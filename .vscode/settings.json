@@ -1,0 +1,11 @@
+{
+    "cSpell.words": [
+        "appwrite",
+        "daisyui",
+        "tailwindcss"
+    ],
+    "files.exclude": {
+        // ".env.local": true
+    },
+    "css.lint.unknownAtRules": "ignore"
+}
