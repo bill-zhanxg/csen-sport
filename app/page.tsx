@@ -1,10 +1,17 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Error } from '../components/Error';
+import { getSession } from '../libs/appwrite';
 
 export default function Home() {
+	useEffect(() => {
+		getSession().then((session) => {
+			console.log(session);
+		});
+	}, []);
+
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState('');
 
