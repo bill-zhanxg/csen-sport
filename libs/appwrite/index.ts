@@ -1,9 +1,9 @@
 'use client';
 
-import { Account, AppwriteException, Client, Databases, Models, Query } from 'appwrite';
+import { Account, AppwriteException, Avatars, Client, Databases, Models, Query } from 'appwrite';
 
 import { logError } from '../logger';
-import { DateInterfaceDocument, GameDocument, TeacherDocument } from './Interface/Weekly-Sport';
+import { DateInterfaceDocument, GameDocument, QueryPickDocument, TeacherDocument } from './Interface/Weekly-sport';
 
 export const client = new Client()
 	.setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT)
@@ -47,6 +47,22 @@ export const account = {
 				});
 		});
 	},
+
+	/**
+	 * This function return a promise with the avatar url
+	 * @throws {AppwriteException}
+	 */
+	getAvatar: () => {
+		return new Promise<URL>((resolve, reject) => {
+			account
+				.getUser()
+				.then((user) => {
+					const avatars = new Avatars(client);
+					resolve(avatars.getInitials(user.name));
+				})
+				.catch(reject);
+		});
+	},
 };
 
 export const database = {
@@ -71,7 +87,7 @@ export const database = {
 	},
 
 	/**
-	 * Get documents from date collection
+	 * Get documents from teacher collection
 	 * @throws {AppwriteException}
 	 */
 	getMyGames: () => {
@@ -109,6 +125,25 @@ export const database = {
 					reject(error);
 				});
 		});
+	},
+
+	teachers: {
+		getAll: () => {
+			return new Promise<QueryPickDocument<TeacherDocument, '$id' | 'name' | 'email'>[]>((resolve, reject) => {
+				database.appwrite
+					.listDocuments<TeacherDocument>('weekly-sport', 'teacher', [
+						Query.orderAsc('name'),
+						Query.select(['$id', 'name', 'email']),
+					])
+					.then((res) => {
+						resolve(res.documents);
+					})
+					.catch((error: AppwriteException) => {
+						appwriteError(error);
+						reject(error);
+					});
+			});
+		},
 	},
 };
 

@@ -34,3 +34,5 @@ export type TeacherDocument = Teacher & Models.Document;
 export type TeamDocument = Team & Models.Document;
 export type GameDocument = Game & Models.Document;
 export type DateInterfaceDocument = DateInterface & Models.Document;
+
+export type QueryPickDocument<T, K extends keyof T> = Pick<T, K> & { $collectionId: string; $databaseId: string };

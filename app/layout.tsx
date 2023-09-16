@@ -2,8 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { FaBars, FaHome } from 'react-icons/fa';
 
-import { AccountMenu } from '../components/AccountMenu';
+import { AccountMenu } from './components/AccountMenu';
 import './globals.css';
+import BarOfProgress from './components/BarOfProgress';
 
 export const metadata: Metadata = {
 	title: 'CCS Sport',
@@ -16,8 +17,12 @@ const menu = [
 		href: '/weekly-sport',
 	},
 	{
-		name: 'Coming Soon',
-		href: '/',
+		name: 'Teachers',
+		href: '/teachers',
+	},
+	{
+		name: 'Users',
+		href: '/users',
 	},
 ];
 
@@ -37,10 +42,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 						</label>
 						<ul
 							tabIndex={0}
-							className="menu menu-lg dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-full"
+							className="menu menu-lg dropdown-content mt-3 z-[100] p-2 shadow bg-base-100 rounded-box w-full"
 						>
-							{menu.map((item, key) => (
-								<li key={key}>
+							{menu.map((item, i) => (
+								<li key={i}>
 									<Link href={item.href}>{item.name}</Link>
 								</li>
 							))}
@@ -60,6 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 					</div>
 				</div>
 				{children}
+				<BarOfProgress />
 			</body>
 		</html>
 	);
