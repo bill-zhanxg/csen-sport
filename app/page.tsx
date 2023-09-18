@@ -3,7 +3,7 @@
 import { AppwriteException } from 'appwrite';
 import { useEffect, useState } from 'react';
 
-import { database } from '../libs/appwrite';
+import { account, database } from '../libs/appwrite';
 import { DateInterface } from '../libs/appwrite/Interface/Weekly-sport';
 import { Error } from './components/Error';
 import { SkeletonBlock } from './components/SkeletonBlock';
@@ -12,6 +12,7 @@ export default function Home() {
 	const [dates, setDates] = useState<DateInterface[]>();
 	const [error, setError] = useState('');
 
+	// TODO: Handle no permission to view the data by removing user from Admin Team
 	useEffect(() => {
 		database
 			.getMyGames()

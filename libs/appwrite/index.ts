@@ -1,6 +1,6 @@
 'use client';
 
-import { Account, AppwriteException, Avatars, Client, Databases, Models, Query } from 'appwrite';
+import { Account, AppwriteException, Avatars, Client, Databases, Models, Query, Teams } from 'appwrite';
 
 import { logError } from '../logger';
 import { DateInterfaceDocument, GameDocument, QueryPickDocument, TeacherDocument } from './Interface/Weekly-sport';
@@ -22,6 +22,20 @@ export const account = {
 			.deleteSession('current')
 			.catch(() => {})
 			.finally(() => location.reload());
+	},
+
+	getJWT: () => {
+		return new Promise<string>((resolve, reject) => {
+			account.appwrite
+				.createJWT()
+				.then((res) => {
+					resolve(res.jwt);
+				})
+				.catch((error: AppwriteException) => {
+					appwriteError(error);
+					reject(error);
+				});
+		});
 	},
 
 	getSession: () => {
@@ -49,19 +63,10 @@ export const account = {
 	},
 
 	/**
-	 * This function return a promise with the avatar url
-	 * @throws {AppwriteException}
+	 * This function return the avatar url
 	 */
 	getAvatar: () => {
-		return new Promise<URL>((resolve, reject) => {
-			account
-				.getUser()
-				.then((user) => {
-					const avatars = new Avatars(client);
-					resolve(avatars.getInitials(user.name));
-				})
-				.catch(reject);
-		});
+		return new Avatars(client).getInitials();
 	},
 };
 

@@ -3,26 +3,22 @@
 import { useEffect, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 
-import Image from 'next/image';
 import { account } from '../../libs/appwrite';
 
 export function AccountMenu() {
 	const [avatar, setAvatar] = useState<string>();
 
 	useEffect(() => {
-		account
-			.getAvatar()
-			.then((avatar) => {
-				setAvatar(avatar.href);
-			})
-			.catch(() => {});
+		setAvatar(account.getAvatar().href);
 	}, []);
 
 	return (
 		<div className="dropdown dropdown-end">
 			<label tabIndex={0} className="btn btn-ghost btn-circle avatar">
 				{avatar ? (
-					<Image src={avatar} alt="User Avatar" height={100} width={100} className="rounded-full" />
+					// We need the image loaded from client side to persist Cookies, so we can not use next/image
+					// eslint-disable-next-line @next/next/no-img-element
+					<img src={avatar} alt="User Avatar" height={100} width={100} className="rounded-full" />
 				) : (
 					<FaUserCircle className="text-4xl" />
 				)}

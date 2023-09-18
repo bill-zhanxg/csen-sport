@@ -3,7 +3,7 @@
 import { AppwriteException } from 'appwrite';
 import { useEffect, useState } from 'react';
 
-import { database } from '../../libs/appwrite';
+import { account, database } from '../../libs/appwrite';
 import { QueryPickDocument, TeacherDocument } from '../../libs/appwrite/Interface/Weekly-sport';
 import { Error } from '../components/Error';
 import { SkeletonBlock } from '../components/SkeletonBlock';
@@ -27,14 +27,56 @@ export default function Teachers() {
 				<div className="flex justify-end gap-3 w-full">
 					<button
 						className="btn btn-primary"
-						onClick={() => {
-							fetch('../users/api', {
-								method: 'GET',
-							});
-						}}
+						onClick={(event) => (event.currentTarget.nextElementSibling as HTMLDialogElement).showModal()}
 					>
 						Create New Teacher
 					</button>
+					<dialog className="modal">
+						<div className="modal-box">
+							<h3 className="font-bold text-lg">Create a new teacher</h3>
+							<div className="form-control w-full">
+								<label className="label">
+									<span className="label-text">Name</span>
+								</label>
+								<input type="text" placeholder="Type here" className="input input-bordered w-full" />
+								<label className="label">
+									<span className="label-text">Email</span>
+								</label>
+								<div className="join">
+									<input type="text" placeholder="Type here" className="input input-bordered w-full join-item" />
+									<div className="flex justify-items-center p-2 bg-base-200 join-item">
+										<p className="self-center">@{process.env.NEXT_PUBLIC_SCHOOL_EMAIL_DOMAIN}</p>
+									</div>
+								</div>
+							</div>
+							<div className="modal-action">
+								<button
+									className="btn btn-primary"
+									onClick={() => {
+										account
+											.getJWT()
+											.then((jwt) => {
+												fetch('../users/api', {
+													method: 'GET',
+													headers: {
+														'X-Appwrite-JWT': jwt,
+													},
+												});
+											})
+											.catch((err: AppwriteException) => {
+												setError(`Failed to create JWT: ${err.message}`);
+											});
+									}}
+								>
+									Create
+								</button>
+								<form method="dialog">
+									{/* if there is a button in form, it will close the modal */}
+									<button className="btn">Close</button>
+								</form>
+							</div>
+						</div>
+					</dialog>
 				</div>
 				{teachers ? (
 					teachers.length < 1 ? (

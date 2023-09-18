@@ -5,6 +5,8 @@ const Style = {
 	error: ['color: #eee', 'background-color: red'],
 };
 
+// TODO: Test sentry logging
+
 export function logDebug(message: any) {
 	console.debug(`%c[${getCurrentTime()}] DEBUG: ${message}`, getStyle(Style.debug));
 }
