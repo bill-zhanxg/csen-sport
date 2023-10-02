@@ -5,19 +5,25 @@ import { useEffect, useState } from 'react';
 
 import { database } from '../../libs/appwrite';
 import { DateInterfaceDocument } from '../../libs/appwrite/Interface/Weekly-sport';
-import { Error } from '../components/Error';
+import { Error, Success } from '../components/Alert';
 import { SkeletonBlock } from '../components/SkeletonBlock';
 
 export default function WeeklySport() {
 	const [dates, setDates] = useState<DateInterfaceDocument[]>();
-	const [error, setError] = useState('');
+	const [alert, setAlert] = useState<{
+		type: 'success' | 'error';
+		message: string;
+	} | null>(null);
 
 	useEffect(() => {
 		database
 			.getDates()
 			.then(setDates)
 			.catch((err: AppwriteException) => {
-				setError(`Failed to load game list: ${err.message}`);
+				setAlert({
+					type: 'error',
+					message: `Failed to load game list: ${err.message}`,
+				});
 			});
 	}, []);
 
@@ -81,7 +87,12 @@ export default function WeeklySport() {
 					<SkeletonBlock />
 				)}
 			</main>
-			{error && <Error message={error} setMessage={setError} />}
+			{alert &&
+				(alert.type === 'success' ? (
+					<Success message={alert.message} setAlert={setAlert} />
+				) : (
+					<Error message={alert.message} setAlert={setAlert} />
+				))}
 		</>
 	);
 }

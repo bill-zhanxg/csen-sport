@@ -7,13 +7,10 @@
             "request": "launch",
             "command": "npm run dev",
             "serverReadyAction": {
-                "pattern": "started server on .+, url: (https?://.+)",
+                "pattern": "- Local:.+(https?://.+)",
                 "uriFormat": "%s",
                 "action": "debugWithEdge"
-            },
-            "outFiles": [
-                "!**/node_modules/**",
-            ]
+            }
         },
         {
             "name": "Next.js: debug server-side",

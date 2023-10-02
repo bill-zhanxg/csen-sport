@@ -1,4 +1,4 @@
-import { Client as ClientClient, Teams } from 'appwrite';
+import { Client as ClientClient, Models, Teams } from 'appwrite';
 import { AppwriteException, Client, Users } from 'node-appwrite';
 
 import { UserAPIResponse } from './Interface/User';
@@ -31,13 +31,21 @@ export const clientAccount = {
 			.setJWT(jwt);
 	},
 
+	/**
+	 * Check if the user is an administrator
+	 * @throws {AppwriteException}
+	 */
 	checkAdministrator: (jwt: string) => {
-		const client = clientAccount._getClient(jwt);
-		const team = new Teams(client);
-		team.createMembership('administrator', [], 'bill.zhanxg@outlook.com', undefined, undefined, 'https://localhost:3000').then((teams) => {
-			console.log('🚀 ~ file: index.ts:38 ~ team.list ~ teams:', teams);
-			// team.create('administrator', 'Administrator').then((team) => {
-			// });
+		return new Promise<Models.Team<Models.Preferences>>((resolve, reject) => {
+			const client = clientAccount._getClient(jwt);
+			const team = new Teams(client);
+			team
+				.get('administrator')
+				.then((team) => {
+					console.log('🚀 ~ file: index.ts:41 ~ .then ~ team:', team);
+					resolve(team);
+				})
+				.catch(reject);
 		});
 	},
 };

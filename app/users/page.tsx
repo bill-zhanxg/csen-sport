@@ -3,14 +3,13 @@
 import { AppwriteException } from 'appwrite';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { FaRegCircleQuestion } from 'react-icons/fa6';
 
-import { database } from '../../libs/appwrite';
+import { account, database } from '../../libs/appwrite';
 import { QueryPickDocument, TeacherDocument } from '../../libs/appwrite/Interface/Weekly-sport';
 import { Error, Success } from '../components/Alert';
 import { SkeletonBlock } from '../components/SkeletonBlock';
 
-export default function Teachers() {
+export default function Users() {
 	const router = useRouter();
 
 	const [teachers, setTeachers] =
@@ -31,15 +30,16 @@ export default function Teachers() {
 	const [dialogError, setDialogError] = useState('');
 
 	useEffect(() => {
-		database.teachers
-			.getAll()
-			.then((teachers) => setTeachers(teachers.map((teacher) => ({ ...teacher, checked: false }))))
-			.catch((err: AppwriteException) => {
-				setAlert({
-					type: 'error',
-					message: `Failed to load teacher list: ${err.message}`,
-				});
-			});
+		account.getJWT().then((jwt) => {
+			fetch('/users/api', {
+                method: 'GET',
+				headers: {
+					'X-Appwrite-JWT': jwt,
+				},
+			})
+				.then(console.log)
+				.catch(console.error);
+		});
 	}, []);
 
 	const handleOnChange = (position: number) => {
@@ -64,89 +64,6 @@ export default function Teachers() {
 	return (
 		<>
 			<main className="flex flex-col items-center gap-4 p-4 overflow-x-auto w-full">
-				<div className="flex justify-end gap-3 w-full">
-					<div
-						className="tooltip tooltip-left"
-						data-tip="You're not making a new user, just a new document to connect the teacher with the email."
-					>
-						<button className="btn btn-primary" onClick={() => createTeacherDialogRef.current?.showModal()}>
-							New <FaRegCircleQuestion />
-						</button>
-					</div>
-					<dialog ref={createTeacherDialogRef} className="modal">
-						<div className="modal-box">
-							<h3 className="font-bold text-lg">Create a new teacher</h3>
-							<div className="form-control w-full">
-								<label className="label">
-									<span className="label-text">Name</span>
-								</label>
-								<input
-									type="text"
-									placeholder="Type here"
-									className="input input-bordered w-full"
-									disabled={dialogLoading}
-									ref={nameRef}
-								/>
-								<label className="label">
-									<span className="label-text">Email</span>
-								</label>
-								<div className="join">
-									<input
-										type="text"
-										placeholder="Type here"
-										className="input input-bordered w-full join-item"
-										disabled={dialogLoading}
-										ref={emailRef}
-									/>
-									<div className="flex justify-items-center p-2 bg-base-200 join-item min-w-fit">
-										<p className="self-center">@{process.env.NEXT_PUBLIC_SCHOOL_EMAIL_DOMAIN}</p>
-									</div>
-								</div>
-							</div>
-							{dialogError && <p className="text-error">{dialogError}</p>}
-							<div className="modal-action">
-								<button
-									className="btn btn-primary"
-									disabled={dialogLoading}
-									onClick={() => {
-										setDialogLoading(true);
-										database.teachers
-											.create(nameRef.current?.value, emailRef.current?.value)
-											.then((teacher) => {
-												nameRef.current!.value = '';
-												emailRef.current!.value = '';
-												setDialogError('');
-												setTeachers((teachers) =>
-													teachers
-														? [...teachers, { ...teacher, checked: false }].sort((a, b) => a.name.localeCompare(b.name))
-														: [{ ...teacher, checked: false }],
-												);
-												setAlert({
-													type: 'success',
-													message: 'Teacher created successfully',
-												});
-												createTeacherDialogRef.current?.close();
-											})
-											.catch((err: AppwriteException) => {
-												setDialogError(err.message);
-											})
-											.finally(() => {
-												setDialogLoading(false);
-											});
-									}}
-								>
-									{dialogLoading ? <span className="loading loading-dots"></span> : 'Create'}
-								</button>
-								<form method="dialog">
-									{/* if there is a button in form, it will close the modal */}
-									<button className="btn" disabled={dialogLoading}>
-										Close
-									</button>
-								</form>
-							</div>
-						</div>
-					</dialog>
-				</div>
 				{teachers ? (
 					teachers.length < 1 ? (
 						<div>Nothing Here</div>
@@ -182,7 +99,6 @@ export default function Teachers() {
 													className="checkbox"
 													checked={teacher.checked}
 													onChange={() => handleOnChange(index)}
-													onClick={(event) => event.stopPropagation()}
 												/>
 											</label>
 										</th>

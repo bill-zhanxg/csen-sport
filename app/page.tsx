@@ -3,14 +3,17 @@
 import { AppwriteException } from 'appwrite';
 import { useEffect, useState } from 'react';
 
-import { account, database } from '../libs/appwrite';
+import { database } from '../libs/appwrite';
 import { DateInterface } from '../libs/appwrite/Interface/Weekly-sport';
-import { Error } from './components/Error';
+import { Error, Success } from './components/Alert';
 import { SkeletonBlock } from './components/SkeletonBlock';
 
 export default function Home() {
 	const [dates, setDates] = useState<DateInterface[]>();
-	const [error, setError] = useState('');
+	const [alert, setAlert] = useState<{
+		type: 'success' | 'error';
+		message: string;
+	} | null>(null);
 
 	// TODO: Handle no permission to view the data by removing user from Admin Team
 	useEffect(() => {
@@ -43,7 +46,10 @@ export default function Home() {
 				setDates(gamesByDate);
 			})
 			.catch((err: AppwriteException) => {
-				setError(`Failed to load game list: ${err.message}`);
+				setAlert({
+					type: 'error',
+					message: `Failed to load game list: ${err.message}`,
+				});
 			});
 	}, []);
 
@@ -108,7 +114,12 @@ export default function Home() {
 					<SkeletonBlock />
 				)}
 			</main>
-			{error && <Error message={error} setMessage={setError} />}
+			{alert &&
+				(alert.type === 'success' ? (
+					<Success message={alert.message} setAlert={setAlert} />
+				) : (
+					<Error message={alert.message} setAlert={setAlert} />
+				))}
 		</>
 	);
 }
