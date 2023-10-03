@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+	env: {
+		NEXT_PUBLIC_SCHOOL_EMAIL_DOMAIN: process.env.NEXT_PUBLIC_SCHOOL_EMAIL_DOMAIN,
+	},
+};
 
 module.exports = nextConfig;
 
