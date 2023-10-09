@@ -1,4 +1,4 @@
-import { Client as ClientClient, Models, Teams } from 'appwrite';
+import { Client as ClientClient, Teams } from 'appwrite';
 import { AppwriteException, Client, Users } from 'node-appwrite';
 
 import { UserAPIResponse } from './Interface/User';
@@ -11,14 +11,16 @@ export const client = new Client()
 export const user = {
 	appwrite: new Users(client),
 
+	/**
+	 * Get all users
+	 * @throws {AppwriteException}
+	 */
 	getAll: () => {
 		return new Promise<UserAPIResponse[]>((resolve, reject) => {
 			user.appwrite
 				.list()
-				.then((users) => resolve(users.users.map(({ name, email }) => ({ name, email }))))
-				.catch((error: AppwriteException) => {
-					// TODO
-				});
+				.then((users) => resolve(users.users.map(({ $id, name, email }) => ({ $id, name, email }))))
+				.catch(reject);
 		});
 	},
 };
@@ -36,16 +38,19 @@ export const clientAccount = {
 	 * @throws {AppwriteException}
 	 */
 	checkAdministrator: (jwt: string) => {
-		return new Promise<Models.Team<Models.Preferences>>((resolve, reject) => {
-			const client = clientAccount._getClient(jwt);
-			const team = new Teams(client);
+		return new Promise<boolean>((resolve, reject) => {
+			const JWTClient = clientAccount._getClient(jwt);
+			const team = new Teams(JWTClient);
 			team
 				.get('administrator')
-				.then((team) => {
-					console.log('🚀 ~ file: index.ts:41 ~ .then ~ team:', team);
-					resolve(team);
-				})
-				.catch(reject);
+				// User is an administrator
+				.then(() => resolve(true))
+				.catch((error: AppwriteException) => {
+					// User is not an administrator
+					if (error.code === 404) resolve(false);
+					// Something went wrong
+					else reject(error);
+				});
 		});
 	},
 };

@@ -2,7 +2,7 @@ import { FaXmark } from 'react-icons/fa6';
 
 export function Error({ message, setAlert }: { message: string; setAlert: (message: null) => void }) {
 	return (
-		<div className="absolute bottom-3 px-3 w-full">
+		<div className="fixed bottom-3 px-3 w-full z-50">
 			<div className="alert alert-error">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -28,7 +28,7 @@ export function Error({ message, setAlert }: { message: string; setAlert: (messa
 
 export function Success({ message, setAlert }: { message: string; setAlert: (message: null) => void }) {
 	return (
-		<div className="absolute bottom-3 px-3 w-full">
+		<div className="fixed bottom-3 px-3 w-full z-50">
 			<div className="alert alert-success">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"

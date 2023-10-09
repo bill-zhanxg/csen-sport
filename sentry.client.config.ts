@@ -2,6 +2,7 @@
 // The config you add here will be used whenever a users loads a page in their browser.
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
+import { CaptureConsole } from '@sentry/integrations';
 import * as Sentry from '@sentry/nextjs';
 
 Sentry.init({
@@ -22,5 +23,5 @@ Sentry.init({
 	replaysSessionSampleRate: 0.1,
 
 	// You can remove this option if you're not planning to use the Sentry Session Replay feature:
-	integrations: [new Sentry.Replay()],
+	integrations: [new Sentry.Replay(), new CaptureConsole({ levels: ['error'] })],
 });

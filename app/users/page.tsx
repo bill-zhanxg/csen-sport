@@ -5,15 +5,15 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 import { account, database } from '../../libs/appwrite';
-import { QueryPickDocument, TeacherDocument } from '../../libs/appwrite/Interface/Weekly-sport';
+import { logError } from '../../libs/logger';
+import { UserAPIResponse } from '../../libs/server/appwrite/Interface/User';
 import { Error, Success } from '../components/Alert';
 import { SkeletonBlock } from '../components/SkeletonBlock';
 
 export default function Users() {
 	const router = useRouter();
 
-	const [teachers, setTeachers] =
-		useState<(QueryPickDocument<TeacherDocument, '$id' | 'name' | 'email'> & { checked: boolean })[]>();
+	const [users, setUsers] = useState<(UserAPIResponse & { checked: boolean })[]>();
 	const [alert, setAlert] = useState<{
 		type: 'success' | 'error';
 		message: string;
@@ -30,42 +30,74 @@ export default function Users() {
 	const [dialogError, setDialogError] = useState('');
 
 	useEffect(() => {
-		account.getJWT().then((jwt) => {
-			fetch('/users/api', {
-                method: 'GET',
-				headers: {
-					'X-Appwrite-JWT': jwt,
-				},
+		account
+			.getJWT()
+			.then((jwt) => {
+				fetch('/users/api', {
+					method: 'GET',
+					headers: {
+						'X-Appwrite-JWT': jwt,
+					},
+				})
+					.then((response) => {
+						if (!response.ok) {
+							setUsers([]);
+							if (response.status === 401)
+								return setAlert({
+									type: 'error',
+									message: 'You are not authorized to view this page',
+								});
+							else if (response.status === 500)
+								return setAlert({
+									type: 'error',
+									message: 'A server error occurred',
+								});
+						}
+						response.json().then((users) => {
+							setUsers(users);
+						});
+					})
+					.catch((reason) => {
+						// This shouldn't happen
+						logError(reason);
+						setAlert({
+							type: 'error',
+							message: `This shouldn't happen: ${reason}`,
+						});
+					});
 			})
-				.then(console.log)
-				.catch(console.error);
-		});
+			.catch((err: AppwriteException) => {
+				setAlert({
+					type: 'error',
+					message: `Failed to get client JWT for authentication: ${err.message}`,
+				});
+			});
 	}, []);
 
 	const handleOnChange = (position: number) => {
-		if (teachers === undefined) return;
+		if (users === undefined) return;
 
-		const updatedCheckedState = teachers.map((teacher, index) =>
+		const updatedCheckedState = users.map((teacher, index) =>
 			index === position ? { ...teacher, checked: !teacher.checked } : teacher,
 		);
 
-		setTeachers(updatedCheckedState);
+		setUsers(updatedCheckedState);
 		// updateTotal(updatedCheckedState);
 	};
 
 	const handleSelectAll = (checked: boolean) => {
-		if (teachers === undefined) return;
+		if (users === undefined) return;
 
-		const updatedCheckedState = teachers.map((teacher) => ({ ...teacher, checked }));
+		const updatedCheckedState = users.map((teacher) => ({ ...teacher, checked }));
 
-		setTeachers(updatedCheckedState);
+		setUsers(updatedCheckedState);
 	};
 
 	return (
 		<>
 			<main className="flex flex-col items-center gap-4 p-4 overflow-x-auto w-full">
-				{teachers ? (
-					teachers.length < 1 ? (
+				{users ? (
+					users.length < 1 ? (
 						<div>Nothing Here</div>
 					) : (
 						<table className="table">
@@ -76,7 +108,7 @@ export default function Users() {
 											<input
 												type="checkbox"
 												className="checkbox"
-												checked={teachers.every((teacher) => teacher.checked)}
+												checked={users.every((teacher) => teacher.checked)}
 												onChange={(event) => handleSelectAll(event.target.checked)}
 											/>
 										</label>
@@ -86,7 +118,7 @@ export default function Users() {
 								</tr>
 							</thead>
 							<tbody>
-								{teachers.map((teacher, index) => (
+								{users.map((teacher, index) => (
 									<tr
 										className="hover cursor-pointer"
 										key={teacher.$id}
@@ -127,13 +159,13 @@ export default function Users() {
 							disabled={deleteTeacherDialogLoading}
 							onClick={() => {
 								setDeleteTeacherDialogLoading(true);
-								const deletion = teachers?.filter((teacher) => teacher.checked);
+								const deletion = users?.filter((teacher) => teacher.checked);
 								if (!deletion) return setDeleteTeacherDialogError("This shouldn't happen");
 								database.teachers
 									.delete(deletion.map((teacher) => teacher.$id))
 									.then((result) => {
 										setDeleteTeacherDialogError('');
-										setTeachers((teachers) => teachers?.filter((teacher) => !teacher.checked));
+										setUsers((teachers) => teachers?.filter((teacher) => !teacher.checked));
 										setAlert({
 											type: 'success',
 											message: `Removed ${result.succeed} teachers, failed to remove ${result.failed} teachers`,
@@ -159,12 +191,12 @@ export default function Users() {
 					</div>
 				</div>
 			</dialog>
-			{teachers && teachers.some((teacher) => teacher.checked) && (
+			{users && users.some((teacher) => teacher.checked) && (
 				<div className="flex justify-center absolute bottom-5 px-3 w-full z-10">
 					<div className="flex items-center justify-between p-4 bg-base-200 shadow-md border-solid border-2 border-base-300 rounded-lg h-16 w-3/4">
 						<span className="flex items-center gap-2">
 							<span className="flex justify-center items-center bg-primary rounded-md h-6 w-6 text-white">
-								{teachers.filter((teacher) => teacher.checked).length}
+								{users.filter((teacher) => teacher.checked).length}
 							</span>
 							Teachers Selected
 						</span>
