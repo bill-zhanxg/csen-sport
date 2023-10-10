@@ -104,7 +104,7 @@ export const database = {
 					database.appwrite
 						.listDocuments<TeacherDocument>(database.name, 'teacher', [Query.equal('email', user.email)])
 						.then((res) => {
-							resolve(res.documents[0].game || []);
+							resolve(res.documents[0]?.game || []);
 						})
 						.catch((error: AppwriteException) => {
 							appwriteError(error);

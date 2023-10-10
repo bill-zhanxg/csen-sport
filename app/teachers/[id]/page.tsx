@@ -24,6 +24,9 @@ export default function Teacher({ params }: { params: { id: string } }) {
 	const [canUpdate, setCanUpdate] = useState(false);
 	const [updateLoading, setUpdateLoading] = useState(false);
 
+	const emailRef = useRef<HTMLInputElement>(null);
+	const updateButtonRef = useRef<HTMLButtonElement>(null);
+
 	const deleteTeacherDialogRef = useRef<HTMLDialogElement>(null);
 	const [deleteTeacherDialogLoading, setDeleteTeacherDialogLoading] = useState(false);
 	const [deleteTeacherDialogError, setDeleteTeacherDialogError] = useState('');
@@ -76,6 +79,12 @@ export default function Teacher({ params }: { params: { id: string } }) {
 										}}
 										disabled={updateLoading}
 										className="input input-bordered w-4/5"
+										onKeyDown={(event) => {
+											if (event.key === 'Enter') {
+												event.preventDefault();
+												emailRef.current?.focus();
+											}
+										}}
 									/>
 								</div>
 								<div className="flex items-center gap-4">
@@ -88,6 +97,13 @@ export default function Teacher({ params }: { params: { id: string } }) {
 										}}
 										disabled={updateLoading}
 										className="input input-bordered w-4/5"
+										ref={emailRef}
+										onKeyDown={(event) => {
+											if (event.key === 'Enter') {
+												event.preventDefault();
+												updateButtonRef.current?.click();
+											}
+										}}
 									/>
 								</div>
 								<div className="card-actions justify-end">
@@ -100,12 +116,13 @@ export default function Teacher({ params }: { params: { id: string } }) {
 									</button>
 									<button
 										className="btn btn-primary"
+										ref={updateButtonRef}
 										onClick={() => {
 											setUpdateLoading(true);
 											database.teachers
 												.update(data.$id, { name, email })
 												.then((teacher) => {
-                                                    setData(teacher);
+													setData(teacher);
 													setAlert({
 														type: 'success',
 														message: 'Successfully updated teacher detail',

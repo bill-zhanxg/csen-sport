@@ -3,6 +3,7 @@
         "appwrite",
         "daisyui",
         "nprogress",
+        "runtypes",
         "tailwindcss",
         "Xmark"
     ],

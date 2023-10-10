@@ -27,6 +27,7 @@ export default function Teachers() {
 	const createTeacherDialogRef = useRef<HTMLDialogElement>(null);
 	const nameRef = useRef<HTMLInputElement>(null);
 	const emailRef = useRef<HTMLInputElement>(null);
+	const submitBtnRef = useRef<HTMLButtonElement>(null);
 	const [dialogLoading, setDialogLoading] = useState(false);
 	const [dialogError, setDialogError] = useState('');
 
@@ -50,7 +51,6 @@ export default function Teachers() {
 		);
 
 		setTeachers(updatedCheckedState);
-		// updateTotal(updatedCheckedState);
 	};
 
 	const handleSelectAll = (checked: boolean) => {
@@ -86,6 +86,12 @@ export default function Teachers() {
 									className="input input-bordered w-full"
 									disabled={dialogLoading}
 									ref={nameRef}
+									onKeyDown={(event) => {
+										if (event.key === 'Enter') {
+											event.preventDefault();
+											emailRef.current?.focus();
+										}
+									}}
 								/>
 								<label className="label">
 									<span className="label-text">Email</span>
@@ -97,6 +103,12 @@ export default function Teachers() {
 										className="input input-bordered w-full join-item"
 										disabled={dialogLoading}
 										ref={emailRef}
+										onKeyDown={(event) => {
+											if (event.key === 'Enter') {
+												event.preventDefault();
+												submitBtnRef.current?.click();
+											}
+										}}
 									/>
 									<div className="flex justify-items-center p-2 bg-base-200 join-item min-w-fit">
 										<p className="self-center">@{process.env.NEXT_PUBLIC_SCHOOL_EMAIL_DOMAIN}</p>
@@ -108,6 +120,7 @@ export default function Teachers() {
 								<button
 									className="btn btn-primary"
 									disabled={dialogLoading}
+									ref={submitBtnRef}
 									onClick={() => {
 										setDialogLoading(true);
 										database.teachers
