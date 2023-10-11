@@ -1,5 +1,5 @@
 import { Client as ClientClient, Teams } from 'appwrite';
-import { AppwriteException, Client, Users } from 'node-appwrite';
+import { AppwriteException, Client, Models, Users } from 'node-appwrite';
 
 import { UserAPIResponse } from './Interface/User';
 
@@ -19,8 +19,18 @@ export const user = {
 		return new Promise<UserAPIResponse[]>((resolve, reject) => {
 			user.appwrite
 				.list()
-				.then((users) => resolve(users.users.map(({ $id, name, email }) => ({ $id, name, email }))))
+				.then((users) => resolve(users.users.map(({ $id, name, email, status }) => ({ $id, name, email, status }))))
 				.catch(reject);
+		});
+	},
+
+	/**
+	 * Block or unblock a user
+	 * @throws {AppwriteException}
+	 */
+	updateStatus: (userId: string, block: boolean) => {
+		return new Promise<Models.User<Models.Preferences>>((resolve, reject) => {
+			user.appwrite.updateStatus(userId, block).then(resolve).catch(reject);
 		});
 	},
 };

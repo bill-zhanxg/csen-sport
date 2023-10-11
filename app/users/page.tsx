@@ -46,6 +46,11 @@ export default function Users() {
 									type: 'error',
 									message: 'A server error occurred',
 								});
+							else
+								return setAlert({
+									type: 'error',
+									message: `An unknown error occurred, code: ${response.status}`,
+								});
 						}
 						response
 							.json()
@@ -118,6 +123,7 @@ export default function Users() {
 									</th>
 									<th>Name</th>
 									<th>Email</th>
+									<th>Blocked</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -136,6 +142,14 @@ export default function Users() {
 										</th>
 										<td>{user.name}</td>
 										<td>{user.email}</td>
+										<td className="flex items-center">
+											<input
+												type="checkbox"
+												checked={!user.status}
+												readOnly
+												className="checkbox checkbox-error disabled"
+											/>
+										</td>
 									</tr>
 								))}
 							</tbody>
@@ -159,17 +173,51 @@ export default function Users() {
 							disabled={blockUserDialogLoading}
 							onClick={() => {
 								setBlockUserDialogLoading(true);
-								const deletion = users?.filter((user) => user.checked).map((user) => user.$id);
+								const deletion = users?.filter((user) => user.checked).map(({ $id }) => $id);
 								if (!deletion) return setBlockUserDialogError("This shouldn't happen");
-								account.getJWT().then((jwt) => {
-									fetch('/users/api', {
-										method: 'GET',
-										headers: {
-											'X-Appwrite-JWT': jwt,
-										},
-										body: JSON.stringify({ users: deletion }),
+								account
+									.getJWT()
+									.then((jwt) => {
+										fetch('/users/api', {
+											method: 'PATCH',
+											headers: {
+												'X-Appwrite-JWT': jwt,
+											},
+											body: JSON.stringify({ block: true, $id: deletion }),
+										})
+											.then((response) => {
+												if (!response.ok) {
+													setBlockUserDialogLoading(false);
+													if (response.status === 401)
+														setBlockUserDialogError('You are not authorized to perform this action');
+													if (response.status === 404) setBlockUserDialogError("This shouldn't happen, code: 404");
+													if (response.status === 500) setBlockUserDialogError('A server error occurred');
+													else setBlockUserDialogError(`An unknown error occurred, code: ${response.status}`);
+													return;
+												}
+												setBlockUserDialogError('');
+												setUsers((users) =>
+													users?.map((user) => (user.checked ? { ...user, checked: false, status: false } : user)),
+												);
+												// TODO: sorting, filling in replacement text
+												setAlert({
+													type: 'success',
+													message: 'Successfully blocked 0 users, failed to block 0 users',
+												});
+												blockUserDialogRef.current?.close();
+											})
+											.catch((reason) => {
+												// This shouldn't happen
+												logError(reason);
+												setBlockUserDialogError(`This shouldn't happen: ${reason}`);
+											});
+									})
+									.catch((err: AppwriteException) => {
+										setAlert({
+											type: 'error',
+											message: `Failed to get client JWT for authentication: ${err.message}`,
+										});
 									});
-								});
 								// database.teachers
 								// 	.delete(deletion.map((teacher) => teacher.$id))
 								// 	.then((result) => {
