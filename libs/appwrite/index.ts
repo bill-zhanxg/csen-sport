@@ -3,12 +3,19 @@
 import { Account, AppwriteException, Avatars, Client, Databases, ID, Models, Query } from 'appwrite';
 
 import { logError } from '../logger';
-import { DateInterfaceDocument, GameDocument, QueryPickDocument, Teacher, TeacherDocument } from './Interface/Weekly-sport';
+import {
+	DateInterfaceDocument,
+	GameDocument,
+	QueryPickDocument,
+	Teacher,
+	TeacherDocument,
+} from './Interface/Weekly-sport';
 
 export const client = new Client()
 	.setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT)
 	.setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID);
 
+// TODO: handle you have been blocked
 export const account = {
 	appwrite: new Account(client),
 
@@ -31,10 +38,7 @@ export const account = {
 				.then((res) => {
 					resolve(res.jwt);
 				})
-				.catch((error: AppwriteException) => {
-					appwriteError(error);
-					reject(error);
-				});
+				.catch((error: AppwriteException) => reject(appwriteError(error)));
 		});
 	},
 
@@ -43,10 +47,7 @@ export const account = {
 			account.appwrite
 				.getSession('current')
 				.then(resolve)
-				.catch((error: AppwriteException) => {
-					appwriteError(error);
-					reject(error);
-				});
+				.catch((error: AppwriteException) => reject(appwriteError(error)));
 		});
 	},
 
@@ -55,10 +56,7 @@ export const account = {
 			account.appwrite
 				.get()
 				.then(resolve)
-				.catch((error: AppwriteException) => {
-					appwriteError(error);
-					reject(error);
-				});
+				.catch((error: AppwriteException) => reject(appwriteError(error)));
 		});
 	},
 
@@ -85,10 +83,7 @@ export const database = {
 				.then((res) => {
 					resolve(res.documents);
 				})
-				.catch((error: AppwriteException) => {
-					appwriteError(error);
-					reject(error);
-				});
+				.catch((error: AppwriteException) => reject(appwriteError(error)));
 		});
 	},
 
@@ -106,10 +101,7 @@ export const database = {
 						.then((res) => {
 							resolve(res.documents[0]?.game || []);
 						})
-						.catch((error: AppwriteException) => {
-							appwriteError(error);
-							reject(error);
-						});
+						.catch((error: AppwriteException) => reject(appwriteError(error)));
 				})
 				.catch(reject);
 		});
@@ -126,10 +118,7 @@ export const database = {
 				.then((res) => {
 					resolve(res.documents);
 				})
-				.catch((error: AppwriteException) => {
-					appwriteError(error);
-					reject(error);
-				});
+				.catch((error: AppwriteException) => reject(appwriteError(error)));
 		});
 	},
 
@@ -159,10 +148,7 @@ export const database = {
 					.then((res) => {
 						resolve(res.documents);
 					})
-					.catch((error: AppwriteException) => {
-						appwriteError(error);
-						reject(error);
-					});
+					.catch((error: AppwriteException) => reject(appwriteError(error)));
 			});
 		},
 
@@ -175,10 +161,7 @@ export const database = {
 						email: `${email}@${process.env.NEXT_PUBLIC_SCHOOL_EMAIL_DOMAIN}`,
 					})
 					.then(resolve)
-					.catch((error: AppwriteException) => {
-						appwriteError(error);
-						reject(error);
-					});
+					.catch((error: AppwriteException) => reject(appwriteError(error)));
 			});
 		},
 
@@ -192,25 +175,18 @@ export const database = {
 		 * @throws {AppwriteException}
 		 */
 		delete: (documentId: string | string[]) => {
-			return new Promise<{ succeed: number; failed: number }>((resolve, reject) => {
+			return new Promise<{ succeed: number; failed: number }>(async (resolve, reject) => {
 				if (typeof documentId === 'string')
 					deleteDocument(documentId)
 						.then(() => resolve({ succeed: 1, failed: 0 }))
-						.catch((error: AppwriteException) => {
-							appwriteError(error);
-							reject(error);
-						});
+						.catch((error: AppwriteException) => reject(appwriteError(error)));
 				else {
 					const promises = documentId.map((id) => deleteDocument(id));
-					Promise.allSettled(promises)
-						.then((result) => {
-							const succeed = result.filter(({ status }) => status === 'fulfilled').length;
-							const failed = result.length - succeed;
-							resolve({ succeed, failed });
-						})
-						.catch(() => {
-							// Should not happen
-						});
+					const result = await Promise.allSettled(promises);
+
+					const succeed = result.filter(({ status }) => status === 'fulfilled').length;
+					const failed = result.length - succeed;
+					resolve({ succeed, failed });
 				}
 
 				function deleteDocument(id: string) {
@@ -224,16 +200,17 @@ export const database = {
 				database.appwrite
 					.updateDocument<TeacherDocument>(database.name, database.teachers.name, documentId, data)
 					.then(resolve)
-					.catch((error: AppwriteException) => {
-						appwriteError(error);
-						reject(error);
-					});
+					.catch((error: AppwriteException) => reject(appwriteError(error)));
 			});
-		}
+		},
 	},
 };
 
 function appwriteError(error: AppwriteException) {
-	if (error.code === 401) account.login();
+	if (error.code === 401) {
+		account.login();
+		return new AppwriteException("You're not logged in. Redirecting to login page...", 401);
+	}
 	logError(error);
+	return error;
 }

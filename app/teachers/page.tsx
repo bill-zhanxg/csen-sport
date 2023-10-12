@@ -230,6 +230,8 @@ export default function Teachers() {
 									.delete(deletion.map((teacher) => teacher.$id))
 									.then((result) => {
 										setDeleteTeacherDialogError('');
+										// TODO: fix remove teacher even when failed
+										// TODO: hide the functions (buttons) and only log warning if the user don't have permission to delete
 										setTeachers((teachers) => teachers?.filter((teacher) => !teacher.checked));
 										setAlert({
 											type: 'success',

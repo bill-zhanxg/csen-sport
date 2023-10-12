@@ -17,6 +17,7 @@ export function logWarn(message: any) {
 	console.warn(`%c[${getCurrentTime()}] WARNING: ${message}`, getStyle(Style.warning));
 }
 
+// TODO: Remove all logError and use console.error instead, give better Sentry stack trace
 export function logError(message: any) {
 	console.error(`%c[${getCurrentTime()}] ERROR: ${message}`, getStyle(Style.error));
 }
