@@ -24,6 +24,10 @@ const menu = [
 		name: 'Users',
 		href: '/users',
 	},
+	{
+		name: 'CSEN',
+		href: '/csen',
+	},
 ];
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

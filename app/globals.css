@@ -3,13 +3,19 @@
 @tailwind utilities;
 
 @layer base {
-  html, body {
-    @apply h-full w-full;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
+	html,
+	body {
+		@apply h-full w-full;
+		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	}
 
-  h1 {
-    @apply text-2xl;
-  }
+	h1 {
+		@apply text-2xl;
+	}
 }
 
+@layer components {
+	.h-full-nav {
+		height: calc(100vh - 70px);
+	}
+}
