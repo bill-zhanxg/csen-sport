@@ -1,6 +1,6 @@
 'use client';
 
-import { Account, AppwriteException, Avatars, Client, Databases, ID, Models, Query } from 'appwrite';
+import { Account, AppwriteException, Avatars, Client, Databases, ID, Models, Query, Teams } from 'appwrite';
 
 import { logError } from '../logger';
 import {
@@ -65,6 +65,30 @@ export const account = {
 	 */
 	getAvatar: () => {
 		return new Avatars(client).getInitials();
+	},
+
+	/**
+	 * Check if the user is an administrator
+	 * @throws {AppwriteException}
+	 */
+	checkAdministrator: () => {
+		return new Promise<boolean>((resolve, reject) => {
+			const team = new Teams(client);
+			team
+				.list()
+				.then((res) => console.log(res))
+				.catch((error: AppwriteException) => console.log(error));
+			team
+				.get('administrator')
+				// User is an administrator
+				.then(() => resolve(true))
+				.catch((error: AppwriteException) => {
+					// User is not an administrator
+					if (error.code === 404) resolve(false);
+					// Something went wrong
+					else reject(error);
+				});
+		});
 	},
 };
 

@@ -1,34 +1,17 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { FaBars, FaHome } from 'react-icons/fa';
+import { FaHome } from 'react-icons/fa';
 
 import { AccountMenu } from './components/AccountMenu';
-import './globals.css';
 import BarOfProgress from './components/BarOfProgress';
+import { NavBar } from './components/NavBar';
+
+import './globals.css';
 
 export const metadata: Metadata = {
 	title: 'CCS Sport',
 	description: 'CCS Sport',
 };
-
-const menu = [
-	{
-		name: 'Weekly Sport',
-		href: '/weekly-sport',
-	},
-	{
-		name: 'Teachers',
-		href: '/teachers',
-	},
-	{
-		name: 'Users',
-		href: '/users',
-	},
-	{
-		name: 'CSEN',
-		href: '/csen',
-	},
-];
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
@@ -40,30 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 							<FaHome />
 						</Link>
 					</div>
-					<div className="dropdown w-full sm:w-0">
-						<label tabIndex={0} className="btn btn-ghost sm:hidden w-full">
-							<FaBars />
-						</label>
-						<ul
-							tabIndex={0}
-							className="menu menu-lg dropdown-content mt-3 z-[100] p-2 shadow bg-base-100 rounded-box w-full"
-						>
-							{menu.map((item, i) => (
-								<li key={i}>
-									<Link href={item.href}>{item.name}</Link>
-								</li>
-							))}
-						</ul>
-					</div>
-					<div className="navbar-center hidden sm:flex">
-						<ul className="menu menu-horizontal px-1">
-							{menu.map((item, key) => (
-								<li key={key}>
-									<Link href={item.href}>{item.name}</Link>
-								</li>
-							))}
-						</ul>
-					</div>
+					<NavBar />
 					<div className="navbar-end">
 						<AccountMenu />
 					</div>
