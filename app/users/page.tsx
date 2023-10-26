@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 import { account } from '../../libs/appwrite';
-import { logError } from '../../libs/logger';
 import { UserAPIResponse } from '../../libs/server/appwrite/Interface/User';
 import { Error, Success } from '../components/Alert';
 import { SkeletonBlock } from '../components/SkeletonBlock';
@@ -59,7 +58,7 @@ export default function Users() {
 							})
 							.catch((reason) => {
 								// This shouldn't happen
-								logError(reason);
+								console.error(reason);
 								setAlert({
 									type: 'error',
 									message: `This shouldn't happen: ${reason}`,
@@ -68,7 +67,7 @@ export default function Users() {
 					})
 					.catch((reason) => {
 						// This shouldn't happen
-						logError(reason);
+						console.error(reason);
 						setAlert({
 							type: 'error',
 							message: `This shouldn't happen: ${reason}`,
@@ -208,7 +207,7 @@ export default function Users() {
 											})
 											.catch((reason) => {
 												// This shouldn't happen
-												logError(reason);
+												console.error(reason);
 												setBlockUserDialogError(`This shouldn't happen: ${reason}`);
 											});
 									})

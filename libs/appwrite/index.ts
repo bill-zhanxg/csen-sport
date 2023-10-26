@@ -2,7 +2,6 @@
 
 import { Account, AppwriteException, Avatars, Client, Databases, ID, Models, Query, Teams } from 'appwrite';
 
-import { logError } from '../logger';
 import {
 	DateInterfaceDocument,
 	GameDocument,
@@ -235,6 +234,6 @@ function appwriteError(error: AppwriteException): AppwriteException {
 		account.login();
 		return new AppwriteException("You're not logged in. Redirecting to login page...", 401);
 	}
-	logError(error);
+	console.error(error);
 	return error;
 }
