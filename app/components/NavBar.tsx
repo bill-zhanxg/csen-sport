@@ -34,7 +34,7 @@ const menu = [
 	},
 	{
 		name: 'Test',
-		href: '/test',
+		href: '/testpdf',
 	},
 ];
 
