@@ -32,12 +32,17 @@ const menu = [
 		name: 'Ladders',
 		href: '/ladder',
 	},
+	{
+		name: 'Test',
+		href: '/test',
+	},
 ];
 
 export function NavBar() {
 	const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
 
 	useEffect(() => {
+		// TODO: fix
 		account
 			.checkAdministrator()
 			.then(() => setIsAdmin(true))
