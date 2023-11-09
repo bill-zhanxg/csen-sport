@@ -55,11 +55,11 @@ export default function WeeklySport() {
 												date.game.map((game) => (
 													<tr key={game.$id}>
 														<td>{game.team?.team || '---'}</td>
-														<td>{game.opponent}</td>
-														<td>{game.venue || '---'}</td>
+														{/* <td>{game.opponent}</td> */}
+														{/* <td>{game.venue || '---'}</td> */}
 														{/* TODO: Make teacher interactive */}
 														<td>{game.teacher?.name || '---'}</td>
-														<td>{game.transportation || '---'}</td>
+														{/* <td>{game.transportation || '---'}</td> */}
 														<td>
 															{game['out-of-class'] ? new Date(game['out-of-class']).toLocaleTimeString() : '---'}
 														</td>

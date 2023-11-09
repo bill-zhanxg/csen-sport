@@ -34,7 +34,7 @@ const menu = [
 	},
 	{
 		name: 'Test',
-		href: '/testpdf',
+		href: '/test',
 	},
 ];
 
@@ -42,10 +42,9 @@ export function NavBar() {
 	const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
 
 	useEffect(() => {
-		// TODO: fix
 		account
 			.checkAdministrator()
-			.then(() => setIsAdmin(true))
+			.then(setIsAdmin)
 			.catch(() => setIsAdmin(false));
 	}, []);
 

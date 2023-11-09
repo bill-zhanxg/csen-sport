@@ -9,7 +9,10 @@ export function AccountMenu() {
 	const [avatar, setAvatar] = useState<string>();
 
 	useEffect(() => {
-		setAvatar(account.getAvatar().href);
+		account
+			.getSession()
+			.then(() => setAvatar(account.getAvatar().href))
+			.catch(() => {});
 	}, []);
 
 	return (
