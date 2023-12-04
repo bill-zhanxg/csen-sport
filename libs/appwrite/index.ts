@@ -18,8 +18,8 @@ export const client = new Client()
 export const account = {
 	appwrite: new Account(client),
 
-	login: () => {
-		const pathname = window.location.href || process.env.ROOT_URL;
+	login: (href?: string | null) => {
+		const pathname = href === undefined ? window.location.href : href === null ? process.env.ROOT_URL : href;
 		account.appwrite.createOAuth2Session('microsoft', pathname, pathname);
 	},
 
@@ -41,12 +41,12 @@ export const account = {
 		});
 	},
 
-	getSession: () => {
+	getSession: (redirect = true) => {
 		return new Promise<Models.Session>((resolve, reject) => {
 			account.appwrite
 				.getSession('current')
 				.then(resolve)
-				.catch((error: AppwriteException) => reject(appwriteError(error)));
+				.catch((error: AppwriteException) => reject(redirect ? appwriteError(error) : null));
 		});
 	},
 
@@ -232,7 +232,10 @@ export const database = {
 function appwriteError(error: AppwriteException): AppwriteException {
 	if (error.code === 401) {
 		// Redirect to login page
-		location.href = '/login';
+		const url = new URL(`${location.protocol}//${location.host}/login`)
+		url.searchParams.set('href', location.href);
+		location.href = url.href;
+		// location.href = `/login?href=${encodeURI(location.href)}`;
 		return new AppwriteException("You're not logged in. Redirecting to login page...", 401);
 	}
 	console.error(error);

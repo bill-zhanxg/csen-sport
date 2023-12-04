@@ -11,9 +11,11 @@ export type Team = {
 	team: string;
 	// Game could be an empty array
 	game: GameDocument[];
+	type: 'junior' | 'intermediate';
 };
 
 export type Game = {
+	// TODO: remove date
 	date: DateInterfaceDocument | null;
 	team: TeamDocument | null;
 	teacher: TeacherDocument | null;
@@ -21,9 +23,9 @@ export type Game = {
 	venue: VenueDocument | null;
 	transportation: TransportationDocument | null;
 	transportation_number: number;
-	// Transportation is Datetime in string format
+	// transportation is Datetime in string format
 	out_of_class: string | null;
-	// Start is Datetime in string format
+	// start is Datetime in string format
 	start: string | null;
 	note: NoteDocument | null;
 };
@@ -32,6 +34,8 @@ export type Game = {
 export type DateInterface = {
 	// Game could be an empty array
 	game: GameDocument[];
+	// day is Datetime in string format, and should be always inserted with time 00:00:00
+	day: string;
 };
 
 // Venue code is venue.$id
@@ -41,22 +45,22 @@ export type Venue = {
 	court_field_number: string;
 	// Game could be an empty array
 	game: GameDocument[];
-}
+};
 
 // Opponent school code is opponent.$id
 export type Opponent = {
 	name?: string;
 	// Game could be an empty array
 	game: GameDocument[];
-}
+};
 
 export type Transportation = {
 	name: string;
-}
+};
 
 export type Note = {
 	description: string;
-}
+};
 
 export type TeacherDocument = Teacher & Models.Document;
 export type TeamDocument = Team & Models.Document;

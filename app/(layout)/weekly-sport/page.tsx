@@ -61,7 +61,7 @@ export default function WeeklySport() {
 														<td>{game.teacher?.name || '---'}</td>
 														{/* <td>{game.transportation || '---'}</td> */}
 														<td>
-															{game['out-of-class'] ? new Date(game['out-of-class']).toLocaleTimeString() : '---'}
+															{game.out_of_class ? new Date(game.out_of_class).toLocaleTimeString() : '---'}
 														</td>
 														<td>{game.start ? new Date(game.start).toLocaleTimeString() : '---'}</td>
 													</tr>

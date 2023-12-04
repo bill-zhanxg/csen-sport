@@ -9,11 +9,16 @@ import { SkeletonBlock } from './SkeletonBlock';
 const menu = [
 	{
 		name: 'Weekly Sport',
-		href: '/weekly-sport',
-	},
-	{
-		name: 'Teachers',
-		href: '/teachers',
+		href: [
+			{
+				name: 'Timetable',
+				href: '/weekly-sport',
+			},
+			{
+				name: 'Teachers',
+				href: '/teachers',
+			},
+		],
 	},
 	{
 		name: 'Users',
@@ -61,20 +66,48 @@ export function NavBar() {
 					tabIndex={0}
 					className="menu menu-lg dropdown-content mt-3 z-[100] p-2 shadow bg-base-100 rounded-box w-full"
 				>
-					{menuFiltered.map((item, i) => (
-						<li key={i}>
-							<Link href={item.href}>{item.name}</Link>
-						</li>
-					))}
+					{menuFiltered.map((item, i) =>
+						Array.isArray(item.href) ? (
+							<li key={i}>
+								<a>{item.name}</a>
+								<ul className="p-2">
+									{item.href.map((item, i) => (
+										<li key={i}>
+											<Link href={item.href}>{item.name}</Link>
+										</li>
+									))}
+								</ul>
+							</li>
+						) : (
+							<li key={i}>
+								<Link href={item.href}>{item.name}</Link>
+							</li>
+						),
+					)}
 				</ul>
 			</div>
 			<div className="navbar-center hidden sm:flex">
-				<ul className="menu menu-horizontal px-1">
-					{menuFiltered.map((item, key) => (
-						<li key={key}>
-							<Link href={item.href}>{item.name}</Link>
-						</li>
-					))}
+				<ul className="menu menu-horizontal px-1 z-[100]">
+					{menuFiltered.map((item, i) =>
+						Array.isArray(item.href) ? (
+							<li key={i}>
+								<details>
+									<summary>{item.name}</summary>
+									<ul className="p-2">
+										{item.href.map((item, i) => (
+											<li className='w-32' key={i}>
+												<Link href={item.href}>{item.name}</Link>
+											</li>
+										))}
+									</ul>
+								</details>
+							</li>
+						) : (
+							<li key={i}>
+								<Link href={item.href}>{item.name}</Link>
+							</li>
+						),
+					)}
 				</ul>
 			</div>
 		</>
