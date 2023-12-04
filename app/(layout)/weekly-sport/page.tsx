@@ -3,10 +3,10 @@
 import { AppwriteException } from 'appwrite';
 import { useEffect, useState } from 'react';
 
-import { database } from '../../libs/appwrite';
-import { DateInterfaceDocument } from '../../libs/appwrite/Interface/Weekly-sport';
-import { Error, Success } from '../components/Alert';
-import { SkeletonBlock } from '../components/SkeletonBlock';
+import { database } from '../../../libs/appwrite';
+import { DateInterfaceDocument } from '../../../libs/appwrite/Interface/Weekly-sport';
+import { Error, Success } from '../../components/Alert';
+import { SkeletonBlock } from '../../components/SkeletonBlock';
 
 export default function WeeklySport() {
 	const [dates, setDates] = useState<DateInterfaceDocument[]>();

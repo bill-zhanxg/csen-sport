@@ -231,7 +231,8 @@ export const database = {
 
 function appwriteError(error: AppwriteException): AppwriteException {
 	if (error.code === 401) {
-		account.login();
+		// Redirect to login page
+		location.href = '/login';
 		return new AppwriteException("You're not logged in. Redirecting to login page...", 401);
 	}
 	console.error(error);

@@ -4,10 +4,10 @@ import { AppwriteException } from 'appwrite';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
-import { account } from '../../libs/appwrite';
-import { UserAPIResponse } from '../../libs/server/appwrite/Interface/User';
-import { Error, Success } from '../components/Alert';
-import { SkeletonBlock } from '../components/SkeletonBlock';
+import { account } from '../../../libs/appwrite';
+import { UserAPIResponse } from '../../../libs/server/appwrite/Interface/User';
+import { Error, Success } from '../../components/Alert';
+import { SkeletonBlock } from '../../components/SkeletonBlock';
 
 export default function Users() {
 	const router = useRouter();

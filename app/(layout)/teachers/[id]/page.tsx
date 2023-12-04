@@ -5,10 +5,10 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { IoIosArrowBack } from 'react-icons/io';
 
-import { database } from '../../../libs/appwrite';
-import { TeacherDocument } from '../../../libs/appwrite/Interface/Weekly-sport';
-import { Error, Success } from '../../components/Alert';
-import { SkeletonBlock } from '../../components/SkeletonBlock';
+import { database } from '../../../../libs/appwrite';
+import { TeacherDocument } from '../../../../libs/appwrite/Interface/Weekly-sport';
+import { Error, Success } from '../../../components/Alert';
+import { SkeletonBlock } from '../../../components/SkeletonBlock';
 
 export default function Teacher({ params }: { params: { id: string } }) {
 	const router = useRouter();

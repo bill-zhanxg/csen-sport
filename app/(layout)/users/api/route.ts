@@ -2,7 +2,7 @@ import { AppwriteException } from 'appwrite';
 import { NextRequest, NextResponse } from 'next/server';
 import { Array, Boolean, Record, String, Union, ValidationError } from 'runtypes';
 
-import { clientAccount, user } from '../../../libs/server/appwrite';
+import { clientAccount, user } from '../../../../libs/server/appwrite';
 
 export async function GET(request: NextRequest) {
 	const unauthorized = NextResponse.json({ message: 'Unauthorized' }, { status: 401, statusText: 'Unauthorized' });
