@@ -12,11 +12,15 @@ const menu = [
 		href: [
 			{
 				name: 'Timetable',
-				href: '/weekly-sport',
+				href: '/weekly-sport/timetable',
 			},
 			{
 				name: 'Teachers',
-				href: '/teachers',
+				href: '/weekly-sport/teachers',
+			},
+			{
+				name: 'Import',
+				href: '/weekly-sport/import',
 			},
 		],
 	},

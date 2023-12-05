@@ -5,10 +5,10 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { FaRegCircleQuestion } from 'react-icons/fa6';
 
-import { account, database } from '../../../libs/appwrite';
-import { QueryPickDocument, TeacherDocument } from '../../../libs/appwrite/Interface/Weekly-sport';
-import { Error, Success } from '../../components/Alert';
-import { SkeletonBlock } from '../../components/SkeletonBlock';
+import { account, database } from '../../../../libs/appwrite';
+import { QueryPickDocument, TeacherDocument } from '../../../../libs/appwrite/Interface/Weekly-sport';
+import { Error, Success } from '../../../components/Alert';
+import { SkeletonBlock } from '../../../components/SkeletonBlock';
 
 export default function Teachers() {
 	const router = useRouter();
