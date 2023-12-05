@@ -36,3 +36,6 @@ next-env.d.ts
 
 # Extra
 /Template
+
+# Sentry Config File
+.sentryclirc
