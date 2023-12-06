@@ -6,7 +6,8 @@ import { FaBars } from 'react-icons/fa';
 import { account } from '../../libs/appwrite';
 import { SkeletonBlock } from './SkeletonBlock';
 
-const menu = [
+type Menu = { name: string; href: string | { name: string; href: string; admin?: boolean }[]; admin?: boolean }[];
+const menu: Menu = [
 	{
 		name: 'Weekly Sport',
 		href: [
@@ -44,7 +45,7 @@ const menu = [
 	},
 	{
 		name: 'Test',
-		href: '/test',
+		href: '/testpdf',
 	},
 ];
 
@@ -59,7 +60,11 @@ export function NavBar() {
 	}, []);
 
 	if (isAdmin === null) return <SkeletonBlock rows={1} height={49} />;
-	const menuFiltered = isAdmin ? menu : menu.filter((item) => !item.admin);
+	const menuFiltered = isAdmin
+		? menu
+		: menu
+				.filter((item) => !item.admin)
+				.map((item) => (Array.isArray(item.href) ? { ...item, href: item.href.filter((item) => !item.admin) } : item));
 
 	return (
 		<>
@@ -100,7 +105,7 @@ export function NavBar() {
 									<summary>{item.name}</summary>
 									<ul className="p-2">
 										{item.href.map((item, i) => (
-											<li className='w-32' key={i}>
+											<li className="w-32" key={i}>
 												<Link href={item.href}>{item.name}</Link>
 											</li>
 										))}

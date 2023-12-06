@@ -235,7 +235,6 @@ function appwriteError(error: AppwriteException): AppwriteException {
 		const url = new URL(`${location.protocol}//${location.host}/login`)
 		url.searchParams.set('href', location.href);
 		location.href = url.href;
-		// location.href = `/login?href=${encodeURI(location.href)}`;
 		return new AppwriteException("You're not logged in. Redirecting to login page...", 401);
 	}
 	console.error(error);
