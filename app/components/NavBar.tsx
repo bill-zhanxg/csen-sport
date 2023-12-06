@@ -21,6 +21,7 @@ const menu = [
 			{
 				name: 'Import',
 				href: '/weekly-sport/import',
+				admin: true,
 			},
 		],
 	},

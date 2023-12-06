@@ -15,7 +15,6 @@ export type Team = {
 };
 
 export type Game = {
-	// TODO: remove date
 	date: DateInterfaceDocument | null;
 	team: TeamDocument | null;
 	teacher: TeacherDocument | null;
