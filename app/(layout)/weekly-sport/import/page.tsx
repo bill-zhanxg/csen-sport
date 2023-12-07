@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { pdfjs } from 'react-pdf';
 
+import { TextItem } from '../../../../node_modules/pdfjs-dist/types/src/display/api';
 import { Error, Success } from '../../../components/Alert';
-import { TextItem } from '../../testpdf/types';
 
 export default function Import() {
 	const [step, setStep] = useState(1);
@@ -17,6 +17,24 @@ export default function Import() {
 
 	const [disableNext, setDisableNext] = useState(true);
 	const [nextLoading, setNextLoading] = useState(false);
+
+	type WeeklySportDataGender = {
+		[game: string]: {
+			[date: string]: {
+				team1: string;
+				team2: string;
+				venue: string;
+			}[];
+		};
+	};
+	type WeeklySportDataType = {
+		boys: WeeklySportDataGender;
+		girls: WeeklySportDataGender;
+	};
+	const [weeklySportData, setWeeklySportData] = useState<{
+		junior: WeeklySportDataType;
+		intermediate: WeeklySportDataType;
+	} | null>(null);
 
 	const [alert, setAlert] = useState<{
 		type: 'success' | 'error';
@@ -35,15 +53,9 @@ export default function Import() {
 		input
 			.arrayBuffer()
 			.then((buffer) => {
-				pdfjs.getDocument(buffer).promise.then((pdf) => {
-					// TODO: combine functions
-					pdf.getPage(1).then((page) => {
-						page.getTextContent().then((content) => {
-							const text = content.items.map((item) => ((item as TextItem).str ? (item as TextItem).str : ''));
-							// setPdf(text);
-							console.log(text);
-						});
-					});
+				handlePdfText(buffer).catch(() => {
+					setNextLoading(false);
+					setWeeklySportFileDisabled(false);
 				});
 			})
 			.catch((err) => {
@@ -63,26 +75,53 @@ export default function Import() {
 			});
 		setNextLoading(true);
 		setWeeklySportURLDisabled(true);
-		pdfjs
-			.getDocument(weeklySportURL)
-			.promise.then((pdf) => {
-				// TODO: combine functions
-				pdf.getPage(1).then((page) => {
-					page.getTextContent().then((content) => {
-						const text = content.items.map((item) => ((item as TextItem).str ? (item as TextItem).str : ''));
-						// setPdf(text);
-						console.log(text);
+		handlePdfText(weeklySportURL).catch(() => {
+			setNextLoading(false);
+			setWeeklySportURLDisabled(false);
+		});
+	}
+
+	function handlePdfText(input: string | ArrayBuffer) {
+		return new Promise((resolve, reject) => {
+			pdfjs
+				.getDocument(typeof input === 'string' ? `https://corsproxy.io/?${encodeURIComponent(input)}` : input)
+				.promise.then((pdf) => {
+					for (let i = 1; i <= pdf.numPages; i++) {
+						pdf
+							.getPage(i)
+							.then((page) => {
+								page
+									.getTextContent()
+									.then((content) => {
+										// TODO
+										const text = content.items.map((item) => ((item as TextItem).str ? (item as TextItem).str : ''));
+										console.log(text);
+									})
+									.catch((err) => {
+										setAlert({
+											type: 'error',
+											message: `Failed to read the text in PDF page ${i}: ${err.message}`,
+										});
+										reject(err);
+									});
+							})
+							.catch((err) => {
+								setAlert({
+									type: 'error',
+									message: `Failed to read PDF page ${i}: ${err.message}`,
+								});
+								reject(err);
+							});
+					}
+				})
+				.catch((err) => {
+					setAlert({
+						type: 'error',
+						message: `Failed to load the selected file: ${err.message}`,
 					});
+					reject(err);
 				});
-			})
-			.catch((err) => {
-				setNextLoading(false);
-				setWeeklySportURLDisabled(false);
-				setAlert({
-					type: 'error',
-					message: `Failed to load the selected file: ${err.message}`,
-				});
-			});
+		});
 	}
 
 	return (

@@ -9,15 +9,27 @@ export default function Test() {
 
 	useEffect(() => {
 		pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
-		pdfjs.getDocument('/fixture.pdf').promise.then((pdf) => {
-			pdf.getPage(1).then((page) => {
-				page.getTextContent().then((content) => {
-					const text = content.items.map((item) => ((item as TextItem).str ? (item as TextItem).str : ''));
-					setPdf(text);
-					console.log(text);
+		// fetch('https://csen.org.au/wp-content/uploads/2023/07/23-SEMESTER-TWO-SPORT-FIXTURES-1-1.pdf', {
+		// 	mode: 'no-cors',
+		// }).then(console.log).catch(console.error)
+		pdfjs
+			.getDocument({
+				url: `https://corsproxy.io/?${encodeURIComponent(
+					'https://csen.org.au/wp-content/uploads/2023/07/23-SEMESTER-TWO-SPORT-FIXTURES-1-1.pdf',
+				)}`,
+				httpHeaders: {
+					'Sec-Fetch-Mode': 'no-cors',
+				},
+			})
+			.promise.then((pdf) => {
+				pdf.getPage(1).then((page) => {
+					page.getTextContent().then((content) => {
+						const text = content.items.map((item) => ((item as TextItem).str ? (item as TextItem).str : ''));
+						setPdf(text);
+						console.log(text.join(' '));
+					});
 				});
 			});
-		});
 	}, []);
 
 	const getFirstDecimal = (num: number) => Math.floor((num % 1) * 10);
@@ -37,7 +49,13 @@ export default function Test() {
 					? pdf.map((item, index) => (
 							<span
 								key={index}
-								className={index % 3 === 0 ? 'text-red-500' : getFirstDecimal(index / 3) == 3 ? 'text-green-500' : 'text-blue-500'}
+								className={
+									index % 3 === 0
+										? 'text-red-500'
+										: getFirstDecimal(index / 3) == 3
+										? 'text-green-500'
+										: 'text-blue-500'
+								}
 							>
 								{item}{' '}
 							</span>
