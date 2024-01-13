@@ -93,8 +93,19 @@ export default function Import() {
 								page
 									.getTextContent()
 									.then((content) => {
-										// TODO
-										const text = content.items.map((item) => ((item as TextItem).str ? (item as TextItem).str : ''));
+										const text = content.items
+											.filter((item) => (item as TextItem).str)
+											.map((item) => (item as TextItem).str)
+											.join(' ');
+											
+										// Text extraction
+										const type = text.match(/(JUNIOR|INTERMEDIATE)/i)?.[0].toLowerCase();
+										const gender = text.match(/(BOYS|GIRLS)/i)?.[0].toLowerCase();
+										
+										// Data extraction
+										
+
+										
 										console.log(text);
 									})
 									.catch((err) => {

@@ -22,9 +22,11 @@ export default function Test() {
 				},
 			})
 			.promise.then((pdf) => {
-				pdf.getPage(1).then((page) => {
+				pdf.getPage(2).then((page) => {
 					page.getTextContent().then((content) => {
-						const text = content.items.map((item) => ((item as TextItem).str ? (item as TextItem).str : ''));
+						console.log(content.items);
+
+						const text = content.items.filter((item) => (item as TextItem).str).map((item) => (item as TextItem).str);
 						setPdf(text);
 						console.log(text.join(' '));
 					});
