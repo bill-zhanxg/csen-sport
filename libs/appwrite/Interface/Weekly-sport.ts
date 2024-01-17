@@ -1,5 +1,3 @@
-import { Models } from 'appwrite';
-
 export type Teacher = {
 	name: string;
 	email: string;
@@ -61,13 +59,13 @@ export type Note = {
 	description: string;
 };
 
-export type TeacherDocument = Teacher & Models.Document;
-export type TeamDocument = Team & Models.Document;
-export type GameDocument = Game & Models.Document;
-export type DateInterfaceDocument = DateInterface & Models.Document;
-export type VenueDocument = Venue & Models.Document;
-export type OpponentDocument = Opponent & Models.Document;
-export type TransportationDocument = Transportation & Models.Document;
-export type NoteDocument = Note & Models.Document;
+export type TeacherDocument = Teacher;
+export type TeamDocument = Team;
+export type GameDocument = Game;
+export type DateInterfaceDocument = DateInterface;
+export type VenueDocument = Venue;
+export type OpponentDocument = Opponent;
+export type TransportationDocument = Transportation;
+export type NoteDocument = Note;
 
 export type QueryPickDocument<T, K extends keyof T> = Pick<T, K> & { $collectionId: string; $databaseId: string };
