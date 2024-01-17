@@ -117,6 +117,7 @@ export function ImportPage() {
 										let previousText = '';
 
 										// For step 2
+										let teamYPos = 0;
 										let currentTeamName = '';
 										let teams: {
 											name: string;
@@ -125,10 +126,13 @@ export function ImportPage() {
 
 										// For step 3
 										let currentGameDate: Date | null = null;
+										let previousXPos = 0;
 										let previousYPos = 0;
-										let previousCol: 0 | 1 | 2 | 3 | 4 = 0;
+										let previousCol = 0;
+										let currentTeamVerse: string = '';
 										// This is for the second [], first one is which team
 										let currentArrayPosForCurrentDate = -1;
+										let searchingForVenue = false;
 										let games: {
 											date: Date;
 											games: (
@@ -173,6 +177,7 @@ export function ImportPage() {
 												let addPreviousText = true;
 												let skip = true;
 
+												if (teamYPos === 0) teamYPos = transform[5];
 												if (!currentTeamName) {
 													// Break point for extracting all the previous data
 													if (!text.match(/^[A-Za-z ]+$/) && previousText.trim()) {
@@ -202,8 +207,8 @@ export function ImportPage() {
 														currentTeamName = '';
 														previousText = '';
 
-														// If there are 4 teams, go to the next step without skipping this text incase there is a data
-														if (teams.length === 4) {
+														// If y position changed, it's not team anymore
+														if (teamYPos !== transform[5]) {
 															steps++;
 															addPreviousText = false;
 															skip = false;
@@ -223,12 +228,19 @@ export function ImportPage() {
 												const currentXPos = transform[4];
 												const currentYPos = transform[5];
 
-												let currentCol: 0 | 1 | 2 | 3 | 4 = 0;
+												let currentCol = 0;
+												const startXPos = 90;
+												const endXPos = 510;
+												const colWidth = (endXPos - startXPos) / teams.length;
 												if (currentXPos <= 80) currentCol = 0;
-												else if (currentXPos <= 190) currentCol = 1;
-												else if (currentXPos <= 310) currentCol = 2;
-												else if (currentXPos <= 430) currentCol = 3;
-												else currentCol = 4;
+												else
+													for (let i = 0; i < teams.length; i++) {
+														const lessThan = startXPos + colWidth * (i + 1);
+														if (i === teams.length - 1 || currentXPos <= lessThan) {
+															currentCol = i + 1;
+															break;
+														}
+													}
 
 												if (previousCol !== currentCol || (currentCol !== 0 && previousYPos !== currentYPos)) {
 													// The next column is reached
@@ -281,7 +293,6 @@ export function ImportPage() {
 												else previousText = (previousText + text).toLowerCase();
 											}
 										}
-										// End of algorithm
 
 										console.log(type, gender, teams, games);
 									})
