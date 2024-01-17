@@ -1,0 +1,16 @@
+{
+  "id": "mig_cmhp51vhvru9q0jobirg",
+  "parentID": "mig_cmhp4ls445p2gkksba2g",
+  "checksum": "1:13df57dd27eae0296c6d508e2c81e9230a9f4136c0d3a93e3aa6878c18c2df4f",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "isJunior",
+          "type": "bool"
+        },
+        "table": "teams"
+      }
+    }
+  ]
+}

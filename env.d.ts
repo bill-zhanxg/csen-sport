@@ -1,11 +1,17 @@
 namespace NodeJS {
 	interface ProcessEnv {
-		NEXT_PUBLIC_APPWRITE_ENDPOINT: string;
-		NEXT_PUBLIC_APPWRITE_PROJECT_ID: string;
+		BASE_URL: string;
+
+		XATA_BRANCH: string;
+		XATA_API_KEY: string;
+
+		AUTH_SECRET: string;
+		AZURE_AD_CLIENT_ID: string;
+		AZURE_AD_CLIENT_SECRET: string;
+		AZURE_AD_TENANT_ID: string;
 
 		NEXT_PUBLIC_SCHOOL_EMAIL_DOMAIN: string;
 
-		APPWRITE_API_KEY: string;
 		SENTRY_AUTH_TOKEN: string;
 	}
 }

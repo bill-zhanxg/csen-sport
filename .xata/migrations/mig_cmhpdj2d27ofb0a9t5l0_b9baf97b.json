@@ -1,0 +1,19 @@
+{
+  "id": "mig_cmhpdj2d27ofb0a9t5l0",
+  "parentID": "mig_cmhpdg2d27ofb0a9t5k0",
+  "checksum": "1:b9baf97bb9ac45c958134caee9325b8d7d943768006406fa4e375b4f967b1d1c",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "venue",
+          "type": "link",
+          "link": {
+            "table": "venues"
+          }
+        },
+        "table": "games"
+      }
+    }
+  ]
+}

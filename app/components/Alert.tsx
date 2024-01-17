@@ -1,3 +1,5 @@
+// TODO: remove
+
 import { FaXmark } from 'react-icons/fa6';
 
 export function Error({ message, setAlert }: { message: string; setAlert: (message: null) => void }) {

@@ -1,0 +1,19 @@
+{
+  "id": "mig_cmhpdg2d27ofb0a9t5k0",
+  "parentID": "mig_cmhpd6k445p2gkksba4g",
+  "checksum": "1:7d5272220328095ea7b0f87a985fa11b61fcbb624db2db02441eb0ba0bdde899",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "team",
+          "type": "link",
+          "link": {
+            "table": "teams"
+          }
+        },
+        "table": "games"
+      }
+    }
+  ]
+}

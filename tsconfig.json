@@ -2,10 +2,8 @@
   "compilerOptions": {
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "noImplicitAny": true,
     "allowJs": true,
     "skipLibCheck": true,
-    "alwaysStrict": true,
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -19,7 +17,10 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]

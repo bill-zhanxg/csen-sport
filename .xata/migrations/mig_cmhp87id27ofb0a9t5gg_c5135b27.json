@@ -1,0 +1,16 @@
+{
+  "id": "mig_cmhp87id27ofb0a9t5gg",
+  "parentID": "mig_cmhp6jnhvru9q0jobisg",
+  "checksum": "1:c5135b27ca6f90f87fccd5745da7dce7a630d0df44ad84b8bb07584c4b9b3944",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "transportation",
+          "type": "string"
+        },
+        "table": "games"
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "mig_cmhpdr2d27ofb0a9t5m0",
+  "parentID": "mig_cmhpdj2d27ofb0a9t5l0",
+  "checksum": "1:15f264649b1f29416ad7f66f5e946945759075e45ece330a710a0a6277050381",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "start",
+          "type": "datetime"
+        },
+        "table": "games"
+      }
+    }
+  ]
+}

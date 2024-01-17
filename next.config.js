@@ -1,5 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+	images: {
+		remotePatterns: [
+			{
+				protocol: 'https',
+				hostname: 'icotar.com',
+			},
+			{
+				protocol: 'https',
+				hostname: '*.xata.sh',
+			},
+		],
+	},
 	webpack: (config) => {
 		config.resolve.alias.canvas = false;
 		return config;

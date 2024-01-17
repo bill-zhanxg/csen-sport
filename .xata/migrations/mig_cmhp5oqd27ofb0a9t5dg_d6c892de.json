@@ -1,0 +1,12 @@
+{
+  "id": "mig_cmhp5oqd27ofb0a9t5dg",
+  "parentID": "mig_cmhp5bqd27ofb0a9t5c0",
+  "checksum": "1:d6c892de0877d7e68d644ec63cc282a018105af53b497361a961763ffc39bff3",
+  "operations": [
+    {
+      "addTable": {
+        "table": "venue"
+      }
+    }
+  ]
+}

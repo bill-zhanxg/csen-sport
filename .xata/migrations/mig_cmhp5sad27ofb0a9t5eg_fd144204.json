@@ -1,0 +1,16 @@
+{
+  "id": "mig_cmhp5sad27ofb0a9t5eg",
+  "parentID": "mig_cmhp5q4445p2gkksba3g",
+  "checksum": "1:fd1442044c15416fc25a79368e65f8f6504defa5f758658e2fe040adea988872",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "name",
+          "type": "string"
+        },
+        "table": "venues"
+      }
+    }
+  ]
+}

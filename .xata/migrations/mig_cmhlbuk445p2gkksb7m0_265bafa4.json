@@ -1,0 +1,16 @@
+{
+  "id": "mig_cmhlbuk445p2gkksb7m0",
+  "parentID": "mig_cmhlbf4445p2gkksb7i0",
+  "checksum": "1:265bafa4088377161b21d404226007940371baaea1bed30d1d6cd8dff70b9989",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "role",
+          "type": "string"
+        },
+        "table": "nextauth_users"
+      }
+    }
+  ]
+}

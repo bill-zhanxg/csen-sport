@@ -1,0 +1,19 @@
+{
+  "id": "mig_cmhpotnhvru9q0jobj00",
+  "parentID": "mig_cmhpdr2d27ofb0a9t5m0",
+  "checksum": "1:afa503dacf1712379b827b1a8b24bcfa88844cf33b00b4a88108b7d8d879f361",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "teacher",
+          "type": "link",
+          "link": {
+            "table": "nextauth_users"
+          }
+        },
+        "table": "games"
+      }
+    }
+  ]
+}

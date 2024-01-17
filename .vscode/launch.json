@@ -23,6 +23,12 @@
             "type": "msedge",
             "request": "launch",
             "url": "http://localhost:3000"
-        }
+        },
+        {
+            "name": "Debug Playground",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "npm run playground"
+        },
     ]
 }

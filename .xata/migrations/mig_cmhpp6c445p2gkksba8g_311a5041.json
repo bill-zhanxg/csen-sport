@@ -1,0 +1,16 @@
+{
+  "id": "mig_cmhpp6c445p2gkksba8g",
+  "parentID": "mig_cmhpotnhvru9q0jobj00",
+  "checksum": "1:311a5041a43e9343ce03e13fd52aba667f777870ff3a9415619308860dac93c5",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "opponent",
+          "type": "string"
+        },
+        "table": "games"
+      }
+    }
+  ]
+}

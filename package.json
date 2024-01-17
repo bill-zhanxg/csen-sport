@@ -1,40 +1,47 @@
 {
-  "name": "ccs-sport",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "node_modules/next/dist/bin/next start -p $PORT",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@sentry/nextjs": "^7.85.0",
-    "appwrite": "^13.0.1",
-    "next": "14.0.3",
-    "next-nprogress-bar": "^2.1.2",
-    "node-appwrite": "^11.1.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-icons": "^4.12.0",
-    "react-loading-skeleton": "^3.3.1",
-    "react-pdf": "^7.5.1",
-    "runtypes": "^6.7.0"
-  },
-  "devDependencies": {
-    "@types/node": "^20.10.3",
-    "@types/react": "^18.2.42",
-    "@types/react-dom": "^18.2.17",
-    "autoprefixer": "^10.4.16",
-    "daisyui": "^4.4.19",
-    "encoding": "^0.1.13",
-    "eslint": "^8.55.0",
-    "eslint-config-next": "^14.0.3",
-    "postcss": "^8.4.32",
-    "tailwindcss": "^3.3.6",
-    "typescript": "^5.3.3"
-  },
-  "engines": {
-    "node": ">=20.x.x"
-  }
+	"name": "ccs-sport",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "node_modules/next/dist/bin/next start -p $PORT",
+		"lint": "next lint",
+		"pull": "xata pull main",
+		"pull:dev": "xata pull dev",
+		"playground": "ts-node ./.playground/index.ts"
+	},
+	"dependencies": {
+		"@auth/xata-adapter": "^0.1.12",
+		"@preact/signals-react": "^2.0.0",
+		"@sentry/nextjs": "^7.93.0",
+		"@xata.io/client": "^0.28.3",
+		"dayjs": "^1.11.10",
+		"next": "14.0.4",
+		"next-auth": "^5.0.0-beta.4",
+		"next-nprogress-bar": "^2.1.2",
+		"react": "18.2.0",
+		"react-dom": "18.2.0",
+		"react-icons": "^5.0.1",
+		"react-pdf": "^7.7.0",
+		"runtypes": "^6.7.0",
+		"zod": "^3.22.4"
+	},
+	"devDependencies": {
+		"@types/node": "^20.11.1",
+		"@types/react": "^18.2.47",
+		"@types/react-dom": "^18.2.18",
+		"autoprefixer": "^10.4.16",
+		"daisyui": "^4.6.0",
+		"encoding": "^0.1.13",
+		"eslint": "^8.56.0",
+		"eslint-config-next": "^14.0.4",
+		"postcss": "^8.4.33",
+		"tailwindcss": "^3.4.1",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.3.3"
+	},
+	"engines": {
+		"node": ">=20.x.x"
+	}
 }

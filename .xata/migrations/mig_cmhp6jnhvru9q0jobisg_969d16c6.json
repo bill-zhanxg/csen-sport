@@ -1,0 +1,16 @@
+{
+  "id": "mig_cmhp6jnhvru9q0jobisg",
+  "parentID": "mig_cmhp67id27ofb0a9t5fg",
+  "checksum": "1:969d16c6ce301dbd8cf5d2d6a17bcff2e0fde478776eb8eefc635e2a41605c71",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "court_field_number",
+          "type": "string"
+        },
+        "table": "venues"
+      }
+    }
+  ]
+}

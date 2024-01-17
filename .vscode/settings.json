@@ -4,6 +4,7 @@
         "CSEN",
         "daisyui",
         "Datetime",
+        "nextauth",
         "nextjs",
         "nprogress",
         "runtypes",
@@ -13,5 +14,6 @@
     "files.exclude": {
         // ".env.local": true
     },
-    "css.lint.unknownAtRules": "ignore"
+    "css.lint.unknownAtRules": "ignore",
+    "typescript.tsdk": "node_modules\\typescript\\lib"
 }

@@ -1,0 +1,16 @@
+{
+  "id": "mig_cmhp5bqd27ofb0a9t5c0",
+  "parentID": "mig_cmhp51vhvru9q0jobirg",
+  "checksum": "1:5efb4d26a380a6c00ad619104009180d2cf84b9cd5b0ccd6d991ee1b88b95fab",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "notes",
+          "type": "text"
+        },
+        "table": "games"
+      }
+    }
+  ]
+}

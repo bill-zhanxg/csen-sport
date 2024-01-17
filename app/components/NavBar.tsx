@@ -1,10 +1,6 @@
-'use client';
-
+import { Session } from 'next-auth/types';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import { FaBars } from 'react-icons/fa';
-import { account } from '../../libs/appwrite';
-import { SkeletonBlock } from './SkeletonBlock';
 
 type Menu = { name: string; href: string | { name: string; href: string; admin?: boolean }[]; admin?: boolean }[];
 const menu: Menu = [
@@ -14,10 +10,6 @@ const menu: Menu = [
 			{
 				name: 'Timetable',
 				href: '/weekly-sport/timetable',
-			},
-			{
-				name: 'Teachers',
-				href: '/weekly-sport/teachers',
 			},
 			{
 				name: 'Import',
@@ -49,22 +41,15 @@ const menu: Menu = [
 	},
 ];
 
-export function NavBar() {
-	const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
-
-	useEffect(() => {
-		account
-			.checkAdministrator()
-			.then(setIsAdmin)
-			.catch(() => setIsAdmin(false));
-	}, []);
-
-	if (isAdmin === null) return <SkeletonBlock rows={1} height={49} />;
-	const menuFiltered = isAdmin
-		? menu
-		: menu
-				.filter((item) => !item.admin)
-				.map((item) => (Array.isArray(item.href) ? { ...item, href: item.href.filter((item) => !item.admin) } : item));
+export function NavBar({ session }: { session: Session }) {
+	const menuFiltered =
+		session.user.role === 'admin'
+			? menu
+			: menu
+					.filter((item) => !item.admin)
+					.map((item) =>
+						Array.isArray(item.href) ? { ...item, href: item.href.filter((item) => !item.admin) } : item,
+					);
 
 	return (
 		<>

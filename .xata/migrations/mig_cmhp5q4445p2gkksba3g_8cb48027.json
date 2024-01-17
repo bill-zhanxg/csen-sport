@@ -1,0 +1,13 @@
+{
+  "id": "mig_cmhp5q4445p2gkksba3g",
+  "parentID": "mig_cmhp5oqd27ofb0a9t5dg",
+  "checksum": "1:8cb480279bffe0deb5af16cfe7b745e73be23952fbbf0a0cfb315095e7b6addd",
+  "operations": [
+    {
+      "renameTable": {
+        "newName": "venues",
+        "oldName": "venue"
+      }
+    }
+  ]
+}

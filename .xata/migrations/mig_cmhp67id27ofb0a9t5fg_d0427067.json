@@ -1,0 +1,16 @@
+{
+  "id": "mig_cmhp67id27ofb0a9t5fg",
+  "parentID": "mig_cmhp5sad27ofb0a9t5eg",
+  "checksum": "1:d042706780047dac5565b3ffe3c5b75067fc29ad1e5adbf44a313f1f6621c05d",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "address",
+          "type": "string"
+        },
+        "table": "venues"
+      }
+    }
+  ]
+}
