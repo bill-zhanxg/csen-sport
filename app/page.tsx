@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 
 // import { database } from '../libs/appwrite';
 import { DateInterface } from '../libs/appwrite/Interface/Weekly-sport';
-import { Error, Success } from './components/Alert';
 
 export default function Home() {
 	return <h1>Unfinished</h1>

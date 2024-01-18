@@ -26862,7 +26862,7 @@ const gender = fullText.match(/(BOYS|GIRLS)/i)?.[0].toLowerCase();
 
 /**
  * 0 - Finding 'date'
- * 1 - Finding 'boys' or 'girls
+ * 1 - Finding 'boys' or 'girls'
  * 2 - Data extraction for teams
  * 3 - Data extraction for games, including date, teams and venue
  */

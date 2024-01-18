@@ -1,326 +1,35 @@
 'use client';
 
-import dayjs from 'dayjs';
-import timezone from 'dayjs/plugin/timezone';
-import utc from 'dayjs/plugin/utc';
-import Link from 'next/link';
-import { TextItem } from 'pdfjs-dist/types/src/display/api';
+import { useSignal } from '@preact/signals-react';
 import { useEffect, useState } from 'react';
 import { pdfjs } from 'react-pdf';
-import { Error, Success } from '../../components/Alert';
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
+import { ErrorAlert, SuccessAlert } from '../../components/Alert';
+import { FIxturePages, Step1 } from './Step1';
+import { Step2, Venues } from './Step2';
+import { Step3 } from './Step3';
 
 export function ImportPage() {
 	const [step, setStep] = useState(1);
 
-	const [weeklySportTab, setWeeklySportTab] = useState<'url' | 'upload'>('url');
-	const [weeklySportURL, setWeeklySportURL] = useState('');
-	const [weeklySportURLDisabled, setWeeklySportURLDisabled] = useState(false);
-	const [weeklySportFileDisabled, setWeeklySportFileDisabled] = useState(false);
-
-	const [disableNext, setDisableNext] = useState(true);
+	// TODO: check back to true
+	const [disableNext, setDisableNext] = useState(false);
 	const [nextLoading, setNextLoading] = useState(false);
 
-	type WeeklySportDataGender = {
-		[game: string]: {
-			[date: string]: {
-				team1: string;
-				team2: string;
-				venue: string;
-			}[];
-		};
-	};
-	type WeeklySportDataType = {
-		boys: WeeklySportDataGender;
-		girls: WeeklySportDataGender;
-	};
-	const [weeklySportData, setWeeklySportData] = useState<{
-		junior: WeeklySportDataType;
-		intermediate: WeeklySportDataType;
-	} | null>(null);
+	const fixturePages = useSignal<FIxturePages>([{"type":"junior","gender":"boys","teams":[{"name":"netball","number":"1"},{"name":"netball","number":"2"},{"name":"volleyball","number":"1"},{"name":"volleyball","number":"2"}],"games":[[{"date":new Date("2024-02-14T01:00:00.000Z"),"games":[{"team1":"chki","team2":"ligh","venue":"ddna 1"},{"team1":"mara 2","team2":"chpa 3","venue":"ddna 2"},{"team1":"mara 1","team2":"chpa 2","venue":"ddna 3"},{"team1":"mtev","team2":"waws","venue":"tbu"},{"team1":"nort","team2":"wanw","venue":"disc 1"}]},{"date":new Date("2024-02-28T01:00:00.000Z"),"games":[{"team1":"chpa 3","team2":"chpa 1","venue":"cdlf 1"},{"team1":"ligh","team2":"mara 2","venue":"spri 1"},{"team1":"stan","team2":"chki","venue":"krnc 1"},{"team1":"mtev","team2":"chpa 2","venue":"tbu"},{"team1":"nort","team2":"mara 1","venue":"disc 1"},{"team1":"wanw","team2":"waws","venue":"cass 1"}]},{"date":new Date("2024-03-13T01:00:00.000Z"),"games":[{"team1":"chpa 1","team2":"ligh","venue":"cdlf 1"},{"team1":"chki","team2":"mara 2","venue":"ddna 1"},{"team1":"chpa 2","team2":"wanw","venue":"cdlf 2"},{"team1":"nort","team2":"waws","venue":"disc 1"},{"team1":"mara 1","team2":"mtev","venue":"ddna 2"}]},{"date":new Date("2024-03-27T01:00:00.000Z"),"games":[{"team1":"mara 2","team2":"chpa 1","venue":"ddna 1"},{"team1":"chpa 3","team2":"chki","venue":"cdlf 1"},{"team1":"ligh","team2":"stan","venue":"spri 1"},{"team1":"mara 1","team2":"wanw","venue":"ddna 2"},{"team1":"nort","team2":"mtev","venue":"disc 1"}]},{"date":new Date("2024-04-24T02:00:00.000Z"),"games":[{"team1":"chpa 1","team2":"chki","venue":"cdlf 1"},{"team1":"mara 2","team2":"stan","venue":"ddna 2"},{"team1":"chpa 3","team2":"ligh","venue":"cdlf 2"},{"team1":"nort","team2":"chpa 2","venue":"disc 1"},{"team1":"wanw","team2":"mtev","venue":"cass 1"},{"team1":"waws","team2":"mara 1","venue":"tbu"}]},{"date":new Date("2024-05-22T02:00:00.000Z"),"games":[{"team1":"chpa 1","team2":"stan *","venue":"cdlf 1"},{"team1":"chpa 3","team2":"stan*","venue":"cdlf 1"},{"team1":"chpa 2","team2":"waws","venue":"cdlf 2"}]},{"date":new Date("2024-06-05T02:00:00.000Z"),"games":[{"text":"GRAND FINAL"}]}],[{"date":new Date("2024-02-14T01:00:00.000Z"),"games":[{"team1":"edin","team2":"mara","venue":"edin 1"},{"team1":"waws","team2":"mtev","venue":"tbu"},{"team1":"chki","team2":"bye","venue":"daba 2"},{"team1":"stan","team2":"heri","venue":"stan 1"},{"team1":"chpa","team2":"ligh","venue":"cdlf 1"},{"team1":"wanw","team2":"bye","venue":"wanw 1"}]},{"date":new Date("2024-02-28T01:00:00.000Z"),"games":[{"team1":"waws","team2":"chki","venue":"tbu"},{"team1":"mtev","team2":"edin","venue":"tbu"},{"team1":"mara","team2":"bye","venue":"mara 1"},{"team1":"chpa","team2":"wanw","venue":"cdlf 3"},{"team1":"ligh","team2":"stan","venue":"spri 2"},{"team1":"heri","team2":"bye","venue":"heri 2"}]},{"date":new Date("2024-03-13T01:00:00.000Z"),"games":[{"team1":"edin","team2":"waws","venue":"edin 1"},{"team1":"chki","team2":"mara","venue":"daba 1"},{"team1":"mtev","team2":"bye","venue":"mtev 1"},{"team1":"wanw","team2":"ligh","venue":"wanw 1"},{"team1":"heri","team2":"chpa","venue":"heri 2"},{"team1":"stan","team2":"bye","venue":"stan"}]},{"date":new Date("2024-03-27T01:00:00.000Z"),"games":[{"team1":"mtev","team2":"mara","venue":"tbu"},{"team1":"edin","team2":"chki","venue":"edin 1"},{"team1":"waws","team2":"bye","venue":"waws 1"},{"team1":"ligh","team2":"heri","venue":"spri 2"},{"team1":"stan","team2":"wanw","venue":"stan 1"},{"team1":"chpa","team2":"bye","venue":"cdlf 3"}]},{"date":new Date("2024-04-24T02:00:00.000Z"),"games":[{"team1":"chki","team2":"mtev","venue":"daba 2"},{"team1":"mara","team2":"waws","venue":"daba 3"},{"team1":"edin","team2":"bye","venue":"edin 1"},{"team1":"wanw","team2":"heri","venue":"wanw 1"},{"team1":"stan","team2":"chpa","venue":"stan 1"},{"team1":"ligh","team2":"bye","venue":"ligh 1"}]},{"date":new Date("2024-05-22T02:00:00.000Z"),"games":[{"text":"semi finals - 1a v 2b"},{"text":"semi finals – 2a v 1b"},{"text":"semi finals - 3a v 4b"},{"text":"semi finals - 4a v 3b"},{"text":"semi finals - 5a v 5b"}]},{"date":new Date("2024-06-05T02:00:00.000Z"),"games":[{"text":"GRAND FINAL"}]}],[{"date":new Date("2024-02-14T01:00:00.000Z"),"games":[{"team1":"wanw","team2":"mtev 2","venue":"wanw 1"},{"team1":"heri","team2":"stan","venue":"heri 2"},{"team1":"mara","team2":"mtev 1","venue":"daba 1"},{"team1":"chpa","team2":"waws","venue":"cdlf 2"}]},{"date":new Date("2024-02-28T01:00:00.000Z"),"games":[{"team1":"mtev 2","team2":"chpa","venue":"tbu"},{"team1":"waws","team2":"mara","venue":"tbu"},{"team1":"mtev 1","team2":"heri","venue":"tbu"},{"team1":"stan","team2":"wanw","venue":"stan 1"}]},{"date":new Date("2024-03-13T01:00:00.000Z"),"games":[{"team1":"stan","team2":"mtev 2","venue":"stan 1"},{"team1":"wanw","team2":"mtev 1","venue":"wanw 2"},{"team1":"heri","team2":"waws","venue":"heri 3"},{"team1":"mara","team2":"chpa","venue":"daba 2"},{"text":"2"}]},{"date":new Date("2024-03-27T01:00:00.000Z"),"games":[{"team1":"mtev 2","team2":"mara","venue":"tbu"},{"team1":"chpa","team2":"heri","venue":"cdlf 3"},{"team1":"waws","team2":"wanw","venue":"tbu"},{"team1":"mtev 1","team2":"stan","venue":"tbu"}]},{"date":new Date("2024-04-24T02:00:00.000Z"),"games":[{"team1":"mtev 1","team2":"mtev 2","venue":"tbu"},{"team1":"stan","team2":"waws","venue":"stan 2"},{"team1":"wanw","team2":"chpa","venue":"wanw 2"},{"team1":"heri","team2":"mara","venue":"heri 2"}]},{"date":new Date("2024-05-22T02:00:00.000Z"),"games":[{"team1":"mtev 2","team2":"heri","venue":"tbu"},{"team1":"mara","team2":"wanw","venue":"daba 2"},{"team1":"chpa","team2":"stan","venue":"cdlf 4"},{"team1":"waws","team2":"mtev 1","venue":"tbu"}]},{"date":new Date("2024-06-05T02:00:00.000Z"),"games":[{"team1":"waws","team2":"mtev 2","venue":"tbu"},{"team1":"mtev 1","team2":"chpa","venue":"tbu"},{"team1":"stan","team2":"mara","venue":"stan 1"}]}]]},{"type":"junior","gender":"girls","teams":[{"name":"basketball","number":"1"},{"name":"basketball","number":"2"},{"name":"soccer","number":"1"},{"name":"soccer","number":"2"}],"games":[[{"date":new Date("2024-02-14T01:00:00.000Z"),"games":[{"team1":"mtev","team2":"edin","venue":"tbu"},{"team1":"waws","team2":"mara","venue":"tbu"},{"team1":"wanw","team2":"bye","venue":"wanw 1"},{"team1":"heri","team2":"stan","venue":"heri 1"},{"team1":"ligh","team2":"chpa","venue":"spri 1"},{"team1":"chki","team2":"bye","venue":"daba 5"}]},{"date":new Date("2024-02-28T01:00:00.000Z"),"games":[{"team1":"waws","team2":"wanw","venue":"tbu"},{"team1":"mara","team2":"mtev","venue":"daba 2"},{"team1":"edin","team2":"bye","venue":"edin 1"},{"team1":"chki","team2":"chpa","venue":"daba 1"},{"team1":"stan","team2":"ligh","venue":"sbc 1"},{"team1":"heri","team2":"bye","venue":"heri 1"}]},{"date":new Date("2024-03-13T01:00:00.000Z"),"games":[{"team1":"mtev","team2":"waws","venue":"tbu"},{"team1":"wanw","team2":"edin","venue":"cass 1"},{"team1":"mara","team2":"bye","venue":"mara 1"},{"team1":"ligh","team2":"chki","venue":"spri 1"},{"team1":"chpa","team2":"heri","venue":"cdlf 3"},{"team1":"stan","team2":"bye","venue":"stan 2"}]},{"date":new Date("2024-03-27T01:00:00.000Z"),"games":[{"team1":"mara","team2":"edin","venue":"daba 1"},{"team1":"mtev","team2":"wanw","venue":"tbu"},{"team1":"waws","team2":"bye","venue":"waws 1"},{"team1":"chpa","team2":"stan","venue":"cdlf 2"},{"team1":"heri","team2":"chki","venue":"heri 1"},{"team1":"ligh","team2":"bye","venue":"ligh 1"}]},{"date":new Date("2024-04-24T02:00:00.000Z"),"games":[{"team1":"wanw","team2":"mara","venue":"cass 2"},{"team1":"edin","team2":"waws","venue":"ksba 5"},{"team1":"mtev","team2":"bye","venue":"tbu"},{"team1":"chki","team2":"stan","venue":"daba 1"},{"team1":"heri","team2":"ligh","venue":"heri 1"},{"team1":"chpa","team2":"bye","venue":"cdlf 3"}]},{"date":new Date("2024-05-22T02:00:00.000Z"),"games":[{"text":"semi finals - 1a v 2b"},{"text":"semi finals – 2a v 1b"},{"text":"semi finals - 3a v 4b"},{"text":"semi finals - 4a v 3b"},{"text":"semi finals - 5a v 5b"}]},{"date":new Date("2024-06-05T02:00:00.000Z"),"games":[{"text":"GRAND FINAL"}]}],[{"date":new Date("2024-02-14T01:00:00.000Z"),"games":[{"team1":"wanw","team2":"chpa","venue":"cass 1"},{"team1":"edin","team2":"stan","venue":"ksba 5"},{"team1":"nort","team2":"mtev 2","venue":"disc 2"},{"team1":"mara","team2":"mtev 1","venue":"daba 3"}]},{"date":new Date("2024-02-28T01:00:00.000Z"),"games":[{"team1":"chpa","team2":"mara","venue":"cdlf 2"},{"team1":"nort","team2":"mtev 1","venue":"disc 2"},{"team1":"mtev 2","team2":"edin","venue":"tbu"},{"team1":"stan","team2":"wanw","venue":"sbc 2"}]},{"date":new Date("2024-03-13T01:00:00.000Z"),"games":[{"team1":"stan","team2":"chpa","venue":"sbc 1"},{"team1":"wanw","team2":"mtev 2","venue":"cass 1"},{"team1":"edin","team2":"mtev 1","venue":"ksba 5"},{"team1":"nort","team2":"mara","venue":"disc 2"}]},{"date":new Date("2024-03-27T01:00:00.000Z"),"games":[{"team1":"nort","team2":"chpa","venue":"disc 2"},{"team1":"mara","team2":"edin","venue":"daba 2"},{"team1":"mtev 1","team2":"wanw","venue":"tbu"},{"team1":"mtev 2","team2":"stan","venue":"tbu"}]},{"date":new Date("2024-04-24T02:00:00.000Z"),"games":[{"team1":"mtev 2","team2":"chpa","venue":"tbu"},{"team1":"stan","team2":"mtev 1","venue":"sbc 1"},{"team1":"wanw","team2":"mara","venue":"cass 3"},{"team1":"nort","team2":"edin","venue":"disc 2"}]},{"date":new Date("2024-05-22T02:00:00.000Z"),"games":[{"team1":"chpa","team2":"edin","venue":"cdlf 3"},{"team1":"nort","team2":"wanw","venue":"disc 2"},{"team1":"mara","team2":"stan","venue":"daba 1"},{"team1":"mtev 1","team2":"mtev 2","venue":"tbu"}]},{"date":new Date("2024-06-05T02:00:00.000Z"),"games":[{"team1":"mtev 1","team2":"chpa","venue":"tbu"},{"team1":"mtev 2","team2":"mara","venue":"tbu"},{"team1":"nort","team2":"stan","venue":"disc 2"}]}],[{"date":new Date("2024-02-14T01:00:00.000Z"),"games":[{"team1":"heri","team2":"stan","venue":"heri 4"},{"team1":"waws 2","team2":"ligh","venue":"tbu"},{"team1":"chpa 1","team2":"bye","venue":"iyu 2"},{"team1":"chpa 2","team2":"waws 1","venue":"iyu 1"},{"team1":"wanw","team2":"chki","venue":"wanw 3"},{"team1":"mara","team2":"bye","venue":"mara 1"}]},{"date":new Date("2024-02-28T01:00:00.000Z"),"games":[{"team1":"chpa 1","team2":"ligh","venue":"iyu 1"},{"team1":"stan","team2":"waws 2","venue":"elee 1"},{"team1":"heri","team2":"bye","venue":"heri 4"},{"team1":"chpa 2","team2":"mara","venue":"iyu 2"},{"text":"CHKI v WAWS 1"},{"team1":"wanw","team2":"bye","venue":"wanw 1"}]},{"date":new Date("2024-03-13T01:00:00.000Z"),"games":[{"team1":"waws 2","team2":"chpa 1","venue":"tbu"},{"team1":"ligh","team2":"heri","venue":"tatt 1"},{"team1":"stan","team2":"bye","venue":"stan 1"},{"team1":"mara","team2":"waws 1","venue":"chal 1"},{"team1":"chpa 2","team2":"wanw","venue":"iyu 1"},{"team1":"chki","team2":"bye","venue":"chki"}]},{"date":new Date("2024-03-27T01:00:00.000Z"),"games":[{"team1":"heri","team2":"chpa 1","venue":"heri 4"},{"team1":"ligh","team2":"stan","venue":"tatt 1"},{"team1":"waws 2","team2":"bye","venue":"waws 1"},{"team1":"wanw","team2":"mara","venue":"wanw 3"},{"team1":"chki","team2":"chpa 2","venue":"chki 2"},{"team1":"waws","team2":"bye","venue":"waws 2"}]},{"date":new Date("2024-04-24T02:00:00.000Z"),"games":[{"team1":"chpa 1","team2":"stan","venue":"iyu 1"},{"team1":"heri","team2":"waws 2","venue":"heri 4"},{"team1":"ligh","team2":"bye","venue":"ligh 1"},{"team1":"mara","team2":"chki","venue":"chal 1"},{"team1":"waws 1","team2":"wanw","venue":"tbu"},{"team1":"chpa 2","team2":"bye","venue":"iyu 2"}]},{"date":new Date("2024-05-22T02:00:00.000Z"),"games":[{"text":"semi finals - 1a v 2b"},{"text":"semi finals – 2a v 1b"},{"text":"semi finals - 3a v 4b"},{"text":"semi finals - 4a v 3b"},{"text":"semi finals - 5a v 5b"}]},{"date":new Date("2024-06-05T02:00:00.000Z"),"games":[{"text":"GRAND FINAL"}]}],[{"date":new Date("2024-03-13T01:00:00.000Z"),"games":[{"text":"2"}]}]]},{"type":"intermediate","gender":"boys","teams":[{"name":"netball","number":"1"},{"name":"netball","number":"2"},{"name":"volleyball","number":"1"},{"name":"volleyball","number":"2"}],"games":[[{"date":new Date("2024-02-07T01:00:00.000Z"),"games":[{"team1":"nort","team2":"stan","venue":"disc 1"},{"team1":"chpa 2","team2":"bye","venue":"chpa 0"},{"team1":"mara 2","team2":"ligh","venue":"daba 1"},{"team1":"chpa 1","team2":"chki","venue":"cdlf 1"}]},{"date":new Date("2024-02-21T01:00:00.000Z"),"games":[{"team1":"waws 1","team2":"chpa 2","venue":"tbu"},{"team1":"nort","team2":"mara 1","venue":"disc 1"},{"team1":"stan","team2":"bye","venue":"stan 0"},{"team1":"waws 2","team2":"chpa 1","venue":"tbu"},{"team1":"wanw","team2":"mara 2","venue":"cass 1"},{"team1":"ligh","team2":"chki","venue":"spri 1"}]},{"date":new Date("2024-03-06T01:00:00.000Z"),"games":[{"team1":"chpa 2","team2":"stan","venue":"cdlf 1"},{"team1":"nort","team2":"waws 1","venue":"disc 1"},{"team1":"mara 1","team2":"bye","venue":"mara 0"},{"team1":"chpa 1","team2":"ligh","venue":"cdlf 2"},{"team1":"mara 2","team2":"waws 2","venue":"daba"},{"team1":"chki","team2":"wanw","venue":"ddna 1"}]},{"date":new Date("2024-03-20T01:00:00.000Z"),"games":[{"team1":"nort","team2":"chpa 2","venue":"disc 1"},{"team1":"mara 1","team2":"stan","venue":"daba 1"},{"team1":"waws 1","team2":"bye","venue":"waws 0"},{"team1":"mara 2","team2":"chpa 1","venue":"daba 2"},{"team1":"wanw","team2":"ligh","venue":"cass 1"}]},{"date":new Date("2024-05-01T02:00:00.000Z"),"games":[{"team1":"chpa 2","team2":"mara 1","venue":"cdlf 1"},{"team1":"stan","team2":"waws 1","venue":"krnc 1"},{"team1":"nort","team2":"bye","venue":"no rt 0"},{"team1":"chpa 1","team2":"wanw","venue":"cdlf 2"},{"team1":"ligh","team2":"waws 2","venue":"spri 1"},{"team1":"chki","team2":"mara 2","venue":"d dna 1"}]},{"date":new Date("2024-05-15T02:00:00.000Z"),"games":[{"team1":"waws 1","team2":"mara 1","venue":"tbu"},{"team1":"waws 2*","team2":"wanw","venue":"tbu"},{"team1":"waws 2*","team2":"chki","venue":"tbu"}]},{"date":new Date("2024-05-29T02:00:00.000Z"),"games":[{"text":"GRAND FINAL"}]}],[{"date":new Date("2024-03-06T01:00:00.000Z"),"games":[{"text":"1"}]}],[{"date":new Date("2024-02-07T01:00:00.000Z"),"games":[{"team1":"mtev","team2":"mara","venue":"tbu"},{"team1":"stan","team2":"bye","venue":"stan"},{"team1":"heri","team2":"chki","venue":"heri 2"},{"team1":"edin","team2":"ligh","venue":"edin 1"},{"team1":"chpa","team2":"bye","venue":"chpa 0"}]},{"date":new Date("2024-02-21T01:00:00.000Z"),"games":[{"team1":"stan","team2":"mtev","venue":"stan 1"},{"team1":"mara","team2":"waws","venue":"daba 1"},{"team1":"wanw","team2":"bye","venue":"wanw"},{"team1":"ligh","team2":"chpa","venue":"spri"},{"team1":"chki","team2":"bye","venue":"chki 0"}]},{"date":new Date("2024-03-06T01:00:00.000Z"),"games":[{"team1":"mara","team2":"wanw","venue":"daba"},{"team1":"waws","team2":"stan","venue":"tbu"},{"team1":"mtev","team2":"bye","venue":"mtev 0"},{"team1":"chki","team2":"ligh","venue":"daba 6"},{"team1":"chpa","team2":"edin","venue":"cdlf"},{"team1":"heri","team2":"bye","venue":"heri 0"}]},{"date":new Date("2024-03-20T01:00:00.000Z"),"games":[{"team1":"stan","team2":"wanw","venue":"stan 1"},{"team1":"mara","team2":"bye","venue":"mara 0"},{"team1":"chpa","team2":"heri","venue":"cdlf 1"},{"team1":"edin","team2":"chki","venue":"edin 1"},{"team1":"ligh","team2":"bye","venue":"ligh 0"}]},{"date":new Date("2024-05-01T02:00:00.000Z"),"games":[{"team1":"wanw","team2":"mtev","venue":"wanw"},{"team1":"stan","team2":"mara","venue":"stan 1"},{"team1":"waws","team2":"bye","venue":"waws 0"},{"team1":"heri","team2":"ligh","venue":"heri 2"},{"team1":"chki","team2":"chpa","venue":"daba 6"},{"team1":"edin","team2":"bye","venue":"edin 0"}]},{"date":new Date("2024-05-15T02:00:00.000Z"),"games":[{"team1":"waws*","team2":"wanw","venue":"tbu"},{"team1":"waws*","team2":"mtev","venue":"tbu"},{"team1":"edin","team2":"heri","venue":"edin 1"}]},{"date":new Date("2024-05-29T02:00:00.000Z"),"games":[{"text":"GRAND FINAL"}]}],[{"date":new Date("2024-02-07T01:00:00.000Z"),"games":[{"team1":"mtev 1","team2":"heri","venue":"tbu"},{"team1":"0 mara","team2":"chpa","venue":"daba 5"},{"team1":"stan","team2":"mtev 2","venue":"stan 1"},{"team1":"wanw","team2":"waws","venue":"wanw 1"}]},{"date":new Date("2024-02-21T01:00:00.000Z"),"games":[{"team1":"mara","team2":"mtev 1","venue":"daba 5"},{"team1":"stan","team2":"heri","venue":"stan 2"},{"team1":"0 wanw","team2":"chpa","venue":"wanw 1"},{"team1":"2 waws","team2":"mtev 2","venue":"tbu"}]},{"date":new Date("2024-03-06T01:00:00.000Z"),"games":[{"team1":"2 mtev 1","team2":"chpa","venue":"tbu"},{"team1":"heri","team2":"mtev 2","venue":"heri 2"},{"team1":"mara","team2":"waws","venue":"daba 5"},{"team1":"stan","team2":"wanw","venue":"stan 1"},{"text":"3"}]},{"date":new Date("2024-03-20T01:00:00.000Z"),"games":[{"team1":"mtev 1","team2":"mtev 2","venue":"tbu"},{"team1":"chpa","team2":"waws","venue":"cdlf 2"},{"team1":"heri","team2":"wanw","venue":"heri 2"},{"team1":"mara","team2":"stan","venue":"daba 5"}]},{"date":new Date("2024-05-01T02:00:00.000Z"),"games":[{"team1":"1 wanw","team2":"mtev 1","venue":"wanw 2"},{"team1":"waws","team2":"stan","venue":"tbu"},{"team1":"mtev 2","team2":"mara","venue":"tbu"},{"team1":"chpa","team2":"heri","venue":"cdlf 3"}]},{"date":new Date("2024-05-15T02:00:00.000Z"),"games":[{"team1":"waws","team2":"mtev 1","venue":"tbu"},{"team1":"mtev 2","team2":"wanw","venue":"tbu"},{"team1":"chpa","team2":"stan","venue":"cdlf 1"},{"team1":"heri","team2":"mara","venue":"heri 2"}]},{"date":new Date("2024-05-29T02:00:00.000Z"),"games":[{"team1":"stan","team2":"mtev 1","venue":"stan 1"},{"team1":"wanw","team2":"mara","venue":"wanw 1"},{"team1":"waws","team2":"heri","venue":"tbu"}]}]]},{"type":"intermediate","gender":"girls","teams":[{"name":"basketball","number":"1a"},{"name":"basketball","number":"1b"},{"name":"soccer","number":"1"},{"name":"soccer","number":"2"}],"games":[[{"date":new Date("2024-02-07T01:00:00.000Z"),"games":[{"team1":"chki","team2":"chpa 1","venue":"daba 7"},{"team1":"edin 2","team2":"mara 2","venue":"ksba 5"},{"team1":"heri","team2":"ligh","venue":"tbu"},{"team1":"wanw 1","team2":"bye","venue":"wanw 0"}]},{"date":new Date("2024-02-21T01:00:00.000Z"),"games":[{"team1":"wanw 1","team2":"chpa 1","venue":"cass"},{"team1":"chki","team2":"mara 2","venue":"daba 7"},{"team1":"ligh","team2":"bye","venue":"ligh 0"}]},{"date":new Date("2024-03-06T01:00:00.000Z"),"games":[{"team1":"edin 2","team2":"chki","venue":"ksba 5"},{"team1":"heri","team2":"wanw 1","venue":"tbu"},{"team1":"ligh","team2":"mara 2","venue":"spri 3"},{"team1":"chpa 1","team2":"bye","venue":"chpa 0"}]},{"date":new Date("2024-03-20T01:00:00.000Z"),"games":[{"team1":"chpa 1","team2":"heri","venue":"cdlf 3"},{"team1":"ligh","team2":"edin 2","venue":"spri 3"},{"team1":"mara 2","team2":"bye","venue":"mara 0"}]},{"date":new Date("2024-05-01T02:00:00.000Z"),"games":[{"team1":"mara 2","team2":"chpa 1","venue":"daba 2"},{"team1":"wanw 1","team2":"ligh","venue":"cass 1"},{"team1":"chki","team2":"heri","venue":"daba 7"},{"team1":"edin 2","team2":"bye","venue":"edin 0"}]},{"date":new Date("2024-05-15T02:00:00.000Z"),"games":[{"team1":"edin 2","team2":"heri","venue":"ksba 5"},{"team1":"wanw 1","team2":"chki","venue":"cass 1"}]},{"date":new Date("2024-05-29T02:00:00.000Z"),"games":[{"text":"GRAND FINAL"}]}],[{"date":new Date("2024-02-07T01:00:00.000Z"),"games":[{"team1":"nort","team2":"mara 1","venue":"disc"},{"team1":"mtev","team2":"edin 1","venue":"tbu"},{"team1":"stan","team2":"chpa 2","venue":"sbc 1"}]},{"date":new Date("2024-02-21T01:00:00.000Z"),"games":[{"team1":"2 nort","team2":"waws","venue":"disc"},{"team1":"chpa 2","team2":"wanw 2","venue":"cdlf 1"},{"team1":"mara 1","team2":"mtev","venue":"daba"}]},{"date":new Date("2024-03-06T01:00:00.000Z"),"games":[{"team1":"nort","team2":"mtev","venue":"disc 2"},{"team1":"stan","team2":"mara 1","venue":"sbc 1"},{"team1":"wanw 2","team2":"edin 1","venue":"cass"},{"team1":"waws","team2":"chpa 2","venue":"tbu"}]},{"date":new Date("2024-03-20T01:00:00.000Z"),"games":[{"team1":"nort","team2":"edin 1","venue":"disc"},{"team1":"mara 1","team2":"chpa 2","venue":"daba"},{"team1":"stan","team2":"wanw 2","venue":"sbc 1"}]},{"date":new Date("2024-05-01T02:00:00.000Z"),"games":[{"team1":"nort","team2":"wanw 2","venue":"disc"},{"team1":"waws","team2":"stan","venue":"tbu"},{"team1":"chpa 2","team2":"mtev","venue":"cdlf"}]},{"date":new Date("2024-05-15T02:00:00.000Z"),"games":[{"team1":"waws*","team2":"wanw 2","venue":"tbu"},{"team1":"waws*","team2":"mtev","venue":"tbu"},{"team1":"edin 1*","team2":"stan","venue":"ksba 5"},{"team1":"edin 1*","team2":"mara 1","venue":"ksba 5"}]},{"date":new Date("2024-05-29T02:00:00.000Z"),"games":[{"text":"GRAND FINAL"}]}],[{"date":new Date("2024-02-07T01:00:00.000Z"),"games":[{"team1":"2 stan","team2":"mtev","venue":"elee"},{"team1":"chpa","team2":"wanw","venue":"iyu 1"},{"team1":"waws","team2":"mara","venue":"tbu"},{"team1":"heri","team2":"ligh","venue":"heri 4"}]},{"date":new Date("2024-02-21T01:00:00.000Z"),"games":[{"team1":"2 mara","team2":"mtev","venue":"chal 1"},{"team1":"wanw","team2":"ligh","venue":"wanw 3"},{"team1":"2 stan","team2":"heri","venue":"elee"},{"team1":"chpa","team2":"waws","venue":"iyu 1"}]},{"date":new Date("2024-03-06T01:00:00.000Z"),"games":[{"team1":"wanw","team2":"mtev","venue":"wanw 3"},{"team1":"stan","team2":"mara","venue":"elee"},{"team1":"2 chpa","team2":"ligh","venue":"iyu 1"},{"team1":"waws","team2":"heri","venue":"tbu"}]},{"date":new Date("2024-03-20T01:00:00.000Z"),"games":[{"team1":"2 mtev","team2":"waws","venue":"tbu"},{"team1":"3 heri","team2":"chpa","venue":"heri 4"},{"team1":"ligh","team2":"stan","venue":"tatt 1"},{"team1":"mara","team2":"wanw","venue":"chal 1"}]},{"date":new Date("2024-05-01T02:00:00.000Z"),"games":[{"team1":"2 mtev","team2":"heri","venue":"tbu"},{"team1":"ligh","team2":"waws","venue":"tatt 1"},{"team1":"4 mara","team2":"chpa","venue":"chal 1"},{"team1":"wanw","team2":"stan","venue":"wanw 3"}]},{"date":new Date("2024-05-15T02:00:00.000Z"),"games":[{"team1":"mtev","team2":"chpa","venue":"tbu"},{"team1":"waws","team2":"stan","venue":"tbu"},{"team1":"heri","team2":"wanw","venue":"heri 4"},{"team1":"ligh","team2":"mara","venue":"tatt 1"}]},{"date":new Date("2024-05-29T02:00:00.000Z"),"games":[{"team1":"ligh","team2":"mtev","venue":"tatt 1"},{"team1":"mara","team2":"heri","venue":"chal 1"},{"team1":"wanw","team2":"waws","venue":"wanw 3"},{"team1":"stan","team2":"chpa","venue":"elee"}]}],[{"date":new Date("2024-02-07T01:00:00.000Z"),"games":[{"text":"1"}]},{"date":new Date("2024-02-21T01:00:00.000Z"),"games":[{"text":"1"}]},{"date":new Date("2024-03-06T01:00:00.000Z"),"games":[{"text":"1"}]}]]}]);
+	const venues = useSignal<Venues>([{"venue":"action indoor sports","address":"160 new street ringwood","cfNum":"1","csenCode":"aisr 1"},{"venue":"action indoor sports","address":"160 new street ringwood","cfNum":"2","csenCode":"aisr 2"},{"venue":"barrysimon reserve","address":"gleneagles drive, endeavour hills","cfNum":"1","csenCode":"bsim 1"},{"venue":"belgrave heights","address":"20 wattle valley road belgrave heights","cfNum":"1","csenCode":"belg 1"},{"venue":"casey fields","address":"369 casey fields boulevard cranbourne east","cfNum":"1","csenCode":"casf 1"},{"venue":"casey stadium","address":"65 berwick cranbourne road cranbourne east","cfNum":"1","csenCode":"cass 1"},{"venue":"casey stadium","address":"65 berwick cranbourne roadcranbourne east","cfNum":"10","csenCode":"cass 10"},{"venue":"casey stadium","address":"65 berwick cranbourne road cranbourne east","cfNum":"2","csenCode":"cass 2"},{"venue":"casey stadium","address":"65 berwick cranbourne road cranbourne east","cfNum":"3","csenCode":"cass 3"},{"venue":"casey stadium","address":"65 berwick cranbourne road cranbourne east","cfNum":"4","csenCode":"cass 4"},{"venue":"casey stadium","address":"65berwick cranbourne road cranbourne east","cfNum":"5","csenCode":"cass 5"},{"venue":"casey stadium","address":"65 berwick cranbourne road cranbourne east","cfNum":"6","csenCode":"cass 6"},{"venue":"casey stadium","address":"65 berwick cranbourne road cranbourne east","cfNum":"7","csenCode":"cass 7"},{"venue":"casey stadium","address":"65 berwick cranbourne road cranbourne east","cfNum":"8","csenCode":"cass 8"},{"venue":"casey stadium","address":"65 berwick cranbourne road cranbourne east","cfNum":"9","csenCode":"cass 9"},{"venue":"cardinia life","address":"olympic way pakenham","cfNum":"1","csenCode":"cdlf 1"},{"venue":"cardinia life","address":"olympic way pakenham","cfNum":"2","csenCode":"cdlf 2"},{"venue":"cardinia life","address":"olympic way pakenham","cfNum":"3","csenCode":"cdlf 3"},{"venue":"cardinia life","address":"olympic way pakenham","cfNum":"4","csenCode":"cdlf 4"},{"venue":"cardinia life","address":"olympic way pakenham","cfNum":"5","csenCode":"cdlf 5"},{"venue":"cardinia life","address":"olympic way pakenham","cfNum":"6","csenCode":"cdlf 6"},{"venue":"cardinia life","address":"olympic way pakenham","cfNum":"7","csenCode":"cdlf 7"},{"venue":"cardinia life","address":"olympic way pakenham","cfNum":"8","csenCode":"cdlf 8"},{"venue":"chairo–pakenham","address":"585 bald hill road pakenham","cfNum":"1","csenCode":"chpa 1"},{"venue":"chairo–pakenham","address":"585 bald hill road pakenham","cfNum":"2","csenCode":"chpa 2"},{"venue":"chairo–pakenham","address":"585 bald hill road pakenham","cfNum":"3-field","csenCode":"chpa 3"},{"venue":"chairo–pakenham","address":"585 bald hill road pakenham","cfNum":"4-field","csenCode":"chpa 4"},{"venue":"chalcot lodge reserve","address":"24 haverstock hill close, endeavour hills","cfNum":"1","csenCode":"chal1"},{"venue":"christway–kingston","address":"316 kingston road clarinda","cfNum":"1","csenCode":"chki1"},{"venue":"christway–kingston","address":"316 kingston road clarinda","cfNum":"2–field","csenCode":"chki2"},{"venue":"dandenong basketball assoc","address":"stud road dandenong","cfNum":"1","csenCode":"daba 1"},{"venue":"dandenong basketball assoc","address":"stud road dandenong","cfNum":"10","csenCode":"daba 10"},{"venue":"dandenong basketball assoc","address":"stud road dandenong","cfNum":"2","csenCode":"daba 2"},{"venue":"dandenong basketball assoc","address":"stud road dandenong","cfNum":"3","csenCode":"daba 3"},{"venue":"dandenongbasketball assoc","address":"stud road dandenong","cfNum":"4","csenCode":"daba 4"},{"venue":"dandenong basketball assoc","address":"stud road dandenong","cfNum":"5","csenCode":"daba 5"},{"venue":"dandenong basketball assoc","address":"stud road dandenong","cfNum":"6","csenCode":"daba 6"},{"venue":"dandenong basketball assoc","address":"stud road dandenong","cfNum":"7","csenCode":"daba 7"},{"venue":"dandenong basketball assoc","address":"studroad dandenong","cfNum":"8","csenCode":"daba 8"},{"venue":"dandenong basketball assoc","address":"stud road dandenong","cfNum":"9","csenCode":"daba 9"},{"venue":"dandenong netball assoc.","address":"bennett street dandenong","cfNum":"1","csenCode":"ddna 1"},{"venue":"dandenong netball assoc.","address":"bennett street dandenong","cfNum":"2","csenCode":"ddna 2"},{"venue":"dandenong netball assoc.","address":"bennett streetdandenong","cfNum":"3","csenCode":"ddna 3"},{"venue":"dandenong netball assoc.","address":"bennett street dandenong","cfNum":"4","csenCode":"ddna 4"},{"venue":"manningham disc","address":"360 springvale road donvale","cfNum":"1","csenCode":"disc 1"},{"venue":"manningham disc","address":"360 springvale road donvale","cfNum":"2","csenCode":"disc 2"},{"venue":"edinburgh","address":"33 edinburgh road lilydale","cfNum":"1","csenCode":"edin 1"},{"venue":"edinburgh","address":"33edinburgh road lilydale","cfNum":"2–field","csenCode":"edin 2"},{"venue":"endeavour hills leisure centre","address":"10 raymond mcmahon blvd endeavour hills","cfNum":"1","csenCode":"ehlc 1"},{"venue":"egan lee reserve","address":"63 wallace rd, knoxfield","cfNum":"1-field","csenCode":"elee 1"},{"venue":"egan lee reserve","address":"63 wallace rd, knoxfield","cfNum":"2-field","csenCode":"elee 2"},{"venue":"esther park reserve","address":"25 esther crescent mooroolbark","cfNum":"1–field","csenCode":"estp 1"},{"venue":"greaves reserve","address":"bennett street dandenong","cfNum":"1–field","csenCode":"grev 1"},{"venue":"grices road recreserve","address":"21 grices road berwick","cfNum":"1-field","csenCode":"gric 1"},{"venue":"grices road rec reserve","address":"21 grices road berwick","cfNum":"2–field","csenCode":"gric 2"},{"venue":"grices road rec reserve","address":"21 grices road berwick","cfNum":"3–field","csenCode":"gric 3"},{"venue":"guy turner reserve","address":"amber street bayswater","cfNum":"1-field","csenCode":"gtur 1"},{"venue":"heritage","address":"66starling road officer","cfNum":"1","csenCode":"heri 1"},{"venue":"heritage","address":"66 starling road officer","cfNum":"2–field","csenCode":"heri 2"},{"venue":"hv jones reserve","address":"kingston street ferntree gully","cfNum":"1–field","csenCode":"hvj 1"},{"venue":"iyu recreation reserve","address":"165 henry road pakenham","cfNum":"1–field","csenCode":"iyu 1"},{"venue":"iyu recreation reserve","address":"165 henry road pakenham","cfNum":"2–field","csenCode":"iyu 2"},{"venue":"kingston heath reserve","address":"center dandenong road cheltenham","cfNum":"1-field","csenCode":"kght 1"},{"venue":"kingston heath reserve","address":"center dandenong road cheltenham","cfNum":"2–field","csenCode":"kght 2"},{"venue":"keith hume fraser reserve","address":"95 swansea road montrose","cfNum":"1–field","csenCode":"khfr 1"},{"venue":"keith hume fraser reserve","address":"95 swansea road montrose","cfNum":"2–field","csenCode":"khfr 2"},{"venue":"knox park","address":"1672 ferntree gully roadknoxfield","cfNum":"1–field","csenCode":"knxp 1"},{"venue":"knox park","address":"1672 ferntree gully road knoxfield","cfNum":"2–field","csenCode":"knxp 2"},{"venue":"knox park","address":"1672 ferntree gully road knoxfield","cfNum":"3-field","csenCode":"knxp 3"},{"venue":"knox regional football facility","address":"george street wantirna south","cfNum":"1–field","csenCode":"krff 1"},{"venue":"knox regionalnetball centre","address":"9 dempster street ferntree gully","cfNum":"1","csenCode":"krnc 1"},{"venue":"knox regional netball centre","address":"9 dempster street ferntree gully","cfNum":"2","csenCode":"krnc 2"},{"venue":"kilsyth basketball association","address":"115 liverpool road kilsyth","cfNum":"1","csenCode":"ksba 1"},{"venue":"kilsyth basketball association","address":"115 liverpool roadkilsyth","cfNum":"2","csenCode":"ksba 2"},{"venue":"kilsyth basketball association","address":"115 liverpool road kilsyth","cfNum":"3","csenCode":"ksba 3"},{"venue":"kilsyth basketball association","address":"115 liverpool road kilsyth","cfNum":"4","csenCode":"ksba 4"},{"venue":"kilsyth basketball association","address":"115 liverpool road kilsyth","cfNum":"5","csenCode":"ksba 5"},{"venue":"kilsyth basketballassociation","address":"115 liverpool road kilsyth","cfNum":"6","csenCode":"ksba 6"},{"venue":"knox basketball association","address":"park crescent boronia","cfNum":"1","csenCode":"kxba 1"},{"venue":"knox basketball association","address":"park crescent boronia","cfNum":"2","csenCode":"kxba 2"},{"venue":"knox basketball association","address":"park crescent boronia","cfNum":"3","csenCode":"kxba 3"},{"venue":"knox basketballassociation","address":"park crescent boronia","cfNum":"4","csenCode":"kxba 4"},{"venue":"knox basketball association","address":"park crescent boronia","cfNum":"5","csenCode":"kxba 5"},{"venue":"knox basketball association","address":"park crescent boronia","cfNum":"6","csenCode":"kxba 6"},{"venue":"lewis park","address":"lewis roadwantirna south","cfNum":"1-field","csenCode":"lewp 1"},{"venue":"lewis park","address":"lewis roadwantirna south","cfNum":"2–field","csenCode":"lewp 2"},{"venue":"lewis park","address":"lewis roadwantirna south","cfNum":"3–field","csenCode":"lewp 3"},{"venue":"lighthouse","address":"927 springvale road keysborough","cfNum":"1","csenCode":"ligh 1"},{"venue":"lighthouse","address":"927 springvale road keysborough","cfNum":"2–field","csenCode":"ligh 2"},{"venue":"llewelyn park","address":"llewelyn park drive wantirnasouth","cfNum":"1-field","csenCode":"llew 1"},{"venue":"llewelyn park","address":"llewelyn park drive wantirna south","cfNum":"2-field","csenCode":"llew 2"},{"venue":"lawson poole reserve","address":"56 marylyn place, cranbourne","cfNum":"1–field","csenCode":"lwpl 1"},{"venue":"lilydale & yarra valley netball","address":"125e liverpool road kilsyth","cfNum":"1","csenCode":"lyvn 1"},{"venue":"lilydale & yarravalley netball","address":"125e liverpool road kilsyth","cfNum":"2","csenCode":"lyvn 2"},{"venue":"lilydale & yarra valley netball","address":"125e liverpool road kilsyth","cfNum":"3","csenCode":"lyvn 3"},{"venue":"lilydale & yarra valley netball","address":"125e liverpool road kilsyth","cfNum":"4","csenCode":"lyvn 4"},{"venue":"maranatha–officer","address":"rix road officer","cfNum":"1","csenCode":"maca 1"},{"venue":"maranatha–officer","address":"maranatha–officer","cfNum":"2–field","csenCode":"maca 2"},{"venue":"maranatha–officer","address":"maranatha–officer","cfNum":"3–field","csenCode":"maca 3"},{"venue":"maranatha–end. hills","address":"reema boulevard endeavour hills","cfNum":"1","csenCode":"mara 1"},{"venue":"maranatha–end. hills","address":"reema boulevard endeavour hills","cfNum":"2","csenCode":"mara 2"},{"venue":"maranatha–end. hills","address":"maranatha–end. hills","cfNum":"3–field","csenCode":"mara 3"},{"venue":"milpera reserve","address":"","cfNum":"1–field","csenCode":"milp 1"},{"venue":"mullum mullum stadium","address":"31 springvale road donvale","cfNum":"1","csenCode":"mmst 1"},{"venue":"mullum mullum stadium","address":"31 springvale road donvale","cfNum":"2","csenCode":"mmst 2"},{"venue":"monbulk regional soccer","address":"115 old emerald road monbulk","cfNum":"1–field","csenCode":"mrsf 1"},{"venue":"monbulk regional soccer","address":"115 old emerald road monbulk","cfNum":"2–field","csenCode":"mrsf 2"},{"venue":"mt evelyn","address":"14 hawkins road montrose","cfNum":"1","csenCode":"mtev 1"},{"venue":"mt evelyn","address":"14hawkins road montrose","cfNum":"3–field","csenCode":"mtev 3"},{"venue":"maroondah nets","address":"154 heathmont road heathmont","cfNum":"1","csenCode":"nets 1"},{"venue":"maroondah nets","address":"154 heathmont road heathmont","cfNum":"2","csenCode":"nets 2"},{"venue":"maroondah nets","address":"154 heathmont road heathmont","cfNum":"3","csenCode":"nets 3"},{"venue":"maroondah nets","address":"154 heathmont road heathmont","cfNum":"4","csenCode":"nets 4"},{"venue":"maroondah nets","address":"154 heathmont road heathmont","cfNum":"5","csenCode":"nets 5"},{"venue":"maroondah nets","address":"154 heathmont road heathmont","cfNum":"6","csenCode":"nets 6"},{"venue":"northside","address":"mccleans road bundoora","cfNum":"1","csenCode":"nort 1"},{"venue":"northside","address":"mccleans road bundoora","cfNum":"2–field","csenCode":"nort 2"},{"venue":"oakleigh rec reserve","address":"2a park roadoakleigh","cfNum":"1–field","csenCode":"oakl 1"},{"venue":"oakleigh rec reserve","address":"2a park road oakleigh","cfNum":"2–field","csenCode":"oakl 2"},{"venue":"oakleigh rec reserve","address":"2a park road oakleigh","cfNum":"3–field","csenCode":"oakl 3"},{"venue":"pinks reserve regional netball","address":"115–123 liverpool road kilsyth","cfNum":"1","csenCode":"prnc 1"},{"venue":"pinks reserve regionalnetball","address":"115–123 liverpool road kilsyth","cfNum":"2","csenCode":"prnc 2"},{"venue":"rivercrest","address":"81 ferdinand drive clyde north","cfNum":"1","csenCode":"rcst 1"},{"venue":"rivercrest","address":"81 ferdinand drive clyde north","cfNum":"2–field","csenCode":"rcst 2"},{"venue":"reema reserve","address":"stacey court endeavour hills","cfNum":"1–field","csenCode":"reem 1"},{"venue":"reema reserve","address":"stacey courtendeavour hills","cfNum":"2–field","csenCode":"reem 2"},{"venue":"state basketball centre","address":"george street wantirna south","cfNum":"1","csenCode":"sbc 1"},{"venue":"state basketball centre","address":"george street wantirna south","cfNum":"2","csenCode":"sbc 2"},{"venue":"state basketball centre","address":"george street wantirna south","cfNum":"3","csenCode":"sbc 3"},{"venue":"state basketball centre","address":"george street wantirna south","cfNum":"4","csenCode":"sbc 4"},{"venue":"state basketball centre","address":"george street wantirna south","cfNum":"5","csenCode":"sbc 5"},{"venue":"state basketball centre","address":"george street wantirna south","cfNum":"6","csenCode":"sbc 6"},{"venue":"sportlink","address":"2 hanover road vermont south","cfNum":"1","csenCode":"splk 1"},{"venue":"sportlink","address":"2 hanover road vermont south","cfNum":"2","csenCode":"splk 2"},{"venue":"sportlink","address":"2 hanover road vermont south","cfNum":"3","csenCode":"splk 3"},{"venue":"sportlink","address":"2 hanover road vermont south","cfNum":"4","csenCode":"splk 4"},{"venue":"sportlink","address":"2 hanover road vermont south","cfNum":"5–out","csenCode":"splk 5"},{"venue":"sportlink","address":"2 hanover road vermont south","cfNum":"6–out","csenCode":"splk 6"},{"venue":"sportlink","address":"2 hanover road vermontsouth","cfNum":"7–out","csenCode":"splk 7"},{"venue":"sportlink","address":"2 hanover road vermont south","cfNum":"8–out","csenCode":"splk 8"},{"venue":"springers leisure centre","address":"400 cheltenham road keysborough","cfNum":"1","csenCode":"spri 1"},{"venue":"springers leisure centre","address":"400 cheltenham road keysborough","cfNum":"2","csenCode":"spri 2"},{"venue":"springers leisure centre","address":"400cheltenham road keysborough","cfNum":"3","csenCode":"spri 3"},{"venue":"springers leisure centre","address":"400 cheltenham road keysborough","cfNum":"4","csenCode":"spri 4"},{"venue":"st andrews","address":"130 tyner road wantirna south","cfNum":"1","csenCode":"stan 1"},{"venue":"st andrews","address":"130 tyner road wantirna south","cfNum":"2-field","csenCode":"stan 2"},{"venue":"st andrews","address":"130 tyner roadwantirna south","cfNum":"3-court","csenCode":"stan 3"},{"venue":"state volleyball centre","address":"stud road dandenong","cfNum":"1","csenCode":"svc 1"},{"venue":"state volleyball centre","address":"stud road dandenong","cfNum":"10","csenCode":"svc 10"},{"venue":"state volleyball centre","address":"stud road dandenong","cfNum":"2","csenCode":"svc 2"},{"venue":"state volleyball centre","address":"stud road dandenong","cfNum":"3","csenCode":"svc 3"},{"venue":"state volleyball centre","address":"stud road dandenong","cfNum":"4","csenCode":"svc 4"},{"venue":"state volleyball centre","address":"stud road dandenong","cfNum":"5","csenCode":"svc 5"},{"venue":"state volleyball centre","address":"stud road dandenong","cfNum":"6","csenCode":"svc 6"},{"venue":"state volleyball centre","address":"stud road dandenong","cfNum":"7","csenCode":"svc 7"},{"venue":"state volleyball centre","address":"stud roaddandenong","cfNum":"8","csenCode":"svc 8"},{"venue":"state volleyball centre","address":"stud road dandenong","cfNum":"9","csenCode":"svc 9"},{"venue":"sweeney reserve","address":"cnr dempster & melzak way berwick","cfNum":"1-field","csenCode":"swee 1"},{"venue":"sweeney reserve","address":"cnr dempster & melzak way berwick","cfNum":"2–field","csenCode":"swee 2"},{"venue":"sweeney reserve","address":"cnr dempster & melzak wayberwick","cfNum":"3–field","csenCode":"swee 3"},{"venue":"tatterson park","address":"400 cheltenham road keysborough","cfNum":"1–field","csenCode":"tatt 1"},{"venue":"tatterson park","address":"400 cheltenham road keysborough","cfNum":"2–field","csenCode":"tatt 2"},{"venue":"waverley–narre warren","address":"college drive narre warren south","cfNum":"1","csenCode":"wanw 1"},{"venue":"waverley–narre warren","address":"college drive narre warren south","cfNum":"2–field","csenCode":"wanw 2"}]);
+
+	useEffect(() => {
+		pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+	}, []);
 
 	const [alert, setAlert] = useState<{
 		type: 'success' | 'error';
 		message: string;
 	} | null>(null);
 
-	useEffect(() => {
-		pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
-	}, []);
-
-	async function handleWeeklySportChange(event: React.ChangeEvent<HTMLInputElement>) {
-		if (!event.target.files) return;
-		setNextLoading(true);
-		setWeeklySportFileDisabled(true);
-		let input = event.target.files[0];
-		input
-			.arrayBuffer()
-			.then((buffer) => {
-				handlePdfText(buffer).catch(() => {
-					setNextLoading(false);
-					setWeeklySportFileDisabled(false);
-				});
-			})
-			.catch((err) => {
-				setNextLoading(false);
-				setWeeklySportFileDisabled(false);
-				setAlert({
-					type: 'error',
-					message: `Failed to load the selected file: ${err.message}`,
-				});
-			});
-	}
-	function handleWeeklySportURLCheck() {
-		if (!weeklySportURL.trim())
-			return setAlert({
-				type: 'error',
-				message: `URL is empty`,
-			});
-		setNextLoading(true);
-		setWeeklySportURLDisabled(true);
-		handlePdfText(weeklySportURL).catch(() => {
-			setNextLoading(false);
-			setWeeklySportURLDisabled(false);
-		});
-	}
-
-	function handlePdfText(input: string | ArrayBuffer) {
-		return new Promise((resolve, reject) => {
-			pdfjs
-				.getDocument(typeof input === 'string' ? `https://corsproxy.io/?${encodeURIComponent(input)}` : input)
-				.promise.then((pdf) => {
-					for (let i = 1; i <= pdf.numPages; i++) {
-						pdf
-							.getPage(i)
-							.then((page) => {
-								page
-									.getTextContent()
-									.then((content) => {
-										// Begin of algorithm
-										const data = (content.items.filter((item) => (item as TextItem).str) as TextItem[]).map(
-											({ str, transform }) => ({ str, transform }),
-										);
-
-										const fullText = data.map(({ str }) => str).join(' ');
-										const type = fullText.match(/(JUNIOR|INTERMEDIATE)/i)?.[0].toLowerCase();
-										const gender = fullText.match(/(BOYS|GIRLS)/i)?.[0].toLowerCase();
-
-										/**
-										 * 0 - Finding 'date'
-										 * 1 - Finding 'boys' or 'girls
-										 * 2 - Data extraction for teams
-										 * 3 - Data extraction for games, including date, teams and venue
-										 */
-										let steps = 0;
-										let previousText = '';
-
-										// For step 2
-										let teamYPos = 0;
-										let currentTeamName = '';
-										let teams: {
-											name: string;
-											number: string;
-										}[] = [];
-
-										// For step 3
-										let currentGameDate: Date | null = null;
-										let previousXPos = 0;
-										let previousYPos = 0;
-										let previousCol = 0;
-										let currentTeamVerse: string = '';
-										// This is for the second [], first one is which team
-										let currentArrayPosForCurrentDate = -1;
-										let searchingForVenue = false;
-										let games: {
-											date: Date;
-											games: (
-												| {
-														team1: string;
-														team2: string;
-														venue: string;
-												  }
-												| {
-														text: string;
-												  }
-											)[];
-										}[][] = [];
-
-										for (const { str, transform } of data) {
-											let text = str.trim();
-
-											if (steps === 0 || steps === 1) {
-												if (!text) {
-													previousText = '';
-													continue;
-												}
-												// Etc. 11/12/23DATE
-												previousText = (previousText + text).toLowerCase();
-
-												if (steps === 0) {
-													if (previousText.endsWith('date')) {
-														steps++;
-														previousText = '';
-													}
-												}
-												if (steps === 1) {
-													if (previousText.endsWith('boys') || previousText.endsWith('girls')) {
-														steps++;
-														previousText = '';
-													}
-												}
-												continue;
-											}
-
-											if (steps === 2) {
-												let addPreviousText = true;
-												let skip = true;
-
-												if (teamYPos === 0) teamYPos = transform[5];
-												if (!currentTeamName) {
-													// Break point for extracting all the previous data
-													if (!text.match(/^[A-Za-z ]+$/) && previousText.trim()) {
-														// Previous text is the team name
-														currentTeamName = previousText.trim();
-														previousText = '';
-														addPreviousText = false;
-													}
-												} else {
-													// We don't want "–" to be added to the previous text
-													if (!text.match(/^[0-9A-Za-z ]+$/)) addPreviousText = false;
-													// Break point when there is no text
-													if (
-														previousText.trim() &&
-														(!text ||
-															!(previousText + text)
-																.toLowerCase()
-																.trim()
-																.match(/^[0-9][a-z]$/))
-													) {
-														// Previous text is the team number
-														const teamNumber = previousText.trim();
-														teams.push({
-															name: currentTeamName,
-															number: teamNumber,
-														});
-														currentTeamName = '';
-														previousText = '';
-
-														// If y position changed, it's not team anymore
-														if (teamYPos !== transform[5]) {
-															steps++;
-															addPreviousText = false;
-															skip = false;
-														}
-													}
-												}
-
-												if (addPreviousText)
-													// NETBALL
-													previousText = (previousText + text).toLowerCase();
-												if (skip) continue;
-											}
-
-											if (steps === 3) {
-												if (!text) continue;
-
-												const currentXPos = transform[4];
-												const currentYPos = transform[5];
-
-												let currentCol = 0;
-												const startXPos = 90;
-												const endXPos = 510;
-												const colWidth = (endXPos - startXPos) / teams.length;
-												if (currentXPos <= 80) currentCol = 0;
-												else
-													for (let i = 0; i < teams.length; i++) {
-														const lessThan = startXPos + colWidth * (i + 1);
-														if (i === teams.length - 1 || currentXPos <= lessThan) {
-															currentCol = i + 1;
-															break;
-														}
-													}
-
-												if (previousCol !== currentCol || (currentCol !== 0 && previousYPos !== currentYPos)) {
-													// The next column is reached
-													if (previousCol === 0) {
-														// It was date column
-														const dateStr = previousText.toLowerCase().match(/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/)?.[0];
-														if (dateStr) {
-															const [day, month, year] = dateStr.split('/').map((item) => parseInt(item));
-
-															// TODO: check dayjs.tz.guess() on browser
-															currentGameDate = dayjs.tz(`${year}-${month}-${day} 12:00`, dayjs.tz.guess()).toDate();
-															currentArrayPosForCurrentDate++;
-														}
-													} else {
-														// Make sure array exists
-														if (!games[previousCol - 1]) games[previousCol - 1] = [];
-														if (!games[previousCol - 1][currentArrayPosForCurrentDate])
-															games[previousCol - 1][currentArrayPosForCurrentDate] = {
-																date: currentGameDate!,
-																games: [],
-															};
-
-														if (previousText.includes(' v ') && previousText.includes('@')) {
-															const [teams, venue] = previousText.split('@').map((item) => item.trim().toLowerCase());
-															const [team1, team2] = teams.toLowerCase().split(' v ');
-
-															// Insert to games
-															games[previousCol - 1][currentArrayPosForCurrentDate].games.push({
-																team1,
-																team2,
-																venue,
-															});
-														} else {
-															// It's not a game, it's a text
-															games[previousCol - 1][currentArrayPosForCurrentDate].games.push({
-																// Raw text, without lowercase
-																text: previousText,
-															});
-														}
-													}
-													previousCol = currentCol;
-													previousText = text;
-													previousYPos = currentYPos;
-													continue;
-												}
-
-												previousYPos = currentYPos;
-												if (currentCol !== 0)
-													previousText = (previousText + ' ' + text).toLowerCase().replace(/\s\s+/g, ' ');
-												else previousText = (previousText + text).toLowerCase();
-											}
-										}
-
-										console.log(type, gender, teams, games);
-									})
-									.catch((err) => {
-										setAlert({
-											type: 'error',
-											message: `Failed to read the text in PDF page ${i}: ${err.message}`,
-										});
-										reject(err);
-									});
-							})
-							.catch((err) => {
-								setAlert({
-									type: 'error',
-									message: `Failed to read PDF page ${i}: ${err.message}`,
-								});
-								reject(err);
-							});
-					}
-				})
-				.catch((err) => {
-					setAlert({
-						type: 'error',
-						message: `Failed to load the selected file: ${err.message}`,
-					});
-					reject(err);
-				});
-		});
+	function checkNextNeedDisable(newStep: number) {
+		if ((newStep === 1 && fixturePages.value.length > 0) || (newStep === 2 && venues.value.length > 0)) return false;
+		else return true;
 	}
 
 	return (
@@ -335,77 +44,54 @@ export function ImportPage() {
 				<h1 className="text-4xl text-center font-bold">Import Weekly Sport PDF to Database</h1>
 
 				{step === 1 && (
-					<>
-						<p className='text-xl font-bold text-error text-center max-w-xl'>
-							Before you begin, make sure all teachers are registered and being given the <span className='text-info'>teacher</span> role for linking
-							with each game in <Link href='/users' className='link link-primary'>the User page</Link>
-						</p>
-						<p className="text-xl font-bold text-center max-w-xl">
-							Please find the latest PDF from{' '}
-							<Link className="link-secondary link" href="https://csen.org.au/semester-sport/" target="_blank">
-								CSEN
-							</Link>{' '}
-							and import it here
-						</p>
-						<div role="tablist" className="tabs tabs-lg tabs-bordered">
-							<button
-								role="tab"
-								className={`tab ${weeklySportTab === 'url' ? 'tab-active' : ''}`}
-								onClick={() => setWeeklySportTab('url')}
-								disabled={weeklySportFileDisabled}
-							>
-								URL
-							</button>
-							<button
-								role="tab"
-								className={`tab ${weeklySportTab === 'url' ? '' : 'tab-active'}`}
-								onClick={() => setWeeklySportTab('upload')}
-								disabled={weeklySportURLDisabled}
-							>
-								Upload
-							</button>
-						</div>
-						{weeklySportTab === 'url' ? (
-							<div className="flex gap-2 w-full max-w-xl">
-								<input
-									type="text"
-									value={weeklySportURL}
-									placeholder="Input URL of the PDF here"
-									className="input input-bordered w-full"
-									onChange={(event) => setWeeklySportURL(event.target.value)}
-									disabled={weeklySportURLDisabled}
-								/>
-								<button
-									className="btn btn-accent"
-									onClick={handleWeeklySportURLCheck}
-									disabled={weeklySportURLDisabled}
-								>
-									Check
-								</button>
-							</div>
-						) : (
-							<input
-								type="file"
-								className="file-input file-input-bordered w-full max-w-xl"
-								accept=".pdf"
-								onChange={handleWeeklySportChange}
-								disabled={weeklySportFileDisabled}
-							/>
-						)}
-					</>
+					<Step1
+						setAlert={setAlert}
+						setNextLoading={setNextLoading}
+						setDisableNext={setDisableNext}
+						pdfjs={pdfjs}
+						fixturePages={fixturePages}
+					/>
+				)}
+				{step === 2 && (
+					<Step2
+						setAlert={setAlert}
+						setNextLoading={setNextLoading}
+						setDisableNext={setDisableNext}
+						pdfjs={pdfjs}
+						venues={venues}
+					/>
+				)}
+				{step === 3 && (
+					<Step3
+						setAlert={setAlert}
+						setNextLoading={setNextLoading}
+						setDisableNext={setDisableNext}
+						fixtures={fixturePages}
+						venues={venues}
+					/>
 				)}
 
 				<div className="flex justify-between w-full max-w-xl">
 					<button
 						className="btn btn-primary w-32 !shrink"
-						onClick={() => setStep((step) => step - 1)}
+						onClick={() => {
+							setStep((step) => {
+								if (!checkNextNeedDisable(step - 1)) setDisableNext(false);
+								return step - 1;
+							});
+						}}
 						disabled={step === 1}
 					>
 						Previous
 					</button>
 					<button
 						className="btn btn-primary w-32 !shrink"
-						onClick={() => setStep((step) => step + 1)}
+						onClick={() => {
+							setStep((step) => {
+								setDisableNext(checkNextNeedDisable(step + 1));
+								return step + 1;
+							});
+						}}
 						disabled={disableNext}
 					>
 						{nextLoading ? (
@@ -420,9 +106,9 @@ export function ImportPage() {
 			</main>
 			{alert &&
 				(alert.type === 'success' ? (
-					<Success message={alert.message} setAlert={setAlert} />
+					<SuccessAlert message={alert.message} setAlert={setAlert} />
 				) : (
-					<Error message={alert.message} setAlert={setAlert} />
+					<ErrorAlert message={alert.message} setAlert={setAlert} />
 				))}
 		</>
 	);
