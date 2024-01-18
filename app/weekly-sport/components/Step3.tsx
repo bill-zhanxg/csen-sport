@@ -64,6 +64,25 @@ export function Step3({
 				court_field_number: 'court_field_number',
 			},
 		},
+		{
+			date: new Date(),
+			notes: '',
+			opponent: 'opponent',
+			start: new Date(),
+			team: {
+				name: 'team',
+				isJunior: false,
+			},
+			teacher: {
+				name: 'teacher',
+			},
+			transportation: 'transportation',
+			venue: {
+				name: 'venue',
+				address: 'address',
+				court_field_number: 'court_field_number',
+			},
+		},
 	]);
 	const columns = useMemo<ColumnDef<Games>[]>(
 		() => [
@@ -78,6 +97,7 @@ export function Step3({
 							defaultValue={`${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${(
 								'0' + date.getDate()
 							).slice(-2)}`}
+							className="px-4 w-full"
 						/>
 					);
 				},
@@ -87,50 +107,55 @@ export function Step3({
 				header: 'Team',
 				cell: ({ row: { index } }) => {
 					const name = schoolGames[index].team.name;
-					return <input className="input input-bordered rounded-none" defaultValue={name} />;
+					return <input className="input input-bordered rounded-none w-full" defaultValue={name} />;
 				},
 			},
 			{
 				id: 'opponent',
 				header: 'Opponent',
 				cell: ({ row: { index } }) => {
-					return schoolGames[index].opponent;
+					const opponent = schoolGames[index].opponent;
+					return <input className="input input-bordered rounded-none w-full" defaultValue={opponent} />;
 				},
 			},
 			{
 				id: 'venue',
 				header: 'Venue',
 				cell: ({ row: { index } }) => {
-					return schoolGames[index].venue.name;
+					const venue = schoolGames[index].venue.name;
+					return <input className="input input-bordered rounded-none w-full" defaultValue={venue} />;
 				},
 			},
 			{
 				id: 'teacher',
 				header: 'Teacher',
 				cell: ({ row: { index } }) => {
-					return schoolGames[index].teacher.name;
+					const teacher = schoolGames[index].teacher.name;
+					return <input className="input input-bordered rounded-none w-full" defaultValue={teacher} />;
 				},
 			},
 			{
 				id: 'transportation',
 				header: 'Transportation',
 				cell: ({ row: { index } }) => {
-					return schoolGames[index].transportation;
+					const transportation = schoolGames[index].transportation;
+					return <input className="input input-bordered rounded-none w-full" defaultValue={transportation} />;
 				},
 			},
 			{
 				id: 'out-of-class',
 				header: 'Out of Class',
 				cell: ({ row: { index } }) => {
-                    const time = schoolGames[index].start;
-					return <input type="time" className='ml-4' />
+					const time = schoolGames[index].start;
+					return <input type="time" defaultValue={`${time.getHours()}:${time.getMinutes()}`} className="ml-4" />;
 				},
 			},
 			{
 				id: 'start',
 				header: 'Start',
 				cell: ({ row: { index } }) => {
-					return schoolGames[index].start.toLocaleTimeString();
+					const time = schoolGames[index].start;
+					return <input type="time" defaultValue={`${time.getHours()}:${time.getMinutes()}`} className="ml-4" />;
 				},
 			},
 		],
@@ -175,7 +200,7 @@ export function Step3({
 				</button>
 			</div>
 			<div className="overflow-x-auto w-[90%]">
-				<table className="table text-xl">
+				<table className="table text-lg">
 					<thead>
 						{table.getHeaderGroups().map((headerGroup) => (
 							<tr key={headerGroup.id}>
@@ -183,7 +208,7 @@ export function Step3({
 									return (
 										<th key={header.id} colSpan={header.colSpan}>
 											{header.isPlaceholder ? null : (
-												<div className=" text-2xl">
+												<div className="text-lg">
 													{flexRender(header.column.columnDef.header, header.getContext())}
 												</div>
 											)}
