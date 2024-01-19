@@ -9,7 +9,7 @@
 		"lint": "next lint",
 		"pull": "xata pull main",
 		"pull:dev": "xata pull dev",
-		"playground": "ts-node ./.playground/index.ts"
+		"playground": "ts-node ./.playground/games.ts"
 	},
 	"dependencies": {
 		"@auth/xata-adapter": "^0.1.12",

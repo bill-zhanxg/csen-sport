@@ -26854,7 +26854,7 @@ const newTestData2 = [
 const data: {
 	str: string;
 	transform: any[];
-}[] = newTestData2[0].filter((item) => item.str).map(({ str, transform }) => ({ str, transform }));
+}[] = newTestData[0].filter((item) => item.str).map(({ str, transform }) => ({ str, transform }));
 
 const fullText = data.map(({ str }) => str).join(' ');
 const type = fullText.match(/(JUNIOR|INTERMEDIATE)/i)?.[0].toLowerCase();
@@ -26886,7 +26886,7 @@ let currentTeamVerse: string = '';
 // This is for the second [], first one is which team
 let currentArrayPosForCurrentDate = -1;
 let searchingForVenue = false;
-let games: {
+let games: (({
 	date: Date;
 	games: (
 		| {
@@ -26898,7 +26898,7 @@ let games: {
 				text: string;
 		  }
 	)[];
-}[][] = [];
+} | null)[] | null)[] = [];
 
 for (const { str, transform } of data) {
 	let text = str.trim();
@@ -26983,9 +26983,9 @@ for (const { str, transform } of data) {
 
 		let currentCol = 0;
 		const startXPos = 90;
-		const endXPos = 510;
+		const endXPos = 540;
 		const colWidth = (endXPos - startXPos) / teams.length;
-		if (currentXPos <= 80) currentCol = 0;
+		if (currentXPos <= startXPos) currentCol = 0;
 		else for (let i = 0; i < teams.length; i++) {
 			const lessThan = startXPos + colWidth * (i + 1);
 			if ((i === teams.length - 1) || (currentXPos <= lessThan)) {
@@ -27002,36 +27002,11 @@ for (const { str, transform } of data) {
 				if (dateStr) {
 					const [day, month, year] = dateStr.split('/').map((item) => parseInt(item));
 
-					// TODO: check dayjs.tz.guess() on browser
 					currentGameDate = dayjs.tz(`${year}-${month}-${day} 12:00`, dayjs.tz.guess()).toDate();
 					currentArrayPosForCurrentDate++;
 				}
 			} else {
-				// Make sure array exists
-				if (!games[previousCol - 1]) games[previousCol - 1] = [];
-				if (!games[previousCol - 1][currentArrayPosForCurrentDate])
-					games[previousCol - 1][currentArrayPosForCurrentDate] = {
-						date: currentGameDate!,
-						games: [],
-					};
-
-				if (previousText.includes(' v ') && previousText.includes('@')) {
-					const [teams, venue] = previousText.split('@').map((item) => item.trim().toLowerCase());
-					const [team1, team2] = teams.toLowerCase().split(' v ');
-
-					// Insert to games
-					games[previousCol - 1][currentArrayPosForCurrentDate].games.push({
-						team1,
-						team2,
-						venue,
-					});
-				} else {
-					// It's not a game, it's a text
-					games[previousCol - 1][currentArrayPosForCurrentDate].games.push({
-						// Raw text, without lowercase
-						text: previousText,
-					});
-				}
+				addGame();
 			}
 			previousCol = currentCol;
 			previousText = text;
@@ -27042,6 +27017,37 @@ for (const { str, transform } of data) {
 		previousYPos = currentYPos;
 		if (currentCol !== 0) previousText = (previousText + ' ' + text).toLowerCase().replace(/\s\s+/g, ' ');
 		else previousText = (previousText + text).toLowerCase();
+	}
+}
+
+// Add the last game
+addGame();
+
+function addGame() {
+	// Make sure array exists
+	if (!games[previousCol - 1]) games[previousCol - 1] = [];
+	if (!games[previousCol - 1]![currentArrayPosForCurrentDate])
+		games[previousCol - 1]![currentArrayPosForCurrentDate] = {
+			date: currentGameDate!,
+			games: [],
+		};
+
+	if (previousText.includes(' v ') && previousText.includes('@')) {
+		const [teams, venue] = previousText.split('@').map((item) => item.trim().toLowerCase());
+		const [team1, team2] = teams.toLowerCase().split(' v ');
+
+		// Insert to games
+		games[previousCol - 1]![currentArrayPosForCurrentDate]!.games.push({
+			team1,
+			team2,
+			venue,
+		});
+	} else {
+		// It's not a game, it's a text
+		games[previousCol - 1]![currentArrayPosForCurrentDate]!.games.push({
+			// Raw text, without lowercase
+			text: previousText,
+		});
 	}
 }
 

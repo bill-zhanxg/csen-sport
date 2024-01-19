@@ -12,23 +12,27 @@ dayjs.extend(timezone);
 
 type Type = 'junior' | 'intermediate';
 type Gender = 'boys' | 'girls';
+// This is actually the sport and division
 type Teams = {
 	name: string;
 	number: string;
 }[];
-type Games = {
-	date: Date;
-	games: (
-		| {
-				team1: string;
-				team2: string;
-				venue: string;
-		  }
-		| {
-				text: string;
-		  }
-	)[];
-}[][];
+type Games = (
+	| ({
+			date: Date;
+			games: (
+				| {
+						team1: string;
+						team2: string;
+						venue: string;
+				  }
+				| {
+						text: string;
+				  }
+			)[];
+	  } | null)[]
+	| null
+)[];
 export type FIxturePages = {
 	type: Type;
 	gender: Gender;
@@ -41,13 +45,13 @@ export function Step1({
 	setDisableNext,
 	setAlert,
 	pdfjs,
-    fixturePages,
+	fixturePages,
 }: {
 	setNextLoading: (nextLoading: boolean) => void;
 	setDisableNext: (disableNext: boolean) => void;
 	setAlert: (alert: { type: 'success' | 'error'; message: string } | null) => void;
 	pdfjs: typeof PDFJS;
-    fixturePages: Signal<FIxturePages>;
+	fixturePages: Signal<FIxturePages>;
 }) {
 	const [weeklySportTab, setWeeklySportTab] = useState<'url' | 'upload'>('url');
 	const [weeklySportURL, setWeeklySportURL] = useState('');
@@ -222,9 +226,9 @@ export function Step1({
 
 												let currentCol = 0;
 												const startXPos = 90;
-												const endXPos = 510;
+												const endXPos = 540;
 												const colWidth = (endXPos - startXPos) / teams.length;
-												if (currentXPos <= 80) currentCol = 0;
+												if (currentXPos <= startXPos) currentCol = 0;
 												else
 													for (let i = 0; i < teams.length; i++) {
 														const lessThan = startXPos + colWidth * (i + 1);
@@ -246,31 +250,7 @@ export function Step1({
 															currentArrayPosForCurrentDate++;
 														}
 													} else {
-														// Make sure array exists
-														if (!games[previousCol - 1]) games[previousCol - 1] = [];
-														if (!games[previousCol - 1][currentArrayPosForCurrentDate])
-															games[previousCol - 1][currentArrayPosForCurrentDate] = {
-																date: currentGameDate!,
-																games: [],
-															};
-
-														if (previousText.includes(' v ') && previousText.includes('@')) {
-															const [teams, venue] = previousText.split('@').map((item) => item.trim().toLowerCase());
-															const [team1, team2] = teams.toLowerCase().split(' v ');
-
-															// Insert to games
-															games[previousCol - 1][currentArrayPosForCurrentDate].games.push({
-																team1,
-																team2,
-																venue,
-															});
-														} else {
-															// It's not a game, it's a text
-															games[previousCol - 1][currentArrayPosForCurrentDate].games.push({
-																// Raw text, without lowercase
-																text: previousText,
-															});
-														}
+														addGame();
 													}
 													previousCol = currentCol;
 													previousText = text;
@@ -282,6 +262,37 @@ export function Step1({
 												if (currentCol !== 0)
 													previousText = (previousText + ' ' + text).toLowerCase().replace(/\s\s+/g, ' ');
 												else previousText = (previousText + text).toLowerCase();
+											}
+										}
+
+										// Add the last game
+										addGame();
+
+										function addGame() {
+											// Make sure array exists
+											if (!games[previousCol - 1]) games[previousCol - 1] = [];
+											if (!games[previousCol - 1]![currentArrayPosForCurrentDate])
+												games[previousCol - 1]![currentArrayPosForCurrentDate] = {
+													date: currentGameDate!,
+													games: [],
+												};
+
+											if (previousText.includes(' v ') && previousText.includes('@')) {
+												const [teams, venue] = previousText.split('@').map((item) => item.trim().toLowerCase());
+												const [team1, team2] = teams.toLowerCase().split(' v ');
+
+												// Insert to games
+												games[previousCol - 1]![currentArrayPosForCurrentDate]!.games.push({
+													team1,
+													team2,
+													venue,
+												});
+											} else {
+												// It's not a game, it's a text
+												games[previousCol - 1]![currentArrayPosForCurrentDate]!.games.push({
+													// Raw text, without lowercase
+													text: previousText,
+												});
 											}
 										}
 										// End of algorithm
@@ -323,7 +334,7 @@ export function Step1({
 						});
 						return reject(new Error('PDF is empty'));
 					} else {
-                        fixturePages.value = pages;
+						fixturePages.value = pages;
 						setAlert({
 							type: 'success',
 							message: 'Successfully extracted required information from the PDF, you can now continue',
