@@ -18,7 +18,7 @@ type Teams = {
 	number: string;
 }[];
 type Games = (
-	| ({
+	| {
 			date: Date;
 			games: (
 				| {
@@ -30,7 +30,7 @@ type Games = (
 						text: string;
 				  }
 			)[];
-	  } | null)[]
+	  }[]
 	| null
 )[];
 export type FIxturePages = {
@@ -282,14 +282,14 @@ export function Step1({
 												const [team1, team2] = teams.toLowerCase().split(' v ');
 
 												// Insert to games
-												games[previousCol - 1]![currentArrayPosForCurrentDate]!.games.push({
+												games[previousCol - 1]![currentArrayPosForCurrentDate].games.push({
 													team1,
 													team2,
 													venue,
 												});
 											} else {
 												// It's not a game, it's a text
-												games[previousCol - 1]![currentArrayPosForCurrentDate]!.games.push({
+												games[previousCol - 1]![currentArrayPosForCurrentDate].games.push({
 													// Raw text, without lowercase
 													text: previousText,
 												});

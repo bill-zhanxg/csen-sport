@@ -1,167 +1,74 @@
+import { Signal } from '@preact/signals-react';
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
+import { Teams } from './Step3';
 
-type Games = {
-	date: Date;
-	notes: string;
-	opponent: string;
-	start: Date;
-	team: {
-		name: string;
-		isJunior: boolean;
-	};
-	teacher: {
-		name: string;
-	};
-	transportation: string;
-	venue: {
-		name: string;
-		address: string;
-		court_field_number: string;
-	};
-};
-
-export function TeamsTable() {
-	const [schoolGames, setSchoolGame] = useState<Games[]>([
-		{
-			date: new Date(),
-			notes: '',
-			opponent: 'opponent',
-			start: new Date(),
-			team: {
-				name: 'team',
-				isJunior: false,
-			},
-			teacher: {
-				name: 'teacher',
-			},
-			transportation: 'transportation',
-			venue: {
-				name: 'venue',
-				address: 'address',
-				court_field_number: 'court_field_number',
-			},
-		},
-		{
-			date: new Date(),
-			notes: '',
-			opponent: 'opponent',
-			start: new Date(),
-			team: {
-				name: 'team',
-				isJunior: false,
-			},
-			teacher: {
-				name: 'teacher',
-			},
-			transportation: 'transportation',
-			venue: {
-				name: 'venue',
-				address: 'address',
-				court_field_number: 'court_field_number',
-			},
-		},
-	]);
-	const columns = useMemo<ColumnDef<Games>[]>(
+export function TeamsTable(
+	{
+		schoolCsenCode,
+		teams,
+		setTeams,
+	}: {
+		schoolCsenCode: string;
+		teams: Teams;
+		setTeams: (teams: Teams) => void;
+	}
+) {
+	const columns = useMemo<ColumnDef<Teams[number]>[]>(
 		() => [
 			{
-				id: 'date',
-				header: 'Date',
+				id: 'gender',
+				header: 'Gender',
 				cell: ({ row: { index } }) => {
-					const date = schoolGames[index].date;
-					return (
-						<input
-							type="date"
-							defaultValue={`${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${(
-								'0' + date.getDate()
-							).slice(-2)}`}
-							className="px-4 w-full"
-						/>
-					);
+					const gender = teams[index].gender
+					return <input className="input input-bordered rounded-none w-full" defaultValue={gender} disabled />;
+				},
+			},
+			{
+				id: 'sport',
+				header: 'Sport',
+				cell: ({ row: { index } }) => {
+					const sport = teams[index].sport
+					return <input className="input input-bordered rounded-none w-full" defaultValue={sport} disabled />;
+				},
+			},
+			{
+				id: 'division',
+				header: 'Division',
+				cell: ({ row: { index } }) => {
+					const division = teams[index].division
+					return <input className="input input-bordered rounded-none w-full" defaultValue={division} disabled />;
 				},
 			},
 			{
 				id: 'team',
 				header: 'Team',
 				cell: ({ row: { index } }) => {
-					const name = schoolGames[index].team.name;
-					return <input className="input input-bordered rounded-none w-full" defaultValue={name} />;
+					const team = teams[index].team
+					return <input className="input input-bordered rounded-none w-full" defaultValue={team} disabled />;
 				},
 			},
 			{
-				id: 'opponent',
-				header: 'Opponent',
+				id: 'friendlyName',
+				header: 'Friendly Name',
 				cell: ({ row: { index } }) => {
-					const opponent = schoolGames[index].opponent;
-					return <input className="input input-bordered rounded-none w-full" defaultValue={opponent} />;
+					const friendlyName = teams[index].friendlyName
+					return <input className="input input-bordered rounded-none w-full" defaultValue={friendlyName} />;
 				},
 			},
 			{
-				id: 'venue',
-				header: 'Venue',
+				id: 'group',
+				header: 'Group',
 				cell: ({ row: { index } }) => {
-					const venue = schoolGames[index].venue.name;
-					return <input className="input input-bordered rounded-none w-full" defaultValue={venue} />;
-				},
-			},
-			{
-				id: 'teacher',
-				header: 'Teacher',
-				cell: ({ row: { index } }) => {
-					const teacher = schoolGames[index].teacher.name;
-					return <input className="input input-bordered rounded-none w-full" defaultValue={teacher} />;
-				},
-			},
-			{
-				id: 'transportation',
-				header: 'Transportation',
-				cell: ({ row: { index } }) => {
-					const transportation = schoolGames[index].transportation;
-					return <input className="input input-bordered rounded-none w-full" defaultValue={transportation} />;
-				},
-			},
-			{
-				id: 'out-of-class',
-				header: 'Out of Class',
-				cell: ({ row: { index } }) => {
-					const time = schoolGames[index].start;
-					return <input type="time" defaultValue={`${time.getHours()}:${time.getMinutes()}`} className="ml-4" />;
-				},
-			},
-			{
-				id: 'start',
-				header: 'Start',
-				cell: ({ row: { index } }) => {
-					const time = schoolGames[index].start;
-					return <input type="time" defaultValue={`${time.getHours()}:${time.getMinutes()}`} className="ml-4" />;
+					const group = teams[index].group
+					return <input className="input input-bordered rounded-none w-full" defaultValue={group} />;
 				},
 			},
 		],
-		[schoolGames],
+		[teams],
 	);
 
-	// Give our default column cell renderer editing superpowers!
-	// const defaultColumn: Partial<ColumnDef<Games>> = {
-	// 	cell: ({ getValue, row: { index }, column: { id }, table }) => {
-	// 		const initialValue = getValue();
-	// 		// We need to keep and update the state of the cell normally
-	// 		const [value, setValue] = useState(initialValue);
-
-	// 		// When the input is blurred, we'll call our table meta's updateData function
-	// 		const onBlur = () => {
-	// 			table.options.meta?.updateData(index, id, value);
-	// 		};
-
-	// 		// If the initialValue is changed external, sync it up with our state
-	// 		useEffect(() => {
-	// 			setValue(initialValue);
-	// 		}, [initialValue]);
-
-	// 		return <input value={value as string} onChange={(e) => setValue(e.target.value)} onBlur={onBlur} />;
-	// 	},
-	// };
-
-	const table = useReactTable({ columns, data: schoolGames, getCoreRowModel: getCoreRowModel() });
+	const table = useReactTable({ columns, data: teams, getCoreRowModel: getCoreRowModel() });
 	return (
 		<div className="overflow-x-auto w-[90%]">
 			<table className="table text-lg">

@@ -26854,7 +26854,7 @@ const newTestData2 = [
 const data: {
 	str: string;
 	transform: any[];
-}[] = newTestData[0].filter((item) => item.str).map(({ str, transform }) => ({ str, transform }));
+}[] = newTestData2[0].filter((item) => item.str).map(({ str, transform }) => ({ str, transform }));
 
 const fullText = data.map(({ str }) => str).join(' ');
 const type = fullText.match(/(JUNIOR|INTERMEDIATE)/i)?.[0].toLowerCase();
@@ -26886,7 +26886,7 @@ let currentTeamVerse: string = '';
 // This is for the second [], first one is which team
 let currentArrayPosForCurrentDate = -1;
 let searchingForVenue = false;
-let games: (({
+let games: ({
 	date: Date;
 	games: (
 		| {
@@ -26898,7 +26898,7 @@ let games: (({
 				text: string;
 		  }
 	)[];
-} | null)[] | null)[] = [];
+}[] | null)[] = [];
 
 for (const { str, transform } of data) {
 	let text = str.trim();
@@ -27037,14 +27037,14 @@ function addGame() {
 		const [team1, team2] = teams.toLowerCase().split(' v ');
 
 		// Insert to games
-		games[previousCol - 1]![currentArrayPosForCurrentDate]!.games.push({
+		games[previousCol - 1]![currentArrayPosForCurrentDate].games.push({
 			team1,
 			team2,
 			venue,
 		});
 	} else {
 		// It's not a game, it's a text
-		games[previousCol - 1]![currentArrayPosForCurrentDate]!.games.push({
+		games[previousCol - 1]![currentArrayPosForCurrentDate].games.push({
 			// Raw text, without lowercase
 			text: previousText,
 		});
