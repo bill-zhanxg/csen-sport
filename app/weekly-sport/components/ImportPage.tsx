@@ -8,7 +8,12 @@ import { FIxturePages, Step1 } from './Step1';
 import { Step2, Venues } from './Step2';
 import { Step3 } from './Step3';
 
-export function ImportPage() {
+export function ImportPage({
+	teachers,
+}: {
+	teachers: {id: string; name?: string | null}[]
+
+}) {
 	const [step, setStep] = useState(1);
 
 	// TODO: check back to true
@@ -68,6 +73,7 @@ export function ImportPage() {
 						setDisableNext={setDisableNext}
 						fixtures={fixturePages}
 						venues={venues}
+						teachers={teachers}
 					/>
 				)}
 

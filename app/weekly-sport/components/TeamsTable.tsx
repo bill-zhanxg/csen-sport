@@ -1,16 +1,18 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
 import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import { ChangeEventHandler, Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
+import { ChangeEventHandler, Dispatch, FocusEventHandler, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 
 export type Teams = {
+	id: string;
 	gender: string;
 	sport: string;
 	division: string;
 	team: string;
 	friendlyName: string;
 	group: string;
+	teacher?: string;
 }[];
 
 const defaultColumn: Partial<ColumnDef<Teams[number]>> = {
@@ -19,14 +21,22 @@ const defaultColumn: Partial<ColumnDef<Teams[number]>> = {
 	},
 };
 
-export function TeamsTable({ teams, setTeams }: { teams: Teams; setTeams: Dispatch<SetStateAction<Teams>> }) {
+export function TeamsTable({
+	teams,
+	setTeams,
+	teachers,
+}: {
+	teams: Teams;
+	setTeams: Dispatch<SetStateAction<Teams>>;
+	teachers: { id: string; name?: string | null }[];
+}) {
 	const columns = useMemo<ColumnDef<Teams[number]>[]>(() => {
 		function editable<T>({
 			getValue,
 			row: { index },
 			column: { id },
 			table,
-		}: CellContext<Teams[number], unknown>): [T, ChangeEventHandler<HTMLElement> | undefined] {
+		}: CellContext<Teams[number], unknown>): [T, ChangeEventHandler<HTMLElement> | undefined, FocusEventHandler<HTMLElement> | undefined] {
 			const initialValue = getValue() as T;
 			const [value, setValue] = useState(initialValue);
 			useEffect(() => {
@@ -38,7 +48,10 @@ export function TeamsTable({ teams, setTeams }: { teams: Teams; setTeams: Dispat
 					if (!('value' in event.target)) return;
 					const newValue = event.target.value as T;
 					setValue(newValue);
-					table.options.meta?.updateData(index, id, newValue);
+				},
+				(event) => {
+					if (!('value' in event.target)) return;
+					table.options.meta?.updateData(index, id, value);
 				},
 			];
 		}
@@ -69,8 +82,8 @@ export function TeamsTable({ teams, setTeams }: { teams: Teams; setTeams: Dispat
 				accessorKey: 'friendlyName',
 				header: 'Friendly Name',
 				cell: (prop) => {
-					const [value, onChange] = editable<string>(prop);
-					return <input className="input input-bordered rounded-none w-full" value={value} onChange={onChange} />;
+					const [value, onChange, onBlur] = editable<string>(prop);
+					return <input className="input input-bordered rounded-none w-full" value={value} onChange={onChange} onBlur={onBlur} />;
 				},
 			},
 			{
@@ -78,17 +91,37 @@ export function TeamsTable({ teams, setTeams }: { teams: Teams; setTeams: Dispat
 				accessorKey: 'group',
 				header: 'Group',
 				cell: (prop) => {
-					const [value, onChange] = editable<'junior' | 'intermediate'>(prop);
+					const [value, onChange, onBlur] = editable<'junior' | 'intermediate'>(prop);
 					return (
-						<select className="select select-bordered rounded-none w-full" value={value} onChange={onChange}>
+						<select className="select select-bordered rounded-none w-full" value={value} onChange={onChange} onBlur={onBlur}>
 							<option value="junior">Junior</option>
 							<option value="intermediate">Intermediate</option>
 						</select>
 					);
 				},
 			},
+			{
+				id: 'teachers',
+				accessorKey: 'teacher',
+				header: 'Default Teacher',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string | undefined>(prop);
+					return (
+						<select className="select select-bordered rounded-none w-full" value={value ?? ''} onChange={onChange} onBlur={onBlur}>
+							<option value={''} disabled>
+								Select a teacher
+							</option>
+							{teachers.map((teacher) => (
+								<option key={teacher.id} value={teacher.id}>
+									{teacher.name}
+								</option>
+							))}
+						</select>
+					);
+				},
+			},
 		];
-	}, []);
+	}, [teachers]);
 
 	const table = useReactTable({
 		columns,
@@ -99,7 +132,7 @@ export function TeamsTable({ teams, setTeams }: { teams: Teams; setTeams: Dispat
 			updateData: (rowIndex, columnId, value) => {
 				setTeams((teams) => {
 					teams[rowIndex][columnId as keyof (typeof teams)[number]] = value as string;
-					return teams;
+					return [...teams];
 				});
 			},
 		},
@@ -145,7 +178,12 @@ export function TeamsTable({ teams, setTeams }: { teams: Teams; setTeams: Dispat
 							<td />
 							<td />
 							<td />
-							<td className="flex justify-end p-0 pt-1"><button className='btn btn-square' disabled><FaPlus /></button></td>
+							<td />
+							<td className="flex justify-end p-0 pt-1">
+								<button className="btn btn-square" disabled>
+									<FaPlus />
+								</button>
+							</td>
 						</tr>
 					</tbody>
 				</table>

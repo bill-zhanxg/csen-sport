@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
 import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import { ChangeEventHandler, Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
+import { ChangeEventHandler, Dispatch, FocusEventHandler, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { Venues } from './Step2';
 
 const defaultColumn: Partial<ColumnDef<Venues[number]>> = {
@@ -17,7 +17,11 @@ export function VenuesTable({ venues, setVenues }: { venues: Venues; setVenues: 
 			row: { index },
 			column: { id },
 			table,
-		}: CellContext<Venues[number], unknown>): [T, ChangeEventHandler<HTMLElement> | undefined] {
+		}: CellContext<Venues[number], unknown>): [
+			T,
+			ChangeEventHandler<HTMLElement> | undefined,
+			FocusEventHandler<HTMLElement> | undefined,
+		] {
 			const initialValue = getValue() as T;
 			const [value, setValue] = useState(initialValue);
 			useEffect(() => {
@@ -29,7 +33,10 @@ export function VenuesTable({ venues, setVenues }: { venues: Venues; setVenues: 
 					if (!('value' in event.target)) return;
 					const newValue = event.target.value as T;
 					setValue(newValue);
-					table.options.meta?.updateData(index, id, newValue);
+				},
+				(event) => {
+					if (!('value' in event.target)) return;
+					table.options.meta?.updateData(index, id, value);
 				},
 			];
 		}
@@ -45,8 +52,17 @@ export function VenuesTable({ venues, setVenues }: { venues: Venues; setVenues: 
 				accessorKey: 'venue',
 				header: 'Venue',
 				cell: (prop) => {
-					const [value, onChange] = editable<string>(prop);
-					return <input className={`input input-bordered rounded-none w-full ${value === 'Not Found' ? 'bg-error text-error-content' : ''}`} value={value} onChange={onChange} />;
+					const [value, onChange, onBlur] = editable<string>(prop);
+					return (
+						<input
+							className={`input input-bordered rounded-none w-full ${
+								value === 'Not Found' ? 'bg-error text-error-content' : ''
+							}`}
+							value={value}
+							onChange={onChange}
+							onBlur={onBlur}
+						/>
+					);
 				},
 			},
 			{
@@ -54,8 +70,17 @@ export function VenuesTable({ venues, setVenues }: { venues: Venues; setVenues: 
 				accessorKey: 'address',
 				header: 'Address',
 				cell: (prop) => {
-					const [value, onChange] = editable<string>(prop);
-					return <input className={`input input-bordered rounded-none w-full ${value === 'Not Found' ? 'bg-error text-error-content' : ''}`} value={value} onChange={onChange} />;
+					const [value, onChange, onBlur] = editable<string>(prop);
+					return (
+						<input
+							className={`input input-bordered rounded-none w-full ${
+								value === 'Not Found' ? 'bg-error text-error-content' : ''
+							}`}
+							value={value}
+							onChange={onChange}
+							onBlur={onBlur}
+						/>
+					);
 				},
 			},
 			{
@@ -63,8 +88,17 @@ export function VenuesTable({ venues, setVenues }: { venues: Venues; setVenues: 
 				accessorKey: 'cfNum',
 				header: 'Court / Field Number',
 				cell: (prop) => {
-					const [value, onChange] = editable<string>(prop);
-					return <input className={`input input-bordered rounded-none w-full ${value === 'Not Found' ? 'bg-error text-error-content' : ''}`} value={value} onChange={onChange} />;
+					const [value, onChange, onBlur] = editable<string>(prop);
+					return (
+						<input
+							className={`input input-bordered rounded-none w-full ${
+								value === 'Not Found' ? 'bg-error text-error-content' : ''
+							}`}
+							value={value}
+							onChange={onChange}
+							onBlur={onBlur}
+						/>
+					);
 				},
 			},
 		];
@@ -79,7 +113,7 @@ export function VenuesTable({ venues, setVenues }: { venues: Venues; setVenues: 
 			updateData: (rowIndex, columnId, value) => {
 				setVenues((venues) => {
 					venues[rowIndex][columnId as keyof (typeof venues)[number]] = value as string;
-					return venues;
+					return [...venues];
 				});
 			},
 		},

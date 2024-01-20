@@ -1,7 +1,8 @@
 import { Signal, useSignal } from '@preact/signals-react';
 import { RowData } from '@tanstack/react-table';
 import { useState } from 'react';
-import { GamesTable } from './GamesTable';
+import { v4 } from 'uuid';
+import { Games, GamesTable } from './GamesTable';
 import { Opponents, OpponentsTable } from './OpponentsTable';
 import { FIxturePages } from './Step1';
 import { Venues } from './Step2';
@@ -20,12 +21,14 @@ export function Step3({
 	setAlert,
 	fixtures,
 	venues,
+	teachers,
 }: {
 	setNextLoading: (nextLoading: boolean) => void;
 	setDisableNext: (disableNext: boolean) => void;
 	setAlert: (alert: { type: 'success' | 'error'; message: string } | null) => void;
 	fixtures: Signal<FIxturePages>;
 	venues: Signal<Venues>;
+	teachers: { id: string; name?: string | null }[];
 }) {
 	const [currentSchoolCsenCode, setSchoolCsenCodeInput] = useState('');
 	const schoolCsenCode = useSignal<string | undefined>(undefined);
@@ -33,10 +36,11 @@ export function Step3({
 	const [teams, setTeams] = useState<Teams>([]);
 	const [opponents, setOpponents] = useState<Opponents>([]);
 	const [filteredVenues, setFilteredVenues] = useState<Venues>([]);
+	const [games, setGames] = useState<Games>([]);
 
 	return (
 		<>
-			<p className="text-xl font-bold text-error text-center max-w-2xl">DO NOT EXIT THIS PAGE, CHANGES WILL BE LOST</p>
+			<p className="text-xl font-bold text-error text-center max-w-2xl">DO NOT EXIT THIS PAGE, PROGRESS WILL BE LOST</p>
 			<div className="flex gap-2 w-full max-w-xl">
 				<input
 					type="text"
@@ -78,22 +82,29 @@ export function Step3({
 
 						// #region Collapse algorithm
 						// Remap games into teams and opponents
-						setTeams([]);
 						const teams: Teams = [];
 						const opponents: string[] = [];
 						const venueCodes: string[] = [];
+						const games: Games = [];
 						for (const item of filteredFixtures.value) {
-							const teamCodes: {
+							type TeamCode = {
 								name: string;
-								team: {
+								sport: {
 									name: string;
 									number: string;
 								};
+							};
+							const teamCodes: TeamCode[] = [];
+							const gameRemap: {
+								date: Date;
+								team: TeamCode;
+								opponent: string;
+								venue: string;
 							}[] = [];
 							for (let i = 0; i < item.games.length; i++) {
 								const games = item.games[i];
 								if (!games) continue;
-								const team = item.teams[i];
+								const sport = item.teams[i];
 								for (const game of games) {
 									for (const verses of game.games) {
 										if ('text' in verses) continue;
@@ -109,10 +120,10 @@ export function Step3({
 										}
 										if (!myTeam || !opponent) continue;
 
-										if (!teamCodes.find((code) => code.name === myTeam && code.team === team)) {
+										if (!teamCodes.find((code) => code.name === myTeam && code.sport === sport)) {
 											teamCodes.push({
 												name: myTeam,
-												team,
+												sport,
 											});
 										}
 
@@ -120,26 +131,58 @@ export function Step3({
 										if (opponentCode && !opponents.includes(opponentCode)) opponents.push(opponentCode);
 
 										if (!venueCodes.includes(verses.venue)) venueCodes.push(verses.venue);
+
+										gameRemap.push({
+											date: game.date,
+											team: {
+												name: myTeam,
+												sport,
+											},
+											opponent,
+											venue: verses.venue,
+										});
 									}
 								}
 							}
 							const upperCaseFirst = (string: string) => string.charAt(0).toUpperCase() + string.toLowerCase().slice(1);
-							teamCodes.forEach((code) => {
+							const formatTeamCode = (code: TeamCode) => {
 								const teamNum = code.name.match(/(\d+)/)?.[0];
-								teams.push({
+								const data = {
 									gender: item.gender,
-									sport: code.team.name,
-									division: code.team.number,
+									sport: code.sport.name,
+									division: code.sport.number,
 									team: code.name,
-									friendlyName: `${upperCaseFirst(item.gender)} ${code.team.name} Div ${code.team.number}${
-										teamNum ? ` (Team ${teamNum})` : ''
-									}`,
 									group: item.type,
+								};
+
+								const link = teams.find(
+									({ id, friendlyName, teacher, ...team }) => JSON.stringify(team) === JSON.stringify(data),
+								);
+
+								return {
+									id: link?.id ?? v4(),
+									...data,
+									friendlyName: `${upperCaseFirst(item.gender)} ${upperCaseFirst(code.sport.name)} Div ${
+										code.sport.number
+									}${teamNum ? ` (Team ${teamNum})` : ''}`,
+								};
+							};
+							teamCodes.forEach((code) => teams.push(formatTeamCode(code)));
+							gameRemap.forEach((game) => {
+								const team = formatTeamCode(game.team);
+								const opponent = game.opponent;
+								const venue = game.venue;
+								const date = game.date;
+								games.push({
+									date,
+									team: { ...team, code: team.team },
+									opponentCode: opponent,
+									venueCode: venue,
 								});
 							});
 						}
 						setTeams(teams);
-						setOpponents(opponents.map((opponent) => ({ cenCode: opponent, friendlyName: opponent.toUpperCase() })));
+						setOpponents(opponents.map((opponent) => ({ csenCode: opponent, friendlyName: opponent.toUpperCase() })));
 						setFilteredVenues(
 							venueCodes.map((venueCode) => {
 								const result = venues.value.find((venue) => venue.csenCode === venueCode);
@@ -150,14 +193,16 @@ export function Step3({
 										address: 'Not Found',
 										cfNum: 'Not Found',
 									};
-								else return {
-									csenCode: venueCode,
-									venue: result.venue.replace(/\b[a-z]/g, (c) => c.toUpperCase()),
-									address: result.address.replace(/\b[a-z]/g, (c) => c.toUpperCase()),
-									cfNum: result.cfNum,
-								};
+								else
+									return {
+										csenCode: venueCode,
+										venue: result.venue.replace(/\b[a-z]/g, (c) => c.toUpperCase()),
+										address: result.address.replace(/\b[a-z]/g, (c) => c.toUpperCase()),
+										cfNum: result.cfNum,
+									};
 							}),
 						);
+						setGames(games);
 						// #endregion
 					}}
 				>
@@ -167,10 +212,18 @@ export function Step3({
 			{schoolCsenCode.value &&
 				(teams.length > 0 ? (
 					<>
-						<TeamsTable teams={teams} setTeams={setTeams} />
+						{teams[0].friendlyName}
+						<TeamsTable teams={teams} setTeams={setTeams} teachers={teachers} />
 						<OpponentsTable opponents={opponents} setOpponents={setOpponents} />
 						<VenuesTable venues={filteredVenues} setVenues={setFilteredVenues} />
-						<GamesTable />
+						<GamesTable
+							teams={teams}
+							opponents={opponents}
+							venues={filteredVenues}
+							games={games}
+							setGames={setGames}
+							teachers={teachers}
+						/>
 					</>
 				) : (
 					<p className="text-xl font-bold text-error text-center max-w-2xl">

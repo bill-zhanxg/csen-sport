@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
 import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import { ChangeEventHandler, Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
+import { ChangeEventHandler, Dispatch, FocusEventHandler, SetStateAction, useEffect, useMemo, useState } from 'react';
 
 export type Opponents = {
-	cenCode: string;
+	csenCode: string;
 	friendlyName: string;
 }[];
 
@@ -14,14 +14,24 @@ const defaultColumn: Partial<ColumnDef<Opponents[number]>> = {
 	},
 };
 
-export function OpponentsTable({ opponents, setOpponents }: { opponents: Opponents; setOpponents: Dispatch<SetStateAction<Opponents>> }) {
+export function OpponentsTable({
+	opponents,
+	setOpponents,
+}: {
+	opponents: Opponents;
+	setOpponents: Dispatch<SetStateAction<Opponents>>;
+}) {
 	const columns = useMemo<ColumnDef<Opponents[number]>[]>(() => {
 		function editable<T>({
 			getValue,
 			row: { index },
 			column: { id },
 			table,
-		}: CellContext<Opponents[number], unknown>): [T, ChangeEventHandler<HTMLElement> | undefined] {
+		}: CellContext<Opponents[number], unknown>): [
+			T,
+			ChangeEventHandler<HTMLElement> | undefined,
+			FocusEventHandler<HTMLElement> | undefined,
+		] {
 			const initialValue = getValue() as T;
 			const [value, setValue] = useState(initialValue);
 			useEffect(() => {
@@ -33,15 +43,18 @@ export function OpponentsTable({ opponents, setOpponents }: { opponents: Opponen
 					if (!('value' in event.target)) return;
 					const newValue = event.target.value as T;
 					setValue(newValue);
-					table.options.meta?.updateData(index, id, newValue);
+				},
+				(event) => {
+					if (!('value' in event.target)) return;
+					table.options.meta?.updateData(index, id, value);
 				},
 			];
 		}
 
 		return [
 			{
-				id: 'cenCode',
-				accessorKey: 'cenCode',
+				id: 'csenCode',
+				accessorKey: 'csenCode',
 				header: 'CSEN Code',
 			},
 			{
@@ -49,8 +62,8 @@ export function OpponentsTable({ opponents, setOpponents }: { opponents: Opponen
 				accessorKey: 'friendlyName',
 				header: 'Friendly Name',
 				cell: (prop) => {
-					const [value, onChange] = editable<string>(prop);
-					return <input className="input input-bordered rounded-none w-full" value={value} onChange={onChange} />;
+					const [value, onChange, onBlur] = editable<string>(prop);
+					return <input className="input input-bordered rounded-none w-full" value={value} onChange={onChange} onBlur={onBlur} />;
 				},
 			},
 		];
@@ -65,7 +78,7 @@ export function OpponentsTable({ opponents, setOpponents }: { opponents: Opponen
 			updateData: (rowIndex, columnId, value) => {
 				setOpponents((opponents) => {
 					opponents[rowIndex][columnId as keyof (typeof opponents)[number]] = value as string;
-					return opponents;
+					return [...opponents];
 				});
 			},
 		},

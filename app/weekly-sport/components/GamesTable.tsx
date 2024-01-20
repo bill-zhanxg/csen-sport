@@ -1,161 +1,202 @@
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import { useMemo, useState } from 'react';
-import { FaRegTrashCan } from 'react-icons/fa6';
+/* eslint-disable react-hooks/rules-of-hooks */
 
-type Games = {
+import {
+	CellContext,
+	ColumnDef,
+	flexRender,
+	getCoreRowModel,
+	getSortedRowModel,
+	useReactTable,
+} from '@tanstack/react-table';
+import { ChangeEventHandler, Dispatch, FocusEventHandler, SetStateAction, useEffect, useMemo, useState } from 'react';
+import { FaPlus } from 'react-icons/fa';
+import { Opponents } from './OpponentsTable';
+import { Venues } from './Step2';
+import { Teams } from './TeamsTable';
+
+export type Games = {
 	date: Date;
-	notes: string;
-	opponent: string;
-	start: Date;
 	team: {
-		name: string;
-		isJunior: boolean;
+		id: string;
+		gender: string;
+		sport: string;
+		division: string;
+		code: string;
+		group: 'junior' | 'intermediate';
 	};
-	teacher: {
-		name: string;
-	};
-	transportation: string;
-	venue: {
-		name: string;
-		address: string;
-		court_field_number: string;
-	};
+	opponentCode: string;
+	venueCode: string;
+	teacher?: string;
+	transportation?: string;
+	out_of_class?: Date;
+	start?: Date;
+	notes?: string;
+}[];
+
+const defaultColumn: Partial<ColumnDef<Games[number]>> = {
+	cell: ({ getValue }) => {
+		return <input className="input input-bordered rounded-none w-full" value={getValue() as string} disabled />;
+	},
 };
 
-export function GamesTable() {
-	const [schoolGames, setSchoolGame] = useState<Games[]>([
-		{
-			date: new Date(),
-			notes: '',
-			opponent: 'opponent',
-			start: new Date(),
-			team: {
-				name: 'team',
-				isJunior: false,
-			},
-			teacher: {
-				name: 'teacher',
-			},
-			transportation: 'transportation',
-			venue: {
-				name: 'venue',
-				address: 'address',
-				court_field_number: 'court_field_number',
-			},
-		},
-		{
-			date: new Date(),
-			notes: '',
-			opponent: 'opponent',
-			start: new Date(),
-			team: {
-				name: 'team',
-				isJunior: false,
-			},
-			teacher: {
-				name: 'teacher',
-			},
-			transportation: 'transportation',
-			venue: {
-				name: 'venue',
-				address: 'address',
-				court_field_number: 'court_field_number',
-			},
-		},
-	]);
-	const columns = useMemo<ColumnDef<Games>[]>(
-		() => [
+export function GamesTable({
+	teams,
+	opponents,
+	venues,
+	games,
+	setGames,
+	teachers,
+}: {
+	teams: Teams;
+	opponents: Opponents;
+	venues: Venues;
+	games: Games;
+	setGames: Dispatch<SetStateAction<Games>>;
+	teachers: { id: string; name?: string | null }[];
+}) {
+	const columns = useMemo<ColumnDef<Games[number]>[]>(() => {
+		function editable<T>({
+			getValue,
+			row: { index },
+			column: { id },
+			table,
+		}: CellContext<Games[number], unknown>): [
+			T,
+			ChangeEventHandler<HTMLElement> | undefined,
+			FocusEventHandler<HTMLElement> | undefined,
+		] {
+			const initialValue = getValue() as T;
+			const [value, setValue] = useState(initialValue);
+			useEffect(() => {
+				setValue(initialValue);
+			}, [initialValue]);
+			return [
+				value,
+				(event) => {
+					if (!('value' in event.target)) return;
+					const newValue = event.target.value as T;
+					setValue(newValue);
+				},
+				(event) => {
+					if (!('value' in event.target)) return;
+					table.options.meta?.updateData(index, id, value);
+				},
+			];
+		}
+
+		return [
 			{
 				id: 'date',
+				accessorKey: 'date',
 				header: 'Date',
-				cell: ({ row: { index } }) => {
-					const date = schoolGames[index].date;
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<Date>(prop);
 					return (
 						<input
 							type="date"
-							defaultValue={`${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${(
-								'0' + date.getDate()
-							).slice(-2)}`}
 							className="bg-base-100 px-4 w-full"
+							value={`${value.getFullYear()}-${('0' + (value.getMonth() + 1)).slice(-2)}-${(
+								'0' + value.getDate()
+							).slice(-2)}`}
+							onChange={onChange}
+							onBlur={onBlur}
 						/>
 					);
 				},
 			},
 			{
 				id: 'team',
+				accessorKey: 'team',
 				header: 'Team',
-				cell: ({ row: { index } }) => {
-					const name = schoolGames[index].team.name;
-					return <input className="input input-bordered rounded-none w-full" defaultValue={name} />;
-				},
-			},
-			{
-				id: 'opponent',
-				header: 'Opponent',
-				cell: ({ row: { index } }) => {
-					const opponent = schoolGames[index].opponent;
-					return <input className="input input-bordered rounded-none w-full" defaultValue={opponent} />;
-				},
-			},
-			{
-				id: 'venue',
-				header: 'Venue',
-				cell: ({ row: { index } }) => {
-					const venue = schoolGames[index].venue.name;
-					return <input className="input input-bordered rounded-none w-full" defaultValue={venue} />;
-				},
-			},
-			{
-				id: 'teacher',
-				header: 'Teacher',
-				cell: ({ row: { index } }) => {
-					const teacher = schoolGames[index].teacher.name;
-					return <input className="input input-bordered rounded-none w-full" defaultValue={teacher} />;
-				},
-			},
-			{
-				id: 'transportation',
-				header: 'Transportation',
-				cell: ({ row: { index } }) => {
-					const transportation = schoolGames[index].transportation;
-					return <input className="input input-bordered rounded-none w-full" defaultValue={transportation} />;
-				},
-			},
-			{
-				id: 'out-of-class',
-				header: 'Out of Class',
-				cell: ({ row: { index } }) => {
-					const time = schoolGames[index].start;
-					return <input type="time" defaultValue={`${time.getHours()}:${time.getMinutes()}`} className="bg-base-100 ml-4" />;
-				},
-			},
-			{
-				id: 'start',
-				header: 'Start',
-				cell: ({ row: { index } }) => {
-					const time = schoolGames[index].start;
-					return <input type="time" defaultValue={`${time.getHours()}:${time.getMinutes()}`} className="bg-base-100 ml-4" />;
-				},
-			},
-			{
-				id: 'actions',
-				header: () => null,
-				cell: ({ row: { index } }) => {
-					const time = schoolGames[index].start;
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string>({
+						...prop,
+						getValue: () => (prop.getValue() as Games[number]['team']).id as any,
+					});
 					return (
-						<div className='flex'>
-							<button className="btn btn-square btn-error btn-sm">
-								<FaRegTrashCan />
-							</button>
-						</div>
+						<select
+							className="select select-bordered rounded-none w-full"
+							value={value}
+							onChange={onChange}
+							onBlur={onBlur}
+						>
+							<option disabled>Select a team</option>
+							{teams.map((team) => (
+								<option key={team.id} value={team.id}>
+									{team.friendlyName}
+								</option>
+							))}
+						</select>
 					);
 				},
 			},
-		],
-		[schoolGames],
-	);
+			{
+				id: 'group',
+				accessorKey: 'group',
+				header: 'Group',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<'junior' | 'intermediate'>(prop);
+					return (
+						<select
+							className="select select-bordered rounded-none w-full"
+							value={value}
+							onChange={onChange}
+							onBlur={onBlur}
+						>
+							<option value="junior">Junior</option>
+							<option value="intermediate">Intermediate</option>
+						</select>
+					);
+				},
+			},
+			// {
+			// 	id: 'teachers',
+			// 	accessorKey: 'teacher',
+			// 	header: 'Default Teacher',
+			// 	cell: (prop) => {
+			// 		const [value, onChange] = editable<string | undefined>(prop);
+			// 		return (
+			// 			<select className="select select-bordered rounded-none w-full" value={value ?? ''} onChange={onChange}>
+			// 				<option value={''} disabled>
+			// 					Select a teacher
+			// 				</option>
+			// 				{teachers.map((teacher) => (
+			// 					<option key={teacher.id} value={teacher.id}>
+			// 						{teacher.name}
+			// 					</option>
+			// 				))}
+			// 			</select>
+			// 		);
+			// 	},
+			// },
+		];
+	}, [teams]);
 
-	const table = useReactTable({ columns, data: schoolGames, getCoreRowModel: getCoreRowModel() });
+	const table = useReactTable({
+		columns,
+		defaultColumn,
+		data: games,
+		getCoreRowModel: getCoreRowModel(),
+		getSortedRowModel: getSortedRowModel(),
+		meta: {
+			updateData: (rowIndex, columnId, value) => {
+				setGames((games) => {
+					// TODO check timezones
+					games[rowIndex][columnId as keyof (typeof games)[number]] = value as any;
+					return [...games];
+				});
+			},
+		},
+		initialState: {
+			sorting: [
+				{
+					id: 'date',
+					desc: false,
+				},
+			],
+		},
+	});
+
 	return (
 		<>
 			<p className="text-xl font-bold mt-4">Games (Modify if needed)</p>
@@ -190,6 +231,19 @@ export function GamesTable() {
 								</tr>
 							);
 						})}
+						<tr>
+							<td />
+							<td />
+							<td />
+							<td />
+							<td />
+							<td />
+							<td className="flex justify-end p-0 pt-1">
+								<button className="btn btn-square" disabled>
+									<FaPlus />
+								</button>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
