@@ -226,7 +226,7 @@ export function Step1({
 
 												let currentCol = 0;
 												const startXPos = 90;
-												const endXPos = 540;
+												const endXPos = 560;
 												const colWidth = (endXPos - startXPos) / teams.length;
 												if (currentXPos <= startXPos) currentCol = 0;
 												else
