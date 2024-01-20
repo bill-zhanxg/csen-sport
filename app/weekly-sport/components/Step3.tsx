@@ -2,24 +2,17 @@ import { Signal, useSignal } from '@preact/signals-react';
 import { RowData } from '@tanstack/react-table';
 import { useState } from 'react';
 import { GamesTable } from './GamesTable';
+import { Opponents, OpponentsTable } from './OpponentsTable';
 import { FIxturePages } from './Step1';
 import { Venues } from './Step2';
-import { TeamsTable } from './TeamsTable';
+import { Teams, TeamsTable } from './TeamsTable';
+import { VenuesTable } from './VenuesTable';
 
 declare module '@tanstack/react-table' {
 	interface TableMeta<TData extends RowData> {
 		updateData: (rowIndex: number, columnId: string, value: unknown) => void;
 	}
 }
-
-export type Teams = {
-	gender: string;
-	sport: string;
-	division: string;
-	team: string;
-	friendlyName: string;
-	group: string;
-}[];
 
 export function Step3({
 	setNextLoading,
@@ -38,6 +31,8 @@ export function Step3({
 	const schoolCsenCode = useSignal<string | undefined>(undefined);
 	const filteredFixtures = useSignal<FIxturePages>([]);
 	const [teams, setTeams] = useState<Teams>([]);
+	const [opponents, setOpponents] = useState<Opponents>([]);
+	const [filteredVenues, setFilteredVenues] = useState<Venues>([]);
 
 	return (
 		<>
@@ -81,9 +76,12 @@ export function Step3({
 						});
 						schoolCsenCode.value = currentSchoolCsenCode;
 
-						// Remap games into teams
+						// #region Collapse algorithm
+						// Remap games into teams and opponents
 						setTeams([]);
 						const teams: Teams = [];
+						const opponents: string[] = [];
+						const venueCodes: string[] = [];
 						for (const item of filteredFixtures.value) {
 							const teamCodes: {
 								name: string;
@@ -99,20 +97,29 @@ export function Step3({
 								for (const game of games) {
 									for (const verses of game.games) {
 										if ('text' in verses) continue;
+										let myTeam: string | undefined;
+										let opponent: string | undefined;
 										if (verses.team1.includes(currentSchoolCsenCode)) {
-											if (teamCodes.find((code) => code.name === verses.team1 && code.team === team)) continue;
-											teamCodes.push({
-												name: verses.team1,
-												team,
-											});
+											myTeam = verses.team1;
+											opponent = verses.team2;
 										}
 										if (verses.team2.includes(currentSchoolCsenCode)) {
-											if (teamCodes.find((code) => code.name === verses.team2 && code.team === team)) continue;
+											myTeam = verses.team2;
+											opponent = verses.team1;
+										}
+										if (!myTeam || !opponent) continue;
+
+										if (!teamCodes.find((code) => code.name === myTeam && code.team === team)) {
 											teamCodes.push({
-												name: verses.team2,
+												name: myTeam,
 												team,
 											});
 										}
+
+										const opponentCode = opponent.match(/([a-z]+)/)?.[0];
+										if (opponentCode && !opponents.includes(opponentCode)) opponents.push(opponentCode);
+
+										if (!venueCodes.includes(verses.venue)) venueCodes.push(verses.venue);
 									}
 								}
 							}
@@ -132,6 +139,26 @@ export function Step3({
 							});
 						}
 						setTeams(teams);
+						setOpponents(opponents.map((opponent) => ({ cenCode: opponent, friendlyName: opponent.toUpperCase() })));
+						setFilteredVenues(
+							venueCodes.map((venueCode) => {
+								const result = venues.value.find((venue) => venue.csenCode === venueCode);
+								if (!result)
+									return {
+										csenCode: venueCode,
+										venue: 'Not Found',
+										address: 'Not Found',
+										cfNum: 'Not Found',
+									};
+								else return {
+									csenCode: venueCode,
+									venue: result.venue.replace(/\b[a-z]/g, (c) => c.toUpperCase()),
+									address: result.address.replace(/\b[a-z]/g, (c) => c.toUpperCase()),
+									cfNum: result.cfNum,
+								};
+							}),
+						);
+						// #endregion
 					}}
 				>
 					Filter
@@ -141,6 +168,8 @@ export function Step3({
 				(teams.length > 0 ? (
 					<>
 						<TeamsTable teams={teams} setTeams={setTeams} />
+						<OpponentsTable opponents={opponents} setOpponents={setOpponents} />
+						<VenuesTable venues={filteredVenues} setVenues={setFilteredVenues} />
 						<GamesTable />
 					</>
 				) : (

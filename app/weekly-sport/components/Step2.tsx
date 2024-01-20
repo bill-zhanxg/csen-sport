@@ -115,7 +115,7 @@ export function Step2({
 										}[] = [];
 
 										for (const { str, transform } of data) {
-											const text = str.trim();
+											const text = str;
 
 											if (steps === 0) {
 												if (!text) continue;
@@ -142,14 +142,16 @@ export function Step2({
 														csenCode: '',
 													};
 													for (const { text, xPos } of previousRows) {
-														const addText = (col: keyof typeof row) =>
-															(row[col] = (row[col] + text).toLowerCase().replace(/\s\s+/g, ' ').trim());
+														const addText = (col: keyof typeof row) => (row[col] = (row[col] + text).toLowerCase());
 														if (xPos < 200) addText('venue');
 														else if (xPos < 450) addText('address');
 														else if (xPos < 520) addText('cfNum');
 														else addText('csenCode');
 													}
 
+													Object.keys(row).forEach((key) => {
+														row[key as keyof typeof row] = row[key as keyof typeof row].replace(/\s\s+/g, ' ').trim();
+													});
 													venues.push(row);
 													previousRows = [];
 													previousYPos = currentYPos;

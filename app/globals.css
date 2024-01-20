@@ -18,4 +18,8 @@
 	.h-full-nav {
 		height: calc(100vh - 70px);
 	}
+
+	input::-webkit-calendar-picker-indicator {
+		filter: invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%);
+	}
 }

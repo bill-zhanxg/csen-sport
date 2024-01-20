@@ -1,5 +1,6 @@
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
+import { FaRegTrashCan } from 'react-icons/fa6';
 
 type Games = {
 	date: Date;
@@ -75,7 +76,7 @@ export function GamesTable() {
 							defaultValue={`${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${(
 								'0' + date.getDate()
 							).slice(-2)}`}
-							className="px-4 w-full"
+							className="bg-base-100 px-4 w-full"
 						/>
 					);
 				},
@@ -125,7 +126,7 @@ export function GamesTable() {
 				header: 'Out of Class',
 				cell: ({ row: { index } }) => {
 					const time = schoolGames[index].start;
-					return <input type="time" defaultValue={`${time.getHours()}:${time.getMinutes()}`} className="ml-4" />;
+					return <input type="time" defaultValue={`${time.getHours()}:${time.getMinutes()}`} className="bg-base-100 ml-4" />;
 				},
 			},
 			{
@@ -133,7 +134,21 @@ export function GamesTable() {
 				header: 'Start',
 				cell: ({ row: { index } }) => {
 					const time = schoolGames[index].start;
-					return <input type="time" defaultValue={`${time.getHours()}:${time.getMinutes()}`} className="ml-4" />;
+					return <input type="time" defaultValue={`${time.getHours()}:${time.getMinutes()}`} className="bg-base-100 ml-4" />;
+				},
+			},
+			{
+				id: 'actions',
+				header: () => null,
+				cell: ({ row: { index } }) => {
+					const time = schoolGames[index].start;
+					return (
+						<div className='flex'>
+							<button className="btn btn-square btn-error btn-sm">
+								<FaRegTrashCan />
+							</button>
+						</div>
+					);
 				},
 			},
 		],
@@ -175,11 +190,6 @@ export function GamesTable() {
 								</tr>
 							);
 						})}
-						<tr>
-							<td className="p-0">
-								<p>Hello</p>
-							</td>
-						</tr>
 					</tbody>
 				</table>
 			</div>

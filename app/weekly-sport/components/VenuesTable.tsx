@@ -2,31 +2,22 @@
 
 import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { ChangeEventHandler, Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
-import { FaPlus } from 'react-icons/fa';
+import { Venues } from './Step2';
 
-export type Teams = {
-	gender: string;
-	sport: string;
-	division: string;
-	team: string;
-	friendlyName: string;
-	group: string;
-}[];
-
-const defaultColumn: Partial<ColumnDef<Teams[number]>> = {
+const defaultColumn: Partial<ColumnDef<Venues[number]>> = {
 	cell: ({ getValue }) => {
 		return <input className="input input-bordered rounded-none w-full" value={getValue() as string} disabled />;
 	},
 };
 
-export function TeamsTable({ teams, setTeams }: { teams: Teams; setTeams: Dispatch<SetStateAction<Teams>> }) {
-	const columns = useMemo<ColumnDef<Teams[number]>[]>(() => {
+export function VenuesTable({ venues, setVenues }: { venues: Venues; setVenues: Dispatch<SetStateAction<Venues>> }) {
+	const columns = useMemo<ColumnDef<Venues[number]>[]>(() => {
 		function editable<T>({
 			getValue,
 			row: { index },
 			column: { id },
 			table,
-		}: CellContext<Teams[number], unknown>): [T, ChangeEventHandler<HTMLElement> | undefined] {
+		}: CellContext<Venues[number], unknown>): [T, ChangeEventHandler<HTMLElement> | undefined] {
 			const initialValue = getValue() as T;
 			const [value, setValue] = useState(initialValue);
 			useEffect(() => {
@@ -45,46 +36,35 @@ export function TeamsTable({ teams, setTeams }: { teams: Teams; setTeams: Dispat
 
 		return [
 			{
-				id: 'gender',
-				accessorKey: 'gender',
-				header: 'Gender',
+				id: 'csenCode',
+				accessorKey: 'csenCode',
+				header: 'CSEN Code',
 			},
 			{
-				id: 'sport',
-				accessorKey: 'sport',
-				header: 'Sport',
-			},
-			{
-				id: 'division',
-				accessorKey: 'division',
-				header: 'Division',
-			},
-			{
-				id: 'team',
-				accessorKey: 'team',
-				header: 'Team',
-			},
-			{
-				id: 'friendlyName',
-				accessorKey: 'friendlyName',
-				header: 'Friendly Name',
+				id: 'venue',
+				accessorKey: 'venue',
+				header: 'Venue',
 				cell: (prop) => {
 					const [value, onChange] = editable<string>(prop);
-					return <input className="input input-bordered rounded-none w-full" value={value} onChange={onChange} />;
+					return <input className={`input input-bordered rounded-none w-full ${value === 'Not Found' ? 'bg-error text-error-content' : ''}`} value={value} onChange={onChange} />;
 				},
 			},
 			{
-				id: 'group',
-				accessorKey: 'group',
-				header: 'Group',
+				id: 'address',
+				accessorKey: 'address',
+				header: 'Address',
 				cell: (prop) => {
-					const [value, onChange] = editable<'junior' | 'intermediate'>(prop);
-					return (
-						<select className="select select-bordered rounded-none w-full" value={value} onChange={onChange}>
-							<option value="junior">Junior</option>
-							<option value="intermediate">Intermediate</option>
-						</select>
-					);
+					const [value, onChange] = editable<string>(prop);
+					return <input className={`input input-bordered rounded-none w-full ${value === 'Not Found' ? 'bg-error text-error-content' : ''}`} value={value} onChange={onChange} />;
+				},
+			},
+			{
+				id: 'cfNum',
+				accessorKey: 'cfNum',
+				header: 'Court / Field Number',
+				cell: (prop) => {
+					const [value, onChange] = editable<string>(prop);
+					return <input className={`input input-bordered rounded-none w-full ${value === 'Not Found' ? 'bg-error text-error-content' : ''}`} value={value} onChange={onChange} />;
 				},
 			},
 		];
@@ -93,13 +73,13 @@ export function TeamsTable({ teams, setTeams }: { teams: Teams; setTeams: Dispat
 	const table = useReactTable({
 		columns,
 		defaultColumn,
-		data: teams,
+		data: venues,
 		getCoreRowModel: getCoreRowModel(),
 		meta: {
 			updateData: (rowIndex, columnId, value) => {
-				setTeams((teams) => {
-					teams[rowIndex][columnId as keyof (typeof teams)[number]] = value as string;
-					return teams;
+				setVenues((venues) => {
+					venues[rowIndex][columnId as keyof (typeof venues)[number]] = value as string;
+					return venues;
 				});
 			},
 		},
@@ -107,7 +87,7 @@ export function TeamsTable({ teams, setTeams }: { teams: Teams; setTeams: Dispat
 
 	return (
 		<>
-			<p className="text-xl font-bold mt-4">Team names (Modify if needed)</p>
+			<p className="text-xl font-bold mt-4">Venues (Modify if needed)</p>
 			<div className="overflow-x-auto w-[90%]">
 				<table className="table text-lg">
 					<thead>
@@ -139,14 +119,6 @@ export function TeamsTable({ teams, setTeams }: { teams: Teams; setTeams: Dispat
 								</tr>
 							);
 						})}
-						<tr>
-							<td />
-							<td />
-							<td />
-							<td />
-							<td />
-							<td className="flex justify-end p-0 pt-1"><button className='btn btn-square' disabled><FaPlus /></button></td>
-						</tr>
 					</tbody>
 				</table>
 			</div>
