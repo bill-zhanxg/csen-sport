@@ -26854,7 +26854,7 @@ const newTestData2 = [
 const data: {
 	str: string;
 	transform: any[];
-}[] = newTestData2[0].filter((item) => item.str).map(({ str, transform }) => ({ str, transform }));
+}[] = newTestData[1].filter((item) => item.str).map(({ str, transform }) => ({ str, transform }));
 
 const fullText = data.map(({ str }) => str).join(' ');
 const type = fullText.match(/(JUNIOR|INTERMEDIATE)/i)?.[0].toLowerCase();
@@ -26983,7 +26983,7 @@ for (const { str, transform } of data) {
 
 		let currentCol = 0;
 		const startXPos = 90;
-		const endXPos = 540;
+		const endXPos = 560;
 		const colWidth = (endXPos - startXPos) / teams.length;
 		if (currentXPos <= startXPos) currentCol = 0;
 		else for (let i = 0; i < teams.length; i++) {

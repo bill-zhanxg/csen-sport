@@ -1,8 +1,16 @@
 import { Signal, useSignal } from '@preact/signals-react';
-import { useRef, useState } from 'react';
+import { RowData } from '@tanstack/react-table';
+import { useState } from 'react';
+import { GamesTable } from './GamesTable';
 import { FIxturePages } from './Step1';
 import { Venues } from './Step2';
 import { TeamsTable } from './TeamsTable';
+
+declare module '@tanstack/react-table' {
+	interface TableMeta<TData extends RowData> {
+		updateData: (rowIndex: number, columnId: string, value: unknown) => void;
+	}
+}
 
 export type Teams = {
 	gender: string;
@@ -26,7 +34,7 @@ export function Step3({
 	fixtures: Signal<FIxturePages>;
 	venues: Signal<Venues>;
 }) {
-	const schoolCsenCodeRef = useRef<HTMLInputElement>(null);
+	const [currentSchoolCsenCode, setSchoolCsenCodeInput] = useState('');
 	const schoolCsenCode = useSignal<string | undefined>(undefined);
 	const filteredFixtures = useSignal<FIxturePages>([]);
 	const [teams, setTeams] = useState<Teams>([]);
@@ -39,16 +47,15 @@ export function Step3({
 					type="text"
 					placeholder="Enter your school CSEN code"
 					className="input input-bordered w-full"
-					ref={schoolCsenCodeRef}
+					onChange={(event) => setSchoolCsenCodeInput(event.target.value.trim().toLowerCase())}
 				/>
 				<button
 					className="btn btn-accent"
+					disabled={!currentSchoolCsenCode || schoolCsenCode.value === currentSchoolCsenCode}
 					onClick={() => {
-						console.log(fixtures.value);
-
-						const currentSchoolCsenCode = schoolCsenCodeRef.current?.value.trim().toLowerCase();
 						if (!currentSchoolCsenCode)
 							return setAlert({ type: 'error', message: 'Please enter your CSEN school code' });
+						if (currentSchoolCsenCode === schoolCsenCode.value) return;
 						filteredFixtures.value = fixtures.value.map((page) => {
 							return {
 								...page,
@@ -74,7 +81,7 @@ export function Step3({
 						});
 						schoolCsenCode.value = currentSchoolCsenCode;
 
-						// Remap teams
+						// Remap games into teams
 						setTeams([]);
 						const teams: Teams = [];
 						for (const item of filteredFixtures.value) {
@@ -89,29 +96,25 @@ export function Step3({
 								const games = item.games[i];
 								if (!games) continue;
 								const team = item.teams[i];
-								for (let j = 0; j < games.length; j++) {
-									const game = games[j];
-									for (const game of games) {
-										for (const verses of game.games) {
-											if ('text' in verses) continue;
-											if (verses.team1.includes(currentSchoolCsenCode)) {
-												teamCodes.push({
-													name: verses.team1,
-													team: team,
-												});
-											}
-											if (verses.team2.includes(currentSchoolCsenCode)) {
-												teamCodes.push({
-													name: verses.team2,
-													team: team,
-												});
-											}
+								for (const game of games) {
+									for (const verses of game.games) {
+										if ('text' in verses) continue;
+										if (verses.team1.includes(currentSchoolCsenCode)) {
+											if (teamCodes.find((code) => code.name === verses.team1 && code.team === team)) continue;
+											teamCodes.push({
+												name: verses.team1,
+												team,
+											});
+										}
+										if (verses.team2.includes(currentSchoolCsenCode)) {
+											if (teamCodes.find((code) => code.name === verses.team2 && code.team === team)) continue;
+											teamCodes.push({
+												name: verses.team2,
+												team,
+											});
 										}
 									}
 								}
-							}
-							for (const games of item.games) {
-								if (!games) continue;
 							}
 							const upperCaseFirst = (string: string) => string.charAt(0).toUpperCase() + string.toLowerCase().slice(1);
 							teamCodes.forEach((code) => {
@@ -121,7 +124,9 @@ export function Step3({
 									sport: code.team.name,
 									division: code.team.number,
 									team: code.name,
-									friendlyName: `${upperCaseFirst(item.gender)} ${code.team.name} Div ${code.team.number}${teamNum ? ` (Team ${teamNum})` : ''}`,
+									friendlyName: `${upperCaseFirst(item.gender)} ${code.team.name} Div ${code.team.number}${
+										teamNum ? ` (Team ${teamNum})` : ''
+									}`,
 									group: item.type,
 								});
 							});
@@ -132,7 +137,17 @@ export function Step3({
 					Filter
 				</button>
 			</div>
-			{schoolCsenCode.value && <TeamsTable schoolCsenCode={schoolCsenCode.value} teams={teams} setTeams={setTeams} />}
+			{schoolCsenCode.value &&
+				(teams.length > 0 ? (
+					<>
+						<TeamsTable teams={teams} setTeams={setTeams} />
+						<GamesTable />
+					</>
+				) : (
+					<p className="text-xl font-bold text-error text-center max-w-2xl">
+						Can not find any teams matching your CSEN code
+					</p>
+				))}
 		</>
 	);
 }
