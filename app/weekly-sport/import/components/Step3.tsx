@@ -62,8 +62,10 @@ export function Step3({
 					className="btn btn-accent"
 					disabled={!currentSchoolCsenCode || schoolCsenCode.value === currentSchoolCsenCode}
 					onClick={() => {
-						if (!currentSchoolCsenCode)
+						if (!currentSchoolCsenCode) {
+							setDisableNext(true);
 							return setAlert({ type: 'error', message: 'Please enter your CSEN school code' });
+						}
 						if (currentSchoolCsenCode === schoolCsenCode.value) return;
 						filteredFixtures.value = fixtures.value.map((page) => {
 							return {
@@ -215,7 +217,8 @@ export function Step3({
 						setGames(games);
 						// #endregion
 
-						setDisableNext(false);
+						if (teams.length > 0) setDisableNext(false);
+						else setDisableNext(true);
 					}}
 				>
 					Filter

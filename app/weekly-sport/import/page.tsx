@@ -1,5 +1,5 @@
 import { getXataClient } from '@/libs/xata';
-import { ImportPage } from '../components/ImportPage';
+import { ImportPage } from './components/ImportPage';
 
 export default async function Import() {
 	const teachers = await getXataClient()
