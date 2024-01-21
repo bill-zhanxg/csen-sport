@@ -2,11 +2,7 @@
 
 import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { ChangeEventHandler, Dispatch, FocusEventHandler, SetStateAction, useEffect, useMemo, useState } from 'react';
-
-export type Opponents = {
-	csenCode: string;
-	friendlyName: string;
-}[];
+import { Opponents } from '../actions';
 
 const defaultColumn: Partial<ColumnDef<Opponents[number]>> = {
 	cell: ({ getValue }) => {
@@ -63,7 +59,14 @@ export function OpponentsTable({
 				header: 'Friendly Name',
 				cell: (prop) => {
 					const [value, onChange, onBlur] = editable<string>(prop);
-					return <input className="input input-bordered rounded-none w-full" value={value} onChange={onChange} onBlur={onBlur} />;
+					return (
+						<input
+							className="input input-bordered rounded-none w-full"
+							value={value}
+							onChange={onChange}
+							onBlur={onBlur}
+						/>
+					);
 				},
 			},
 		];

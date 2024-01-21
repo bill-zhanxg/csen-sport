@@ -83,6 +83,7 @@ const tables = [
       { name: "start", type: "datetime" },
       { name: "teacher", type: "link", link: { table: "nextauth_users" } },
       { name: "opponent", type: "string" },
+      { name: "out_of_class", type: "datetime" },
     ],
   },
   {

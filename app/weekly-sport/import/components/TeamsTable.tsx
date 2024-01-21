@@ -3,19 +3,7 @@
 import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { ChangeEventHandler, Dispatch, FocusEventHandler, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
-
-export type Teams = {
-	id: string;
-	gender: string;
-	sport: string;
-	division: string;
-	team: string;
-	friendlyName: string;
-	group: string;
-	teacher?: string;
-	out_of_class?: string;
-	start?: string;
-}[];
+import { Teams } from '../actions';
 
 const defaultColumn: Partial<ColumnDef<Teams[number]>> = {
 	cell: ({ getValue }) => {
@@ -38,7 +26,11 @@ export function TeamsTable({
 			row: { index },
 			column: { id },
 			table,
-		}: CellContext<Teams[number], unknown>): [T, ChangeEventHandler<HTMLElement> | undefined, FocusEventHandler<HTMLElement> | undefined] {
+		}: CellContext<Teams[number], unknown>): [
+			T,
+			ChangeEventHandler<HTMLElement> | undefined,
+			FocusEventHandler<HTMLElement> | undefined,
+		] {
 			const initialValue = getValue() as T;
 			const [value, setValue] = useState(initialValue);
 			useEffect(() => {
@@ -85,7 +77,14 @@ export function TeamsTable({
 				header: 'Friendly Name',
 				cell: (prop) => {
 					const [value, onChange, onBlur] = editable<string>(prop);
-					return <input className="input input-bordered rounded-none w-full" value={value} onChange={onChange} onBlur={onBlur} />;
+					return (
+						<input
+							className="input input-bordered rounded-none w-full"
+							value={value}
+							onChange={onChange}
+							onBlur={onBlur}
+						/>
+					);
 				},
 			},
 			{
@@ -95,7 +94,12 @@ export function TeamsTable({
 				cell: (prop) => {
 					const [value, onChange, onBlur] = editable<'junior' | 'intermediate'>(prop);
 					return (
-						<select className="select select-bordered rounded-none w-full" value={value} onChange={onChange} onBlur={onBlur}>
+						<select
+							className="select select-bordered rounded-none w-full"
+							value={value}
+							onChange={onChange}
+							onBlur={onBlur}
+						>
 							<option value="junior">Junior</option>
 							<option value="intermediate">Intermediate</option>
 						</select>
@@ -109,7 +113,12 @@ export function TeamsTable({
 				cell: (prop) => {
 					const [value, onChange, onBlur] = editable<string | undefined>(prop);
 					return (
-						<select className="select select-bordered rounded-none w-full" value={value ?? ''} onChange={onChange} onBlur={onBlur}>
+						<select
+							className="select select-bordered rounded-none w-full"
+							value={value ?? ''}
+							onChange={onChange}
+							onBlur={onBlur}
+						>
 							<option value={''} disabled>
 								Select a teacher
 							</option>
@@ -128,7 +137,9 @@ export function TeamsTable({
 				header: 'D Out of Class',
 				cell: (prop) => {
 					const [value, onChange, onBlur] = editable<string | undefined>(prop);
-					return <input type="time" className="bg-base-100 ml-4" value={value ?? ''} onChange={onChange} onBlur={onBlur} />;
+					return (
+						<input type="time" className="bg-base-100 ml-4" value={value ?? ''} onChange={onChange} onBlur={onBlur} />
+					);
 				},
 			},
 			{
@@ -137,7 +148,9 @@ export function TeamsTable({
 				header: 'D Start Time',
 				cell: (prop) => {
 					const [value, onChange, onBlur] = editable<string | undefined>(prop);
-					return <input type="time" className="bg-base-100 ml-4" value={value ?? ''} onChange={onChange} onBlur={onBlur} />;
+					return (
+						<input type="time" className="bg-base-100 ml-4" value={value ?? ''} onChange={onChange} onBlur={onBlur} />
+					);
 				},
 			},
 		];

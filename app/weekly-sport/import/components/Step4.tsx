@@ -1,4 +1,5 @@
 import { ImportState } from './ImportPage';
+import { TbReload } from "react-icons/tb";
 
 export function Step4({ importState }: { importState: ImportState }) {
 	return (
@@ -10,15 +11,15 @@ export function Step4({ importState }: { importState: ImportState }) {
 				</>
 			) : importState.type === 'error' ? (
 				<>
-					<h1 className="font-bold">Error</h1>
+					<h1 className="font-bold">An Error had occurred</h1>
 					<p>{importState.message}</p>
-					<progress className="progress progress-error w-full" value="100" max="100" ></progress>
-					<button className="btn btn-error">Error</button>
+					<progress className="progress progress-error w-full" value="56" max="100" ></progress>
+					<button className="btn btn-neutral w-full text-center border-1 border-error"><TbReload size={20}/>Retry</button>
 				</>
 			) : (
 				<>
-					<h1 className="font-bold">Done</h1>
-					<progress className="progress progress-success w-full" value="100" max="100"></progress>
+					<h1 className="font-bold">Data Imported</h1>
+					<progress className="progress progress-success w-full" value="100" max="100" ></progress>
 				</>
 			)}
 		</div>

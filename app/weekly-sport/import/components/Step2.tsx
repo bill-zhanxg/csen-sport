@@ -1,21 +1,9 @@
-import { TextItem } from '@/app/testpdf/types';
 import { Signal } from '@preact/signals-react';
-import dayjs from 'dayjs';
-import timezone from 'dayjs/plugin/timezone';
-import utc from 'dayjs/plugin/utc';
 import Link from 'next/link';
 import { useState } from 'react';
 import { pdfjs as PDFJS } from 'react-pdf';
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
-
-export type Venues = {
-	venue: string;
-	address: string;
-	cfNum: string;
-	csenCode: string;
-}[];
+import { Venues } from '../actions';
+import { TextItem } from './types';
 
 export function Step2({
 	setNextLoading,

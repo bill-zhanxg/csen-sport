@@ -1,17 +1,20 @@
 'use client';
 
 import { useSignal } from '@preact/signals-react';
+import dayjs from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import { useEffect, useState } from 'react';
 import { pdfjs } from 'react-pdf';
 import { ErrorAlert, SuccessAlert } from '../../../components/Alert';
-import { importData } from '../actions';
-import { Games } from './GamesTable';
-import { Opponents } from './OpponentsTable';
+import { Games, Opponents, Teams, Venues, importData } from '../actions';
 import { FIxturePages, Step1 } from './Step1';
-import { Step2, Venues } from './Step2';
+import { Step2 } from './Step2';
 import { Step3 } from './Step3';
 import { Step4 } from './Step4';
-import { Teams } from './TeamsTable';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export type ImportState =
 	| {
@@ -1109,6 +1112,19 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 
 	const [importState, setImportState] = useState<ImportState>({ type: 'loading' });
 
+	useEffect(() => {
+		if (step === 4) {
+			importData(teams, opponents, filteredVenues, games, dayjs.tz.guess())
+				.then((res) => {
+					setImportState(res);
+					setNextLoading(false);
+				})
+				.catch(() => {
+					// Shouldn't happen
+				});
+		}
+	}, [step, teams, opponents, filteredVenues, games]);
+
 	return (
 		<>
 			<main className="flex flex-col items-center gap-4 p-4 overflow-x-auto w-full">
@@ -1180,14 +1196,6 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 								if (newStep === 4) {
 									setDisablePrevious(true);
 									setNextLoading(true);
-
-									importData(teams, opponents, filteredVenues, games)
-										.then((res) => {
-											setImportState(res);
-										})
-										.catch(() => {
-											// Shouldn't happen
-										});
 								}
 								return newStep;
 							});

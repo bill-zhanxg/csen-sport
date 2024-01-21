@@ -1,0 +1,16 @@
+{
+  "id": "mig_cmlmcd0upf76fqo7lp6g",
+  "parentID": "mig_cmhpp6c445p2gkksba8g",
+  "checksum": "1:50155dfc31d2c2cccee8b964910bf469e0f99a698af835ce282cb4643241f637",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "out_of_class",
+          "type": "datetime"
+        },
+        "table": "games"
+      }
+    }
+  ]
+}
