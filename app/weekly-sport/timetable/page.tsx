@@ -1,13 +1,20 @@
+import { getXataClient } from '@/libs/xata';
 
-import { auth } from '@/libs/auth';
-import { DateInterfaceDocument } from '../../../libs/appwrite/Interface/Weekly-sport';
-import { Error, Success } from '../../components/Alert';
+export default async function WeeklySport() {
+	const games = await getXataClient()
+		.db.games.select(['*', 'team.*', 'venue.*'])
+		.getPaginated({
+			consistency: 'eventual',
+			sort: [{ date: 'asc' }],
+			pagination: {
+				size: 100,
+				offset: 0,
+			},
+		});
 
-export default async  function WeeklySport() {
-	const session = await auth();
-	if (!session) return <h1>Unauthenticated</h1>;
+	console.log(games.records[0]);
 
-	return <h1>Unfinished</h1>
+	return <h1>Unfinished</h1>;
 	// return (
 	// 	<>
 	// 		<main className="flex flex-col items-center gap-4 p-4 overflow-x-auto w-full">
