@@ -13,6 +13,8 @@ export type Teams = {
 	friendlyName: string;
 	group: string;
 	teacher?: string;
+	out_of_class?: string;
+	start?: string;
 }[];
 
 const defaultColumn: Partial<ColumnDef<Teams[number]>> = {
@@ -101,7 +103,7 @@ export function TeamsTable({
 				},
 			},
 			{
-				id: 'teachers',
+				id: 'teacher',
 				accessorKey: 'teacher',
 				header: 'Default Teacher',
 				cell: (prop) => {
@@ -120,6 +122,24 @@ export function TeamsTable({
 					);
 				},
 			},
+			{
+				id: 'out_of_class',
+				accessorKey: 'out_of_class',
+				header: 'D Out of Class',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string | undefined>(prop);
+					return <input type="time" className="bg-base-100 ml-4" value={value ?? ''} onChange={onChange} onBlur={onBlur} />;
+				},
+			},
+			{
+				id: 'start',
+				accessorKey: 'start',
+				header: 'D Start Time',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string | undefined>(prop);
+					return <input type="time" className="bg-base-100 ml-4" value={value ?? ''} onChange={onChange} onBlur={onBlur} />;
+				},
+			},
 		];
 	}, [teachers]);
 
@@ -131,7 +151,7 @@ export function TeamsTable({
 		meta: {
 			updateData: (rowIndex, columnId, value) => {
 				setTeams((teams) => {
-					teams[rowIndex][columnId as keyof (typeof teams)[number]] = value as string;
+					teams[rowIndex][columnId as keyof (typeof teams)[number]] = value as any;
 					return [...teams];
 				});
 			},
@@ -173,6 +193,8 @@ export function TeamsTable({
 							);
 						})}
 						<tr>
+							<td />
+							<td />
 							<td />
 							<td />
 							<td />

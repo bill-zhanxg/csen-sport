@@ -9,27 +9,19 @@ import {
 	useReactTable,
 } from '@tanstack/react-table';
 import { ChangeEventHandler, Dispatch, FocusEventHandler, SetStateAction, useEffect, useMemo, useState } from 'react';
-import { FaPlus } from 'react-icons/fa';
 import { Opponents } from './OpponentsTable';
 import { Venues } from './Step2';
 import { Teams } from './TeamsTable';
 
 export type Games = {
-	date: Date;
-	team: {
-		id: string;
-		gender: string;
-		sport: string;
-		division: string;
-		code: string;
-		group: 'junior' | 'intermediate';
-	};
+	date: string;
+	teamId: string;
 	opponentCode: string;
 	venueCode: string;
 	teacher?: string;
 	transportation?: string;
-	out_of_class?: Date;
-	start?: Date;
+	out_of_class?: string;
+	start?: string;
 	notes?: string;
 }[];
 
@@ -90,14 +82,12 @@ export function GamesTable({
 				accessorKey: 'date',
 				header: 'Date',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<Date>(prop);
+					const [value, onChange, onBlur] = editable<string>(prop);
 					return (
 						<input
 							type="date"
 							className="bg-base-100 px-4 w-full"
-							value={`${value.getFullYear()}-${('0' + (value.getMonth() + 1)).slice(-2)}-${(
-								'0' + value.getDate()
-							).slice(-2)}`}
+							value={value ?? ''}
 							onChange={onChange}
 							onBlur={onBlur}
 						/>
@@ -105,14 +95,11 @@ export function GamesTable({
 				},
 			},
 			{
-				id: 'team',
-				accessorKey: 'team',
+				id: 'teamId',
+				accessorKey: 'teamId',
 				header: 'Team',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string>({
-						...prop,
-						getValue: () => (prop.getValue() as Games[number]['team']).id as any,
-					});
+					const [value, onChange, onBlur] = editable<string>(prop);
 					return (
 						<select
 							className="select select-bordered rounded-none w-full"
@@ -123,7 +110,7 @@ export function GamesTable({
 							<option disabled>Select a team</option>
 							{teams.map((team) => (
 								<option key={team.id} value={team.id}>
-									{team.friendlyName}
+									[{team.group}] {team.friendlyName}
 								</option>
 							))}
 						</select>
@@ -131,11 +118,11 @@ export function GamesTable({
 				},
 			},
 			{
-				id: 'group',
-				accessorKey: 'group',
-				header: 'Group',
+				id: 'opponentCode',
+				accessorKey: 'opponentCode',
+				header: 'Opponent',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<'junior' | 'intermediate'>(prop);
+					const [value, onChange, onBlur] = editable<string>(prop);
 					return (
 						<select
 							className="select select-bordered rounded-none w-full"
@@ -143,34 +130,137 @@ export function GamesTable({
 							onChange={onChange}
 							onBlur={onBlur}
 						>
-							<option value="junior">Junior</option>
-							<option value="intermediate">Intermediate</option>
+							<option disabled>Select opponent</option>
+							{opponents.map((opponent) => (
+								<option key={opponent.csenCode} value={opponent.csenCode}>
+									{opponent.friendlyName}
+								</option>
+							))}
 						</select>
 					);
 				},
 			},
-			// {
-			// 	id: 'teachers',
-			// 	accessorKey: 'teacher',
-			// 	header: 'Default Teacher',
-			// 	cell: (prop) => {
-			// 		const [value, onChange] = editable<string | undefined>(prop);
-			// 		return (
-			// 			<select className="select select-bordered rounded-none w-full" value={value ?? ''} onChange={onChange}>
-			// 				<option value={''} disabled>
-			// 					Select a teacher
-			// 				</option>
-			// 				{teachers.map((teacher) => (
-			// 					<option key={teacher.id} value={teacher.id}>
-			// 						{teacher.name}
-			// 					</option>
-			// 				))}
-			// 			</select>
-			// 		);
-			// 	},
-			// },
+			{
+				id: 'venueCode',
+				accessorKey: 'venueCode',
+				header: 'Venue',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string>(prop);
+					return (
+						<select
+							className="select select-bordered rounded-none w-full"
+							value={value}
+							onChange={onChange}
+							onBlur={onBlur}
+						>
+							<option disabled>Select venue</option>
+							{venues.map((venue) => (
+								<option key={venue.csenCode} value={venue.csenCode}>
+									{venue.venue} ({venue.cfNum}) [{venue.csenCode}]
+								</option>
+							))}
+						</select>
+					);
+				},
+			},
+			{
+				id: 'teachers',
+				accessorKey: 'teacher',
+				header: 'Teacher',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string | undefined>(prop);
+					const defaultTeacher = teams.find((team) => team.id === prop.row.original.teamId)?.teacher;
+					return (
+						<select
+							className="select select-bordered rounded-none w-full"
+							value={defaultTeacher ?? value ?? ''}
+							onChange={onChange}
+							onBlur={onBlur}
+						>
+							<option value={''} disabled>
+								Select a teacher
+							</option>
+							{teachers.map((teacher) => (
+								<option key={teacher.id} value={teacher.id}>
+									{teacher.name}
+								</option>
+							))}
+						</select>
+					);
+				},
+			},
+			{
+				id: 'transportation',
+				accessorKey: 'transportation',
+				header: 'Transportation',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string>(prop);
+					return (
+						<input
+							className="input input-bordered rounded-none w-full"
+							placeholder="Optional"
+							value={value ?? ''}
+							onChange={onChange}
+							onBlur={onBlur}
+						/>
+					);
+				},
+			},
+			{
+				id: 'notes',
+				accessorKey: 'notes',
+				header: 'Notes',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string>(prop);
+					return (
+						<input
+							className="input input-bordered rounded-none w-full"
+							placeholder="Extra info"
+							value={value ?? ''}
+							onChange={onChange}
+							onBlur={onBlur}
+						/>
+					);
+				},
+			},
+			{
+				id: 'out_of_class',
+				accessorKey: 'out_of_class',
+				header: 'Out of Class',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string | undefined>(prop);
+					const defaultTime = teams.find((team) => team.id === prop.row.original.teamId)?.out_of_class;
+					return (
+						<input
+							type="time"
+							className="bg-base-100 ml-4"
+							value={defaultTime ?? value ?? ''}
+							onChange={onChange}
+							onBlur={onBlur}
+						/>
+					);
+				},
+			},
+			{
+				id: 'start',
+				accessorKey: 'start',
+				header: 'Start Time',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string | undefined>(prop);
+					const defaultTime = teams.find((team) => team.id === prop.row.original.teamId)?.start;
+					return (
+						<input
+							type="time"
+							className="bg-base-100 ml-4"
+							value={defaultTime ?? value ?? ''}
+							onChange={onChange}
+							onBlur={onBlur}
+						/>
+					);
+				},
+			},
 		];
-	}, [teams]);
+	}, [teams, opponents, venues, teachers]);
 
 	const table = useReactTable({
 		columns,
@@ -181,7 +271,6 @@ export function GamesTable({
 		meta: {
 			updateData: (rowIndex, columnId, value) => {
 				setGames((games) => {
-					// TODO check timezones
 					games[rowIndex][columnId as keyof (typeof games)[number]] = value as any;
 					return [...games];
 				});
@@ -231,7 +320,7 @@ export function GamesTable({
 								</tr>
 							);
 						})}
-						<tr>
+						{/* <tr>
 							<td />
 							<td />
 							<td />
@@ -243,7 +332,7 @@ export function GamesTable({
 									<FaPlus />
 								</button>
 							</td>
-						</tr>
+						</tr> */}
 					</tbody>
 				</table>
 			</div>

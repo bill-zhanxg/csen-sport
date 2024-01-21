@@ -19,7 +19,7 @@ type Teams = {
 }[];
 type Games = (
 	| {
-			date: Date;
+			date: string;
 			games: (
 				| {
 						team1: string;
@@ -136,7 +136,7 @@ export function Step1({
 										let teams: Teams = [];
 
 										// For step 3
-										let currentGameDate: Date | null = null;
+										let currentGameDate: string | null = null;
 										let previousYPos = 0;
 										let previousCol = 0;
 										// This is for the second [], first one is which team
@@ -244,9 +244,8 @@ export function Step1({
 														// It was date column
 														const dateStr = previousText.toLowerCase().match(/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/)?.[0];
 														if (dateStr) {
-															const [day, month, year] = dateStr.split('/').map((item) => parseInt(item));
-
-															currentGameDate = dayjs.tz(`${year}-${month}-${day} 12:00`, dayjs.tz.guess()).toDate();
+															const [day, month, year] = dateStr.split('/');
+															currentGameDate = `${year}-${month}-${day}`;
 															currentArrayPosForCurrentDate++;
 														}
 													} else {

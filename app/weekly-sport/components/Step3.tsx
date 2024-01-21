@@ -96,7 +96,7 @@ export function Step3({
 							};
 							const teamCodes: TeamCode[] = [];
 							const gameRemap: {
-								date: Date;
+								date: string;
 								team: TeamCode;
 								opponent: string;
 								venue: string;
@@ -175,7 +175,7 @@ export function Step3({
 								const date = game.date;
 								games.push({
 									date,
-									team: { ...team, code: team.team },
+									teamId: team.id,
 									opponentCode: opponent,
 									venueCode: venue,
 								});
@@ -212,7 +212,6 @@ export function Step3({
 			{schoolCsenCode.value &&
 				(teams.length > 0 ? (
 					<>
-						{teams[0].friendlyName}
 						<TeamsTable teams={teams} setTeams={setTeams} teachers={teachers} />
 						<OpponentsTable opponents={opponents} setOpponents={setOpponents} />
 						<VenuesTable venues={filteredVenues} setVenues={setFilteredVenues} />

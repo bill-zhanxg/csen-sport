@@ -1,10 +1,3 @@
-const dayjs = require('dayjs');
-var utc = require('dayjs/plugin/utc');
-var timezone = require('dayjs/plugin/timezone');
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
-
 const newTestData = [
 	[
 		{
@@ -26878,7 +26871,7 @@ let teams: {
 }[] = [];
 
 // For step 3
-let currentGameDate: Date | null = null;
+let currentGameDate: string | null = null;
 let previousXPos = 0;
 let previousYPos = 0;
 let previousCol = 0;
@@ -26886,19 +26879,22 @@ let currentTeamVerse: string = '';
 // This is for the second [], first one is which team
 let currentArrayPosForCurrentDate = -1;
 let searchingForVenue = false;
-let games: ({
-	date: Date;
-	games: (
-		| {
-				team1: string;
-				team2: string;
-				venue: string;
-		  }
-		| {
-				text: string;
-		  }
-	)[];
-}[] | null)[] = [];
+let games: (
+	| {
+			date: string;
+			games: (
+				| {
+						team1: string;
+						team2: string;
+						venue: string;
+				  }
+				| {
+						text: string;
+				  }
+			)[];
+	  }[]
+	| null
+)[] = [];
 
 for (const { str, transform } of data) {
 	let text = str.trim();
@@ -26986,13 +26982,14 @@ for (const { str, transform } of data) {
 		const endXPos = 560;
 		const colWidth = (endXPos - startXPos) / teams.length;
 		if (currentXPos <= startXPos) currentCol = 0;
-		else for (let i = 0; i < teams.length; i++) {
-			const lessThan = startXPos + colWidth * (i + 1);
-			if ((i === teams.length - 1) || (currentXPos <= lessThan)) {
-				currentCol = i + 1;
-				break;
+		else
+			for (let i = 0; i < teams.length; i++) {
+				const lessThan = startXPos + colWidth * (i + 1);
+				if (i === teams.length - 1 || currentXPos <= lessThan) {
+					currentCol = i + 1;
+					break;
+				}
 			}
-		}
 
 		if (previousCol !== currentCol || (currentCol !== 0 && previousYPos !== currentYPos)) {
 			// The next column is reached
@@ -27000,9 +26997,8 @@ for (const { str, transform } of data) {
 				// It was date column
 				const dateStr = previousText.toLowerCase().match(/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/)?.[0];
 				if (dateStr) {
-					const [day, month, year] = dateStr.split('/').map((item) => parseInt(item));
-
-					currentGameDate = dayjs.tz(`${year}-${month}-${day} 12:00`, dayjs.tz.guess()).toDate();
+					const [day, month, year] = dateStr.split('/');
+					currentGameDate = `${year}-${month}-${day}`;
 					currentArrayPosForCurrentDate++;
 				}
 			} else {
