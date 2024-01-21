@@ -7,6 +7,10 @@ import { ErrorAlert, SuccessAlert } from '../../components/Alert';
 import { FIxturePages, Step1 } from './Step1';
 import { Step2, Venues } from './Step2';
 import { Step3 } from './Step3';
+import { Teams } from './TeamsTable';
+import { Opponents } from './OpponentsTable';
+import { Games } from './GamesTable';
+import { Step4 } from './Step4';
 
 export function ImportPage({
 	teachers,
@@ -36,6 +40,11 @@ export function ImportPage({
 		if ((newStep === 1 && fixturePages.value.length > 0) || (newStep === 2 && venues.value.length > 0)) return false;
 		else return true;
 	}
+	
+	const [teams, setTeams] = useState<Teams>([]);
+	const [opponents, setOpponents] = useState<Opponents>([]);
+	const [filteredVenues, setFilteredVenues] = useState<Venues>([]);
+	const [games, setGames] = useState<Games>([]);
 
 	return (
 		<>
@@ -69,11 +78,29 @@ export function ImportPage({
 				{step === 3 && (
 					<Step3
 						setAlert={setAlert}
-						setNextLoading={setNextLoading}
 						setDisableNext={setDisableNext}
 						fixtures={fixturePages}
 						venues={venues}
 						teachers={teachers}
+						teams={teams}
+						setTeams={setTeams}
+						opponents={opponents}
+						setOpponents={setOpponents}
+						filteredVenues={filteredVenues}
+						setFilteredVenues={setFilteredVenues}
+						games={games}
+						setGames={setGames}
+					/>
+				)}
+				{step === 4 && (
+					<Step4
+						setAlert={setAlert}
+						setNextLoading={setNextLoading}
+						setDisableNext={setDisableNext}
+						teams={teams}
+						opponents={opponents}
+						venues={filteredVenues}
+						games={games}
 					/>
 				)}
 

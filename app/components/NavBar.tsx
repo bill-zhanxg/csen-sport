@@ -35,10 +35,6 @@ const menu: Menu = [
 		name: 'Ladders',
 		href: '/ladder',
 	},
-	{
-		name: 'Test',
-		href: '/testpdf',
-	},
 ];
 
 export function NavBar({ session }: { session: Session }) {

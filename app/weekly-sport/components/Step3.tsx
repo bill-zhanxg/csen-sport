@@ -1,6 +1,6 @@
 import { Signal, useSignal } from '@preact/signals-react';
 import { RowData } from '@tanstack/react-table';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { v4 } from 'uuid';
 import { Games, GamesTable } from './GamesTable';
 import { Opponents, OpponentsTable } from './OpponentsTable';
@@ -16,27 +16,37 @@ declare module '@tanstack/react-table' {
 }
 
 export function Step3({
-	setNextLoading,
 	setDisableNext,
 	setAlert,
 	fixtures,
 	venues,
 	teachers,
+	teams,
+	setTeams,
+	opponents,
+	setOpponents,
+	filteredVenues,
+	setFilteredVenues,
+	games,
+	setGames,
 }: {
-	setNextLoading: (nextLoading: boolean) => void;
-	setDisableNext: (disableNext: boolean) => void;
+	setDisableNext: Dispatch<SetStateAction<boolean>>;
 	setAlert: (alert: { type: 'success' | 'error'; message: string } | null) => void;
 	fixtures: Signal<FIxturePages>;
 	venues: Signal<Venues>;
 	teachers: { id: string; name?: string | null }[];
+	teams: Teams;
+	setTeams: Dispatch<SetStateAction<Teams>>;
+	opponents: Opponents;
+	setOpponents: Dispatch<SetStateAction<Opponents>>;
+	filteredVenues: Venues;
+	setFilteredVenues: Dispatch<SetStateAction<Venues>>;
+	games: Games;
+	setGames: Dispatch<SetStateAction<Games>>;
 }) {
 	const [currentSchoolCsenCode, setSchoolCsenCodeInput] = useState('');
 	const schoolCsenCode = useSignal<string | undefined>(undefined);
 	const filteredFixtures = useSignal<FIxturePages>([]);
-	const [teams, setTeams] = useState<Teams>([]);
-	const [opponents, setOpponents] = useState<Opponents>([]);
-	const [filteredVenues, setFilteredVenues] = useState<Venues>([]);
-	const [games, setGames] = useState<Games>([]);
 
 	return (
 		<>
@@ -204,6 +214,8 @@ export function Step3({
 						);
 						setGames(games);
 						// #endregion
+
+						setDisableNext(false);
 					}}
 				>
 					Filter
