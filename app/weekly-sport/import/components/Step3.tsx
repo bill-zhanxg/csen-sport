@@ -2,7 +2,7 @@ import { Signal, useSignal } from '@preact/signals-react';
 import { RowData } from '@tanstack/react-table';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { v4 } from 'uuid';
-import { Games, Opponents, Teams, Venues } from '../actions';
+import { Games, Opponents, Teams, Venues } from './types';
 import { GamesTable } from './GamesTable';
 import { OpponentsTable } from './OpponentsTable';
 import { FIxturePages } from './Step1';

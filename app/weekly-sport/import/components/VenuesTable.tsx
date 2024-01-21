@@ -2,7 +2,7 @@
 
 import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { ChangeEventHandler, Dispatch, FocusEventHandler, SetStateAction, useEffect, useMemo, useState } from 'react';
-import { Venues } from '../actions';
+import { Venues } from './types';
 
 const defaultColumn: Partial<ColumnDef<Venues[number]>> = {
 	cell: ({ getValue }) => {

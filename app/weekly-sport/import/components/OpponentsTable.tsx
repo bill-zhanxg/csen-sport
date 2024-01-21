@@ -2,7 +2,7 @@
 
 import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { ChangeEventHandler, Dispatch, FocusEventHandler, SetStateAction, useEffect, useMemo, useState } from 'react';
-import { Opponents } from '../actions';
+import { Opponents } from './types';
 
 const defaultColumn: Partial<ColumnDef<Opponents[number]>> = {
 	cell: ({ getValue }) => {

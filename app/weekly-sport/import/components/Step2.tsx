@@ -2,8 +2,8 @@ import { Signal } from '@preact/signals-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { pdfjs as PDFJS } from 'react-pdf';
-import { Venues } from '../actions';
-import { TextItem } from './types';
+import { Venues } from './types';
+import { TextItem } from './pdfjsTypes';
 
 export function Step2({
 	setNextLoading,

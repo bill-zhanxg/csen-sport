@@ -6,60 +6,21 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { z } from 'zod';
 import { ImportState } from './components/ImportPage';
+import {
+	Games,
+	GamesSchema,
+	Opponents,
+	OpponentsSchema,
+	Teams,
+	TeamsSchema,
+	Venues,
+	VenuesSchema,
+} from './components/types';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const xata = getXataClient();
-
-export const GamesSchema = z.array(
-	z.object({
-		date: z.string(),
-		teamId: z.string(),
-		opponentCode: z.string(),
-		venueCode: z.string(),
-		teacher: z.string().optional(),
-		transportation: z.string().optional(),
-		out_of_class: z.string().optional(),
-		start: z.string().optional(),
-		notes: z.string().optional(),
-	}),
-);
-export type Games = z.infer<typeof GamesSchema>;
-
-export const OpponentsSchema = z.array(
-	z.object({
-		csenCode: z.string(),
-		friendlyName: z.string(),
-	}),
-);
-export type Opponents = z.infer<typeof OpponentsSchema>;
-
-export const VenuesSchema = z.array(
-	z.object({
-		venue: z.string(),
-		address: z.string(),
-		cfNum: z.string(),
-		csenCode: z.string(),
-	}),
-);
-export type Venues = z.infer<typeof VenuesSchema>;
-
-export const TeamsSchema = z.array(
-	z.object({
-		id: z.string(),
-		gender: z.string(),
-		sport: z.string(),
-		division: z.string(),
-		team: z.string(),
-		friendlyName: z.string(),
-		group: z.literal('junior').or(z.literal('intermediate')),
-		teacher: z.string().optional(),
-		out_of_class: z.string().optional(),
-		start: z.string().optional(),
-	}),
-);
-export type Teams = z.infer<typeof TeamsSchema>;
 
 const TimezoneSchema = z.string();
 
@@ -83,23 +44,36 @@ export async function importData(
 			isJunior: group === 'junior',
 		}));
 		const venueRecords = venues.map(({ csenCode, venue, address, cfNum }) => ({
-			id: csenCode,
+			id: csenCode.replaceAll(' ', '-'),
 			name: venue,
 			address,
 			court_field_number: cfNum,
 		}));
 		const findTeam = (teamId: string) => team.find((team) => team.id === teamId);
-		const gameRecords = games.map((game) => ({
-			date: dayjs.tz(`${game.date} 12:00`, timezone).toDate(),
-			team: game.teamId,
-			opponent: opponents.find((opponent) => opponent.csenCode === game.opponentCode)?.friendlyName ?? 'Not Found',
-			venue: game.venueCode,
-			teacher: game.teacher ?? findTeam(game.teamId)?.teacher ?? '',
-			transportation: game.transportation ?? '',
-			out_of_class: game.out_of_class ?? findTeam(game.teamId)?.out_of_class ?? '',
-			start: game.start ?? findTeam(game.teamId)?.start ?? '',
-			notes: game.notes ?? '',
-		}));
+		const gameRecords = games.map((game) => {
+			const date = dayjs.tz(`${game.date} 12:00`, timezone).toDate();
+
+			let out_of_class: Date | undefined = undefined;
+			const out_of_class_string = (game.out_of_class ?? findTeam(game.teamId)?.out_of_class)?.split(':') ?? undefined;
+			if (out_of_class_string)
+				out_of_class = dayjs.tz(`${game.date} ${out_of_class_string[0]}:${out_of_class_string[1]}`, timezone).toDate();
+
+			let start: Date | undefined = undefined;
+			const start_string = (game.start ?? findTeam(game.teamId)?.start)?.split(':') ?? undefined;
+			if (start_string) start = dayjs.tz(`${game.date} ${start_string[0]}:${start_string[1]}`, timezone).toDate();
+
+			return {
+				date,
+				team: game.teamId,
+				opponent: opponents.find((opponent) => opponent.csenCode === game.opponentCode)?.friendlyName ?? 'Not Found',
+				venue: game.venueCode.replaceAll(' ', '-'),
+				teacher: game.teacher ?? findTeam(game.teamId)?.teacher,
+				transportation: game.transportation,
+				out_of_class,
+				start,
+				notes: game.notes,
+			};
+		});
 
 		return xata.transactions
 			.run([
@@ -113,6 +87,7 @@ export async function importData(
 				} as const;
 			})
 			.catch((e: Error) => {
+				console.log(e);
 				return {
 					type: 'error',
 					message: e.message,
