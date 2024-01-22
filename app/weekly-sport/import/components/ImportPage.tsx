@@ -15,6 +15,7 @@ import { Step3 } from './Step3';
 import { Step4 } from './Step4';
 import { Games, Opponents, Teams, Venues } from './types';
 import { useRouter } from 'next/navigation';
+import * as Sentry from '@sentry/nextjs';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -29,6 +30,14 @@ export type ImportState =
 	  };
 
 export function ImportPage({ teachers }: { teachers: { id: string; name?: string | null }[] }) {
+
+	Sentry.setUser({
+		id: '123',
+		username: 'test',
+		email: 'heello@email.com',
+		ip_address: '123.123.123.12',
+	});
+
 	const router = useRouter();
 
 	const [step, setStep] = useState(1);

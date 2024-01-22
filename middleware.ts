@@ -7,6 +7,16 @@ export async function middleware(request: NextRequest) {
 		return NextResponse.redirect(
 			new URL(process.env.NEXTAUTH_URL).href + `login?redirect=${encodeURIComponent(request.nextUrl.pathname)}`,
 		);
+
+	// Modify the request headers with client's IP address
+	const requestHeaders = new Headers(request.headers);
+	const ip = request.ip || '';
+	requestHeaders.set('x-forwarded-for', ip);
+	return NextResponse.next({
+		request: {
+			headers: requestHeaders,
+		},
+	});
 }
 
 export const config = {

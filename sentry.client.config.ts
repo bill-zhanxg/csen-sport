@@ -28,5 +28,11 @@ Sentry.init({
 			maskAllInputs: false,
 		}),
 		new CaptureConsole({ levels: ['error'] }),
+		new Sentry.Feedback({
+			buttonLabel: 'Bug / Feedback',
+			formTitle: 'Submit a Bug / Feedback',
+			showEmail: false,
+			showName: false,
+		}),
 	],
 });

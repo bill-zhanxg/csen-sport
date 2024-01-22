@@ -1,12 +1,12 @@
+import { auth } from '@/libs/auth';
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
 import Link from 'next/link';
 import { FaHome } from 'react-icons/fa';
-
 import BarOfProgress from './components/BarOfProgress';
-import { NavBar } from './components/NavBar';
-
-import { auth } from '@/libs/auth';
 import { LogoutButton } from './components/LogoutButton';
+import { NavBar } from './components/NavBar';
+import { SentrySetUser } from './components/SentrySetUser';
 import { UserAvatar } from './globalComponents/UserAvatar';
 import './globals.css';
 
@@ -17,6 +17,7 @@ export const metadata: Metadata = {
 
 export default async function MainLayout({ children }: { children: React.ReactNode }) {
 	const session = await auth();
+	const ip = headers().get('x-forwarded-for');
 
 	return (
 		<html lang="en">
@@ -51,6 +52,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 							</div>
 							{children}
 							<BarOfProgress />
+							<SentrySetUser user={{ ...session.user, ip_address: ip }} />
 						</>
 					)
 				) : (
