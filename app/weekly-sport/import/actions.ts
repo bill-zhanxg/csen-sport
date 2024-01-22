@@ -16,6 +16,7 @@ import {
 	Venues,
 	VenuesSchema,
 } from './components/types';
+import { revalidatePath } from 'next/cache';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -82,6 +83,7 @@ export async function importData(
 				...gameRecords.map((games) => ({ insert: { table: 'games', record: games } } as const)),
 			])
 			.then(() => {
+				revalidatePath('/weekly-sport/timetable');
 				return {
 					type: 'success',
 				} as const;

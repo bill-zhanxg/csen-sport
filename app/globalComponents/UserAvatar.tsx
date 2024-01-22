@@ -13,16 +13,16 @@ export function UserAvatar({
 	className?: string;
 }) {
 	return user.image ? (
-		<Image src={user.image} alt="User Avatar" height={100} width={100} className={`w-12 h-12 ${className}`} />
+		<Image src={user.image} alt="User Avatar" height={500} width={500} className={`w-12 h-12 hover:shadow-lg shadow-cyan-500/50 ${className}`} />
 	) : (
 		<Image
 			src={`https://icotar.com/${user.name ? 'initials' : 'avatar'}/${encodeURI(
 				user.name ?? (user.email || user.id),
 			)}.png`}
-			width={100}
-			height={100}
+			width={500}
+			height={500}
 			alt="User Avatar"
-			className={`w-12 h-12 ${className}`}
+			className={`w-12 h-12 hover:shadow-lg shadow-cyan-500/50 ${className}`}
 		/>
 	);
 }
