@@ -6,34 +6,34 @@ type Menu = { name: string; href: string | { name: string; href: string; admin?:
 const menu: Menu = [
 	{
 		name: 'Weekly Sport',
-		href: [
-			{
-				name: 'Timetable',
-				href: '/weekly-sport/timetable',
-			},
-			{
-				name: 'Import',
-				href: '/weekly-sport/import',
-				admin: true,
-			},
-		],
-	},
-	{
-		name: 'Users',
-		href: '/users',
-		admin: true,
+		href: '/weekly-sport/timetable',
 	},
 	{
 		name: 'CSEN',
 		href: '/csen',
 	},
+	// TODO: Remove pages
+	// {
+	// 	name: 'Weekly Sport PDF',
+	// 	href: '/weekly-sport-pdf',
+	// },
+	// {
+	// 	name: 'Ladders',
+	// 	href: '/ladder',
+	// },
 	{
-		name: 'Weekly Sport PDF',
-		href: '/weekly-sport-pdf',
-	},
-	{
-		name: 'Ladders',
-		href: '/ladder',
+		name: 'Admin Controls',
+		admin: true,
+		href: [
+			{
+				name: 'Users',
+				href: '/users',
+			},
+			{
+				name: 'Import Timetable',
+				href: '/weekly-sport/import',
+			},
+		],
 	},
 ];
 
@@ -86,7 +86,7 @@ export function NavBar({ session }: { session: Session }) {
 									<summary>{item.name}</summary>
 									<ul className="p-2">
 										{item.href.map((item, i) => (
-											<li className="w-32" key={i}>
+											<li className="w-36" key={i}>
 												<Link href={item.href}>{item.name}</Link>
 											</li>
 										))}

@@ -15,6 +15,7 @@ const tables = [
       { name: "name", type: "string" },
       { name: "image", type: "string" },
       { name: "role", type: "string" },
+      { name: "team", type: "link", link: { table: "teams" } },
     ],
     revLinks: [
       { column: "user", table: "nextauth_accounts" },
@@ -92,7 +93,10 @@ const tables = [
       { name: "name", type: "string" },
       { name: "isJunior", type: "bool" },
     ],
-    revLinks: [{ column: "team", table: "games" }],
+    revLinks: [
+      { column: "team", table: "games" },
+      { column: "team", table: "nextauth_users" },
+    ],
   },
   {
     name: "venues",

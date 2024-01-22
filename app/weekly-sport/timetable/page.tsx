@@ -91,10 +91,37 @@ export default async function WeeklySport({
 										<tbody>
 											{date.games.map((game) => (
 												<tr key={game.id}>
-													<td>{game?.team?.isJunior !== undefined ? game.team.isJunior ? 'Junior' : 'Intermediate' : '---'}</td>
+													<td>
+														{game?.team?.isJunior !== undefined
+															? game.team.isJunior
+																? 'Junior'
+																: 'Intermediate'
+															: '---'}
+													</td>
 													<td>{game?.team?.name || '---'}</td>
 													<td>{game?.opponent || '---'}</td>
-													<td>{game?.venue?.name || '---'}</td>
+													<td className="">
+														<label
+															htmlFor="my_modal_6"
+															className="block w-full h-full cursor-pointer hover:bg-base-200"
+														>
+															{game?.venue?.name || '---'}
+														</label>
+
+														{/* Put this part before </body> tag */}
+														<input type="checkbox" id="my_modal_6" className="modal-toggle" />
+														<div className="modal" role="dialog">
+															<div className="modal-box">
+																<h3 className="font-bold text-lg">Hello!</h3>
+																<p className="py-4">This modal works with a hidden checkbox!</p>
+																<div className="modal-action">
+																	<label htmlFor="my_modal_6" className="btn">
+																		Close!
+																	</label>
+																</div>
+															</div>
+														</div>
+													</td>
 													<td>{game?.teacher?.name || '---'}</td>
 													<td>{game?.transportation || '---'}</td>
 													<td>{game?.out_of_class?.toLocaleTimeString() || '---'}</td>

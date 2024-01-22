@@ -1,0 +1,19 @@
+{
+  "id": "mig_cmn16n605s7ojgrcfr0g",
+  "parentID": "mig_cmlmcd0upf76fqo7lp6g",
+  "checksum": "1:734be298d3fa2116d03265cdc7fa20a95949db7411cfcd46ee96de768306cf83",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "team",
+          "type": "link",
+          "link": {
+            "table": "teams"
+          }
+        },
+        "table": "nextauth_users"
+      }
+    }
+  ]
+}
