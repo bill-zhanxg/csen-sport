@@ -23,8 +23,12 @@ jobs:
 
       - name: npm install, build, and test
         env:
-          NEXT_PUBLIC_SCHOOL_EMAIL_DOMAIN: ${{ secrets.NEXT_PUBLIC_SCHOOL_EMAIL_DOMAIN }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          XATA_API_KEY: ${{ secrets.XATA_API_KEY }}
+          AZURE_AD_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+          AZURE_AD_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
+          AZURE_AD_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
         run: |
           npm install
           npm run build --if-present
