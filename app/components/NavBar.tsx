@@ -55,7 +55,7 @@ export function NavBar({ session }: { session: Session }) {
 				</label>
 				<ul
 					tabIndex={0}
-					className="menu menu-lg dropdown-content mt-3 z-[100] p-2 shadow bg-base-100 rounded-box w-full"
+					className="menu menu-lg dropdown-content mt-3 z-[100] p-2 shadow bg-base-100 rounded-box border border-primary"
 				>
 					{menuFiltered.map((item, i) =>
 						Array.isArray(item.href) ? (
@@ -84,7 +84,7 @@ export function NavBar({ session }: { session: Session }) {
 							<li key={i}>
 								<details>
 									<summary>{item.name}</summary>
-									<ul className="p-2">
+									<ul className="p-2 border border-primary">
 										{item.href.map((item, i) => (
 											<li className="w-36" key={i}>
 												<Link href={item.href}>{item.name}</Link>

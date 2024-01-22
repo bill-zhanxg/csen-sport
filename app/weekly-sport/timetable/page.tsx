@@ -1,4 +1,7 @@
 import { PaginationMenu } from '@/app/globalComponents/PaginationMenu';
+import { WeeklySportStudent } from '@/app/globalComponents/WeeklySportStudent';
+import { WeeklySportTeacher } from '@/app/globalComponents/WeeklySportTeacher';
+import { auth } from '@/libs/auth';
 import { GamesRecord, getXataClient } from '@/libs/xata';
 import { SelectedPick } from '@xata.io/client';
 import Link from 'next/link';
@@ -8,6 +11,7 @@ export default async function WeeklySport({
 }: {
 	searchParams: { [key: string]: string | string[] | undefined };
 }) {
+	const session = await auth();
 	const itemsPerPage = 100;
 	const { filter, page } = searchParams;
 	const past = filter === 'past';
@@ -71,68 +75,39 @@ export default async function WeeklySport({
 					<div>Nothing Here</div>
 				) : (
 					<>
-						{dates.map((date) => (
-							<div className="w-full" key={date.date}>
-								<h2 className="text-xl text-center text-primary">Weekly Sport {date.date}</h2>
-								<div className="w-full">
-									<table className="table">
-										<thead>
-											<tr>
-												<th>Group</th>
-												<th>Team</th>
-												<th>Opponent</th>
-												<th>Venue</th>
-												<th>Teacher</th>
-												<th>Transportation</th>
-												<th>Out of Class</th>
-												<th>Start time</th>
-											</tr>
-										</thead>
-										<tbody>
-											{date.games.map((game) => (
-												<tr key={game.id}>
-													<td>
-														{game?.team?.isJunior !== undefined
-															? game.team.isJunior
-																? 'Junior'
-																: 'Intermediate'
-															: '---'}
-													</td>
-													<td>{game?.team?.name || '---'}</td>
-													<td>{game?.opponent || '---'}</td>
-													<td className="">
-														<label
-															htmlFor="my_modal_6"
-															className="block w-full h-full cursor-pointer hover:bg-base-200"
-														>
-															{game?.venue?.name || '---'}
-														</label>
-
-														{/* Put this part before </body> tag */}
-														<input type="checkbox" id="my_modal_6" className="modal-toggle" />
-														<div className="modal" role="dialog">
-															<div className="modal-box">
-																<h3 className="font-bold text-lg">Hello!</h3>
-																<p className="py-4">This modal works with a hidden checkbox!</p>
-																<div className="modal-action">
-																	<label htmlFor="my_modal_6" className="btn">
-																		Close!
-																	</label>
-																</div>
-															</div>
-														</div>
-													</td>
-													<td>{game?.teacher?.name || '---'}</td>
-													<td>{game?.transportation || '---'}</td>
-													<td>{game?.out_of_class?.toLocaleTimeString() || '---'}</td>
-													<td>{game?.start?.toLocaleTimeString() || '---'}</td>
-												</tr>
-											))}
-										</tbody>
-									</table>
-								</div>
-							</div>
-						))}
+						{dates.map((date) =>
+							session?.user.role === 'admin' || session?.user.role === 'teacher' ? (
+								<WeeklySportTeacher
+									date={{
+										...date,
+										games: date.games.map(({ id, date, opponent, venue, team, teacher, out_of_class, start }) => ({
+											id,
+											date,
+											opponent,
+											venue: {
+												id: venue?.id,
+												name: venue?.name,
+												address: venue?.address,
+											},
+											team: {
+												id: team?.id,
+												name: team?.name,
+												isJunior: team?.isJunior,
+											},
+											teacher: {
+												id: teacher?.id,
+												name: teacher?.name,
+											},
+											out_of_class,
+											start,
+										})),
+									}}
+									key={date.date}
+								/>
+							) : (
+								<WeeklySportStudent date={date} key={date.date} />
+							),
+						)}
 						<PaginationMenu totalPages={Math.ceil(total / itemsPerPage)} />
 					</>
 				)}
