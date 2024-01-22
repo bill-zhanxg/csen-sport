@@ -5,7 +5,7 @@ export async function middleware(request: NextRequest) {
 	const session = await auth();
 	if (!session)
 		return NextResponse.redirect(
-			new URL(process.env.BASE_URL).href + `login?redirect=${encodeURIComponent(request.nextUrl.pathname)}`,
+			new URL(process.env.NEXTAUTH_URL).href + `login?redirect=${encodeURIComponent(request.nextUrl.pathname)}`,
 		);
 }
 
