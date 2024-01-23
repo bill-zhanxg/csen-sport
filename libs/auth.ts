@@ -23,8 +23,9 @@ export const {
 	callbacks: {
 		session({ session, user }) {
 			if (session.user) {
-				session.user.role = user.role;
 				session.user.id = user.id;
+				session.user.role = user.role;
+				session.user.team = user.team;
 			}
 			return session;
 		},

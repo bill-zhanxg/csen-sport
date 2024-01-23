@@ -1,11 +1,12 @@
 'use server';
 
 import { auth } from '@/libs/auth';
+import { isTeacher } from '@/libs/checkPermission';
+import { getXataClient } from '@/libs/xata';
+import sharp from 'sharp';
 import { z } from 'zod';
 import { SettingState } from './components/SettingsForm';
-import { getXataClient } from '@/libs/xata';
-import { isTeacher } from '@/libs/checkPermission';
-import sharp from 'sharp';
+import { revalidatePath } from 'next/cache';
 
 const schema = z.object({
 	name: z.string().min(1).max(200).optional(),
@@ -35,25 +36,29 @@ export async function updateProfile(prevState: SettingState, formData: FormData)
 	if (!parse.success) return { success: false, message: parse.error.errors[0].message };
 	const { avatar, ...data } = parse.data;
 
-	console.log(parse.data);
+	if (!isTeacher(session)) {
+		// Don't want students to update their name or email
+		if (session.user.name?.trim()) delete data.name;
+		if (session.user.email?.trim()) delete data.email;
+	}
 
-    if (!isTeacher(session)) {
-        // Don't want students to update their name or email
-        if (session.user.name?.trim()) delete data.name;
-        if (session.user.email?.trim()) delete data.email;
-    }
+	let image: string | undefined = undefined;
+	if (avatar) {
+		// Result need to be below 204800 bytes
+		const result = await sharp(await avatar.arrayBuffer())
+			.resize(1000, 1000)
+			.withMetadata()
+			.toBuffer();
+		image = `data:${avatar.type};base64,${result.toString('base64')}`;
+	}
 
-    let image: string | undefined = undefined;
-    if (avatar) {
-        const result = await sharp(await avatar.arrayBuffer()).toBuffer()
-        image = `data:${avatar.type};base64,${result.toString('base64')}`
-    }
+	const res = await getXataClient().db.nextauth_users.update(session.user.id, {
+		...data,
+		image,
+	});
 
-    getXataClient().db.nextauth_users.update(session.user.id, {
-        ...data,
-        image
-    })
-
+	revalidatePath('/settings');
+	if (!res) return { success: false, message: 'Failed to update profile' };
 	return {
 		success: true,
 		message: 'Profile updated successfully',

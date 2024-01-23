@@ -79,7 +79,7 @@ export function SettingsForm({
 				<h1 className="font-bold px-4 pt-4">Preferences</h1>
 				<div className="divider m-0"></div>
 				<div className="flex flex-col sm:flex-row justify-center w-full gap-4 items-center pt-0 p-4">
-					<Preferences teams={teams} />
+					<Preferences teams={teams} session={session} />
 				</div>
 			</Box>
             {state && (

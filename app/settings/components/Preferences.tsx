@@ -1,18 +1,16 @@
 'use client';
 
+import { SerializedTeam } from '@/libs/serializeData';
+import { Session } from 'next-auth/types';
 import { useEffect, useState } from 'react';
 
-export function Preferences({
-	teams,
-}: {
-	teams: {
-		id: string;
-		name?: string | null;
-		isJunior?: boolean | null;
-	}[];
-}) {
-	const [group, setGroup] = useState<'default' | 'junior' | 'intermediate'>('default');
-	const [filteredTeams, setFilteredTeams] = useState([teams[0]]);
+export function Preferences({ teams, session }: { teams: SerializedTeam[]; session: Session }) {
+	const currentTeam = teams.find((team) => team.id === session.user.team.id);
+
+	const [group, setGroup] = useState<'default' | 'junior' | 'intermediate'>(
+		currentTeam === undefined ? 'default' : currentTeam.isJunior ? 'junior' : 'intermediate',
+	);
+	const [filteredTeams, setFilteredTeams] = useState<SerializedTeam[]>(teams);
 
 	useEffect(() => {
 		setFilteredTeams(
@@ -44,7 +42,12 @@ export function Preferences({
 				<div className="label">
 					<span className="label-text">Pick Your Team</span>
 				</div>
-				<select disabled={group === 'default'} className="select select-bordered" name="team">
+				<select
+					disabled={group === 'default'}
+					defaultValue={currentTeam?.id}
+					className="select select-bordered"
+					name="team"
+				>
 					<option disabled>Pick one</option>
 					{filteredTeams.map((team) => (
 						<option key={team.id} value={team.id} className="text-base-content">

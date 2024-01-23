@@ -1,10 +1,3 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-
-// import { database } from '../libs/appwrite';
-// import { DateInterface } from '../libs/appwrite/Interface/Weekly-sport';
-
 export default function Home() {
 	return <h1>Unfinished</h1>
 	// const [dates, setDates] = useState<DateInterface[]>();

@@ -40,10 +40,7 @@ export function ProfilePicture({
 				onChange={async (event) => {
 					const file = event.target.files?.[0];
 					if (!file) return;
-
-					// Encoded image must be below 256 characters
 					const base64 = (await toBase64(file)) as string;
-
 					setUser((user) => {
 						return {
 							...user,
