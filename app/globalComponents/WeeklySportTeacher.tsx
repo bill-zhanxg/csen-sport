@@ -45,7 +45,7 @@ export function WeeklySportTeacher({
 			isTime: boolean = false,
 		): [T, boolean, ChangeEventHandler<HTMLElement> | undefined, FocusEventHandler<HTMLElement> | undefined] {
 			let initialValue = getValue() as T;
-			if (isTime) initialValue = dayjs(initialValue as any).format('HH:mm') as unknown as T;
+			if (isTime) initialValue = initialValue ? dayjs(initialValue as any).format('HH:mm') as unknown as T : initialValue;
 			const [value, setValue] = useState(initialValue);
 			const [disabled, setDisabled] = useState(false);
 			useEffect(() => {
@@ -101,14 +101,14 @@ export function WeeklySportTeacher({
 		return [
 			{
 				id: 'team',
-				accessorKey: 'team.id',
+				accessorFn: (row) => row.team?.id,
 				header: 'Team',
 				cell: (prop) => {
-					const [value, disabled, onChange, onBlur] = editable<string>(prop, true);
+					const [value, disabled, onChange, onBlur] = editable<string | undefined>(prop, true);
 					return (
 						<select
 							className="select select-bordered rounded-none w-full"
-							value={value}
+							value={value ?? ''}
 							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
@@ -130,11 +130,11 @@ export function WeeklySportTeacher({
 				accessorKey: 'opponent',
 				header: 'Opponent',
 				cell: (prop) => {
-					const [value, disabled, onChange, onBlur] = editable<string>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string | undefined>(prop);
 					return (
 						<input
 							className="input input-bordered rounded-none w-full"
-							value={value}
+							value={value ?? ''}
 							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
@@ -144,14 +144,14 @@ export function WeeklySportTeacher({
 			},
 			{
 				id: 'venue',
-				accessorKey: 'venue.id',
+				accessorFn: (row) => row.venue?.id,
 				header: 'Venue',
 				cell: (prop) => {
-					const [value, disabled, onChange, onBlur] = editable<'junior' | 'intermediate'>(prop, true);
+					const [value, disabled, onChange, onBlur] = editable<string | undefined>(prop, true);
 					return (
 						<select
 							className="select select-bordered rounded-none w-full"
-							value={value}
+							value={value ?? ''}
 							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
@@ -170,7 +170,7 @@ export function WeeklySportTeacher({
 			},
 			{
 				id: 'teacher',
-				accessorKey: 'teacher.id',
+				accessorFn: (row) => row.teacher?.id,
 				header: 'Teacher',
 				cell: (prop) => {
 					const [value, disabled, onChange, onBlur] = editable<string | undefined>(prop, true);
@@ -183,7 +183,7 @@ export function WeeklySportTeacher({
 							onBlur={onBlur}
 						>
 							<option disabled value="">
-								Select a teacher
+								---
 							</option>
 							{teachers.map((teacher) => (
 								<option key={teacher.id} value={teacher.id}>
@@ -199,11 +199,11 @@ export function WeeklySportTeacher({
 				accessorKey: 'transportation',
 				header: 'Transportation',
 				cell: (prop) => {
-					const [value, disabled, onChange, onBlur] = editable<string>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string | undefined>(prop);
 					return (
 						<input
 							className="input input-bordered rounded-none w-full"
-							value={value}
+							value={value ?? ''}
 							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
@@ -216,11 +216,11 @@ export function WeeklySportTeacher({
 				accessorKey: 'notes',
 				header: 'Notes',
 				cell: (prop) => {
-					const [value, disabled, onChange, onBlur] = editable<string>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string | undefined>(prop);
 					return (
 						<input
 							className="input input-bordered rounded-none w-full"
-							value={value}
+							value={value ?? ''}
 							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
@@ -233,7 +233,7 @@ export function WeeklySportTeacher({
 				accessorKey: 'out_of_class',
 				header: 'Out of Class',
 				cell: (prop) => {
-					const [value, disabled, onChange, onBlur] = editable<string>(prop, false, true);
+					const [value, disabled, onChange, onBlur] = editable<string | undefined>(prop, false, true);
 					return (
 						<input
 							type="time"
@@ -251,7 +251,7 @@ export function WeeklySportTeacher({
 				accessorKey: 'start',
 				header: 'Start',
 				cell: (prop) => {
-					const [value, disabled, onChange, onBlur] = editable<string>(prop, false, true);
+					const [value, disabled, onChange, onBlur] = editable<string | undefined>(prop, false, true);
 					return (
 						<input
 							type="time"
@@ -272,14 +272,6 @@ export function WeeklySportTeacher({
 		defaultColumn,
 		data: date.games,
 		getCoreRowModel: getCoreRowModel(),
-		meta: {
-			updateData: (rowIndex, columnId, value) => {
-				// setTeams((teams) => {
-				// 	teams[rowIndex][columnId as keyof (typeof teams)[number]] = value as any;
-				// 	return [...teams];
-				// });
-			},
-		},
 	});
 
 	return (
