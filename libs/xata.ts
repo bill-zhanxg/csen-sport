@@ -13,9 +13,9 @@ const tables = [
       { name: "email", type: "email" },
       { name: "emailVerified", type: "datetime" },
       { name: "name", type: "string" },
-      { name: "image", type: "string" },
       { name: "role", type: "string" },
       { name: "team", type: "link", link: { table: "teams" } },
+      { name: "image", type: "text" },
     ],
     revLinks: [
       { column: "user", table: "nextauth_accounts" },

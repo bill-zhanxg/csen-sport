@@ -44,7 +44,7 @@ export function Preferences({
 				<div className="label">
 					<span className="label-text">Pick Your Team</span>
 				</div>
-				<select className="select select-bordered">
+				<select disabled={group === 'default'} className="select select-bordered" name="team">
 					<option disabled>Pick one</option>
 					{filteredTeams.map((team) => (
 						<option key={team.id} value={team.id} className="text-base-content">

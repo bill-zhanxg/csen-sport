@@ -1,0 +1,16 @@
+{
+  "id": "mig_cmnne4lgbdm3imgef06g",
+  "parentID": "mig_cmnne3i9fetua4pa4330",
+  "checksum": "1:f0c3bd164fba43cedb2955b003cfea1cae319210b5e94be0eba3c40f9d500f83",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "image",
+          "type": "text"
+        },
+        "table": "nextauth_users"
+      }
+    }
+  ]
+}

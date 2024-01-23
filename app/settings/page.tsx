@@ -2,8 +2,7 @@ import { auth } from '@/libs/auth';
 import { getXataClient } from '@/libs/xata';
 import { UserAvatar } from '../globalComponents/UserAvatar';
 import { Box } from './components/Box';
-import { Preferences } from './components/Preferences';
-import { ProfilePicture } from './components/ProfilePicture';
+import { SettingsForm } from './components/SettingsForm';
 
 export default async function Profile() {
 	const session = await auth();
@@ -25,58 +24,7 @@ export default async function Profile() {
 						<p>{session.user.email}</p>
 					</div>
 				</Box>
-				<form className="flex flex-col gap-4 w-full">
-					<Box>
-						<h1 className="font-bold px-4">User Settings</h1>
-						<div className="divider m-0"></div>
-						<div className="flex flex-col sm:flex-row justify-center w-full gap-4 items-center pt-0 p-4">
-							{/* Input Name */}
-							<div className="flex justify-center flex-col basis-3/4 w-full">
-								<label className="form-control w-full">
-									<div className="label">
-										<span className="label-text text-md font-bold">Name</span>
-									</div>
-									<input
-										type="text"
-										placeholder="Type here"
-										defaultValue={session.user.name ?? ''}
-										className="input input-bordered w-full"
-									/>
-								</label>
-								<label className="form-control w-full">
-									<div className="label">
-										<span className="label-text text-md font-bold">Email</span>
-									</div>
-									<input
-										type="email"
-										placeholder="Type here"
-										defaultValue={session.user.email ?? ''}
-										className="input input-bordered w-full"
-									/>
-								</label>
-							</div>
-
-							{/* Add profile upload */}
-							<div className="flex justify-center items-center basis-1/4 h-full">
-								<label className="form-control mt-4">
-									<div className="label">
-										<span className="label-text text-md font-bold text-center">Profile picture</span>
-									</div>
-									<ProfilePicture user={session.user} />
-								</label>
-							</div>
-						</div>
-					</Box>
-
-					<Box>
-						<h1 className="font-bold px-4 pt-4">Preferences</h1>
-						<div className="divider m-0"></div>
-						<div className="flex flex-col sm:flex-row justify-center w-full gap-4 items-center pt-0 p-4">
-							<Preferences teams={teams.map(({ id, name, isJunior }) => ({ id, name, isJunior }))} />
-						</div>
-					</Box>
-					<button type='submit' className="btn btn-primary mt-2">Update Profile</button>
-				</form>
+				<SettingsForm session={session} teams={teams.map(({ id, name, isJunior }) => ({ id, name, isJunior }))} />
 			</div>
 		</div>
 	);
