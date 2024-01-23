@@ -31,8 +31,6 @@ export async function updateGame(
 	const session = await auth();
 	if (!isTeacher(session)) return { type: 'error', message: 'Only admins can update games' };
 
-    console.log(dataRaw)
-
 	try {
 		const id = stringSchema.parse(idRaw);
 		const data = UpdateGameSchema.parse(dataRaw);

@@ -47,6 +47,7 @@ export function WeeklySportTeacher({
 			let initialValue = getValue() as T;
 			if (isTime) initialValue = initialValue ? dayjs(initialValue as any).format('HH:mm') as unknown as T : initialValue;
 			const [value, setValue] = useState(initialValue);
+			const [previousValue, setPreviousValue] = useState(value);
 			const [disabled, setDisabled] = useState(false);
 			useEffect(() => {
 				setValue(initialValue);
@@ -62,7 +63,10 @@ export function WeeklySportTeacher({
 				},
 				(event) => {
 					if (!('value' in event.target)) return;
-					if (!changeOnChange) uploadData();
+					if (!changeOnChange && previousValue !== value) {
+						uploadData();
+						setPreviousValue(value);
+					}
 				},
 			];
 			function uploadData(newValue?: T) {

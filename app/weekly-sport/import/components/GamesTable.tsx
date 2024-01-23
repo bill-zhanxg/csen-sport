@@ -45,6 +45,7 @@ export function GamesTable({
 		] {
 			const initialValue = getValue() as T;
 			const [value, setValue] = useState(initialValue);
+			const [previousValue, setPreviousValue] = useState(value);
 			useEffect(() => {
 				setValue(initialValue);
 			}, [initialValue]);
@@ -57,7 +58,10 @@ export function GamesTable({
 				},
 				(event) => {
 					if (!('value' in event.target)) return;
-					table.options.meta?.updateData(index, id, value);
+					if (previousValue !== value) {
+						table.options.meta?.updateData(index, id, value);
+						setPreviousValue(value);
+					}
 				},
 			];
 		}
