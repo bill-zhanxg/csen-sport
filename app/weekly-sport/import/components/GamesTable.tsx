@@ -9,7 +9,7 @@ import {
 	useReactTable,
 } from '@tanstack/react-table';
 import { ChangeEventHandler, Dispatch, FocusEventHandler, SetStateAction, useEffect, useMemo, useState } from 'react';
-import { Games, Opponents, Teams, Venues } from './types';
+import { Games, Opponents, Teams, Venues } from '../types';
 
 const defaultColumn: Partial<ColumnDef<Games[number]>> = {
 	cell: ({ getValue }) => {

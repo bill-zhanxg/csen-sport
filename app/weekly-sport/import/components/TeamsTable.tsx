@@ -3,7 +3,7 @@
 import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { ChangeEventHandler, Dispatch, FocusEventHandler, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
-import { Teams } from './types';
+import { Teams } from '../types';
 
 const defaultColumn: Partial<ColumnDef<Teams[number]>> = {
 	cell: ({ getValue }) => {

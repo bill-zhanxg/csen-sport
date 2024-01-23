@@ -18,7 +18,7 @@ import {
 	TeamsSchema,
 	Venues,
 	VenuesSchema,
-} from './components/types';
+} from './types';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);

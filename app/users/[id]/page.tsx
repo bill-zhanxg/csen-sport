@@ -1,6 +1,7 @@
 import { UserAvatar } from '@/app/globalComponents/UserAvatar';
 import { Box } from '@/app/settings/components/Box';
 import { auth } from '@/libs/auth';
+import { isAdmin } from '@/libs/checkPermission';
 import { getXataClient } from '@/libs/xata';
 
 export default async function User({
@@ -14,14 +15,13 @@ export default async function User({
 	const user = await getXataClient().db.nextauth_users.read(params.id, ['email', 'name', 'image', 'role']);
 	if (!user) return <h1>The user does not exist</h1>;
 
-	if (session?.user.role !== 'admin' && user.role !== 'teacher' && user.role !== 'admin')
-		return <h1>Unauthenticated</h1>;
+	if (!isAdmin(session) && user.role !== 'teacher' && user.role !== 'admin') return <h1>Unauthorized</h1>;
 
 	return (
 		<div className="flex justify-center items-center h-[80vh] w-full">
-			<Box className="card card-side bg-base-100 shadow-xl w-auto p-0 sm:px-8 sm:py-2">
+			<Box className="card card-side bg-base-100 shadow-xl w-auto p-0 sm:px-8 sm:py-2 max-w-xl">
 				<div className="card-body">
-					<div className="flex flex-col sm:flex-row gap-6 items-center">
+					<div className="flex flex-col sm:flex-row gap-6 items-center break-all">
 						<div className="avatar">
 							<div className="w-24 rounded-full avatar h-24 ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden mt-2 backdrop-opacity-10 bg-white/30">
 								<UserAvatar user={user} />

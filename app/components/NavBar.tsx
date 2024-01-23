@@ -30,8 +30,24 @@ const menu: Menu = [
 				href: '/users',
 			},
 			{
+				name: 'Teams',
+				href: '/teams',
+			},
+			{
+				name: 'Venues',
+				href: '/venues',
+			},
+			{
+				name: 'Bulk Action',
+				href: '/bulk',
+			},
+			{
 				name: 'Import Timetable',
 				href: '/weekly-sport/import',
+			},
+			{
+				name: 'Create Timetable',
+				href: '/weekly-sport/create',
 			},
 		],
 	},
@@ -55,7 +71,7 @@ export function NavBar({ session }: { session: Session }) {
 				</label>
 				<ul
 					tabIndex={0}
-					className="menu menu-lg dropdown-content mt-3 z-[100] p-2 shadow bg-base-100 rounded-box border border-primary"
+					className="menu menu-md dropdown-content mt-3 z-[100] p-2 shadow bg-base-100 rounded-box border border-primary w-full"
 				>
 					{menuFiltered.map((item, i) =>
 						Array.isArray(item.href) ? (

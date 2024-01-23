@@ -4,7 +4,7 @@ import { UserTable } from './components/UserTable';
 
 export default async function Users() {
 	const session = await auth();
-	if (session?.user.role !== 'admin') return <h1>Unauthenticated</h1>;
+	if (session?.user.role !== 'admin') return <h1>Unauthorized</h1>;
 
 	const users = await getXataClient().db.nextauth_users.select(['email', 'name', 'image', 'role']).getMany();
 
