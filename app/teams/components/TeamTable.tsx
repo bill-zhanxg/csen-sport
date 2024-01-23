@@ -238,7 +238,7 @@ export function TeamTable({ teams }: { teams: SerializedTeam[] }) {
 										onChange={(event) => setNewGroup(event.target.value as '' | 'junior' | 'intermediate')}
 									>
 										<option disabled value="">
-											Add a new team
+											Add a Team
 										</option>
 										<option value="junior">Junior</option>
 										<option value="intermediate">Intermediate</option>

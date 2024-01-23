@@ -10,59 +10,44 @@ import { AlertType } from '../components/Alert';
 const xata = getXataClient();
 const stringSchema = z.string();
 
-const UpdateTeamSchema = z.object({
+const UpdateVenueSchema = z.object({
 	name: z.optional(z.string()),
-	isJunior: z.optional(z.boolean().or(z.literal('junior').or(z.literal('intermediate')))),
+	address: z.optional(z.string()),
+	court_field_number: z.optional(z.string()),
 });
 
-export async function updateTeam(idRaw: string, dataRaw: z.infer<typeof UpdateTeamSchema>): Promise<AlertType> {
-	const session = await auth();
-	if (!isAdmin(session)) return { type: 'error', message: 'Unauthorized' };
-
-	try {
+export async function updateVenue(idRaw: string, dataRaw: z.infer<typeof UpdateVenueSchema>): Promise<AlertType> {
+	return venueAction(() => {
 		const id = stringSchema.parse(idRaw);
-		const data = UpdateTeamSchema.parse(dataRaw);
-
-		if (data.isJunior && typeof data.isJunior !== 'boolean') data.isJunior = data.isJunior === 'junior';
-		const res = await xata.db.teams.update(id, data);
-
-		revalidatePath('/teams');
-		if (!res) return { type: 'error', message: 'The game you are trying to update does not exist' };
-		return { type: 'success', message: `Successfully updated game for column "${Object.keys(data)[0] ?? 'none'}"` };
-	} catch (error) {
-		return { type: 'error', message: (error as Error).message };
-	}
+		const data = UpdateVenueSchema.parse(dataRaw);
+		return xata.db.venues.update(id, data);
+	});
 }
 
-export async function newTeam(dataRaw: z.infer<typeof UpdateTeamSchema>): Promise<AlertType> {
+export async function newVenue(dataRaw: z.infer<typeof UpdateVenueSchema>): Promise<AlertType> {
+	return venueAction(() => {
+		const data = UpdateVenueSchema.parse(dataRaw);
+		return xata.db.venues.create(data);
+	});
+}
+
+export async function deleteVenue(idRaw: string): Promise<AlertType> {
+	return venueAction(() => {
+		const id = stringSchema.parse(idRaw);
+		return xata.db.venues.delete(id);
+	});
+}
+
+async function venueAction(func: () => Promise<any> | any): Promise<AlertType> {
 	const session = await auth();
 	if (!isAdmin(session)) return { type: 'error', message: 'Unauthorized' };
 
 	try {
-		const data = UpdateTeamSchema.parse(dataRaw);
+		const res = await func();
 
-		if (data.isJunior && typeof data.isJunior !== 'boolean') data.isJunior = data.isJunior === 'junior';
-		const res = await xata.db.teams.create(data);
-
-		revalidatePath('/teams');
+		revalidatePath('/venues');
 		if (!res) return { type: 'error', message: 'The game you are trying to update does not exist' };
 		return { type: 'success', message: `Successfully created a new team named "${res.name}"` };
-	} catch (error) {
-		return { type: 'error', message: (error as Error).message };
-	}
-}
-
-export async function deleteTeam(idRaw: string): Promise<AlertType> {
-	const session = await auth();
-	if (!isAdmin(session)) return { type: 'error', message: 'Unauthorized' };
-
-	try {
-		const id = stringSchema.parse(idRaw);
-		const res = await xata.db.teams.delete(id);
-
-		revalidatePath('/teams');
-		if (!res) return { type: 'error', message: 'The game you are trying to update does not exist' };
-		return { type: 'success', message: `Successfully removed team "${res.name}"` };
 	} catch (error) {
 		return { type: 'error', message: (error as Error).message };
 	}

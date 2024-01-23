@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
 import { AlertType, ErrorAlert, SuccessAlert } from '@/app/components/Alert';
-import { SerializedTeam } from '@/libs/serializeData';
+import { SerializedVenue } from '@/libs/serializeData';
 import {
 	CellContext,
 	ColumnDef,
@@ -14,20 +14,20 @@ import {
 import { ChangeEventHandler, FocusEventHandler, useEffect, useMemo, useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import { FaRegTrashCan } from 'react-icons/fa6';
-import { deleteTeam, newTeam, updateTeam } from '../actions';
+import { deleteVenue, newVenue, updateVenue } from '../actions';
 
-const defaultColumn: Partial<ColumnDef<SerializedTeam>> = {
+const defaultColumn: Partial<ColumnDef<SerializedVenue>> = {
 	cell: ({ getValue }) => {
 		return <input className="input input-bordered rounded-none w-full" value={getValue() as string} disabled />;
 	},
 };
 
-export function VenueTable({ teams }: { teams: SerializedTeam[] }) {
+export function VenueTable({ teams }: { teams: SerializedVenue[] }) {
 	const [alert, setAlert] = useState<AlertType>(null);
 
-	const columns = useMemo<ColumnDef<SerializedTeam>[]>(() => {
+	const columns = useMemo<ColumnDef<SerializedVenue>[]>(() => {
 		function editable<T>(
-			{ getValue, row: { original }, column: { id } }: CellContext<SerializedTeam, unknown>,
+			{ getValue, row: { original }, column: { id } }: CellContext<SerializedVenue, unknown>,
 			changeOnChange: boolean = false,
 		): [T, boolean, ChangeEventHandler<HTMLElement> | undefined, FocusEventHandler<HTMLElement> | undefined] {
 			const initialValue = getValue() as T;
@@ -59,7 +59,7 @@ export function VenueTable({ teams }: { teams: SerializedTeam[] }) {
 
 				let importValue = newValue ?? value;
 
-				updateTeam(original.id, { [id]: importValue })
+				updateVenue(original.id, { [id]: importValue })
 					.then((res) => {
 						setAlert(res);
 						setDisabled(false);
@@ -75,32 +75,43 @@ export function VenueTable({ teams }: { teams: SerializedTeam[] }) {
 
 		return [
 			{
-				id: 'isJunior',
-				accessorKey: 'isJunior',
-				header: 'Group',
+				id: 'name',
+				accessorKey: 'name',
+				header: 'Venue Name',
 				cell: (prop) => {
-					const [value, disabled, onChange, onBlur] = editable<boolean>(prop, true);
+					const [value, disabled, onChange, onBlur] = editable<string>(prop);
 					return (
-						<select
-							className="select select-bordered rounded-none w-full"
-							value={value === undefined ? '' : value ? 'junior' : 'intermediate'}
+						<input
+							className="input input-bordered rounded-none w-full"
+							value={value}
 							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
-						>
-							<option disabled value="">
-								Select a group
-							</option>
-							<option value="junior">Junior</option>
-							<option value="intermediate">Intermediate</option>
-						</select>
+						/>
 					);
 				},
 			},
 			{
-				id: 'name',
-				accessorKey: 'name',
-				header: 'Team Name',
+				id: 'address',
+				accessorKey: 'address',
+				header: 'Address',
+				cell: (prop) => {
+					const [value, disabled, onChange, onBlur] = editable<string>(prop);
+					return (
+						<input
+							className="input input-bordered rounded-none w-full"
+							value={value}
+							disabled={disabled}
+							onChange={onChange}
+							onBlur={onBlur}
+						/>
+					);
+				},
+			},
+			{
+				id: 'court_field_number',
+				accessorKey: 'court_field_number',
+				header: 'Court Field Number',
 				cell: (prop) => {
 					const [value, disabled, onChange, onBlur] = editable<string>(prop);
 					return (
@@ -130,23 +141,27 @@ export function VenueTable({ teams }: { teams: SerializedTeam[] }) {
 								<div className="modal-box">
 									<h3 className="font-bold text-lg">Confirmation</h3>
 									<p className="py-4">
-										Are you sure you want to delete the following team? This action is irreversible and all games linked
-										to this team will be unlinked.
+										Are you sure you want to delete the following venue? This action is irreversible and all games linked
+										to this venue will be unlinked.
 									</p>
 									<span className="flex flex-col sm:flex-row justify-between w-full">
-										<h4 className="text-lg font-bold">Group</h4>
-										<p className="text-lg">{original.isJunior ? 'Junior' : 'Intermediate'}</p>
+										<h4 className="text-lg font-bold">Venue Name:</h4>
+										<p className="text-lg">{original.name}</p>
 									</span>
 									<span className="flex flex-col sm:flex-row justify-between w-full">
-										<h4 className="text-lg font-bold">Team Name:</h4>
-										<p className="text-lg">{original.name}</p>
+										<h4 className="text-lg font-bold">Venue Address:</h4>
+										<p className="text-lg">{original.address}</p>
+									</span>
+									<span className="flex flex-col sm:flex-row justify-between w-full">
+										<h4 className="text-lg font-bold">Venue Court/Field Number:</h4>
+										<p className="text-lg">{original.court_field_number}</p>
 									</span>
 									<div className="modal-action">
 										<form method="dialog">
 											<button
 												className="btn btn-error"
 												onClick={() => {
-													deleteTeam(original.id)
+													deleteVenue(original.id)
 														.then(setAlert)
 														.catch(() => {
 															setAlert({
@@ -181,21 +196,22 @@ export function VenueTable({ teams }: { teams: SerializedTeam[] }) {
 		initialState: {
 			sorting: [
 				{
-					id: 'isJunior',
+					id: 'name',
 					desc: false,
 				},
 			],
 		},
 	});
 
-	const [newGroup, setNewGroup] = useState<'' | 'junior' | 'intermediate'>('');
 	const [newName, setNewName] = useState('');
+	const [newAddress, setNewAddress] = useState('');
+	const [newCfNum, setNewCfNum] = useState('');
 
 	return (
 		<>
 			<div className="p-6">
 				<div className="w-full bg-base-100 rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4">
-					<h2 className="text-xl text-center text-primary">Modify or add team</h2>
+					<h2 className="text-xl text-center text-primary">Modify or add venue</h2>
 					<table className="table table-pin-rows text-lg">
 						<thead>
 							{table.getHeaderGroups().map((headerGroup) => (
@@ -232,34 +248,38 @@ export function VenueTable({ teams }: { teams: SerializedTeam[] }) {
 						<tfoot>
 							<tr>
 								<td className="p-0">
-									<select
-										className="select select-bordered rounded-none w-full"
-										value={newGroup}
-										onChange={(event) => setNewGroup(event.target.value as '' | 'junior' | 'intermediate')}
-									>
-										<option disabled value="">
-											Add a new team
-										</option>
-										<option value="junior">Junior</option>
-										<option value="intermediate">Intermediate</option>
-									</select>
+									<input
+										className="input input-bordered rounded-none w-full"
+										placeholder="Add a Venue"
+										value={newName}
+										onChange={(event) => setNewName(event.target.value)}
+									/>
 								</td>
 								<td className="p-0">
 									<input
 										className="input input-bordered rounded-none w-full"
-										placeholder="Team Name"
-										value={newName}
-										onChange={(event) => setNewName(event.target.value)}
+										placeholder="Venue Address"
+										value={newAddress}
+										onChange={(event) => setNewAddress(event.target.value)}
+									/>
+								</td>
+								<td className="p-0">
+									<input
+										className="input input-bordered rounded-none w-full"
+										placeholder="Venue Court/Field Number"
+										value={newCfNum}
+										onChange={(event) => setNewCfNum(event.target.value)}
 									/>
 								</td>
 								<td className="flex justify-end p-0 pt-1">
 									<button
 										className="btn btn-square"
-										disabled={newGroup === '' || newName === ''}
+										disabled={newName === '' || newAddress === '' || newCfNum === ''}
 										onClick={() => {
-											setNewGroup('');
 											setNewName('');
-											newTeam({ name: newName, isJunior: newGroup as 'junior' | 'intermediate' })
+											setNewAddress('');
+											setNewCfNum('');
+											newVenue({ name: newName, address: newAddress, court_field_number: newCfNum })
 												.then(setAlert)
 												.catch(() => {
 													setAlert({
