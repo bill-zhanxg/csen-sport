@@ -4,18 +4,16 @@ import { useSignal } from '@preact/signals-react';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { pdfjs } from 'react-pdf';
-import { ErrorAlert, SuccessAlert } from '../../../components/Alert';
+import { AlertType, ErrorAlert, SuccessAlert } from '../../../components/Alert';
 import { importData } from '../actions';
 import { FIxturePages, Step1 } from './Step1';
 import { Step2 } from './Step2';
 import { Step3 } from './Step3';
 import { Step4 } from './Step4';
 import { Games, Opponents, Teams, Venues } from './types';
-import { useRouter } from 'next/navigation';
-import * as Sentry from '@sentry/nextjs';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -30,14 +28,6 @@ export type ImportState =
 	  };
 
 export function ImportPage({ teachers }: { teachers: { id: string; name?: string | null }[] }) {
-
-	Sentry.setUser({
-		id: '123',
-		username: 'test',
-		email: 'heello@email.com',
-		ip_address: '123.123.123.12',
-	});
-
 	const router = useRouter();
 
 	const [step, setStep] = useState(1);
@@ -53,10 +43,7 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 		pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 	}, []);
 
-	const [alert, setAlert] = useState<{
-		type: 'success' | 'error';
-		message: string;
-	} | null>(null);
+	const [alert, setAlert] = useState<AlertType>(null);
 
 	function checkNextNeedDisable(newStep: number) {
 		if ((newStep === 1 && fixturePages.value.length > 0) || (newStep === 2 && venues.value.length > 0)) return false;

@@ -1,10 +1,14 @@
+import { RawTeacher, RawTeam, RawVenue, getRawTeachers, getRawTeams, getRawVenues } from '@/libs/tableData';
 import { PaginationMenu } from '@/app/globalComponents/PaginationMenu';
 import { WeeklySportStudent } from '@/app/globalComponents/WeeklySportStudent';
 import { WeeklySportTeacher } from '@/app/globalComponents/WeeklySportTeacher';
 import { auth } from '@/libs/auth';
+import { serializeGames } from '@/libs/serializeData';
 import { GamesRecord, getXataClient } from '@/libs/xata';
 import { SelectedPick } from '@xata.io/client';
 import Link from 'next/link';
+
+const xata = getXataClient();
 
 export default async function WeeklySport({
 	searchParams,
@@ -15,9 +19,10 @@ export default async function WeeklySport({
 	const itemsPerPage = 100;
 	const { filter, page } = searchParams;
 	const past = filter === 'past';
+	const isTeacher = session?.user.role === 'admin' || session?.user.role === 'teacher';
 
 	const total = (
-		await getXataClient().db.games.summarize({
+		await xata.db.games.summarize({
 			consistency: 'eventual',
 			filter: {
 				date: past ? { $lt: new Date() } : { $ge: new Date() },
@@ -55,6 +60,10 @@ export default async function WeeklySport({
 		dates[datesArrayIndex].games.push(game);
 	}
 
+	const teams = isTeacher ? await getRawTeams() : [];
+	const teachers = isTeacher ? await getRawTeachers() : [];
+	const venues = isTeacher ? await getRawVenues() : [];
+
 	return (
 		<div className="flex flex-col items-center w-full p-4 gap-4">
 			<h1 className="text-2xl font-bold">Weekly Sport Timetable</h1>
@@ -76,33 +85,16 @@ export default async function WeeklySport({
 				) : (
 					<>
 						{dates.map((date) =>
-							session?.user.role === 'admin' || session?.user.role === 'teacher' ? (
+							isTeacher ? (
 								<WeeklySportTeacher
 									date={{
 										...date,
-										games: date.games.map(({ id, date, opponent, venue, team, teacher, out_of_class, start }) => ({
-											id,
-											date,
-											opponent,
-											venue: {
-												id: venue?.id,
-												name: venue?.name,
-												address: venue?.address,
-											},
-											team: {
-												id: team?.id,
-												name: team?.name,
-												isJunior: team?.isJunior,
-											},
-											teacher: {
-												id: teacher?.id,
-												name: teacher?.name,
-											},
-											out_of_class,
-											start,
-										})),
+										games: serializeGames(date.games),
 									}}
 									key={date.date}
+									teams={teams}
+									teachers={teachers}
+									venues={venues}
 								/>
 							) : (
 								<WeeklySportStudent date={date} key={date.date} />

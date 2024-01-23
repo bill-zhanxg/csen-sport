@@ -1,9 +1,12 @@
 'use server';
 
+import { auth } from '@/libs/auth';
+import { isAdmin } from '@/libs/checkPermission';
 import { getXataClient } from '@/libs/xata';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
+import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { ImportState } from './components/ImportPage';
 import {
@@ -16,7 +19,6 @@ import {
 	Venues,
 	VenuesSchema,
 } from './components/types';
-import { revalidatePath } from 'next/cache';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -32,6 +34,9 @@ export async function importData(
 	gamesRaw: Games,
 	timezoneRaw: string,
 ): Promise<ImportState> {
+	const session = await auth();
+	if (!isAdmin(session)) return { type: 'error', message: 'Unauthorized' };
+
 	try {
 		const team = TeamsSchema.parse(teamRaw);
 		const opponents = OpponentsSchema.parse(opponentsRaw);

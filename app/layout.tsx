@@ -9,6 +9,7 @@ import { NavBar } from './components/NavBar';
 import { SentrySetUser } from './components/SentrySetUser';
 import { UserAvatar } from './globalComponents/UserAvatar';
 import './globals.css';
+import { isBlocked } from '@/libs/checkPermission';
 
 export const metadata: Metadata = {
 	title: 'CCS Sport',
@@ -23,7 +24,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 		<html lang="en">
 			<body>
 				{session ? (
-					session.user.role === 'blocked' ? (
+					isBlocked(session) ? (
 						<h1 className="text-2xl">Sorry but you&apos;re been blocked from accessing this site</h1>
 					) : (
 						<>

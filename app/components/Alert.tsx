@@ -1,5 +1,10 @@
 import { FaXmark } from 'react-icons/fa6';
 
+export type AlertType = {
+	type: 'success' | 'error';
+	message: string;
+} | null;
+
 export function ErrorAlert({ message, setAlert }: { message: string; setAlert: (message: null) => void }) {
 	return (
 		<div className="fixed bottom-3 px-3 w-full z-50">

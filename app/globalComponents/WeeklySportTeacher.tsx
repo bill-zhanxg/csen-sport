@@ -1,32 +1,22 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 'use client';
 
+import { SerializedGame } from '@/libs/serializeData';
 import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import { ChangeEventHandler, FocusEventHandler, useEffect, useMemo, useState } from 'react';
+import { RawTeacher, RawTeam, RawVenue } from '../../libs/tableData';
+import { AlertType, ErrorAlert, SuccessAlert } from '../components/Alert';
+import { updateGame } from './weeklySportTeacherActions';
 
-type Game = {
-	id: string;
-	date?: Date | null;
-	opponent?: string | null;
-	venue?: {
-		id?: string;
-		name?: string | null;
-		address?: string | null;
-	} | null;
-	team?: {
-		id?: string;
-		name?: string | null;
-		isJunior?: boolean | null;
-	} | null;
-	teacher?: {
-		id?: string;
-		name?: string | null;
-	} | null;
-	out_of_class?: Date | null;
-	start?: Date | null;
-};
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
-const defaultColumn: Partial<ColumnDef<Game>> = {
+const defaultColumn: Partial<ColumnDef<SerializedGame>> = {
 	cell: ({ getValue }) => {
 		return <input className="input input-bordered rounded-none w-full" value={getValue() as string} disabled />;
 	},
@@ -34,73 +24,118 @@ const defaultColumn: Partial<ColumnDef<Game>> = {
 
 export function WeeklySportTeacher({
 	date,
+	teams,
+	teachers,
+	venues,
 }: {
 	date: {
 		date: string;
-		games: Game[];
+		games: SerializedGame[];
 	};
+	teams: RawTeam[];
+	teachers: RawTeacher[];
+	venues: RawVenue[];
 }) {
-	const columns = useMemo<ColumnDef<Game>[]>(() => {
-		function editable<T>({
-			getValue,
-			row: { index },
-			column: { id },
-			table,
-		}: CellContext<Game, unknown>): [
-			T,
-			ChangeEventHandler<HTMLElement> | undefined,
-			FocusEventHandler<HTMLElement> | undefined,
-		] {
-			const initialValue = getValue() as T;
+	const [alert, setAlert] = useState<AlertType>(null);
+
+	const columns = useMemo<ColumnDef<SerializedGame>[]>(() => {
+		function editable<T>(
+			{ getValue, row: { original }, column: { id } }: CellContext<SerializedGame, unknown>,
+			changeOnChange: boolean = false,
+			isTime: boolean = false,
+		): [T, boolean, ChangeEventHandler<HTMLElement> | undefined, FocusEventHandler<HTMLElement> | undefined] {
+			let initialValue = getValue() as T;
+			if (isTime) initialValue = dayjs(initialValue as any).format('HH:mm') as unknown as T;
 			const [value, setValue] = useState(initialValue);
+			const [disabled, setDisabled] = useState(false);
 			useEffect(() => {
 				setValue(initialValue);
 			}, [initialValue]);
 			return [
 				value,
+				disabled,
 				(event) => {
 					if (!('value' in event.target)) return;
 					const newValue = event.target.value as T;
 					setValue(newValue);
+					if (changeOnChange) uploadData(newValue);
 				},
 				(event) => {
 					if (!('value' in event.target)) return;
-					table.options.meta?.updateData(index, id, value);
+					if (!changeOnChange) uploadData();
 				},
 			];
+			function uploadData(newValue?: T) {
+				setDisabled(true);
+
+				let importValue = newValue ?? value;
+
+				if (isTime) {
+					const timezone = dayjs.tz.guess();
+					let time: Date | undefined = undefined;
+					const time_string = (importValue as string)?.split(':') ?? undefined;
+					if (time_string)
+						time = dayjs
+							.tz(
+								`${dayjs.tz(original.date, timezone).format('YYYY-MM-DD')} ${time_string[0]}:${time_string[1]}`,
+								timezone,
+							)
+							.toDate();
+					importValue = time as any;
+				}
+
+				updateGame(original.id, { [id]: importValue })
+					.then((res) => {
+						setAlert(res);
+						setDisabled(false);
+					})
+					.catch(() => {
+						setAlert({
+							type: 'error',
+							message: 'A network error occurred. Please try again later.',
+						});
+					});
+			}
 		}
 
 		return [
 			{
-				id: 'gender',
-				accessorKey: 'gender',
-				header: 'Gender',
-			},
-			{
-				id: 'sport',
-				accessorKey: 'sport',
-				header: 'Sport',
-			},
-			{
-				id: 'division',
-				accessorKey: 'division',
-				header: 'Division',
-			},
-			{
 				id: 'team',
-				accessorKey: 'team',
+				accessorKey: 'team.id',
 				header: 'Team',
+				cell: (prop) => {
+					const [value, disabled, onChange, onBlur] = editable<string>(prop, true);
+					return (
+						<select
+							className="select select-bordered rounded-none w-full"
+							value={value}
+							disabled={disabled}
+							onChange={onChange}
+							onBlur={onBlur}
+						>
+							<option disabled value="">
+								---
+							</option>
+							{teams.map((team) => (
+								<option key={team.id} value={team.id}>
+									[{team.isJunior ? 'Junior' : 'Intermediate'}] {team.name}
+								</option>
+							))}
+						</select>
+					);
+				},
 			},
 			{
-				id: 'friendlyName',
-				accessorKey: 'friendlyName',
-				header: 'Friendly Name',
+				id: 'opponent',
+				accessorKey: 'opponent',
+				header: 'Opponent',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string>(prop);
 					return (
 						<input
 							className="input input-bordered rounded-none w-full"
 							value={value}
+							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
 						/>
@@ -108,73 +143,129 @@ export function WeeklySportTeacher({
 				},
 			},
 			{
-				id: 'group',
-				accessorKey: 'group',
-				header: 'Group',
+				id: 'venue',
+				accessorKey: 'venue.id',
+				header: 'Venue',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<'junior' | 'intermediate'>(prop);
+					const [value, disabled, onChange, onBlur] = editable<'junior' | 'intermediate'>(prop, true);
 					return (
 						<select
 							className="select select-bordered rounded-none w-full"
 							value={value}
+							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
 						>
-							<option value="junior">Junior</option>
-							<option value="intermediate">Intermediate</option>
+							<option disabled value="">
+								---
+							</option>
+							{venues.map((venue) => (
+								<option key={venue.id} value={venue.id}>
+									{venue.name} ({venue.court_field_number})
+								</option>
+							))}
 						</select>
 					);
 				},
 			},
 			{
 				id: 'teacher',
-				accessorKey: 'teacher',
-				header: 'Default Teacher',
+				accessorKey: 'teacher.id',
+				header: 'Teacher',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string | undefined>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string | undefined>(prop, true);
 					return (
 						<select
 							className="select select-bordered rounded-none w-full"
 							value={value ?? ''}
+							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
 						>
-							<option value={''} disabled>
+							<option disabled value="">
 								Select a teacher
 							</option>
-							{/* {teachers.map((teacher) => (
+							{teachers.map((teacher) => (
 								<option key={teacher.id} value={teacher.id}>
 									{teacher.name}
 								</option>
-							))} */}
+							))}
 						</select>
+					);
+				},
+			},
+			{
+				id: 'transportation',
+				accessorKey: 'transportation',
+				header: 'Transportation',
+				cell: (prop) => {
+					const [value, disabled, onChange, onBlur] = editable<string>(prop);
+					return (
+						<input
+							className="input input-bordered rounded-none w-full"
+							value={value}
+							disabled={disabled}
+							onChange={onChange}
+							onBlur={onBlur}
+						/>
+					);
+				},
+			},
+			{
+				id: 'notes',
+				accessorKey: 'notes',
+				header: 'Notes',
+				cell: (prop) => {
+					const [value, disabled, onChange, onBlur] = editable<string>(prop);
+					return (
+						<input
+							className="input input-bordered rounded-none w-full"
+							value={value}
+							disabled={disabled}
+							onChange={onChange}
+							onBlur={onBlur}
+						/>
 					);
 				},
 			},
 			{
 				id: 'out_of_class',
 				accessorKey: 'out_of_class',
-				header: 'D Out of Class',
+				header: 'Out of Class',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string | undefined>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string>(prop, false, true);
 					return (
-						<input type="time" className="bg-base-100 ml-4" value={value ?? ''} onChange={onChange} onBlur={onBlur} />
+						<input
+							type="time"
+							className="bg-base-100 ml-4"
+							value={value ?? ''}
+							disabled={disabled}
+							onChange={onChange}
+							onBlur={onBlur}
+						/>
 					);
 				},
 			},
 			{
 				id: 'start',
 				accessorKey: 'start',
-				header: 'D Start Time',
+				header: 'Start',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string | undefined>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string>(prop, false, true);
 					return (
-						<input type="time" className="bg-base-100 ml-4" value={value ?? ''} onChange={onChange} onBlur={onBlur} />
+						<input
+							type="time"
+							className="bg-base-100 ml-4"
+							value={value ?? ''}
+							disabled={disabled}
+							onChange={onChange}
+							onBlur={onBlur}
+						/>
 					);
 				},
 			},
 		];
-	}, []);
+	}, [teams, venues, teachers]);
 
 	const table = useReactTable({
 		columns,
@@ -193,41 +284,51 @@ export function WeeklySportTeacher({
 
 	return (
 		<>
-			<p className="text-xl font-bold mt-4">Team names (Modify if needed)</p>
-			<div className="overflow-x-auto w-[90%]">
-				<table className="table text-lg">
-					<thead>
-						{table.getHeaderGroups().map((headerGroup) => (
-							<tr key={headerGroup.id}>
-								{headerGroup.headers.map((header) => {
-									return (
-										<th key={header.id} colSpan={header.colSpan}>
-											{header.isPlaceholder ? null : (
-												<div className="text-lg">{flexRender(header.column.columnDef.header, header.getContext())}</div>
-											)}
-										</th>
-									);
-								})}
-							</tr>
-						))}
-					</thead>
-					<tbody>
-						{table.getRowModel().rows.map((row) => {
-							return (
-								<tr key={row.id}>
-									{row.getVisibleCells().map((cell) => {
+			<div className="w-full bg-base-100 rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4">
+				<h2 className="text-xl text-center text-primary">Weekly Sport {date.date}</h2>
+				<div className="overflow-x-auto">
+					<table className="table text-lg">
+						<thead>
+							{table.getHeaderGroups().map((headerGroup) => (
+								<tr key={headerGroup.id}>
+									{headerGroup.headers.map((header) => {
 										return (
-											<td className="p-0" key={cell.id}>
-												{flexRender(cell.column.columnDef.cell, cell.getContext())}
-											</td>
+											<th key={header.id} colSpan={header.colSpan}>
+												{header.isPlaceholder ? null : (
+													<div className="text-lg">
+														{flexRender(header.column.columnDef.header, header.getContext())}
+													</div>
+												)}
+											</th>
 										);
 									})}
 								</tr>
-							);
-						})}
-					</tbody>
-				</table>
+							))}
+						</thead>
+						<tbody>
+							{table.getRowModel().rows.map((row) => {
+								return (
+									<tr key={row.id}>
+										{row.getVisibleCells().map((cell) => {
+											return (
+												<td className="p-0" key={cell.id}>
+													{flexRender(cell.column.columnDef.cell, cell.getContext())}
+												</td>
+											);
+										})}
+									</tr>
+								);
+							})}
+						</tbody>
+					</table>
+				</div>
 			</div>
+			{alert &&
+				(alert.type === 'success' ? (
+					<SuccessAlert message={alert.message} setAlert={setAlert} />
+				) : (
+					<ErrorAlert message={alert.message} setAlert={setAlert} />
+				))}
 		</>
 	);
 }

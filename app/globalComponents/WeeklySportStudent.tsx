@@ -13,10 +13,7 @@ export function WeeklySportStudent({
 	};
 }) {
 	return (
-		<div
-			className="w-full bg-base-200 rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4"
-			key={date.date}
-		>
+		<div className="w-full bg-base-200 rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4">
 			<h2 className="text-xl text-center text-primary">Weekly Sport {date.date}</h2>
 			<div className="w-full mt-2">
 				<table className="table">
