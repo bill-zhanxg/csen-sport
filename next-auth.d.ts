@@ -7,20 +7,20 @@ declare module 'next-auth' {
 		user: {
 			/** The role of the user. */
 			role: role;
-			team: team;
+			team?: team;
 		} & DefaultSession['user'];
 	}
 
 	interface User extends DefaultUser {
 		/** The role of the user. */
 		role: role;
-		team: team;
+		team?: team;
 	}
 }
 
 declare module '@auth/core/adapters' {
 	interface AdapterUser extends BaseAdapterUser {
 		role: role;
-		team: team;
+		team?: team;
 	}
 }

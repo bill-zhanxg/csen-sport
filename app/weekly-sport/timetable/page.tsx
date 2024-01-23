@@ -1,9 +1,10 @@
-import { RawTeacher, RawTeam, RawVenue, getRawTeachers, getRawTeams, getRawVenues } from '@/libs/tableData';
 import { PaginationMenu } from '@/app/globalComponents/PaginationMenu';
 import { WeeklySportStudent } from '@/app/globalComponents/WeeklySportStudent';
 import { WeeklySportTeacher } from '@/app/globalComponents/WeeklySportTeacher';
 import { auth } from '@/libs/auth';
+import { isTeacher } from '@/libs/checkPermission';
 import { serializeGames } from '@/libs/serializeData';
+import { getRawTeachers, getRawTeams, getRawVenues } from '@/libs/tableData';
 import { GamesRecord, getXataClient } from '@/libs/xata';
 import { SelectedPick } from '@xata.io/client';
 import Link from 'next/link';
@@ -19,7 +20,7 @@ export default async function WeeklySport({
 	const itemsPerPage = 100;
 	const { filter, page } = searchParams;
 	const past = filter === 'past';
-	const isTeacher = session?.user.role === 'admin' || session?.user.role === 'teacher';
+	const isTeacherVar = isTeacher(session);
 
 	const total = (
 		await xata.db.games.summarize({
@@ -60,9 +61,9 @@ export default async function WeeklySport({
 		dates[datesArrayIndex].games.push(game);
 	}
 
-	const teams = isTeacher ? await getRawTeams() : [];
-	const teachers = isTeacher ? await getRawTeachers() : [];
-	const venues = isTeacher ? await getRawVenues() : [];
+	const teams = isTeacherVar ? await getRawTeams() : [];
+	const teachers = isTeacherVar ? await getRawTeachers() : [];
+	const venues = isTeacherVar ? await getRawVenues() : [];
 
 	return (
 		<div className="flex flex-col items-center w-full p-4 gap-4">
@@ -85,7 +86,7 @@ export default async function WeeklySport({
 				) : (
 					<>
 						{dates.map((date) =>
-							isTeacher ? (
+							isTeacherVar ? (
 								<WeeklySportTeacher
 									date={{
 										...date,

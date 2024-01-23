@@ -1,5 +1,47 @@
-export default function Home() {
-	return <h1>Unfinished</h1>
+import { auth } from '@/libs/auth';
+import { isTeacher } from '@/libs/checkPermission';
+import { getXataClient } from '@/libs/xata';
+
+const xata = getXataClient();
+
+export default async function Home({
+	searchParams,
+}: {
+	searchParams: { [key: string]: string | string[] | undefined };
+}) {
+	const session = await auth();
+	const itemsPerPage = 100;
+	const { page } = searchParams;
+
+	const filter = {
+		date: { $ge: new Date() },
+		...(isTeacher(session) ? { teacher: session?.user.id } : session?.user.team ? { team: session.user.team.id } : {}),
+	};
+
+	const total = (
+		await xata.db.games.summarize({
+			consistency: 'eventual',
+			filter: { ...filter },
+			summaries: {
+				total: { count: '*' },
+			},
+		})
+	).summaries[0].total;
+	const games = await getXataClient()
+		.db.games.select(['*', 'team.*', 'venue.*', 'teacher.*'])
+		.getPaginated({
+			consistency: 'eventual',
+			sort: [{ date: 'asc' }],
+			filter: { ...(filter as any) },
+			pagination: {
+				size: itemsPerPage,
+				offset: page ? (parseInt(page[0]) - 1) * itemsPerPage : 0,
+			},
+		});
+
+	console.log(games.records);
+
+	return <h1>Unfinished</h1>;
 	// const [dates, setDates] = useState<DateInterface[]>();
 	// const [alert, setAlert] = useState<{
 	// 	type: 'success' | 'error';
