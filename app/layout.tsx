@@ -12,8 +12,8 @@ import './globals.css';
 import { isBlocked } from '@/libs/checkPermission';
 
 export const metadata: Metadata = {
-	title: 'CCS Sport',
-	description: 'CCS Sport',
+	title: 'CSEN Sport',
+	description: 'CSEN Sport',
 };
 
 export default async function MainLayout({ children }: { children: React.ReactNode }) {

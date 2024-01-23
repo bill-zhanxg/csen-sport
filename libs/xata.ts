@@ -157,7 +157,7 @@ const DatabaseClient = buildClient();
 
 const defaultOptions = {
   databaseURL:
-    "https://Bill-zhanxg-s-workspace-76bknl.ap-southeast-2.xata.sh/db/ccs-sport",
+    "https://Bill-zhanxg-s-workspace-76bknl.ap-southeast-2.xata.sh/db/csen-sport",
 };
 
 export class XataClient extends DatabaseClient<DatabaseSchema> {

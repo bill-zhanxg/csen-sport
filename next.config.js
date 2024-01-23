@@ -33,7 +33,7 @@ module.exports = withSentryConfig(
 		// Suppresses source map uploading logs during build
 		silent: true,
 		org: 'billzhanxg',
-		project: 'ccs-sport',
+		project: 'csen-sport',
 	},
 	{
 		// For all available options, see:

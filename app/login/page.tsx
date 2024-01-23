@@ -29,7 +29,7 @@ export default async function Login({
 
 	return (
 		<div className="flex flex-col justify-center items-center gap-3 h-full">
-			<h1 className="text-4xl text-center font-bold p-5">CCS Sport Login</h1>
+			<h1 className="text-4xl text-center font-bold p-5">CSEN Sport Login</h1>
 			<LoginButton callbackUrl={decodeURIComponent(callbackURL ?? '')} />
 			{/* Error */}
 			{searchParams.error && (
