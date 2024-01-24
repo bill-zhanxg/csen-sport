@@ -1,12 +1,13 @@
 import { PaginationMenu } from '@/app/globalComponents/PaginationMenu';
+import { Tabs } from '@/app/globalComponents/Tabs';
 import { WeeklySportStudent } from '@/app/globalComponents/WeeklySportStudent';
 import { WeeklySportTeacher } from '@/app/globalComponents/WeeklySportTeacher';
 import { auth } from '@/libs/auth';
 import { isTeacher } from '@/libs/checkPermission';
+import { gamesToDates } from '@/libs/gamesToDates';
 import { serializeGames } from '@/libs/serializeData';
 import { getRawTeachers, getRawTeams, getRawVenues } from '@/libs/tableData';
-import { GamesRecord, getXataClient } from '@/libs/xata';
-import { SelectedPick } from '@xata.io/client';
+import { getXataClient } from '@/libs/xata';
 import Link from 'next/link';
 
 const xata = getXataClient();
@@ -18,15 +19,20 @@ export default async function WeeklySport({
 }) {
 	const session = await auth();
 	const itemsPerPage = 100;
-	const { filter, page } = searchParams;
-	const past = filter === 'past';
+	// Convert all array search params to string and return new object
+	for (const key in searchParams) {
+		if (Array.isArray(searchParams[key])) searchParams[key] = searchParams[key]?.[0];
+	}
+	const { filter, page, edit } = searchParams;
+	const isPast = filter === 'past';
+	const isEdit = edit === 'true';
 	const isTeacherVar = isTeacher(session);
 
 	const total = (
 		await xata.db.games.summarize({
 			consistency: 'eventual',
 			filter: {
-				date: past ? { $lt: new Date() } : { $ge: new Date() },
+				date: isPast ? { $lt: new Date() } : { $ge: new Date() },
 			},
 			summaries: {
 				total: { count: '*' },
@@ -37,30 +43,17 @@ export default async function WeeklySport({
 		.db.games.select(['*', 'team.*', 'venue.*', 'teacher.*'])
 		.getPaginated({
 			consistency: 'eventual',
-			sort: [{ date: past ? 'desc' : 'asc' }],
+			sort: [{ date: isPast ? 'desc' : 'asc' }],
 			filter: {
-				date: past ? { $lt: new Date().toISOString() } : { $ge: new Date().toISOString() },
+				date: isPast ? { $lt: new Date().toISOString() } : { $ge: new Date().toISOString() },
 			},
 			pagination: {
 				size: itemsPerPage,
-				offset: page ? (parseInt(page[0]) - 1) * itemsPerPage : 0,
+				offset: page ? (parseInt(page as string) - 1) * itemsPerPage : 0,
 			},
 		});
 
-	const dates: {
-		date: string;
-		games: SelectedPick<GamesRecord, ('*' | 'team.*' | 'venue.*' | 'teacher.*')[]>[];
-	}[] = [];
-	let datesArrayIndex = 0;
-	for (const game of games.records) {
-		if (!game.date) continue;
-		const date = game.date.toLocaleDateString();
-		if (!dates[datesArrayIndex]) dates[datesArrayIndex] = { date, games: [] };
-		if (dates[datesArrayIndex].date !== date) datesArrayIndex++;
-		if (!dates[datesArrayIndex]) dates[datesArrayIndex] = { date, games: [] };
-		dates[datesArrayIndex].games.push(game);
-	}
-
+	const dates = gamesToDates(games);
 	const teams = isTeacherVar ? await getRawTeams() : [];
 	const teachers = isTeacherVar ? await getRawTeachers() : [];
 	const venues = isTeacherVar ? await getRawVenues() : [];
@@ -68,17 +61,41 @@ export default async function WeeklySport({
 	return (
 		<div className="flex flex-col items-center w-full p-4 gap-4">
 			<h1 className="text-2xl font-bold">Weekly Sport Timetable</h1>
-			<div role="tablist" className="tabs tabs-bordered tabs-lg">
-				<Link href="/weekly-sport/timetable" role="tab" className={`tab ${past ? '' : 'tab-active text-primary'}`}>
-					Upcoming Games
-				</Link>
-				<Link
-					href="/weekly-sport/timetable?filter=past"
-					role="tab"
-					className={`tab ${past ? 'tab-active text-primary' : ''}`}
-				>
-					Past Games
-				</Link>
+			<div className="flex gap-4">
+				<Tabs>
+					<Link
+						href={`/weekly-sport/timetable?edit=${edit}`}
+						role="tab"
+						className={`tab ${isPast ? '' : 'tab-active text-primary'}`}
+					>
+						Upcoming Games
+					</Link>
+					<Link
+						href={`/weekly-sport/timetable?filter=past&edit=${edit}`}
+						role="tab"
+						className={`tab ${isPast ? 'tab-active text-primary' : ''}`}
+					>
+						Past Games
+					</Link>
+				</Tabs>
+				{isTeacherVar && (
+					<Tabs>
+						<Link
+							href={`/weekly-sport/timetable?edit=false&filter=${filter}&page=${page}`}
+							role="tab"
+							className={`tab ${isEdit ? '' : 'tab-active text-primary'}`}
+						>
+							Viewing
+						</Link>
+						<Link
+							href={`/weekly-sport/timetable?edit=true&filter=${filter}&page=${page}`}
+							role="tab"
+							className={`tab ${isEdit ? 'tab-active text-primary' : ''}`}
+						>
+							Editing
+						</Link>
+					</Tabs>
+				)}
 			</div>
 			<main className="flex flex-col items-center gap-4 p-4 overflow-x-auto w-full">
 				{dates.length < 1 ? (
@@ -86,7 +103,7 @@ export default async function WeeklySport({
 				) : (
 					<>
 						{dates.map((date) =>
-							isTeacherVar ? (
+							isTeacherVar && isEdit ? (
 								<WeeklySportTeacher
 									date={{
 										...date,

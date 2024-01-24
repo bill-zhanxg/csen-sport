@@ -42,49 +42,6 @@ export default async function Home({
 	console.log(games.records);
 
 	return <h1>Unfinished</h1>;
-	// const [dates, setDates] = useState<DateInterface[]>();
-	// const [alert, setAlert] = useState<{
-	// 	type: 'success' | 'error';
-	// 	message: string;
-	// } | null>(null);
-
-	// // TODO: Handle no permission to view the data by removing user from Admin Team
-	// useEffect(() => {
-	// 	database
-	// 		.getMyGames()
-	// 		.then((games) => {
-	// 			const filteredGames = games.filter((game) => {
-	// 				if (!game.date) return false;
-	// 				const now = new Date();
-	// 				const gameDate = new Date(game.date.day);
-	// 				return gameDate > now;
-	// 			});
-	// 			const gamesByDate: DateInterface[] = [];
-	// 			for (const game of filteredGames) {
-	// 				const gameDate = new Date(game.date!.day);
-	// 				const gameDateString = gameDate.toString();
-	// 				const index = gamesByDate.findIndex((date) => date.day === gameDateString);
-	// 				if (index !== -1) gamesByDate[index].game.push(game);
-	// 				else
-	// 					gamesByDate.push({
-	// 						day: gameDateString,
-	// 						game: [game],
-	// 					});
-	// 			}
-	// 			gamesByDate.sort((a, b) => {
-	// 				const aDate = new Date(a.day);
-	// 				const bDate = new Date(b.day);
-	// 				return aDate.getTime() - bDate.getTime();
-	// 			});
-	// 			setDates(gamesByDate);
-	// 		})
-	// 		.catch((err: AppwriteException) => {
-	// 			setAlert({
-	// 				type: 'error',
-	// 				message: `Failed to load game list: ${err.message}`,
-	// 			});
-	// 		});
-	// }, []);
 
 	// return (
 	// 	<>

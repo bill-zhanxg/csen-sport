@@ -4,7 +4,7 @@ import { useSignal } from '@preact/signals-react';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next13-progressbar';
 import { useEffect, useMemo, useState } from 'react';
 import { pdfjs } from 'react-pdf';
 import { AlertType, ErrorAlert, SuccessAlert } from '../../../components/Alert';
@@ -144,7 +144,7 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 					<button
 						className="btn btn-primary w-32 !shrink"
 						onClick={() => {
-							if (step === 4) return router.replace('/weekly-sport/timetable');
+							if (step === 4) return router.push('/weekly-sport/timetable');
 							setStep((step) => {
 								const newStep = step + 1;
 								setDisableNext(checkNextNeedDisable(newStep));

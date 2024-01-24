@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 'use client';
 
+import { SerializedDateWithGames } from '@/libs/gamesToDates';
 import { SerializedGame } from '@/libs/serializeData';
 import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import dayjs from 'dayjs';
@@ -28,10 +29,7 @@ export function WeeklySportTeacher({
 	teachers,
 	venues,
 }: {
-	date: {
-		date: string;
-		games: SerializedGame[];
-	};
+	date: SerializedDateWithGames;
 	teams: RawTeam[];
 	teachers: RawTeacher[];
 	venues: RawVenue[];
@@ -45,7 +43,8 @@ export function WeeklySportTeacher({
 			isTime: boolean = false,
 		): [T, boolean, ChangeEventHandler<HTMLElement> | undefined, FocusEventHandler<HTMLElement> | undefined] {
 			let initialValue = getValue() as T;
-			if (isTime) initialValue = initialValue ? dayjs(initialValue as any).format('HH:mm') as unknown as T : initialValue;
+			if (isTime)
+				initialValue = initialValue ? (dayjs(initialValue as any).format('HH:mm') as unknown as T) : initialValue;
 			const [value, setValue] = useState(initialValue);
 			const [previousValue, setPreviousValue] = useState(value);
 			const [disabled, setDisabled] = useState(false);

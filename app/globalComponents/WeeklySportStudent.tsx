@@ -1,17 +1,9 @@
-import { GamesRecord } from '@/libs/xata';
-import { SelectedPick } from '@xata.io/client';
+import { DateWithGames } from '@/libs/gamesToDates';
 import Link from 'next/link';
 import { FaInfoCircle } from 'react-icons/fa';
 import { FaLocationDot } from 'react-icons/fa6';
 
-export function WeeklySportStudent({
-	date,
-}: {
-	date: {
-		date: string;
-		games: SelectedPick<GamesRecord, ('*' | 'team.*' | 'venue.*' | 'teacher.*')[]>[];
-	};
-}) {
+export function WeeklySportStudent({ date }: { date: DateWithGames }) {
 	return (
 		<div className="w-full bg-base-200 rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4">
 			<h2 className="text-xl text-center text-primary">Weekly Sport {date.date}</h2>

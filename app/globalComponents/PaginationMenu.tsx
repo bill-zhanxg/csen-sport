@@ -1,6 +1,7 @@
 'use client';
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next13-progressbar';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
 import { Pagination, PaginationList, PaginationNext, PaginationPrev } from 'react-unstyled-pagination';
 
