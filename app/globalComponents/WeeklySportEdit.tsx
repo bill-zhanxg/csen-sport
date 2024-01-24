@@ -11,7 +11,7 @@ import utc from 'dayjs/plugin/utc';
 import { ChangeEventHandler, FocusEventHandler, useEffect, useMemo, useState } from 'react';
 import { RawTeacher, RawTeam, RawVenue } from '../../libs/tableData';
 import { AlertType, ErrorAlert, SuccessAlert } from '../components/Alert';
-import { updateGame } from './weeklySportTeacherActions';
+import { updateGame } from './WeeklySportEditActions';
 
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
@@ -23,7 +23,7 @@ const defaultColumn: Partial<ColumnDef<SerializedGame>> = {
 	},
 };
 
-export function WeeklySportTeacher({
+export function WeeklySportEdit({
 	date,
 	teams,
 	teachers,

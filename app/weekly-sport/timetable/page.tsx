@@ -1,7 +1,7 @@
 import { PaginationMenu } from '@/app/globalComponents/PaginationMenu';
 import { Tabs } from '@/app/globalComponents/Tabs';
-import { WeeklySportStudent } from '@/app/globalComponents/WeeklySportStudent';
-import { WeeklySportTeacher } from '@/app/globalComponents/WeeklySportTeacher';
+import { WeeklySportView } from '@/app/globalComponents/WeeklySportView';
+import { WeeklySportEdit } from '@/app/globalComponents/WeeklySportEdit';
 import { auth } from '@/libs/auth';
 import { isTeacher } from '@/libs/checkPermission';
 import { gamesToDates } from '@/libs/gamesToDates';
@@ -26,7 +26,7 @@ export default async function WeeklySport({
 	const { filter, page, edit } = searchParams;
 	const isPast = filter === 'past';
 	const isEdit = edit === 'true';
-	const isTeacherVar = isTeacher(session);
+	const isTeacherBool = isTeacher(session);
 
 	const total = (
 		await xata.db.games.summarize({
@@ -54,14 +54,14 @@ export default async function WeeklySport({
 		});
 
 	const dates = gamesToDates(games);
-	const teams = isTeacherVar ? await getRawTeams() : [];
-	const teachers = isTeacherVar ? await getRawTeachers() : [];
-	const venues = isTeacherVar ? await getRawVenues() : [];
+	const teams = isTeacherBool ? await getRawTeams() : [];
+	const teachers = isTeacherBool ? await getRawTeachers() : [];
+	const venues = isTeacherBool ? await getRawVenues() : [];
 
 	return (
 		<div className="flex flex-col items-center w-full p-4 gap-4">
 			<h1 className="text-2xl font-bold">Weekly Sport Timetable</h1>
-			<div className="flex gap-4">
+			<div className="flex flex-col sm:flex-row gap-4 py-2 px-4 w-full sm:w-auto">
 				<Tabs>
 					<Link
 						href={`/weekly-sport/timetable?edit=${edit}`}
@@ -78,7 +78,7 @@ export default async function WeeklySport({
 						Past Games
 					</Link>
 				</Tabs>
-				{isTeacherVar && (
+				{isTeacherBool && (
 					<Tabs>
 						<Link
 							href={`/weekly-sport/timetable?edit=false&filter=${filter}&page=${page}`}
@@ -97,14 +97,14 @@ export default async function WeeklySport({
 					</Tabs>
 				)}
 			</div>
-			<main className="flex flex-col items-center gap-4 p-4 overflow-x-auto w-full">
+			<main className="flex flex-col items-center gap-4 pt-0 p-4 overflow-x-auto w-full">
 				{dates.length < 1 ? (
 					<div>Nothing Here</div>
 				) : (
 					<>
 						{dates.map((date) =>
-							isTeacherVar && isEdit ? (
-								<WeeklySportTeacher
+							isTeacherBool && isEdit ? (
+								<WeeklySportEdit
 									date={{
 										...date,
 										games: serializeGames(date.games),
@@ -115,7 +115,7 @@ export default async function WeeklySport({
 									venues={venues}
 								/>
 							) : (
-								<WeeklySportStudent date={date} key={date.date} />
+								<WeeklySportView key={date.date} date={date} isTeacher={isTeacherBool} />
 							),
 						)}
 						<PaginationMenu totalPages={Math.ceil(total / itemsPerPage)} />
