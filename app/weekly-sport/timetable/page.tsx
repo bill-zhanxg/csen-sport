@@ -18,7 +18,7 @@ export default async function WeeklySport({
 	searchParams: { [key: string]: string | string[] | undefined };
 }) {
 	const session = await auth();
-	const itemsPerPage = 100;
+	const itemsPerPage = 50;
 	// Convert all array search params to string and return new object
 	for (const key in searchParams) {
 		if (Array.isArray(searchParams[key])) searchParams[key] = searchParams[key]?.[0];
@@ -53,7 +53,7 @@ export default async function WeeklySport({
 			},
 		});
 
-	const dates = gamesToDates(games);
+	const dates = gamesToDates(games, isTeacherBool);
 	const teams = isTeacherBool ? await getRawTeams() : [];
 	const teachers = isTeacherBool ? await getRawTeachers() : [];
 	const venues = isTeacherBool ? await getRawVenues() : [];
@@ -107,7 +107,7 @@ export default async function WeeklySport({
 								<WeeklySportEdit
 									date={{
 										...date,
-										games: serializeGames(date.games),
+										games: serializeGames(date.games, isTeacherBool),
 									}}
 									key={date.date}
 									teams={teams}

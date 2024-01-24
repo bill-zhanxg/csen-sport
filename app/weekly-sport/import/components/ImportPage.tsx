@@ -1,9 +1,6 @@
 'use client';
 
 import { useSignal } from '@preact/signals-react';
-import dayjs from 'dayjs';
-import timezone from 'dayjs/plugin/timezone';
-import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next13-progressbar';
 import { useEffect, useMemo, useState } from 'react';
 import { pdfjs } from 'react-pdf';
@@ -14,9 +11,7 @@ import { Step2 } from './Step2';
 import { Step3 } from './Step3';
 import { Step4 } from './Step4';
 import { Games, Opponents, Teams, Venues } from '../types';
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
+import { dayjs } from '@/libs/dayjs';
 
 export type ImportState =
 	| {

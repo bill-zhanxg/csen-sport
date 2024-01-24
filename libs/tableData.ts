@@ -1,3 +1,4 @@
+import { serializeTeams, serializeVenues } from './serializeData';
 import { getXataClient } from './xata';
 
 export type RawTeam = {
@@ -22,7 +23,7 @@ const xata = getXataClient();
 
 export async function getRawTeams(): Promise<RawTeam[]> {
 	const teamsRecords = await xata.db.teams.select(['name', 'isJunior']).getAll();
-	return teamsRecords.map(({ id, name, isJunior }) => ({ id, name, isJunior }));
+	return serializeTeams(teamsRecords);
 }
 
 export async function getRawTeachers(): Promise<RawTeacher[]> {
@@ -32,5 +33,5 @@ export async function getRawTeachers(): Promise<RawTeacher[]> {
 
 export async function getRawVenues(): Promise<RawVenue[]> {
 	const venuesRecords = await xata.db.venues.select(['name', 'address', 'court_field_number']).getAll();
-	return venuesRecords.map(({ id, name, address, court_field_number }) => ({ id, name, address, court_field_number }));
+	return serializeVenues(venuesRecords);
 }

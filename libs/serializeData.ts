@@ -1,14 +1,11 @@
 import { SelectedPick } from '@xata.io/client';
+import { RawTeam, RawVenue } from './tableData';
 import { GamesRecord, TeamsRecord, VenuesRecord } from './xata';
 
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
-export type SerializedTeam = {
-	id: string;
-	name?: string | null;
-	isJunior?: boolean | null;
-};
-type TeamRecord = SelectedPick<TeamsRecord, ['*']>;
+export type SerializedTeam = RawTeam;
+type TeamRecord = SelectedPick<TeamsRecord, ['name', 'isJunior']>;
 
 export function serializeTeams(teams: TeamRecord[]): SerializedTeam[] {
 	return teams.map((team) => serializeTeam(team));
@@ -21,13 +18,8 @@ export function serializeTeam({ id, name, isJunior }: TeamRecord): SerializedTea
 	};
 }
 
-export type SerializedVenue = {
-	id: string;
-	name?: string | null;
-	address?: string | null;
-	court_field_number?: string | null;
-};
-type VenueRecord = SelectedPick<VenuesRecord, ['*']>;
+export type SerializedVenue = RawVenue;
+type VenueRecord = SelectedPick<VenuesRecord, ['name', 'address', 'court_field_number']>;
 
 export function serializeVenues(venues: VenueRecord[]): SerializedVenue[] {
 	return venues.map((venue) => serializeVenue(venue));
@@ -59,22 +51,26 @@ export type SerializedGame = {
 
 export function serializeGames(
 	games: SelectedPick<GamesRecord, ('*' | 'team.*' | 'venue.*' | 'teacher.*')[]>[],
+	isTeacher: boolean,
 ): SerializedGame[] {
-	return games.map((game) => serializeGame(game));
+	return games.map((game) => serializeGame(game, isTeacher));
 }
 
-export function serializeGame({
-	id,
-	date,
-	opponent,
-	venue,
-	team,
-	teacher,
-	transportation,
-	out_of_class,
-	start,
-	notes,
-}: SelectedPick<GamesRecord, ('*' | 'team.*' | 'venue.*' | 'teacher.*')[]>): SerializedGame {
+export function serializeGame(
+	{
+		id,
+		date,
+		opponent,
+		venue,
+		team,
+		teacher,
+		transportation,
+		out_of_class,
+		start,
+		notes,
+	}: SelectedPick<GamesRecord, ('*' | 'team.*' | 'venue.*' | 'teacher.*')[]>,
+	isTeacher: boolean,
+): SerializedGame {
 	return {
 		id,
 		date,
@@ -97,6 +93,6 @@ export function serializeGame({
 		transportation,
 		out_of_class,
 		start,
-		notes,
+		notes: isTeacher ? notes : undefined,
 	};
 }

@@ -1,9 +1,9 @@
 import { DateWithGames } from '@/libs/gamesToDates';
 import Link from 'next/link';
-import { FaInfoCircle } from 'react-icons/fa';
-import { FaLocationDot } from 'react-icons/fa6';
+import { FaInfoCircle, FaRegEye } from 'react-icons/fa';
+import { FaLocationDot, FaPen } from 'react-icons/fa6';
 
-export function WeeklySportView({ date, isTeacher }: { date: DateWithGames, isTeacher: boolean }) {
+export function WeeklySportView({ date, isTeacher }: { date: DateWithGames; isTeacher: boolean }) {
 	return (
 		<div className="w-full bg-base-200 rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4 overflow-auto">
 			<h2 className="sticky left-0 text-xl text-center text-primary">Weekly Sport {date.date}</h2>
@@ -19,6 +19,7 @@ export function WeeklySportView({ date, isTeacher }: { date: DateWithGames, isTe
 							<th>Transportation</th>
 							<th>Out of Class</th>
 							<th>Start time</th>
+							{isTeacher && <th>Notes</th>}
 						</tr>
 					</thead>
 					<tbody>
@@ -82,6 +83,14 @@ export function WeeklySportView({ date, isTeacher }: { date: DateWithGames, isTe
 								<td>{game?.transportation || '---'}</td>
 								<td>{game?.out_of_class?.toLocaleTimeString() || '---'}</td>
 								<td>{game?.start?.toLocaleTimeString() || '---'}</td>
+								{isTeacher && <td>{game?.notes || '---'}</td>}
+								<td>
+									<div className="flex gap-2 justify-end w-full">
+										<Link className="btn btn-active" href={`/game/${game.id}`}>
+											{isTeacher ? <FaPen /> : <FaRegEye />}
+										</Link>
+									</div>
+								</td>
 							</tr>
 						))}
 					</tbody>

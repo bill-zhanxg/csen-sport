@@ -62,6 +62,7 @@ export async function importData(
 			let out_of_class: Date | undefined = undefined;
 			const out_of_class_string = (game.out_of_class ?? findTeam(game.teamId)?.out_of_class)?.split(':') ?? undefined;
 			if (out_of_class_string)
+				// Can be improved but it works
 				out_of_class = dayjs.tz(`${game.date} ${out_of_class_string[0]}:${out_of_class_string[1]}`, timezone).toDate();
 
 			let start: Date | undefined = undefined;

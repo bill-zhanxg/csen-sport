@@ -9,6 +9,8 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { ChangeEventHandler, FocusEventHandler, useEffect, useMemo, useState } from 'react';
+import { FaPlus } from 'react-icons/fa';
+import { FaRegTrashCan } from 'react-icons/fa6';
 import { RawTeacher, RawTeam, RawVenue } from '../../libs/tableData';
 import { AlertType, ErrorAlert, SuccessAlert } from '../components/Alert';
 import { updateGame } from './WeeklySportEditActions';
@@ -267,6 +269,61 @@ export function WeeklySportEdit({
 					);
 				},
 			},
+			{
+				id: 'actions',
+				header: () => null,
+				cell: ({ row: { original } }) => {
+					return (
+						<div className="flex gap-2 justify-end w-full">
+							<button
+								className="btn btn-error"
+								onClick={(event) => (event.currentTarget.nextElementSibling as HTMLDialogElement).showModal()}
+							>
+								<FaRegTrashCan />
+							</button>
+							<dialog className="modal">
+								<div className="modal-box">
+									<h3 className="font-bold text-lg">Confirmation</h3>
+									<p className="py-4">
+										Are you sure you want to delete the following team? This action is irreversible and all games linked
+										to this team will be unlinked.
+									</p>
+									<span className="flex flex-col sm:flex-row justify-between w-full">
+										<h4 className="text-lg font-bold">Group</h4>
+										{/* <p className="text-lg">{original.isJunior ? 'Junior' : 'Intermediate'}</p> */}
+									</span>
+									<span className="flex flex-col sm:flex-row justify-between w-full">
+										<h4 className="text-lg font-bold">Team Name:</h4>
+										{/* <p className="text-lg">{original.name}</p> */}
+									</span>
+									<div className="modal-action">
+										<form method="dialog">
+											<button
+												className="btn btn-error"
+												onClick={() => {
+													// deleteTeam(original.id)
+													// 	.then(setAlert)
+													// 	.catch(() => {
+													// 		setAlert({
+													// 			type: 'error',
+													// 			message: 'A network error occurred. Please try again later.',
+													// 		});
+													// 	});
+												}}
+											>
+												Remove
+											</button>
+										</form>
+										<form method="dialog">
+											<button className="btn">Close</button>
+										</form>
+									</div>
+								</div>
+							</dialog>
+						</div>
+					);
+				},
+			},
 		];
 	}, [teams, venues, teachers]);
 
@@ -306,7 +363,7 @@ export function WeeklySportEdit({
 									<tr key={row.id}>
 										{row.getVisibleCells().map((cell) => {
 											return (
-												<td className="p-0" key={cell.id}>
+												<td className="p-0 last:w-20" key={cell.id}>
 													{flexRender(cell.column.columnDef.cell, cell.getContext())}
 												</td>
 											);
@@ -315,6 +372,51 @@ export function WeeklySportEdit({
 								);
 							})}
 						</tbody>
+						<tfoot>
+							<tr>
+								{/* <td className="p-0">
+									<select
+										className="select select-bordered rounded-none w-full"
+										value={newGroup}
+										onChange={(event) => setNewGroup(event.target.value as '' | 'junior' | 'intermediate')}
+									>
+										<option disabled value="">
+											Add a Team
+										</option>
+										<option value="junior">Junior</option>
+										<option value="intermediate">Intermediate</option>
+									</select>
+								</td>
+								<td className="p-0">
+									<input
+										className="input input-bordered rounded-none w-full"
+										placeholder="Team Name"
+										value={newName}
+										onChange={(event) => setNewName(event.target.value)}
+									/>
+								</td>
+								<td className="flex justify-end p-0 pt-1">
+									<button
+										className="btn btn-square"
+										disabled={newGroup === '' || newName === ''}
+										onClick={() => {
+											setNewGroup('');
+											setNewName('');
+											newTeam({ name: newName, isJunior: newGroup as 'junior' | 'intermediate' })
+												.then(setAlert)
+												.catch(() => {
+													setAlert({
+														type: 'error',
+														message: 'A network error occurred. Please try again later.',
+													});
+												});
+										}}
+									>
+										<FaPlus />
+									</button>
+								</td> */}
+							</tr>
+						</tfoot>
 					</table>
 				</div>
 			</div>

@@ -1,5 +1,5 @@
 import { UserAvatar } from '@/app/globalComponents/UserAvatar';
-import { Box } from '@/app/settings/components/Box';
+import { Box } from '@/app/globalComponents/Box';
 import { auth } from '@/libs/auth';
 import { isAdmin } from '@/libs/checkPermission';
 import { getXataClient } from '@/libs/xata';

@@ -5,8 +5,8 @@ import { isTeacher } from '@/libs/checkPermission';
 import { getXataClient } from '@/libs/xata';
 import sharp from 'sharp';
 import { z } from 'zod';
-import { SettingState } from './components/SettingsForm';
 import { revalidatePath } from 'next/cache';
+import { FormState } from '@/libs/types';
 
 const schema = z.object({
 	name: z.string().min(1).max(200).optional(),
@@ -22,7 +22,7 @@ const schema = z.object({
 	team: z.string().min(1).max(200).nullable(),
 });
 
-export async function updateProfile(prevState: SettingState, formData: FormData): Promise<SettingState> {
+export async function updateProfile(prevState: FormState, formData: FormData): Promise<FormState> {
 	const session = await auth();
 	if (!session) return { success: false, message: 'Unauthorized' };
 

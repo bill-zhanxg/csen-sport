@@ -3,7 +3,6 @@
 import { auth } from '@/libs/auth';
 import { isTeacher } from '@/libs/checkPermission';
 import { getXataClient } from '@/libs/xata';
-import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { AlertType } from '../components/Alert';
 

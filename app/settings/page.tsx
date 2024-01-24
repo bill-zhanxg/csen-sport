@@ -1,7 +1,8 @@
 import { auth } from '@/libs/auth';
+import { serializeTeams } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
+import { Box } from '../globalComponents/Box';
 import { UserAvatar } from '../globalComponents/UserAvatar';
-import { Box } from './components/Box';
 import { SettingsForm } from './components/SettingsForm';
 
 export default async function Profile() {
@@ -24,7 +25,7 @@ export default async function Profile() {
 						<p>{session.user.email}</p>
 					</div>
 				</Box>
-				<SettingsForm session={session} teams={teams.map(({ id, name, isJunior }) => ({ id, name, isJunior }))} />
+				<SettingsForm session={session} teams={serializeTeams(teams)} />
 			</div>
 		</div>
 	);

@@ -1,31 +1,18 @@
 'use client';
 
 import { isTeacher } from '@/libs/checkPermission';
+import { SerializedTeam } from '@/libs/serializeData';
+import { FormState } from '@/libs/types';
 import { Session } from 'next-auth/types';
 import { useFormState, useFormStatus } from 'react-dom';
+import { FaRegCheckCircle, FaRegTimesCircle } from 'react-icons/fa';
+import { Box } from '../../globalComponents/Box';
 import { updateProfile } from '../actions';
-import { Box } from './Box';
 import { Preferences } from './Preferences';
 import { ProfilePicture } from './ProfilePicture';
-import { FaRegCheckCircle, FaRegTimesCircle } from 'react-icons/fa';
 
-export type SettingState = null | {
-	success: boolean;
-	message: string;
-};
-
-export function SettingsForm({
-	session,
-	teams,
-}: {
-	session: Session;
-	teams: {
-		id: string;
-		name?: string | null;
-		isJunior?: boolean | null;
-	}[];
-}) {
-	const [state, formAction] = useFormState<SettingState, FormData>(updateProfile, null);
+export function SettingsForm({ session, teams }: { session: Session; teams: SerializedTeam[] }) {
+	const [state, formAction] = useFormState<FormState, FormData>(updateProfile, null);
 
 	return (
 		<form className="flex flex-col gap-4 w-full" action={formAction}>
@@ -44,7 +31,7 @@ export function SettingsForm({
 								placeholder="Type here"
 								disabled={!isTeacher(session)}
 								defaultValue={session.user.name ?? ''}
-                                name='name'
+								name="name"
 								className="input input-bordered w-full"
 							/>
 						</label>
@@ -57,7 +44,7 @@ export function SettingsForm({
 								placeholder="Type here"
 								disabled={!isTeacher(session)}
 								defaultValue={session.user.email ?? ''}
-                                name='email'
+								name="email"
 								className="input input-bordered w-full"
 							/>
 						</label>
@@ -82,7 +69,7 @@ export function SettingsForm({
 					<Preferences teams={teams} session={session} />
 				</div>
 			</Box>
-            {state && (
+			{state && (
 				<div role="alert" className={`alert ${state.success ? 'alert-success' : 'alert-error'} mt-2`}>
 					{state.success ? <FaRegCheckCircle size={20} /> : <FaRegTimesCircle size={20} />}
 					<span>{state?.message}</span>
