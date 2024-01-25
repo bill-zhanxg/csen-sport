@@ -3,7 +3,7 @@
 import { Box } from '@/app/globalComponents/Box';
 import { isTeacher } from '@/libs/checkPermission';
 import { dayjs } from '@/libs/dayjs';
-import { formatIsJunior } from '@/libs/formatText';
+import { formatIsJunior } from '@/libs/formatValue';
 import { SerializedGame, SerializedTeam, SerializedVenue } from '@/libs/serializeData';
 import { RawTeacher } from '@/libs/tableData';
 import { FormState } from '@/libs/types';

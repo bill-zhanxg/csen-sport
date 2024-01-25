@@ -6,7 +6,11 @@ import { FaLocationDot, FaPen } from 'react-icons/fa6';
 export function WeeklySportView({ date, isTeacher }: { date: DateWithGames; isTeacher: boolean }) {
 	return (
 		<div className="w-full bg-base-200 rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4 overflow-auto">
-			<h2 className="sticky left-0 text-xl text-center text-primary">Weekly Sport {date.date}</h2>
+			{isTeacher ? (
+				<Link href={`/date/${date.rawDate.valueOf()}`} className="block sticky left-0 text-xl text-center link link-primary">Weekly Sport {date.date}</Link>
+			) : (
+				<h2 className="sticky left-0 text-xl text-center text-primary">Weekly Sport {date.date}</h2>
+			)}
 			<div className="w-full mt-2">
 				<table className="table">
 					<thead>

@@ -2,6 +2,7 @@
 
 import { auth } from '@/libs/auth';
 import { isAdmin } from '@/libs/checkPermission';
+import { formatTime } from '@/libs/formatValue';
 import { getXataClient } from '@/libs/xata';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
@@ -9,16 +10,7 @@ import utc from 'dayjs/plugin/utc';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { ImportState } from './components/ImportPage';
-import {
-	Games,
-	GamesSchema,
-	Opponents,
-	OpponentsSchema,
-	Teams,
-	TeamsSchema,
-	Venues,
-	VenuesSchema,
-} from './types';
+import { Games, GamesSchema, Opponents, OpponentsSchema, Teams, TeamsSchema, Venues, VenuesSchema } from './types';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -59,15 +51,8 @@ export async function importData(
 		const gameRecords = games.map((game) => {
 			const date = dayjs.tz(`${game.date} 12:00`, timezone).toDate();
 
-			let out_of_class: Date | undefined = undefined;
-			const out_of_class_string = (game.out_of_class ?? findTeam(game.teamId)?.out_of_class)?.split(':') ?? undefined;
-			if (out_of_class_string)
-				// Can be improved but it works
-				out_of_class = dayjs.tz(`${game.date} ${out_of_class_string[0]}:${out_of_class_string[1]}`, timezone).toDate();
-
-			let start: Date | undefined = undefined;
-			const start_string = (game.start ?? findTeam(game.teamId)?.start)?.split(':') ?? undefined;
-			if (start_string) start = dayjs.tz(`${game.date} ${start_string[0]}:${start_string[1]}`, timezone).toDate();
+			const out_of_class = formatTime(date, game.out_of_class ?? findTeam(game.teamId)?.out_of_class, timezone);
+			const start = formatTime(date, game.start ?? findTeam(game.teamId)?.start, timezone);
 
 			return {
 				date,

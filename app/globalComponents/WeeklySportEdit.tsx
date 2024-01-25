@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 'use client';
 
+import { formatIsJunior, formatTime } from '@/libs/formatValue';
 import { SerializedDateWithGames } from '@/libs/gamesToDates';
 import { SerializedGame } from '@/libs/serializeData';
 import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
@@ -8,12 +9,12 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
+import Link from 'next/link';
 import { ChangeEventHandler, FocusEventHandler, useEffect, useMemo, useState } from 'react';
-import { FaPlus } from 'react-icons/fa';
-import { FaRegTrashCan } from 'react-icons/fa6';
+import { FaPlus, FaRegTrashCan } from 'react-icons/fa6';
 import { RawTeacher, RawTeam, RawVenue } from '../../libs/tableData';
 import { AlertType, ErrorAlert, SuccessAlert } from '../components/Alert';
-import { updateGame } from './WeeklySportEditActions';
+import { deleteGame, newGame, updateGame } from './WeeklySportEditActions';
 
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
@@ -76,16 +77,7 @@ export function WeeklySportEdit({
 				let importValue = newValue ?? value;
 
 				if (isTime) {
-					const timezone = dayjs.tz.guess();
-					let time: Date | undefined = undefined;
-					const time_string = (importValue as string)?.split(':') ?? undefined;
-					if (time_string)
-						time = dayjs
-							.tz(
-								`${dayjs.tz(original.date, timezone).format('YYYY-MM-DD')} ${time_string[0]}:${time_string[1]}`,
-								timezone,
-							)
-							.toDate();
+					const time: Date | undefined = formatTime(original.date, importValue as string);
 					importValue = time as any;
 				}
 
@@ -285,30 +277,63 @@ export function WeeklySportEdit({
 								<div className="modal-box">
 									<h3 className="font-bold text-lg">Confirmation</h3>
 									<p className="py-4">
-										Are you sure you want to delete the following team? This action is irreversible and all games linked
-										to this team will be unlinked.
+										Are you sure you want to delete the following game? This action can not be undone.
 									</p>
 									<span className="flex flex-col sm:flex-row justify-between w-full">
+										<h4 className="text-lg font-bold">Date</h4>
+										<p className="text-lg">{original.date?.toLocaleDateString() ?? '---'}</p>
+									</span>
+									<span className="flex flex-col sm:flex-row justify-between w-full">
 										<h4 className="text-lg font-bold">Group</h4>
-										{/* <p className="text-lg">{original.isJunior ? 'Junior' : 'Intermediate'}</p> */}
+										<p className="text-lg">
+											{original.team ? (original.team.isJunior ? 'Junior' : 'Intermediate') : '---'}
+										</p>
 									</span>
 									<span className="flex flex-col sm:flex-row justify-between w-full">
 										<h4 className="text-lg font-bold">Team Name:</h4>
-										{/* <p className="text-lg">{original.name}</p> */}
+										<p className="text-lg">{original.team?.name ?? '---'}</p>
+									</span>
+									<span className="flex flex-col sm:flex-row justify-between w-full">
+										<h4 className="text-lg font-bold">Opponent:</h4>
+										<p className="text-lg">{original.opponent ?? '---'}</p>
+									</span>
+									<span className="flex flex-col sm:flex-row justify-between w-full">
+										<h4 className="text-lg font-bold">Venue:</h4>
+										<p className="text-lg">{original.venue?.name ?? '---'}</p>
+									</span>
+									<span className="flex flex-col sm:flex-row justify-between w-full">
+										<h4 className="text-lg font-bold">Teacher:</h4>
+										<p className="text-lg">{original.teacher?.name ?? '---'}</p>
+									</span>
+									<span className="flex flex-col sm:flex-row justify-between w-full">
+										<h4 className="text-lg font-bold">Transportation:</h4>
+										<p className="text-lg">{original.transportation ?? '---'}</p>
+									</span>
+									<span className="flex flex-col sm:flex-row justify-between w-full">
+										<h4 className="text-lg font-bold">Out of Class:</h4>
+										<p className="text-lg">{original.out_of_class?.toLocaleTimeString() ?? '---'}</p>
+									</span>
+									<span className="flex flex-col sm:flex-row justify-between w-full">
+										<h4 className="text-lg font-bold">Start:</h4>
+										<p className="text-lg">{original.start?.toLocaleTimeString() ?? '---'}</p>
+									</span>
+									<span className="flex flex-col sm:flex-row justify-between w-full">
+										<h4 className="text-lg font-bold">Notes:</h4>
+										<p className="text-lg">{original.notes ?? '---'}</p>
 									</span>
 									<div className="modal-action">
 										<form method="dialog">
 											<button
 												className="btn btn-error"
 												onClick={() => {
-													// deleteTeam(original.id)
-													// 	.then(setAlert)
-													// 	.catch(() => {
-													// 		setAlert({
-													// 			type: 'error',
-													// 			message: 'A network error occurred. Please try again later.',
-													// 		});
-													// 	});
+													deleteGame(original.id)
+														.then(setAlert)
+														.catch(() => {
+															setAlert({
+																type: 'error',
+																message: 'A network error occurred. Please try again later.',
+															});
+														});
 												}}
 											>
 												Remove
@@ -334,10 +359,27 @@ export function WeeklySportEdit({
 		getCoreRowModel: getCoreRowModel(),
 	});
 
+	const usedTeams = useMemo(() => {
+		return date.games.map((game) => game.team?.id);
+	}, [date.games]);
+	const [newTeam, setNewTeam] = useState('');
+	const [newOpponent, setNewOpponent] = useState('');
+	const [newVenue, setNewVenue] = useState('');
+	const [newTeacher, setNewTeacher] = useState('');
+	const [newTransportation, setNewTransportation] = useState('');
+	const [newNotes, setNewNotes] = useState('');
+	const [newOutOfClass, setNewOutOfClass] = useState('');
+	const [newStart, setNewStart] = useState('');
+
 	return (
 		<>
 			<div className="w-full bg-base-100 rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4">
-				<h2 className="text-xl text-center text-primary">Weekly Sport {date.date}</h2>
+				<Link
+					href={`/date/${date.rawDate.valueOf()}`}
+					className="block sticky left-0 text-xl text-center link link-primary"
+				>
+					Weekly Sport {date.date}
+				</Link>
 				<div className="overflow-x-auto">
 					<table className="table text-lg">
 						<thead>
@@ -372,37 +414,122 @@ export function WeeklySportEdit({
 								);
 							})}
 						</tbody>
-						<tfoot>
+						<tfoot className="text-[95%]">
 							<tr>
-								{/* <td className="p-0">
+								<td className="p-0">
 									<select
 										className="select select-bordered rounded-none w-full"
-										value={newGroup}
-										onChange={(event) => setNewGroup(event.target.value as '' | 'junior' | 'intermediate')}
+										value={newTeam}
+										onChange={(event) => setNewTeam(event.target.value)}
 									>
 										<option disabled value="">
-											Add a Team
+											Add a Game
 										</option>
-										<option value="junior">Junior</option>
-										<option value="intermediate">Intermediate</option>
+										{teams
+											.filter((team) => !usedTeams.includes(team.id))
+											.map((team) => (
+												<option key={team.id} value={team.id}>
+													[{formatIsJunior(team.isJunior)}] {team.name}
+												</option>
+											))}
 									</select>
 								</td>
 								<td className="p-0">
 									<input
 										className="input input-bordered rounded-none w-full"
-										placeholder="Team Name"
-										value={newName}
-										onChange={(event) => setNewName(event.target.value)}
+										placeholder="Opponent"
+										value={newOpponent}
+										onChange={(event) => setNewOpponent(event.target.value)}
+									/>
+								</td>
+								<td className="p-0">
+									<select
+										className="select select-bordered rounded-none w-full"
+										value={newVenue}
+										onChange={(event) => setNewVenue(event.target.value)}
+									>
+										<option disabled value="">
+											Venue
+										</option>
+										{venues.map((venue) => (
+											<option key={venue.id} value={venue.id}>
+												{venue.name} ({venue.court_field_number})
+											</option>
+										))}
+									</select>
+								</td>
+								<td className="p-0">
+									<select
+										className="select select-bordered rounded-none w-full"
+										value={newTeacher}
+										onChange={(event) => setNewTeacher(event.target.value)}
+									>
+										<option disabled value="">
+											Teacher
+										</option>
+										{teachers.map((teacher) => (
+											<option key={teacher.id} value={teacher.id}>
+												{teacher.name}
+											</option>
+										))}
+									</select>
+								</td>
+								<td className="p-0">
+									<input
+										className="input input-bordered rounded-none w-full"
+										placeholder="Transportation"
+										value={newTransportation}
+										onChange={(event) => setNewTransportation(event.target.value)}
+									/>
+								</td>
+								<td className="p-0">
+									<input
+										className="input input-bordered rounded-none w-full"
+										placeholder="Notes"
+										value={newNotes}
+										onChange={(event) => setNewNotes(event.target.value)}
+									/>
+								</td>
+								<td className="p-0">
+									<input
+										type="time"
+										className="bg-base-100 ml-4"
+										value={newOutOfClass}
+										onChange={(event) => setNewOutOfClass(event.target.value)}
+									/>
+								</td>
+								<td className="p-0">
+									<input
+										type="time"
+										className="bg-base-100 ml-4"
+										value={newStart}
+										onChange={(event) => setNewStart(event.target.value)}
 									/>
 								</td>
 								<td className="flex justify-end p-0 pt-1">
 									<button
 										className="btn btn-square"
-										disabled={newGroup === '' || newName === ''}
+										disabled={newTeam === '' || newOpponent === ''}
 										onClick={() => {
-											setNewGroup('');
-											setNewName('');
-											newTeam({ name: newName, isJunior: newGroup as 'junior' | 'intermediate' })
+											setNewTeam('');
+											setNewOpponent('');
+											setNewVenue('');
+											setNewTeacher('');
+											setNewTransportation('');
+											setNewNotes('');
+											setNewOutOfClass('');
+											setNewStart('');
+											newGame({
+												date: date.rawDate,
+												team: newTeam,
+												opponent: newOpponent,
+												venue: newVenue,
+												teacher: newTeacher,
+												transportation: newTransportation,
+												notes: newNotes,
+												out_of_class: formatTime(date.rawDate, newOutOfClass),
+												start: formatTime(date.rawDate, newStart),
+											})
 												.then(setAlert)
 												.catch(() => {
 													setAlert({
@@ -414,7 +541,7 @@ export function WeeklySportEdit({
 									>
 										<FaPlus />
 									</button>
-								</td> */}
+								</td>
 							</tr>
 						</tfoot>
 					</table>

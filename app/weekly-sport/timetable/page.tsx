@@ -1,29 +1,23 @@
 import { PaginationMenu } from '@/app/globalComponents/PaginationMenu';
 import { Tabs } from '@/app/globalComponents/Tabs';
-import { WeeklySportView } from '@/app/globalComponents/WeeklySportView';
 import { WeeklySportEdit } from '@/app/globalComponents/WeeklySportEdit';
+import { WeeklySportView } from '@/app/globalComponents/WeeklySportView';
 import { auth } from '@/libs/auth';
 import { isTeacher } from '@/libs/checkPermission';
+import { stringifySearchParam } from '@/libs/formatValue';
 import { gamesToDates } from '@/libs/gamesToDates';
 import { serializeGames } from '@/libs/serializeData';
 import { getRawTeachers, getRawTeams, getRawVenues } from '@/libs/tableData';
+import { SearchParams } from '@/libs/types';
 import { getXataClient } from '@/libs/xata';
 import Link from 'next/link';
 
 const xata = getXataClient();
 
-export default async function WeeklySport({
-	searchParams,
-}: {
-	searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export default async function WeeklySport({ searchParams }: { searchParams: SearchParams }) {
 	const session = await auth();
 	const itemsPerPage = 50;
-	// Convert all array search params to string and return new object
-	for (const key in searchParams) {
-		if (Array.isArray(searchParams[key])) searchParams[key] = searchParams[key]?.[0];
-	}
-	const { filter, page, edit } = searchParams;
+	const { filter, page, edit } = stringifySearchParam(searchParams);
 	const isPast = filter === 'past';
 	const isEdit = edit === 'true';
 	const isTeacherBool = isTeacher(session);
@@ -49,7 +43,7 @@ export default async function WeeklySport({
 			},
 			pagination: {
 				size: itemsPerPage,
-				offset: page ? (parseInt(page as string) - 1) * itemsPerPage : 0,
+				offset: page ? (parseInt(page) - 1) * itemsPerPage : 0,
 			},
 		});
 
