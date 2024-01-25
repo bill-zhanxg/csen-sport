@@ -14,6 +14,7 @@ import { ChangeEventHandler, FocusEventHandler, useEffect, useMemo, useState } f
 import { FaPlus, FaRegTrashCan } from 'react-icons/fa6';
 import { RawTeacher, RawTeam, RawVenue } from '../../libs/tableData';
 import { AlertType, ErrorAlert, SuccessAlert } from '../components/Alert';
+import { SideBySide } from './SideBySide';
 import { deleteGame, newGame, updateGame } from './WeeklySportEditActions';
 
 dayjs.extend(customParseFormat);
@@ -279,48 +280,19 @@ export function WeeklySportEdit({
 									<p className="py-4">
 										Are you sure you want to delete the following game? This action can not be undone.
 									</p>
-									<span className="flex flex-col sm:flex-row justify-between w-full">
-										<h4 className="text-lg font-bold">Date</h4>
-										<p className="text-lg">{original.date?.toLocaleDateString() ?? '---'}</p>
-									</span>
-									<span className="flex flex-col sm:flex-row justify-between w-full">
-										<h4 className="text-lg font-bold">Group</h4>
-										<p className="text-lg">
-											{original.team ? (original.team.isJunior ? 'Junior' : 'Intermediate') : '---'}
-										</p>
-									</span>
-									<span className="flex flex-col sm:flex-row justify-between w-full">
-										<h4 className="text-lg font-bold">Team Name:</h4>
-										<p className="text-lg">{original.team?.name ?? '---'}</p>
-									</span>
-									<span className="flex flex-col sm:flex-row justify-between w-full">
-										<h4 className="text-lg font-bold">Opponent:</h4>
-										<p className="text-lg">{original.opponent ?? '---'}</p>
-									</span>
-									<span className="flex flex-col sm:flex-row justify-between w-full">
-										<h4 className="text-lg font-bold">Venue:</h4>
-										<p className="text-lg">{original.venue?.name ?? '---'}</p>
-									</span>
-									<span className="flex flex-col sm:flex-row justify-between w-full">
-										<h4 className="text-lg font-bold">Teacher:</h4>
-										<p className="text-lg">{original.teacher?.name ?? '---'}</p>
-									</span>
-									<span className="flex flex-col sm:flex-row justify-between w-full">
-										<h4 className="text-lg font-bold">Transportation:</h4>
-										<p className="text-lg">{original.transportation ?? '---'}</p>
-									</span>
-									<span className="flex flex-col sm:flex-row justify-between w-full">
-										<h4 className="text-lg font-bold">Out of Class:</h4>
-										<p className="text-lg">{original.out_of_class?.toLocaleTimeString() ?? '---'}</p>
-									</span>
-									<span className="flex flex-col sm:flex-row justify-between w-full">
-										<h4 className="text-lg font-bold">Start:</h4>
-										<p className="text-lg">{original.start?.toLocaleTimeString() ?? '---'}</p>
-									</span>
-									<span className="flex flex-col sm:flex-row justify-between w-full">
-										<h4 className="text-lg font-bold">Notes:</h4>
-										<p className="text-lg">{original.notes ?? '---'}</p>
-									</span>
+									<SideBySide title="Date:" value={original.date?.toLocaleDateString() ?? '---'} />
+									<SideBySide
+										title="Group:"
+										value={original.team ? (original.team.isJunior ? 'Junior' : 'Intermediate') : '---'}
+									/>
+									<SideBySide title="Team Name:" value={original.team?.name ?? '---'} />
+									<SideBySide title="Opponent:" value={original.opponent ?? '---'} />
+									<SideBySide title="Venue:" value={original.venue?.name ?? '---'} />
+									<SideBySide title="Teacher:" value={original.teacher?.name ?? '---'} />
+									<SideBySide title="Transportation:" value={original.transportation ?? '---'} />
+									<SideBySide title="Out of Class:" value={original.out_of_class?.toLocaleTimeString() ?? '---'} />
+									<SideBySide title="Start:" value={original.start?.toLocaleTimeString() ?? '---'} />
+									<SideBySide title="Notes:" value={original.notes ?? '---'} />
 									<div className="modal-action">
 										<form method="dialog">
 											<button

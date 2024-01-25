@@ -15,7 +15,9 @@ export type SerializedDateWithGames = {
 };
 
 export function gamesToDates(
-	games: Page<GamesRecord, SelectedPick<GamesRecord, ('*' | 'team.*' | 'teacher.*' | 'venue.*')[]>>,
+	games:
+		| Page<GamesRecord, SelectedPick<GamesRecord, ('*' | 'team.*' | 'teacher.*' | 'venue.*')[]>>
+		| SelectedPick<GamesRecord, ('*' | 'team.*' | 'teacher.*' | 'venue.*')[]>[],
 	isTeacher: boolean,
 ): DateWithGames[] {
 	const dates: {
@@ -24,7 +26,8 @@ export function gamesToDates(
 		games: SelectedPick<GamesRecord, ('*' | 'team.*' | 'venue.*' | 'teacher.*')[]>[];
 	}[] = [];
 	let datesArrayIndex = 0;
-	for (const game of games.records) {
+	const gamesArray = 'records' in games ? games.records : games;
+	for (const game of gamesArray) {
 		if (!game.date) continue;
 		const date = game.date.toLocaleDateString();
 		if (!dates[datesArrayIndex]) dates[datesArrayIndex] = { date, rawDate: game.date, games: [] };

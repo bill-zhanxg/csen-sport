@@ -4,7 +4,7 @@ import { WeeklySportEdit } from '@/app/globalComponents/WeeklySportEdit';
 import { WeeklySportView } from '@/app/globalComponents/WeeklySportView';
 import { auth } from '@/libs/auth';
 import { isTeacher } from '@/libs/checkPermission';
-import { stringifySearchParam } from '@/libs/formatValue';
+import { getDateStart, stringifySearchParam } from '@/libs/formatValue';
 import { gamesToDates } from '@/libs/gamesToDates';
 import { serializeGames } from '@/libs/serializeData';
 import { getRawTeachers, getRawTeams, getRawVenues } from '@/libs/tableData';
@@ -22,12 +22,14 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 	const isEdit = edit === 'true';
 	const isTeacherBool = isTeacher(session);
 
+	const dbFilter = {
+		date: isPast ? { $lt: getDateStart() } : { $ge: getDateStart() },
+	};
+
 	const total = (
 		await xata.db.games.summarize({
 			consistency: 'eventual',
-			filter: {
-				date: isPast ? { $lt: new Date() } : { $ge: new Date() },
-			},
+			filter: dbFilter,
 			summaries: {
 				total: { count: '*' },
 			},
@@ -38,9 +40,7 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 		.getPaginated({
 			consistency: 'eventual',
 			sort: [{ date: isPast ? 'desc' : 'asc' }],
-			filter: {
-				date: isPast ? { $lt: new Date().toISOString() } : { $ge: new Date().toISOString() },
-			},
+			filter: dbFilter as any,
 			pagination: {
 				size: itemsPerPage,
 				offset: page ? (parseInt(page) - 1) * itemsPerPage : 0,

@@ -2,12 +2,18 @@ import { DateWithGames } from '@/libs/gamesToDates';
 import Link from 'next/link';
 import { FaInfoCircle, FaRegEye } from 'react-icons/fa';
 import { FaLocationDot, FaPen } from 'react-icons/fa6';
+import { SideBySide } from './SideBySide';
 
 export function WeeklySportView({ date, isTeacher }: { date: DateWithGames; isTeacher: boolean }) {
 	return (
 		<div className="w-full bg-base-200 rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4 overflow-auto">
 			{isTeacher ? (
-				<Link href={`/date/${date.rawDate.valueOf()}`} className="block sticky left-0 text-xl text-center link link-primary">Weekly Sport {date.date}</Link>
+				<Link
+					href={`/date/${date.rawDate.valueOf()}`}
+					className="block sticky left-0 text-xl text-center link link-primary"
+				>
+					Weekly Sport {date.date}
+				</Link>
 			) : (
 				<h2 className="sticky left-0 text-xl text-center text-primary">Weekly Sport {date.date}</h2>
 			)}
@@ -44,18 +50,9 @@ export function WeeklySportView({ date, isTeacher }: { date: DateWithGames; isTe
 											<div className="modal" role="dialog">
 												<div className="flex flex-col modal-box gap-2">
 													<h3 className="font-bold text-2xl">Venue Information</h3>
-													<span className="flex flex-col sm:flex-row justify-between w-full">
-														<h4 className="text-lg font-bold">Name:</h4>
-														<p className="text-lg">{game.venue.name}</p>
-													</span>
-													<span className="flex flex-col sm:flex-row justify-between w-full">
-														<h4 className="text-lg font-bold">Address:</h4>
-														<p className="text-lg">{game.venue.address}</p>
-													</span>
-													<span className="flex flex-col sm:flex-row justify-between w-full">
-														<h4 className="text-lg font-bold">Court Field Number:</h4>
-														<p className="text-lg">{game.venue.court_field_number}</p>
-													</span>
+													<SideBySide title="Name:" value={game.venue.name ?? '---'} />
+													<SideBySide title="Address:" value={game.venue.address ?? '---'} />
+													<SideBySide title="Court / Field Number:" value={game.venue.court_field_number ?? '---'} />
 													<div className="modal-action flex-col sm:flex-row gap-2">
 														<Link
 															href={`https://www.google.com/maps/place/${game.venue.address?.replaceAll(' ', '+')}`}

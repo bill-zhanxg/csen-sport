@@ -16,3 +16,11 @@ export function formatTime(date?: Date | null, time?: string | null, timezone = 
 	if (!date || !time) return undefined;
 	return dayjs.tz(`${dayjs.tz(date, timezone).format('YYYY-MM-DD')} ${time}`, timezone).toDate();
 }
+
+export function getDateStart(date = new Date()): Date {
+	return dayjs(date).subtract(12, 'hour').toDate();
+}
+
+export function getDateEnd(date = new Date()): Date {
+	return dayjs(date).add(12, 'hour').toDate();
+}

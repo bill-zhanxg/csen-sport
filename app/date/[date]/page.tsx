@@ -1,27 +1,32 @@
-import { dayjs } from '@/libs/dayjs';
+import { WeeklySportView } from '@/app/globalComponents/WeeklySportView';
+import { auth } from '@/libs/auth';
+import { getDateEnd, getDateStart } from '@/libs/formatValue';
+import { gamesToDates } from '@/libs/gamesToDates';
 import { getXataClient } from '@/libs/xata';
-import { log } from 'console';
 
 export default async function DatePage({ params }: { params: { date: string } }) {
-	let date = new Date(parseInt(params.date));
-    date = dayjs(date).subtract(12, 'hour').toDate();
+	const session = await auth();
+	const date = new Date(parseInt(params.date));
 
-	// const games = await getXataClient()
-	// 	.db.games.select(['*', 'team.*', 'venue.*', 'teacher.*'])
-	// 	.getPaginated({
-	// 		consistency: 'eventual',
-	// 		sort: [{ 'team.name': 'asc' }],
-	// 		filter: {
-	// 			date: isPast ? { $lt: new Date().toISOString() } : { $ge: new Date().toISOString() },
-	// 		},
-	// 		pagination: {
-	// 			size: itemsPerPage,
-	// 			offset: page ? (parseInt(page) - 1) * itemsPerPage : 0,
-	// 		},
-	// 	});
+	const games = await getXataClient()
+		.db.games.select(['*', 'team.*', 'venue.*', 'teacher.*'])
+		.sort('team.name', 'asc')
+		.filter('date', { $ge: getDateStart(date), $le: getDateEnd(date) })
+		.getAll({
+			consistency: 'eventual',
+		});
 
-	log(date);
-	log(date.toUTCString());
+	const dates = gamesToDates(games, false);
 
-	return <h1>Unfinished</h1>;
+	return (
+		<div className="flex flex-col items-center w-full p-4 gap-4">
+			<main className="flex flex-col items-center gap-4 pt-0 p-4 overflow-x-auto w-full">
+				{dates.length > 0 ? (
+					<WeeklySportView date={dates[0]} isTeacher={false} />
+				) : (
+					<h1>There are no games on {date.toLocaleDateString()}</h1>
+				)}
+			</main>
+		</div>
+	);
 }

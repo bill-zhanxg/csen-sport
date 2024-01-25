@@ -2,6 +2,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
 import { AlertType, ErrorAlert, SuccessAlert } from '@/app/components/Alert';
+import { SideBySide } from '@/app/globalComponents/SideBySide';
 import { SerializedTeam } from '@/libs/serializeData';
 import {
 	CellContext,
@@ -133,14 +134,11 @@ export function TeamTable({ teams }: { teams: SerializedTeam[] }) {
 										Are you sure you want to delete the following team? This action is irreversible and all games linked
 										to this team will be unlinked.
 									</p>
-									<span className="flex flex-col sm:flex-row justify-between w-full">
-										<h4 className="text-lg font-bold">Group</h4>
-										<p className="text-lg">{original.isJunior ? 'Junior' : 'Intermediate'}</p>
-									</span>
-									<span className="flex flex-col sm:flex-row justify-between w-full">
-										<h4 className="text-lg font-bold">Team Name:</h4>
-										<p className="text-lg">{original.name}</p>
-									</span>
+									<SideBySide
+										title="Group:"
+										value={original.isJunior ? (original.isJunior ? 'Junior' : 'Intermediate') : '---'}
+									/>
+									<SideBySide title="Team Name:" value={original.name ?? '---'} />
 									<div className="modal-action">
 										<form method="dialog">
 											<button

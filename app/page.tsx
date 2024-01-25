@@ -21,7 +21,7 @@ export default async function Home({
 	const total = (
 		await xata.db.games.summarize({
 			consistency: 'eventual',
-			filter: { ...filter },
+			filter,
 			summaries: {
 				total: { count: '*' },
 			},
@@ -32,7 +32,7 @@ export default async function Home({
 		.getPaginated({
 			consistency: 'eventual',
 			sort: [{ date: 'asc' }],
-			filter: { ...(filter as any) },
+			filter: filter as any,
 			pagination: {
 				size: itemsPerPage,
 				offset: page ? (parseInt(page[0]) - 1) * itemsPerPage : 0,

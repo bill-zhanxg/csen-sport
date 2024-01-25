@@ -2,6 +2,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
 import { AlertType, ErrorAlert, SuccessAlert } from '@/app/components/Alert';
+import { SideBySide } from '@/app/globalComponents/SideBySide';
 import { SerializedVenue } from '@/libs/serializeData';
 import {
 	CellContext,
@@ -141,21 +142,12 @@ export function VenueTable({ teams }: { teams: SerializedVenue[] }) {
 								<div className="modal-box">
 									<h3 className="font-bold text-lg">Confirmation</h3>
 									<p className="py-4">
-										Are you sure you want to delete the following venue? This action is irreversible and all games linked
-										to this venue will be unlinked.
+										Are you sure you want to delete the following venue? This action is irreversible and all games
+										linked to this venue will be unlinked.
 									</p>
-									<span className="flex flex-col sm:flex-row justify-between w-full">
-										<h4 className="text-lg font-bold">Venue Name:</h4>
-										<p className="text-lg">{original.name}</p>
-									</span>
-									<span className="flex flex-col sm:flex-row justify-between w-full">
-										<h4 className="text-lg font-bold">Venue Address:</h4>
-										<p className="text-lg">{original.address}</p>
-									</span>
-									<span className="flex flex-col sm:flex-row justify-between w-full">
-										<h4 className="text-lg font-bold">Venue Court/Field Number:</h4>
-										<p className="text-lg">{original.court_field_number}</p>
-									</span>
+									<SideBySide title="Venue Name:" value={original.name ?? '---'} />
+									<SideBySide title="Address:" value={original.address ?? '---'} />
+									<SideBySide title="Court / Field Number:" value={original.court_field_number ?? '---'} />
 									<div className="modal-action">
 										<form method="dialog">
 											<button
