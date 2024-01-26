@@ -47,13 +47,13 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 											tabIndex={0}
 											className="menu menu-md dropdown-content mt-3 z-[100] p-2 shadow-xl bg-base-100 rounded-box w-52 border border-primary"
 										>
-											<li>
+											<li id="user-settings-btn">
 												<Link href="/settings">User Settings</Link>
 											</li>
-											<li>
+											<li id="changelog-btn">
 												<Link href="/changelog">Changelogs</Link>
 											</li>
-											<li>
+											<li id="logout-btn">
 												<LogoutButton />
 											</li>
 										</ul>

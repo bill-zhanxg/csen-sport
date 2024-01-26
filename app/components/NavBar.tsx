@@ -80,19 +80,23 @@ export function NavBar({ session }: { session: Session }) {
 				>
 					{menuFiltered.map((item) =>
 						Array.isArray(item.href) ? (
-							<li id={item.id} key={item.id}>
-								<a>{item.name}</a>
+							<li key={item.id}>
+								<a id={item.id + '-mobile'}>{item.name}</a>
 								<ul className="p-2">
 									{item.href.map((item) => (
-										<li id={item.id} key={item.id}>
-											<Link href={item.href}>{item.name}</Link>
+										<li key={item.id}>
+											<Link id={item.id + '-mobile'} href={item.href}>
+												{item.name}
+											</Link>
 										</li>
 									))}
 								</ul>
 							</li>
 						) : (
-							<li id={item.id} key={item.id}>
-								<Link href={item.href}>{item.name}</Link>
+							<li key={item.id}>
+								<Link id={item.id + '-mobile'} href={item.href}>
+									{item.name}
+								</Link>
 							</li>
 						),
 					)}
@@ -102,21 +106,25 @@ export function NavBar({ session }: { session: Session }) {
 				<ul className="menu menu-horizontal px-1 z-[100]">
 					{menuFiltered.map((item) =>
 						Array.isArray(item.href) ? (
-							<li id={item.id} key={item.id}>
+							<li key={item.id}>
 								<details>
-									<summary>{item.name}</summary>
+									<summary id={item.id}>{item.name}</summary>
 									<ul className="p-2 border border-primary">
 										{item.href.map((item) => (
-											<li className="w-36" id={item.id} key={item.id}>
-												<Link href={item.href}>{item.name}</Link>
+											<li className="w-36" key={item.id}>
+												<Link id={item.id} href={item.href}>
+													{item.name}
+												</Link>
 											</li>
 										))}
 									</ul>
 								</details>
 							</li>
 						) : (
-							<li id={item.id} key={item.id}>
-								<Link href={item.href}>{item.name}</Link>
+							<li key={item.id}>
+								<Link id={item.id} href={item.href}>
+									{item.name}
+								</Link>
 							</li>
 						),
 					)}
