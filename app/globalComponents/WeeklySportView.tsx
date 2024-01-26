@@ -1,27 +1,35 @@
+import { dayjs } from '@/libs/dayjs';
 import { DateWithGames } from '@/libs/gamesToDates';
 import Link from 'next/link';
 import { FaInfoCircle, FaRegEye } from 'react-icons/fa';
 import { FaLocationDot, FaPen } from 'react-icons/fa6';
 import { SideBySide } from './SideBySide';
 
-export function WeeklySportView({ date, isTeacher }: { date: DateWithGames; isTeacher: boolean }) {
+export function WeeklySportView({
+	date,
+	showRelative = false,
+	isTeacher,
+	hideGroup = false,
+}: {
+	date: DateWithGames;
+	showRelative?: boolean;
+	isTeacher: boolean;
+	hideGroup?: boolean;
+}) {
 	return (
 		<div className="w-full bg-base-200 rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4 overflow-auto">
-			{isTeacher ? (
-				<Link
-					href={`/date/${date.rawDate.valueOf()}`}
-					className="block sticky left-0 text-xl text-center link link-primary"
-				>
-					Weekly Sport {date.date}
-				</Link>
-			) : (
-				<h2 className="sticky left-0 text-xl text-center text-primary">Weekly Sport {date.date}</h2>
-			)}
+			<Link
+				href={`/date/${date.rawDate.valueOf()}`}
+				className="block sticky left-0 text-xl text-center link link-primary"
+			>
+				Weekly Sport {date.rawDate.toLocaleDateString()}
+				{showRelative && ` (${dayjs(date.rawDate).fromNow()})`}
+			</Link>
 			<div className="w-full mt-2">
 				<table className="table">
 					<thead>
 						<tr>
-							<th>Group</th>
+							{hideGroup || <th>Group</th>}
 							<th>Team</th>
 							<th>Opponent</th>
 							<th>Venue</th>
@@ -35,7 +43,11 @@ export function WeeklySportView({ date, isTeacher }: { date: DateWithGames; isTe
 					<tbody>
 						{date.games.map((game) => (
 							<tr key={game.id} className="border-base-300">
-								<td>{game?.team?.isJunior !== undefined ? (game.team.isJunior ? 'Junior' : 'Intermediate') : '---'}</td>
+								{hideGroup || (
+									<td>
+										{game?.team?.isJunior !== undefined ? (game.team.isJunior ? 'Junior' : 'Intermediate') : '---'}
+									</td>
+								)}
 								<td>{game?.team?.name || '---'}</td>
 								<td>{game?.opponent || '---'}</td>
 								<td>

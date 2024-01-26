@@ -2,15 +2,15 @@
 
 import { auth } from '@/libs/auth';
 import { isTeacher } from '@/libs/checkPermission';
+import { FormState } from '@/libs/types';
 import { getXataClient } from '@/libs/xata';
+import { revalidatePath } from 'next/cache';
 import sharp from 'sharp';
 import { z } from 'zod';
-import { revalidatePath } from 'next/cache';
-import { FormState } from '@/libs/types';
 
 const schema = z.object({
-	name: z.string().min(1).max(200).optional(),
-	email: z.string().min(1).max(200).email().optional(),
+	name: z.string().min(1).max(200).optional().nullable(),
+	email: z.string().min(1).max(200).email().optional().nullable(),
 	avatar: z.nullable(
 		z
 			.instanceof(File)

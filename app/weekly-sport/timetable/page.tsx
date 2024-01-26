@@ -37,10 +37,10 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 	).summaries[0].total;
 	const games = await getXataClient()
 		.db.games.select(['*', 'team.*', 'venue.*', 'teacher.*'])
+		.filter(dbFilter)
 		.getPaginated({
 			consistency: 'eventual',
 			sort: [{ date: isPast ? 'desc' : 'asc' }],
-			filter: dbFilter as any,
 			pagination: {
 				size: itemsPerPage,
 				offset: page ? (parseInt(page) - 1) * itemsPerPage : 0,
@@ -54,7 +54,7 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 
 	return (
 		<div className="flex flex-col items-center w-full p-4 gap-4">
-			<h1 className="text-2xl font-bold">Weekly Sport Timetable</h1>
+			<h1 className="text-2xl font-bold text-center">Weekly Sport Timetable</h1>
 			<div className="flex flex-col sm:flex-row gap-4 py-2 px-4 w-full sm:w-auto">
 				<Tabs>
 					<Link

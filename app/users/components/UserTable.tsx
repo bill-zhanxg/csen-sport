@@ -52,11 +52,12 @@ export function UserTable({
 
 	return (
 		<>
-			<main className="flex flex-col items-center gap-4 p-4 overflow-x-auto w-full">
+			<main className="flex flex-col items-center gap-4 p-4 overflow-auto w-full">
 				{users.length < 1 ? (
 					<div>Nothing Here</div>
 				) : (
-					<div className="overflow-x-auto w-full">
+					<div className="flex flex-col gap-4 bg-base-100 rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4 overflow-auto w-full">
+						<h2 className="sticky left-0 text-xl text-center text-primary">Users Management</h2>
 						<table className="table">
 							<thead>
 								<tr>
@@ -78,7 +79,7 @@ export function UserTable({
 							<tbody>
 								{users.map((user, index) => (
 									<tr className="hover cursor-pointer" key={user.id} onClick={() => router.push(`/users/${user.id}`)}>
-										<th>
+										<th className="cursor-default" onClick={(event) => event.stopPropagation()}>
 											<label>
 												<input
 													type="checkbox"
@@ -176,8 +177,8 @@ export function UserTable({
 				<form id="close_dialog" method="dialog" />
 			</dialog>
 			{users.some((user) => user.checked) && (
-				<div className="flex justify-center sticky bottom-5 px-3 w-full z-10">
-					<div className="flex flex-col sm:flex-row gap-2 items-center justify-between p-4 bg-base-200 shadow-md border-solid border-2 border-base-300 rounded-lg h-32 sm:h-16 w-full mx-10">
+				<div className="flex justify-center sticky bottom-5 px-4 w-full z-10">
+					<div className="flex flex-col sm:flex-row gap-2 items-center justify-between p-4 bg-base-200 shadow-md border-solid border-2 border-base-300 rounded-lg h-32 sm:h-16 w-full">
 						<span className="flex items-center gap-2">
 							<span className="flex justify-center items-center bg-primary rounded-md h-6 w-6 text-white">
 								{users.filter((user) => user.checked).length}

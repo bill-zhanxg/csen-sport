@@ -43,7 +43,7 @@ export default async function DatePage({
 						<h1 className="font-bold">Teacher Actions</h1>
 						<p>For posting a link of the games to the specific date and group</p>
 						<Copy games={serializeGames(dates[0].games, false)} />
-						<Tabs breakPoint='lg'>
+						<Tabs breakPoint="lg">
 							<Link
 								href={`/date/${params.date}`}
 								role="tab"
@@ -72,7 +72,7 @@ export default async function DatePage({
 			<main className="flex flex-col items-center gap-4 pt-0 p-4 w-full">
 				{isTeacher(session) && <h1 className="font-bold">Student View ↓</h1>}
 				{dates.length > 0 ? (
-					<WeeklySportView date={dates[0]} isTeacher={false} />
+					<WeeklySportView date={dates[0]} isTeacher={false} hideGroup={!!view} />
 				) : (
 					<h1>There are no games on {date.toLocaleDateString()}</h1>
 				)}
