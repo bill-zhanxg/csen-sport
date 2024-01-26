@@ -50,6 +50,9 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 												<Link href="/settings">User Settings</Link>
 											</li>
 											<li>
+												<Link href="/changelog">Changelogs</Link>
+											</li>
+											<li>
 												<LogoutButton />
 											</li>
 										</ul>

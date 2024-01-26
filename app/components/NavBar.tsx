@@ -12,15 +12,6 @@ const menu: Menu = [
 		name: 'CSEN',
 		href: '/csen',
 	},
-	// TODO: Remove pages
-	// {
-	// 	name: 'Weekly Sport PDF',
-	// 	href: '/weekly-sport-pdf',
-	// },
-	// {
-	// 	name: 'Ladders',
-	// 	href: '/ladder',
-	// },
 	{
 		name: 'Admin Controls',
 		admin: true,
