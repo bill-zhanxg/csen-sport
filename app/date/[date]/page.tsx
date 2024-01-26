@@ -4,11 +4,11 @@ import { auth } from '@/libs/auth';
 import { isTeacher } from '@/libs/checkPermission';
 import { getDateEnd, getDateStart, stringifySearchParam } from '@/libs/formatValue';
 import { gamesToDates } from '@/libs/gamesToDates';
+import { serializeGames } from '@/libs/serializeData';
 import { SearchParams } from '@/libs/types';
 import { getXataClient } from '@/libs/xata';
 import Link from 'next/link';
 import { Copy } from './components/Copy';
-import { serializeGame, serializeGames } from '@/libs/serializeData';
 
 export default async function DatePage({
 	params,
@@ -19,12 +19,16 @@ export default async function DatePage({
 }) {
 	const session = await auth();
 	const date = new Date(parseInt(params.date));
-	const view = stringifySearchParam(searchParams).view as 'junior' | 'intermediate' | undefined;
+	let view = stringifySearchParam(searchParams).view as 'junior' | 'intermediate' | undefined;
+	if (view !== 'junior' && view !== 'intermediate') view = undefined;
 
 	const games = await getXataClient()
 		.db.games.select(['*', 'team.*', 'venue.*', 'teacher.*'])
 		.sort('team.name', 'asc')
-		.filter('date', { $ge: getDateStart(date), $le: getDateEnd(date) })
+		.filter({
+			date: { $ge: getDateStart(date), $le: getDateEnd(date) },
+			...(view ? { 'team.isJunior': view === 'junior' ? true : false } : {}),
+		})
 		.getAll({
 			consistency: 'eventual',
 		});
@@ -39,7 +43,7 @@ export default async function DatePage({
 						<h1 className="font-bold">Teacher Actions</h1>
 						<p>For posting a link of the games to the specific date and group</p>
 						<Copy games={serializeGames(dates[0].games, false)} />
-						<Tabs>
+						<Tabs breakPoint='lg'>
 							<Link
 								href={`/date/${params.date}`}
 								role="tab"

@@ -30,7 +30,7 @@ export function Copy({ games }: { games: SerializedGame[] }) {
 	}
 
 	return (
-		<div className="join join-vertical sm:join-horizontal w-full sm:w-auto">
+		<div className="join join-vertical lg:join-horizontal w-full lg:w-auto">
 			<button
 				className="btn tooltip-bottom join-item"
 				data-tip="Copied"
@@ -61,7 +61,7 @@ export function Copy({ games }: { games: SerializedGame[] }) {
 				onClick={(e) => onClick(e, undefined, true)}
 				onMouseLeave={onMouseLeave}
 			>
-				Copy as Table
+				Copy as Table (Current View)
 			</button>
 		</div>
 	);
