@@ -91,7 +91,7 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 					</Tabs>
 				)}
 			</div>
-			<main className="flex flex-col items-center gap-4 pt-0 p-4 overflow-x-auto w-full">
+			<main className="flex flex-col items-center gap-4 pt-0 p-4 w-full">
 				{dates.length < 1 ? (
 					<div>Nothing Here</div>
 				) : (

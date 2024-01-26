@@ -1,0 +1,21 @@
+import { formatIsJunior } from '@/libs/formatValue';
+import { SerializedGame } from '@/libs/serializeData';
+
+export function copyToText(games: SerializedGame[]): string {
+	return [
+		['Date', 'Group', 'Team', 'Opponent', 'Venue', 'Teacher', 'Transportation', 'Out of Class', 'Start'].join('\t'),
+		...games.map((game) => {
+			return [
+				game.date?.toLocaleDateString() ?? '---',
+				game.team?.isJunior !== undefined ? formatIsJunior(game.team.isJunior) : '---',
+				game.team?.name ?? '---',
+				game.opponent ?? '---',
+				game.venue ? `${game.venue.name} (${game.venue.court_field_number})` : '---',
+				game.teacher?.name ?? '---',
+				game.transportation ?? '---',
+				game.out_of_class?.toLocaleTimeString() ?? '---',
+				game.start?.toLocaleTimeString() ?? '---',
+			].join('\t');
+		}),
+	].join('\n');
+}
