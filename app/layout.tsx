@@ -1,4 +1,5 @@
 import { auth } from '@/libs/auth';
+import { isBlocked } from '@/libs/checkPermission';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import Link from 'next/link';
@@ -6,10 +7,10 @@ import { FaHome } from 'react-icons/fa';
 import BarOfProgress from './components/BarOfProgress';
 import { LogoutButton } from './components/LogoutButton';
 import { NavBar } from './components/NavBar';
+import { ReactJoyride } from './components/ReactJoyride';
 import { SentrySetUser } from './components/SentrySetUser';
 import { UserAvatar } from './globalComponents/UserAvatar';
 import './globals.css';
-import { isBlocked } from '@/libs/checkPermission';
 
 export const metadata: Metadata = {
 	title: 'CSEN Sport',
@@ -30,7 +31,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 						<>
 							<div className="navbar bg-base-200 border-b-2 border-base-300 shadow-lg shadow-base-300">
 								<div className="navbar-start">
-									<Link href="/" className="btn btn-ghost normal-case text-xl">
+									<Link id="home-btn" href="/" className="btn btn-ghost normal-case text-xl">
 										<FaHome />
 									</Link>
 								</div>
@@ -62,6 +63,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 							{children}
 							<BarOfProgress />
 							<SentrySetUser user={{ ...session.user, ip_address: ip }} />
+							<ReactJoyride />
 						</>
 					)
 				) : (

@@ -4,8 +4,6 @@ import { gamesToDates } from '@/libs/gamesToDates';
 import { getXataClient } from '@/libs/xata';
 import { WeeklySportView } from './globalComponents/WeeklySportView';
 
-const xata = getXataClient();
-
 export default async function Home() {
 	const session = await auth();
 	const isTeacherBool = isTeacher(session);
