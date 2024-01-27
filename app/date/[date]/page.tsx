@@ -41,7 +41,7 @@ export default async function DatePage({
 				<div className="p-4 w-full">
 					<div className="flex flex-col items-center gap-2 rounded-xl border-2 border-error shadow-lg shadow-error p-4 w-full">
 						<h1 className="font-bold">Teacher Actions</h1>
-						<p>For posting a link of the games to the specific date and group</p>
+						<p className='text-center'>For posting a link of the games to the specific date and group</p>
 						<Copy games={serializeGames(dates[0].games, false)} />
 						<Tabs breakPoint="lg">
 							<Link
