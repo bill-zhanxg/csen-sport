@@ -16,6 +16,7 @@ const tables = [
       { name: "role", type: "string" },
       { name: "team", type: "link", link: { table: "teams" } },
       { name: "image", type: "text" },
+      { name: "guided", type: "bool", defaultValue: "false" },
     ],
     revLinks: [
       { column: "user", table: "nextauth_accounts" },

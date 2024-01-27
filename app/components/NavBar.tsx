@@ -75,6 +75,7 @@ export function NavBar({ session }: { session: Session }) {
 					<FaBars />
 				</label>
 				<ul
+					id="mobile-menu"
 					tabIndex={0}
 					className="menu menu-md dropdown-content mt-3 z-[100] p-2 shadow bg-base-100 rounded-box border border-primary w-full"
 				>

@@ -44,16 +44,21 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 											</label>
 										</div>
 										<ul
+											id="user-menu"
 											tabIndex={0}
 											className="menu menu-md dropdown-content mt-3 z-[100] p-2 shadow-xl bg-base-100 rounded-box w-52 border border-primary"
 										>
-											<li id="user-settings-btn">
-												<Link href="/settings">User Settings</Link>
+											<li>
+												<Link id="user-settings-btn" href="/settings">
+													User Settings
+												</Link>
 											</li>
-											<li id="changelog-btn">
-												<Link href="/changelog">Changelogs</Link>
+											<li>
+												<Link id="changelog-btn" href="/changelog">
+													Changelogs
+												</Link>
 											</li>
-											<li id="logout-btn">
+											<li>
 												<LogoutButton />
 											</li>
 										</ul>
@@ -63,7 +68,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 							{children}
 							<BarOfProgress />
 							<SentrySetUser user={{ ...session.user, ip_address: ip }} />
-							<ReactJoyride />
+							{!session.user.guided && <ReactJoyride />}
 						</>
 					)
 				) : (

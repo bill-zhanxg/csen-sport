@@ -1,10 +1,12 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { ReactNode } from 'react';
+import { finishGuide } from './ReacyJoyRideActions';
 
 const Joyride = dynamic(() => import('react-joyride'), { ssr: false });
 
-const steps: { target: string; content: string }[] = [
+const steps: { title?: ReactNode; target: string; content: string }[] = [
 	{
 		target: '#home-btn',
 		content: 'Click here whenever you want to go back to the homepage',
@@ -66,12 +68,45 @@ const steps: { target: string; content: string }[] = [
 const stepsMap = steps.map((step) => [step, { ...step, target: `${step.target}-mobile` }]);
 
 export function ReactJoyride() {
+	function openMenu(menu: HTMLElement | null) {
+		if (menu) {
+			menu.style.setProperty('visibility', 'visible', 'important');
+			menu.style.setProperty('opacity', '1', 'important');
+		}
+	}
+	function closeMenu(menu: HTMLElement | null) {
+		if (menu) {
+			menu.style.removeProperty('visibility');
+			menu.style.removeProperty('opacity');
+		}
+	}
+
 	return (
 		<Joyride
 			run
 			continuous
-			callback={(data) => {
-				console.log(data);
+			showSkipButton
+			scrollOffset={300}
+			callback={(event) => {
+				if (event.type === 'step:before') {
+					if (event.step.target === '#users-btn') document.getElementById('admin-control-btn')?.click();
+				}
+				if (event.type === 'step:after') {
+					if (event.step.target === '#create-timetables-btn' || event.step.target === '#create-timetables-btn-mobile') {
+						document.getElementById('admin-control-btn')?.click();
+
+						// Start user-menu
+						openMenu(document.getElementById('user-menu'));
+						closeMenu(document.getElementById('mobile-menu'));
+					}
+					if (event.step.target === '#logout-btn') {
+						closeMenu(document.getElementById('user-menu'));
+					}
+				}
+				if (event.type === 'error:target_not_found') {
+					if (event.step.target === '#weekly-sport-btn') openMenu(document.getElementById('mobile-menu'));
+				}
+				if (event.status === 'finished') finishGuide();
 			}}
 			steps={stepsMap.flat()}
 		/>

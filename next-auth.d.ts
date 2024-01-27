@@ -8,6 +8,7 @@ declare module 'next-auth' {
 			/** The role of the user. */
 			role: role;
 			team?: team;
+			guided: boolean;
 		} & DefaultSession['user'];
 	}
 
@@ -15,6 +16,7 @@ declare module 'next-auth' {
 		/** The role of the user. */
 		role: role;
 		team?: team;
+		guided: boolean;
 	}
 }
 
@@ -22,5 +24,6 @@ declare module '@auth/core/adapters' {
 	interface AdapterUser extends BaseAdapterUser {
 		role: role;
 		team?: team;
+		guided: boolean;
 	}
 }

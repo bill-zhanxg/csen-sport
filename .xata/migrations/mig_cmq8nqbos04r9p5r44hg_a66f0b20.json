@@ -1,0 +1,17 @@
+{
+  "id": "mig_cmq8nqbos04r9p5r44hg",
+  "parentID": "mig_cmnne4lgbdm3imgef06g",
+  "checksum": "1:a66f0b204a536d16bf6d6758dee250972dfdb6fa5bbc821b3a274703e3e79d25",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "guided",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        "table": "nextauth_users"
+      }
+    }
+  ]
+}
