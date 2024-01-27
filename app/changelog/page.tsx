@@ -1,9 +1,11 @@
 import Link from 'next/link';
+import { RestartGuide } from './components/RestartGuide';
 
 export default function Changelog() {
 	return (
 		<div className="flex flex-col gap-4 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
+			<RestartGuide />
 			<ChangelogBox version="0.1.0" latest>
 				<div className="flex flex-col gap-4">
 					<div className="flex items-center gap-4">
