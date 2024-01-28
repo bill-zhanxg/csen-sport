@@ -4,7 +4,7 @@ import { useSignal } from '@preact/signals-react';
 import { useRouter } from 'next13-progressbar';
 import { useEffect, useMemo, useState } from 'react';
 import { pdfjs } from 'react-pdf';
-import { AlertType, ErrorAlert, SuccessAlert } from '../../../components/Alert';
+import { AlertType, ErrorAlertFixed, SuccessAlertFixed } from '../../../components/Alert';
 import { importData } from '../actions';
 import { FIxturePages, Step1 } from './Step1';
 import { Step2 } from './Step2';
@@ -166,9 +166,9 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 			</main>
 			{alert &&
 				(alert.type === 'success' ? (
-					<SuccessAlert message={alert.message} setAlert={setAlert} />
+					<SuccessAlertFixed message={alert.message} setAlert={setAlert} />
 				) : (
-					<ErrorAlert message={alert.message} setAlert={setAlert} />
+					<ErrorAlertFixed message={alert.message} setAlert={setAlert} />
 				))}
 		</>
 	);

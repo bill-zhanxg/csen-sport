@@ -1,7 +1,7 @@
 'use client';
 /* eslint-disable react-hooks/rules-of-hooks */
 
-import { AlertType, ErrorAlert, SuccessAlert } from '@/app/components/Alert';
+import { AlertType, ErrorAlertFixed, SuccessAlertFixed } from '@/app/components/Alert';
 import { SideBySide } from '@/app/globalComponents/SideBySide';
 import { SerializedVenue } from '@/libs/serializeData';
 import {
@@ -291,9 +291,9 @@ export function VenueTable({ teams }: { teams: SerializedVenue[] }) {
 			</div>
 			{alert &&
 				(alert.type === 'success' ? (
-					<SuccessAlert message={alert.message} setAlert={setAlert} />
+					<SuccessAlertFixed message={alert.message} setAlert={setAlert} />
 				) : (
-					<ErrorAlert message={alert.message} setAlert={setAlert} />
+					<ErrorAlertFixed message={alert.message} setAlert={setAlert} />
 				))}
 		</>
 	);

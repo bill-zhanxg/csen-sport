@@ -361,9 +361,16 @@ export function Step1({
 					the User page
 				</Link>
 			</p>
+			<p className="text-xl font-bold text-error text-center max-w-2xl">
+				Also make sure you have reset everything in{' '}
+				<Link href="/bulk" className="link link-primary">
+					the Bulk Action page
+				</Link>{' '}
+				to prevent any duplicate data
+			</p>
 			<p className="text-xl font-bold text-center max-w-2xl">
 				Please find the latest fixtures PDF from{' '}
-				<Link className="link-secondary link" href="https://csen.org.au/semester-sport/" target="_blank">
+				<Link className="link-primary link" href="https://csen.org.au/semester-sport/" target="_blank">
 					CSEN
 				</Link>{' '}
 				then import it here

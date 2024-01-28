@@ -13,7 +13,7 @@ import Link from 'next/link';
 import { ChangeEventHandler, FocusEventHandler, useEffect, useMemo, useState } from 'react';
 import { FaPlus, FaRegTrashCan } from 'react-icons/fa6';
 import { RawTeacher, RawTeam, RawVenue } from '../../libs/tableData';
-import { AlertType, ErrorAlert, SuccessAlert } from '../components/Alert';
+import { AlertType, ErrorAlertFixed, SuccessAlertFixed } from '../components/Alert';
 import { SideBySide } from './SideBySide';
 import { deleteGame, newGame, updateGame } from './WeeklySportEditActions';
 
@@ -521,9 +521,9 @@ export function WeeklySportEdit({
 			</div>
 			{alert &&
 				(alert.type === 'success' ? (
-					<SuccessAlert message={alert.message} setAlert={setAlert} />
+					<SuccessAlertFixed message={alert.message} setAlert={setAlert} />
 				) : (
-					<ErrorAlert message={alert.message} setAlert={setAlert} />
+					<ErrorAlertFixed message={alert.message} setAlert={setAlert} />
 				))}
 		</>
 	);

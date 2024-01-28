@@ -2,6 +2,8 @@ import { formatIsJunior } from '@/libs/formatValue';
 import { getXataClient } from '@/libs/xata';
 import { utils } from 'xlsx';
 
+const xata = getXataClient();
+
 export async function getAllWorkbook() {
 	const gamesWorksheet = await getGamesWorksheet();
 	const teamsWorksheet = await getTeamsWorksheet();
@@ -36,8 +38,8 @@ export async function getVenuesWorkbook() {
 }
 
 async function getGamesWorksheet() {
-	const allGames = await getXataClient()
-		.db.games.select([
+	const allGames = await xata.db.games
+		.select([
 			'date',
 			'team.isJunior',
 			'team.name',
@@ -112,11 +114,7 @@ async function getGamesWorksheet() {
 }
 
 async function getTeamsWorksheet() {
-	const teams = await getXataClient()
-		.db.teams.select(['name', 'isJunior'])
-		.sort('isJunior', 'asc')
-		.sort('name', 'asc')
-		.getAll();
+	const teams = await xata.db.teams.select(['name', 'isJunior']).sort('isJunior', 'asc').sort('name', 'asc').getAll();
 
 	const rows = teams.map((team) => ({
 		Group: formatIsJunior(team.isJunior),
@@ -132,10 +130,7 @@ async function getTeamsWorksheet() {
 }
 
 async function getVenuesWorksheet() {
-	const venues = await getXataClient()
-		.db.venues.select(['name', 'address', 'court_field_number'])
-		.sort('name', 'asc')
-		.getAll();
+	const venues = await xata.db.venues.select(['name', 'address', 'court_field_number']).sort('name', 'asc').getAll();
 
 	const rows = venues.map((venue) => ({
 		Venue: venue.name,
