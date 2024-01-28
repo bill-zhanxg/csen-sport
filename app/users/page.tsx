@@ -1,10 +1,12 @@
 import { auth } from '@/libs/auth';
+import { isAdmin } from '@/libs/checkPermission';
 import { getXataClient } from '@/libs/xata';
+import { Unauthorized } from '../globalComponents/Unauthorized';
 import { UserTable } from './components/UserTable';
 
 export default async function Users() {
 	const session = await auth();
-	if (session?.user.role !== 'admin') return <h1>Unauthorized</h1>;
+	if (!session || !isAdmin(session)) return Unauthorized();
 
 	const users = await getXataClient().db.nextauth_users.select(['email', 'name', 'image', 'role']).getMany();
 

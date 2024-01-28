@@ -1,12 +1,13 @@
 import { auth } from '@/libs/auth';
 import { isTeacher } from '@/libs/checkPermission';
-import { serializeTeams, serializeVenues } from '@/libs/serializeData';
+import { serializeVenues } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
+import { Unauthorized } from '../globalComponents/Unauthorized';
 import { VenueTable } from './components/VenueTable';
 
 export default async function Teams() {
 	const session = await auth();
-	if (!isTeacher(session)) return <h1>Unauthorized</h1>;
+	if (!isTeacher(session)) return Unauthorized();
 
 	const venues = await getXataClient().db.venues.getAll();
 

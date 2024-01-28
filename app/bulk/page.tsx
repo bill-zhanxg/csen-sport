@@ -1,11 +1,12 @@
 import { auth } from '@/libs/auth';
 import { isAdmin } from '@/libs/checkPermission';
 import Link from 'next/link';
+import { Unauthorized } from '../globalComponents/Unauthorized';
 import { Danger } from './components/Danger';
 
 export default async function BulkAction() {
 	const session = await auth();
-	if (!isAdmin(session)) return <h1>Unauthorized</h1>;
+	if (!isAdmin(session)) return Unauthorized();
 
 	return (
 		<div className="p-6">

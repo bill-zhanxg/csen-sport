@@ -1,5 +1,6 @@
-import { UserAvatar } from '@/app/globalComponents/UserAvatar';
 import { Box } from '@/app/globalComponents/Box';
+import { Unauthorized } from '@/app/globalComponents/Unauthorized';
+import { UserAvatar } from '@/app/globalComponents/UserAvatar';
 import { auth } from '@/libs/auth';
 import { isAdmin } from '@/libs/checkPermission';
 import { getXataClient } from '@/libs/xata';
@@ -15,7 +16,7 @@ export default async function User({
 	const user = await getXataClient().db.nextauth_users.read(params.id, ['email', 'name', 'image', 'role']);
 	if (!user) return <h1>The user does not exist</h1>;
 
-	if (!isAdmin(session) && user.role !== 'teacher' && user.role !== 'admin') return <h1>Unauthorized</h1>;
+	if (!isAdmin(session) && user.role !== 'teacher' && user.role !== 'admin') return Unauthorized();
 
 	return (
 		<div className="flex justify-center items-center h-[80vh] w-full">
