@@ -2,12 +2,13 @@ import { auth } from '@/libs/auth';
 import { serializeTeams } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
 import { Box } from '../globalComponents/Box';
+import { Unauthorized } from '../globalComponents/Unauthorized';
 import { UserAvatar } from '../globalComponents/UserAvatar';
 import { SettingsForm } from './components/SettingsForm';
 
 export default async function Profile() {
 	const session = await auth();
-	if (!session) return <h1>Not Logged In</h1>;
+	if (!session) return Unauthorized();
 
 	const teams = await getXataClient().db.teams.getAll();
 

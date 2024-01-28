@@ -1,5 +1,6 @@
 'use client';
 
+import { ErrorMessage } from '@/app/globalComponents/ErrorMessage';
 import { UserAvatar } from '@/app/globalComponents/UserAvatar';
 import { NextauthUsersRecord } from '@/libs/xata';
 import { JSONData, SelectedPick } from '@xata.io/client';
@@ -48,7 +49,7 @@ export function UserTable({
 		setUsers(users.map((user) => ({ ...user, checked: user.id === myId ? false : checked })));
 	};
 
-	if (!users) return <h1>There is no users</h1>;
+	if (!users) return <ErrorMessage code="501" message="There is no users in the database" />;
 
 	return (
 		<>

@@ -1,3 +1,4 @@
+import { ErrorMessage } from '@/app/globalComponents/ErrorMessage';
 import { Tabs } from '@/app/globalComponents/Tabs';
 import { WeeklySportView } from '@/app/globalComponents/WeeklySportView';
 import { auth } from '@/libs/auth';
@@ -41,8 +42,8 @@ export default async function DatePage({
 				<div className="p-4 w-full">
 					<div className="flex flex-col items-center gap-2 rounded-xl border-2 border-error shadow-lg shadow-error p-4 w-full">
 						<h1 className="font-bold">Teacher Actions</h1>
-						<p className='text-center'>For posting a link of the games to the specific date and group</p>
-						<Copy games={serializeGames(dates[0].games, false)} />
+						<p className="text-center">For posting a link of the games to the specific date and group</p>
+						<Copy games={serializeGames(dates[0]?.games ?? [], false)} />
 						<Tabs breakPoint="lg">
 							<Link
 								href={`/date/${params.date}`}
@@ -74,7 +75,7 @@ export default async function DatePage({
 				{dates.length > 0 ? (
 					<WeeklySportView date={dates[0]} isTeacher={false} hideGroup={!!view} />
 				) : (
-					<h1>There are no games on {date.toLocaleDateString()}</h1>
+					<ErrorMessage code="404" message={`There are no games on ${date.toLocaleDateString()}`} />
 				)}
 			</main>
 		</div>

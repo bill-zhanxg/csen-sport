@@ -1,3 +1,4 @@
+import { ErrorMessage } from '@/app/globalComponents/ErrorMessage';
 import { auth } from '@/libs/auth';
 import { isTeacher } from '@/libs/checkPermission';
 import { serializeGame } from '@/libs/serializeData';
@@ -14,12 +15,18 @@ export default async function EditGame({ params }: { params: { id: string } }) {
 	const venues = isTeacherBool ? await getRawVenues() : [];
 	const teachers = isTeacherBool ? await getRawTeachers() : [];
 
-	if (!game) return <h1>Game not found</h1>;
+	if (!game) return <ErrorMessage code="404" message="Game not found" />;
 
 	return (
 		<div className="flex justify-center w-full">
 			<div className="w-full max-w-[50rem] m-4 flex gap-8 flex-col">
-				<GameForm session={session} game={serializeGame(game, isTeacherBool)} teams={teams} venues={venues} teachers={teachers} />
+				<GameForm
+					session={session}
+					game={serializeGame(game, isTeacherBool)}
+					teams={teams}
+					venues={venues}
+					teachers={teachers}
+				/>
 			</div>
 		</div>
 	);

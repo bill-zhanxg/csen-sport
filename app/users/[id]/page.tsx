@@ -1,4 +1,5 @@
 import { Box } from '@/app/globalComponents/Box';
+import { ErrorMessage } from '@/app/globalComponents/ErrorMessage';
 import { Unauthorized } from '@/app/globalComponents/Unauthorized';
 import { UserAvatar } from '@/app/globalComponents/UserAvatar';
 import { auth } from '@/libs/auth';
@@ -14,7 +15,7 @@ export default async function User({
 }) {
 	const session = await auth();
 	const user = await getXataClient().db.nextauth_users.read(params.id, ['email', 'name', 'image', 'role']);
-	if (!user) return <h1>The user does not exist</h1>;
+	if (!user) return <ErrorMessage code="404" message="The user you're looking for can not be found" />;
 
 	if (!isAdmin(session) && user.role !== 'teacher' && user.role !== 'admin') return Unauthorized();
 
