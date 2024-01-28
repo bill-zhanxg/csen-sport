@@ -3,7 +3,7 @@ import { isAdmin } from '@/libs/checkPermission';
 import { write } from 'xlsx';
 import { getGames } from '../libs/dl';
 
-export async function GET(req: Request) {
+export async function GET() {
 	const session = await auth();
 	if (!isAdmin(session)) return new Response('Unauthorized', { status: 401 });
 
