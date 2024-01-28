@@ -1,12 +1,21 @@
 import { auth } from '@/libs/auth';
 import { isAdmin } from '@/libs/checkPermission';
+import { getRawTeachers, getRawTeams, getRawVenues } from '@/libs/tableData';
+import { getXataClient } from '@/libs/xata';
 import Link from 'next/link';
 import { Unauthorized } from '../globalComponents/Unauthorized';
 import { Danger } from './components/Danger';
 
+const xata = getXataClient();
+
 export default async function BulkAction() {
 	const session = await auth();
 	if (!isAdmin(session)) return Unauthorized();
+
+	const games = await xata.db.games.select(['*', 'team.*', 'venue.*', 'teacher.*']).getMany();
+	const teams = await getRawTeams();
+	const venues = await getRawVenues();
+	const teachers = await getRawTeachers();
 
 	return (
 		<div className="p-6">

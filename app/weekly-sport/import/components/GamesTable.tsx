@@ -11,12 +11,6 @@ import {
 import { ChangeEventHandler, Dispatch, FocusEventHandler, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { Games, Opponents, Teams, Venues } from '../types';
 
-const defaultColumn: Partial<ColumnDef<Games[number]>> = {
-	cell: ({ getValue }) => {
-		return <input className="input input-bordered rounded-none w-full" value={getValue() as string} disabled />;
-	},
-};
-
 export function GamesTable({
 	teams,
 	opponents,
@@ -254,7 +248,6 @@ export function GamesTable({
 
 	const table = useReactTable({
 		columns,
-		defaultColumn,
 		data: games,
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),

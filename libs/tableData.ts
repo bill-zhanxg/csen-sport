@@ -7,16 +7,16 @@ export type RawTeam = {
 	isJunior?: boolean | null;
 };
 
-export type RawTeacher = {
-	id: string;
-	name?: string | null;
-};
-
 export type RawVenue = {
 	id: string;
 	name?: string | null;
 	address?: string | null;
 	court_field_number?: string | null;
+};
+
+export type RawTeacher = {
+	id: string;
+	name?: string | null;
 };
 
 const xata = getXataClient();
@@ -26,12 +26,12 @@ export async function getRawTeams(): Promise<RawTeam[]> {
 	return serializeTeams(teamsRecords);
 }
 
-export async function getRawTeachers(): Promise<RawTeacher[]> {
-	const teachersRecords = await xata.db.nextauth_users.select(['name']).getAll();
-	return teachersRecords.map(({ id, name }) => ({ id, name }));
-}
-
 export async function getRawVenues(): Promise<RawVenue[]> {
 	const venuesRecords = await xata.db.venues.select(['name', 'address', 'court_field_number']).getAll();
 	return serializeVenues(venuesRecords);
+}
+
+export async function getRawTeachers(): Promise<RawTeacher[]> {
+	const teachersRecords = await xata.db.nextauth_users.select(['name']).getAll();
+	return teachersRecords.map(({ id, name }) => ({ id, name }));
 }
