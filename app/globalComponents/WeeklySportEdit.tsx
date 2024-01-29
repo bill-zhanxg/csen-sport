@@ -483,14 +483,6 @@ export function WeeklySportEdit({
 										className="btn btn-square"
 										disabled={newTeam === '' || newOpponent === ''}
 										onClick={() => {
-											setNewTeam('');
-											setNewOpponent('');
-											setNewVenue('');
-											setNewTeacher('');
-											setNewTransportation('');
-											setNewNotes('');
-											setNewOutOfClass('');
-											setNewStart('');
 											newGame({
 												date: date.rawDate,
 												team: newTeam,
@@ -509,6 +501,14 @@ export function WeeklySportEdit({
 														message: 'A network error occurred. Please try again later.',
 													});
 												});
+											setNewTeam('');
+											setNewOpponent('');
+											setNewVenue('');
+											setNewTeacher('');
+											setNewTransportation('');
+											setNewNotes('');
+											setNewOutOfClass('');
+											setNewStart('');
 										}}
 									>
 										<FaPlus />

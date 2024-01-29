@@ -32,6 +32,11 @@ export async function getRawVenues(): Promise<RawVenue[]> {
 }
 
 export async function getRawTeachers(): Promise<RawTeacher[]> {
-	const teachersRecords = await xata.db.nextauth_users.select(['name']).getAll();
+	const teachersRecords = await xata.db.nextauth_users
+		.filter({
+			role: { $any: ['teacher', 'admin'] },
+		})
+		.select(['name'])
+		.getAll();
 	return teachersRecords.map(({ id, name }) => ({ id, name }));
 }

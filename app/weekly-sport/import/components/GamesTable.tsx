@@ -303,19 +303,6 @@ export function GamesTable({
 								</tr>
 							);
 						})}
-						{/* <tr>
-							<td />
-							<td />
-							<td />
-							<td />
-							<td />
-							<td />
-							<td className="flex justify-end p-0 pt-1">
-								<button className="btn btn-square" disabled>
-									<FaPlus />
-								</button>
-							</td>
-						</tr> */}
 					</tbody>
 				</table>
 			</div>

@@ -7,21 +7,10 @@ import { SelectedPick } from '@xata.io/client';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { AlertType } from '../components/Alert';
+import { UpdateGameSchema } from './Schemas';
 
 const xata = getXataClient();
 const stringSchema = z.string();
-
-const UpdateGameSchema = z.object({
-	date: z.date().optional(),
-	team: z.string().optional(),
-	opponent: z.string().optional(),
-	venue: z.string().optional(),
-	teacher: z.string().optional(),
-	transportation: z.string().optional(),
-	out_of_class: z.date().optional(),
-	start: z.date().optional(),
-	notes: z.string().optional(),
-});
 
 export async function updateGame(idRaw: string, dataRaw: z.infer<typeof UpdateGameSchema>): Promise<AlertType> {
 	return gameAction(() => {

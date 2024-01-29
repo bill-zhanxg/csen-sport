@@ -12,6 +12,11 @@ export function stringifySearchParam(searchParams: SearchParams): { [key: string
 	return searchParams as { [key: string]: string | undefined };
 }
 
+export function formatDate(date?: string | null, timezone = dayjs.tz.guess()): Date | undefined {
+	if (!date) return undefined;
+	return dayjs.tz(`${date} 12:00`, timezone).toDate();
+}
+
 export function formatTime(date?: Date | null, time?: string | null, timezone = dayjs.tz.guess()): Date | undefined {
 	if (!date || !time) return undefined;
 	return dayjs.tz(`${dayjs.tz(date, timezone).format('YYYY-MM-DD')} ${time}`, timezone).toDate();

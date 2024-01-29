@@ -14,7 +14,7 @@ export default async function BulkAction() {
 	const session = await auth();
 	if (!isAdmin(session)) return Unauthorized();
 
-	const games = await xata.db.games.select(['*', 'team.id', 'venue.id', 'teacher.id']).getMany();
+	const games = await xata.db.games.select(['*', 'team.id', 'venue.id', 'teacher.id']).getAll();
 	const teams = await getRawTeams();
 	const venues = await getRawVenues();
 	const teachers = await getRawTeachers();
@@ -48,7 +48,7 @@ export default async function BulkAction() {
 						</div>
 					</div>
 				</div>
-				<GamesTable games={serializeGamesWithId(games, true)} teams={teams} venues={venues} teachers={teachers} />
+				<GamesTable gamesRaw={serializeGamesWithId(games, true)} teams={teams} venues={venues} teachers={teachers} />
 			</div>
 		</div>
 	);
