@@ -34,6 +34,7 @@ export default function Changelog() {
 						<li>Ability to import weekly sport fixture to database via PDF (Import page admin only)</li>
 						<li>Ability to add, edit and delete weekly sport games manually (Weekly Sport page teacher view)</li>
 						<li>Ability to export weekly sport fixture to Excel document (Bulk Action page admin only)</li>
+						<li>Bulk add, modify, or remove games for admin</li>
 						<li>Ability to change user&apos;s role in bulk</li>
 						<li>Ability to manage teams, venues (Admin Controls)</li>
 					</ul>
@@ -41,7 +42,6 @@ export default function Changelog() {
 					{/* TODO */}
 					<h2 className="text-xl font-bold">Todos</h2>
 					<ul className="list-disc list-inside">
-						<li>Bulk add or remove games for admin</li>
 						<li>Ability to manually create timetable if automatic import fails (Create Timetable page admin only)</li>
 					</ul>
 					<div className="divider"></div>

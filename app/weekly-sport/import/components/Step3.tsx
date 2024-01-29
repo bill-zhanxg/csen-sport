@@ -1,3 +1,4 @@
+import { PreventUnload } from '@/app/globalComponents/PreventUnload';
 import { Signal, useSignal } from '@preact/signals-react';
 import { RowData } from '@tanstack/react-table';
 import { Dispatch, SetStateAction, useState } from 'react';
@@ -244,6 +245,7 @@ export function Step3({
 						Can not find any teams matching your CSEN code
 					</p>
 				))}
+			<PreventUnload />
 		</>
 	);
 }

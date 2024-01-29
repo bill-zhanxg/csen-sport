@@ -3,6 +3,7 @@ import { dayjs } from '@/libs/dayjs';
 /* eslint-disable react-hooks/rules-of-hooks */
 
 import { AlertType, ErrorAlert, SuccessAlert } from '@/app/components/Alert';
+import { PreventUnload } from '@/app/globalComponents/PreventUnload';
 import { formatDate, formatIsJunior, formatTime } from '@/libs/formatValue';
 import { SerializedGameWithId } from '@/libs/serializeData';
 import { RawTeacher, RawTeam, RawVenue } from '@/libs/tableData';
@@ -77,6 +78,7 @@ export function GamesTable({
 									[id]: importValue,
 								},
 							});
+						setChanged(true);
 						setPreviousValue(value);
 					}
 				},
@@ -259,6 +261,7 @@ export function GamesTable({
 										id: original.id,
 									});
 									setGames((games) => games.filter((game) => game.id !== original.id));
+									setChanged(true);
 								}}
 							>
 								<FaRegTrashCan />
@@ -296,6 +299,7 @@ export function GamesTable({
 	const [newStart, setNewStart] = useState('');
 
 	const [alert, setAlert] = useState<AlertType>(null);
+	const [changed, setChanged] = useState(false);
 	const [loading, setLoading] = useState(false);
 
 	return (
@@ -456,6 +460,7 @@ export function GamesTable({
 											value,
 										});
 										setGames((games) => [...games, value]);
+										setChanged(true);
 
 										setNewDate('');
 										setNewTeam('');
@@ -478,10 +483,14 @@ export function GamesTable({
 				{alert && (alert.type === 'error' ? ErrorAlert(alert) : SuccessAlert(alert))}
 				<button
 					className="btn btn-primary w-full mt-2"
-					disabled={loading}
+					disabled={!changed || loading}
 					onClick={async () => {
 						setLoading(true);
 						const res = await updateGamesBulk(changes.value);
+						if (res?.type === 'success') {
+							setChanged(false);
+							changes.value = [];
+						}
 						setAlert(res);
 						setLoading(false);
 					}}
@@ -489,6 +498,7 @@ export function GamesTable({
 					Update Games
 				</button>
 			</div>
+			{changed && <PreventUnload />}
 		</>
 	);
 }
