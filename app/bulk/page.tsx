@@ -5,6 +5,8 @@ import { getXataClient } from '@/libs/xata';
 import Link from 'next/link';
 import { Unauthorized } from '../globalComponents/Unauthorized';
 import { Danger } from './components/Danger';
+import { GamesTable } from './components/GamesTable';
+import { serializeGame, serializeGames, serializeGamesWithId } from '@/libs/serializeData';
 
 const xata = getXataClient();
 
@@ -12,7 +14,7 @@ export default async function BulkAction() {
 	const session = await auth();
 	if (!isAdmin(session)) return Unauthorized();
 
-	const games = await xata.db.games.select(['*', 'team.*', 'venue.*', 'teacher.*']).getMany();
+	const games = await xata.db.games.select(['*', 'team.id', 'venue.id', 'teacher.id']).getMany();
 	const teams = await getRawTeams();
 	const venues = await getRawVenues();
 	const teachers = await getRawTeachers();
@@ -46,7 +48,7 @@ export default async function BulkAction() {
 						</div>
 					</div>
 				</div>
-				
+				<GamesTable games={serializeGamesWithId(games, true)} teams={teams} venues={venues} teachers={teachers} />
 			</div>
 		</div>
 	);

@@ -49,11 +49,31 @@ export type SerializedGame = {
 	notes?: string | null;
 };
 
+export type SerializedGameWithId = {
+	id: string;
+	date?: Date | null;
+	opponent?: string | null;
+	team?: string | null;
+	venue?: string | null;
+	teacher?: string | null;
+	transportation?: string | null;
+	out_of_class?: Date | null;
+	start?: Date | null;
+	notes?: string | null;
+};
+
 export function serializeGames(
 	games: SelectedPick<GamesRecord, ('*' | 'team.*' | 'venue.*' | 'teacher.*')[]>[],
 	isTeacher: boolean,
 ): SerializedGame[] {
 	return games.map((game) => serializeGame(game, isTeacher));
+}
+
+export function serializeGamesWithId(
+	games: SelectedPick<GamesRecord, ('*' | 'team.id' | 'venue.id' | 'teacher.id')[]>[],
+	isTeacher: boolean,
+): SerializedGameWithId[] {
+	return games.map((game) => serializeGameWithId(game, isTeacher));
 }
 
 export function serializeGame(
@@ -90,6 +110,35 @@ export function serializeGame(
 			id: teacher?.id,
 			name: teacher?.name,
 		},
+		transportation,
+		out_of_class,
+		start,
+		notes: isTeacher ? notes : undefined,
+	};
+}
+
+export function serializeGameWithId(
+	{
+		id,
+		date,
+		opponent,
+		venue,
+		team,
+		teacher,
+		transportation,
+		out_of_class,
+		start,
+		notes,
+	}: SelectedPick<GamesRecord, ('*' | 'team.id' | 'venue.id' | 'teacher.id')[]>,
+	isTeacher: boolean,
+) {
+	return {
+		id,
+		date,
+		opponent,
+		team: team?.id,
+		venue: venue?.id,
+		teacher: teacher?.id,
 		transportation,
 		out_of_class,
 		start,

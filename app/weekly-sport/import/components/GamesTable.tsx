@@ -148,7 +148,7 @@ export function GamesTable({
 				},
 			},
 			{
-				id: 'teachers',
+				id: 'teacher',
 				accessorKey: 'teacher',
 				header: 'Teacher',
 				cell: (prop) => {
