@@ -23,6 +23,10 @@ export default function Changelog() {
 						<li>Changelog page is finished</li>
 						<li>Settings page is finished and functional</li>
 						<li>CSEN page for quick access their official website</li>
+						<li>
+							Website guidance is finished and working (you can restart the guide by clicking the &quot;Restart
+							Guide&quot; button on the top)
+						</li>
 					</ul>
 					<div className="divider"></div>
 					<h2 className="text-xl font-bold">For Teacher and Admin</h2>
