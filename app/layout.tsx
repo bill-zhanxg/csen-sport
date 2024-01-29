@@ -69,6 +69,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 							<BarOfProgress />
 							<SentrySetUser user={{ ...session.user, ip_address: ip }} />
 							{!session.user.guided && <ReactJoyride />}
+							<ReactJoyride />
 						</>
 					)
 				) : (
