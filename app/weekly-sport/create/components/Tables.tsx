@@ -1,31 +1,29 @@
 'use client';
 /* eslint-disable react-hooks/rules-of-hooks */
 
+import { AlertType } from '@/app/components/Alert';
+import { dayjs } from '@/libs/dayjs';
 import { RawTeacher } from '@/libs/tableData';
-import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import {
+	CellContext,
+	ColumnDef,
+	flexRender,
+	getCoreRowModel,
+	getSortedRowModel,
+	useReactTable,
+} from '@tanstack/react-table';
+import { useRouter } from 'next13-progressbar';
 import { ChangeEventHandler, FocusEventHandler, useEffect, useMemo, useState } from 'react';
 import { FaPlus, FaRegTrashCan } from 'react-icons/fa6';
 import { v4 } from 'uuid';
-
-type Team = {
-	id: string;
-	group?: 'junior' | 'intermediate';
-	name?: string;
-	teacher?: string;
-	out_of_class?: string;
-	start?: string;
-};
-
-type Venue = {
-	id: string;
-	venue?: string;
-	address?: string;
-	cfNum?: string;
-};
+import { Game, Team, Venue, createWeeklySport } from '../actions';
 
 export function Tables({ teachers }: { teachers: RawTeacher[] }) {
+	const router = useRouter();
+
 	const [teams, setTeams] = useState<Team[]>([]);
 	const [venues, setVenues] = useState<Venue[]>([]);
+	const [games, setGames] = useState<Game[]>([]);
 
 	// #region Venues
 	const teamColumns = useMemo<ColumnDef<Team>[]>(() => {
@@ -313,6 +311,263 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 	const [newCfNum, setNewCfNum] = useState('');
 	// #endregion
 
+	// #region Games
+	const gameColumns = useMemo<ColumnDef<Game>[]>(() => {
+		function editable<T>({
+			getValue,
+			row: { original },
+			column: { id },
+		}: CellContext<Game, unknown>): [
+			T,
+			ChangeEventHandler<HTMLElement> | undefined,
+			FocusEventHandler<HTMLElement> | undefined,
+		] {
+			const initialValue = getValue() as T;
+			const [value, setValue] = useState(initialValue);
+			const [previousValue, setPreviousValue] = useState(value);
+			useEffect(() => {
+				setValue(initialValue);
+			}, [initialValue]);
+			return [
+				value,
+				(event) => {
+					if (!('value' in event.target)) return;
+					const newValue = event.target.value as T;
+					setValue(newValue);
+				},
+				(event) => {
+					if (!('value' in event.target)) return;
+					if (previousValue !== value) {
+						setGames((games) => {
+							// Can not use index because it will be wrong when sorting
+							const index = games.findIndex((game) => game.id === original.id);
+							games[index][id as keyof Game] = value as any;
+							return [...games];
+						});
+						setPreviousValue(value);
+					}
+				},
+			];
+		}
+
+		return [
+			{
+				id: 'date',
+				accessorKey: 'date',
+				header: 'Date',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string>(prop);
+					return (
+						<input
+							type="date"
+							className="bg-base-100 px-4 w-full"
+							value={value ?? ''}
+							onChange={onChange}
+							onBlur={onBlur}
+						/>
+					);
+				},
+			},
+			{
+				id: 'teamId',
+				accessorKey: 'teamId',
+				header: 'Team',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string>(prop);
+					return (
+						<select
+							className="select select-bordered rounded-none w-full"
+							value={value}
+							onChange={onChange}
+							onBlur={onBlur}
+						>
+							<option disabled>Select a team</option>
+							{teams.map((team) => (
+								<option key={team.id} value={team.id}>
+									[{team.group}] {team.name}
+								</option>
+							))}
+						</select>
+					);
+				},
+			},
+			{
+				id: 'opponent',
+				accessorKey: 'opponent',
+				header: 'Opponent',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string>(prop);
+					return (
+						<input
+							className="input input-bordered rounded-none w-full"
+							placeholder="Optional"
+							value={value ?? ''}
+							onChange={onChange}
+							onBlur={onBlur}
+						/>
+					);
+				},
+			},
+			{
+				id: 'venue',
+				accessorKey: 'venue',
+				header: 'Venue',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string>(prop);
+					return (
+						<select
+							className="select select-bordered rounded-none w-full"
+							value={value}
+							onChange={onChange}
+							onBlur={onBlur}
+						>
+							<option disabled>Select venue</option>
+							{venues.map((venue) => (
+								<option key={venue.id} value={venue.id}>
+									{venue.venue} ({venue.cfNum})
+								</option>
+							))}
+						</select>
+					);
+				},
+			},
+			{
+				id: 'teacher',
+				accessorKey: 'teacher',
+				header: 'Teacher',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string | undefined>(prop);
+					const defaultTeacher = teams.find((team) => team.id === prop.row.original.team)?.teacher;
+					return (
+						<select
+							className="select select-bordered rounded-none w-full"
+							value={defaultTeacher ?? value ?? ''}
+							onChange={onChange}
+							onBlur={onBlur}
+						>
+							<option value={''} disabled>
+								Select a teacher
+							</option>
+							{teachers.map((teacher) => (
+								<option key={teacher.id} value={teacher.id}>
+									{teacher.name}
+								</option>
+							))}
+						</select>
+					);
+				},
+			},
+			{
+				id: 'transportation',
+				accessorKey: 'transportation',
+				header: 'Transportation',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string>(prop);
+					return (
+						<input
+							className="input input-bordered rounded-none w-full"
+							placeholder="Optional"
+							value={value ?? ''}
+							onChange={onChange}
+							onBlur={onBlur}
+						/>
+					);
+				},
+			},
+			{
+				id: 'notes',
+				accessorKey: 'notes',
+				header: 'Notes',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string>(prop);
+					return (
+						<input
+							className="input input-bordered rounded-none w-full"
+							placeholder="Extra info"
+							value={value ?? ''}
+							onChange={onChange}
+							onBlur={onBlur}
+						/>
+					);
+				},
+			},
+			{
+				id: 'out_of_class',
+				accessorKey: 'out_of_class',
+				header: 'Out of Class',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string | undefined>(prop);
+					const defaultTime = teams.find((team) => team.id === prop.row.original.team)?.out_of_class;
+					return (
+						<input
+							type="time"
+							className="bg-base-100 ml-4"
+							value={defaultTime ?? value ?? ''}
+							onChange={onChange}
+							onBlur={onBlur}
+						/>
+					);
+				},
+			},
+			{
+				id: 'start',
+				accessorKey: 'start',
+				header: 'Start Time',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string | undefined>(prop);
+					const defaultTime = teams.find((team) => team.id === prop.row.original.team)?.start;
+					return (
+						<input
+							type="time"
+							className="bg-base-100 ml-4"
+							value={defaultTime ?? value ?? ''}
+							onChange={onChange}
+							onBlur={onBlur}
+						/>
+					);
+				},
+			},
+			{
+				id: 'actions',
+				header: () => null,
+				cell: ({ row: { original } }) => {
+					return (
+						<div className="flex gap-2 justify-end w-full">
+							<button
+								className="btn btn-error"
+								onClick={() => setGames((games) => games.filter((venue) => venue.id !== original.id))}
+							>
+								<FaRegTrashCan />
+							</button>
+						</div>
+					);
+				},
+			},
+		];
+	}, [teams, venues, teachers]);
+
+	const gamesTable = useReactTable({
+		columns: gameColumns,
+		data: games,
+		getCoreRowModel: getCoreRowModel(),
+		getSortedRowModel: getSortedRowModel(),
+		initialState: {
+			sorting: [
+				{
+					id: 'date',
+					desc: false,
+				},
+			],
+		},
+	});
+
+	const [newDate, setNewDate] = useState('');
+	const [newGameGroup, setNewGameGroup] = useState<'' | 'junior' | 'intermediate'>('');
+	// #endregion
+
+	const [alertState, setAlertState] = useState<AlertType>(null);
+	const [loading, setLoading] = useState(false);
+
 	return (
 		<>
 			<p className="text-xl font-bold mt-4">Create Teams</p>
@@ -339,7 +594,7 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 								<tr key={row.id}>
 									{row.getVisibleCells().map((cell) => {
 										return (
-											<td className="p-0" key={cell.id}>
+											<td className="p-0 last:w-20" key={cell.id}>
 												{flexRender(cell.column.columnDef.cell, cell.getContext())}
 											</td>
 										);
@@ -412,7 +667,7 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 											...teams,
 											{
 												id: v4(),
-												group: newGroup || undefined,
+												group: (newGroup || undefined) as any,
 												name: newTeamName || undefined,
 												teacher: newDefaultTeacher || undefined,
 												out_of_class: newDefaultOutOfClass || undefined,
@@ -458,7 +713,7 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 								<tr key={row.id}>
 									{row.getVisibleCells().map((cell) => {
 										return (
-											<td className="p-0" key={cell.id}>
+											<td className="p-0 last:w-20" key={cell.id}>
 												{flexRender(cell.column.columnDef.cell, cell.getContext())}
 											</td>
 										);
@@ -519,6 +774,130 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 					</tfoot>
 				</table>
 			</div>
+
+			<p className="text-xl font-bold mt-4">Create Games (After creating Teams and Venues)</p>
+			<div className="overflow-x-auto w-full">
+				<table className="table text-lg">
+					<thead>
+						{gamesTable.getHeaderGroups().map((headerGroup) => (
+							<tr key={headerGroup.id}>
+								{headerGroup.headers.map((header) => {
+									return (
+										<th key={header.id} colSpan={header.colSpan}>
+											{header.isPlaceholder ? null : (
+												<div className="text-lg">{flexRender(header.column.columnDef.header, header.getContext())}</div>
+											)}
+										</th>
+									);
+								})}
+							</tr>
+						))}
+					</thead>
+					<tbody>
+						{gamesTable.getRowModel().rows.map((row) => {
+							return (
+								<tr key={row.id}>
+									{row.getVisibleCells().map((cell) => {
+										return (
+											<td className="p-0 last:w-20" key={cell.id}>
+												{flexRender(cell.column.columnDef.cell, cell.getContext())}
+											</td>
+										);
+									})}
+								</tr>
+							);
+						})}
+					</tbody>
+					<tfoot className="text-[95%]">
+						<tr>
+							<td className="p-0" colSpan={5}>
+								<input
+									type="date"
+									className="input input-bordered rounded-none w-full"
+									value={newDate}
+									onChange={(event) => setNewDate(event.target.value)}
+								/>
+							</td>
+							<td className="p-0" colSpan={4}>
+								<select
+									className="select select-bordered rounded-none w-full"
+									value={newGameGroup}
+									onChange={(event) => setNewGameGroup(event.target.value as any)}
+								>
+									<option disabled value="">
+										Select a group
+									</option>
+									<option value="junior">Junior</option>
+									<option value="intermediate">Intermediate</option>
+								</select>
+							</td>
+							<td className="flex justify-end p-0 pt-1">
+								<button
+									className="btn btn-square"
+									disabled={
+										newDate === '' ||
+										newGameGroup === '' ||
+										teams.filter((team) => team.group === newGameGroup).length < 1 ||
+										venues.length < 1
+									}
+									onClick={() => {
+										setGames((games) => [
+											...games,
+											...teams
+												.filter((team) => team.group === newGameGroup)
+												.map((team) => ({
+													id: v4(),
+													date: newDate || undefined,
+													team: team.id || undefined,
+												})),
+										]);
+										setNewDate('');
+										setNewGameGroup('');
+									}}
+								>
+									<FaPlus />
+								</button>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+			<button
+				className="btn btn-primary w-full"
+				disabled={games.length < 1}
+				onClick={(event) => (event.currentTarget.nextElementSibling as HTMLDialogElement).showModal()}
+			>
+				Finish
+			</button>
+			<dialog className="modal">
+				<div className="modal-box">
+					<h3 className="font-bold text-lg">Confirmation</h3>
+					<p className="py-4">
+						You will not be able to modify the data after you import the fixture to the database. Are you sure you want
+						to continue? Have you double checked?
+					</p>
+					<div className="modal-action">
+						<button
+							className="btn btn-primary"
+							disabled={loading}
+							onClick={async () => {
+								setLoading(true);
+								const res = await createWeeklySport(teams, venues, games, dayjs.tz.guess());
+								setAlertState(res);
+								if (res?.type === 'success') router.push('/weekly-sport/timetable');
+								else setLoading(false);
+							}}
+						>
+							Import to Database
+						</button>
+						<form method="dialog">
+							<button className="btn" disabled={loading}>
+								No
+							</button>
+						</form>
+					</div>
+				</div>
+			</dialog>
 		</>
 	);
 }

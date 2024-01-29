@@ -31,7 +31,6 @@ export function GamesTable({
 			getValue,
 			row: { original },
 			column: { id },
-			table,
 		}: CellContext<Games[number], unknown>): [
 			T,
 			ChangeEventHandler<HTMLElement> | undefined,
