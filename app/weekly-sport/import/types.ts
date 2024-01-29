@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const GamesSchema = z.array(
 	z.object({
+		id: z.string(),
 		date: z.string(),
 		teamId: z.string(),
 		opponentCode: z.string(),

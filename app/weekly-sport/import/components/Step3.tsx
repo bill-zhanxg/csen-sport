@@ -187,6 +187,7 @@ export function Step3({
 								const venue = game.venue;
 								const date = game.date;
 								games.push({
+									id: v4(),
 									date,
 									teamId: team.id,
 									opponentCode: opponent,

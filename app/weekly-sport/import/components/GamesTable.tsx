@@ -29,7 +29,7 @@ export function GamesTable({
 	const columns = useMemo<ColumnDef<Games[number]>[]>(() => {
 		function editable<T>({
 			getValue,
-			row: { index },
+			row: { original },
 			column: { id },
 			table,
 		}: CellContext<Games[number], unknown>): [
@@ -53,7 +53,12 @@ export function GamesTable({
 				(event) => {
 					if (!('value' in event.target)) return;
 					if (previousValue !== value) {
-						table.options.meta?.updateData(index, id, value);
+						setGames((games) => {
+							// Can not use index because it will be wrong when sorting
+							const index = games.findIndex((game) => game.id === original.id);
+							games[index][id as keyof Games[number]] = value as any;
+							return [...games];
+						});
 						setPreviousValue(value);
 					}
 				},
@@ -244,21 +249,13 @@ export function GamesTable({
 				},
 			},
 		];
-	}, [teams, opponents, venues, teachers]);
+	}, [teams, opponents, venues, teachers, setGames]);
 
 	const table = useReactTable({
 		columns,
 		data: games,
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
-		meta: {
-			updateData: (rowIndex, columnId, value) => {
-				setGames((games) => {
-					games[rowIndex][columnId as keyof (typeof games)[number]] = value as any;
-					return [...games];
-				});
-			},
-		},
 		initialState: {
 			sorting: [
 				{

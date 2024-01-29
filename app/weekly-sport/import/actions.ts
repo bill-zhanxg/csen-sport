@@ -2,7 +2,7 @@
 
 import { auth } from '@/libs/auth';
 import { isAdmin } from '@/libs/checkPermission';
-import { formatTime } from '@/libs/formatValue';
+import { chunk, formatTime } from '@/libs/formatValue';
 import { getXataClient } from '@/libs/xata';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
@@ -57,7 +57,8 @@ export async function importData(
 			return {
 				date,
 				team: game.teamId,
-				opponent: opponents.find((opponent) => opponent.csenCode === game.opponentCode)?.friendlyName ?? 'Not Found',
+				opponent:
+					opponents.find((opponent) => game.opponentCode.includes(opponent.csenCode))?.friendlyName ?? 'Not Found',
 				venue: game.venueCode.replaceAll(' ', '-'),
 				teacher: game.teacher ?? findTeam(game.teamId)?.teacher,
 				transportation: game.transportation,
@@ -67,25 +68,20 @@ export async function importData(
 			};
 		});
 
-		return xata.transactions
-			.run([
-				...teamRecords.map((team) => ({ insert: { table: 'teams', record: team } } as const)),
-				...venueRecords.map((venue) => ({ insert: { table: 'venues', record: venue } } as const)),
-				...gameRecords.map((games) => ({ insert: { table: 'games', record: games } } as const)),
-			])
-			.then(() => {
-				revalidatePath('/weekly-sport/timetable');
-				return {
-					type: 'success',
-				} as const;
-			})
-			.catch((e: Error) => {
-				console.log(e);
-				return {
-					type: 'error',
-					message: e.message,
-				} as const;
-			});
+		const allTransactionChunks = chunk([
+			...teamRecords.map((team) => ({ insert: { table: 'teams', record: team } } as const)),
+			...venueRecords.map((venue) => ({ insert: { table: 'venues', record: venue } } as const)),
+			...gameRecords.map((games) => ({ insert: { table: 'games', record: games } } as const)),
+		]);
+
+		for (const transactionChunks of allTransactionChunks) {
+			await xata.transactions.run(transactionChunks);
+		}
+
+		revalidatePath('/weekly-sport/timetable');
+		return {
+			type: 'success',
+		} as const;
 	} catch (e) {
 		return {
 			type: 'error',

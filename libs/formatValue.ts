@@ -29,3 +29,9 @@ export function getDateStart(date = new Date()): Date {
 export function getDateEnd(date = new Date()): Date {
 	return dayjs(date).add(12, 'hour').toDate();
 }
+
+export function chunk<T>(array: T[], chunkSize = 1000): T[][] {
+	const R = [];
+	for (let i = 0, len = array.length; i < len; i += chunkSize) R.push(array.slice(i, i + chunkSize));
+	return R;
+}

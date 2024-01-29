@@ -3,7 +3,7 @@ import { RestartGuide } from './components/RestartGuide';
 
 export default function Changelog() {
 	return (
-		<div className="flex flex-col gap-4 items-center w-full p-6">
+		<main className="flex flex-col gap-4 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
 			<ChangelogBox version="0.1.0" latest>
@@ -54,7 +54,7 @@ export default function Changelog() {
 					</p>
 				</div>
 			</ChangelogBox>
-		</div>
+		</main>
 	);
 }
 

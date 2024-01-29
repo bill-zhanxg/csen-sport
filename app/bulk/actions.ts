@@ -7,6 +7,7 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { AlertType } from '../components/Alert';
 import { UpdateGameSchema } from '../globalComponents/Schemas';
+import { chunk } from '@/libs/formatValue';
 
 const xata = getXataClient();
 
@@ -79,12 +80,6 @@ async function resetItem(table: 'games' | 'teams' | 'venues'): Promise<AlertType
 			message: 'Error: ' + (e as Error).message,
 		};
 	}
-}
-
-function chunk<T>(array: T[], chunkSize = 1000): T[][] {
-	const R = [];
-	for (let i = 0, len = array.length; i < len; i += chunkSize) R.push(array.slice(i, i + chunkSize));
-	return R;
 }
 
 const GameChangesSchema = z.array(
