@@ -1,7 +1,8 @@
 'use client';
 /* eslint-disable react-hooks/rules-of-hooks */
 
-import { AlertType } from '@/app/components/Alert';
+import { AlertType, ErrorAlert, SuccessAlert } from '@/app/components/Alert';
+import { PreventUnload } from '@/app/globalComponents/PreventUnload';
 import { dayjs } from '@/libs/dayjs';
 import { RawTeacher } from '@/libs/tableData';
 import {
@@ -24,6 +25,13 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 	const [teams, setTeams] = useState<Team[]>([]);
 	const [venues, setVenues] = useState<Venue[]>([]);
 	const [games, setGames] = useState<Game[]>([]);
+
+	const [changed, setChanged] = useState(false);
+	useEffect(() => {
+		if (teams.length === 0 && venues.length === 0 && games.length === 0) return;
+		if (changed) return;
+		setChanged(true);
+	}, [teams.length, venues.length, games.length, changed]);
 
 	// #region Venues
 	const teamColumns = useMemo<ColumnDef<Team>[]>(() => {
@@ -369,8 +377,8 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 				},
 			},
 			{
-				id: 'teamId',
-				accessorKey: 'teamId',
+				id: 'team',
+				accessorKey: 'team',
 				header: 'Team',
 				cell: (prop) => {
 					const [value, onChange, onBlur] = editable<string>(prop);
@@ -381,7 +389,7 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 							onChange={onChange}
 							onBlur={onBlur}
 						>
-							<option disabled>Select a team</option>
+							<option disabled value={''}>Select a team</option>
 							{teams.map((team) => (
 								<option key={team.id} value={team.id}>
 									[{team.group}] {team.name}
@@ -417,11 +425,13 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 					return (
 						<select
 							className="select select-bordered rounded-none w-full"
-							value={value}
+							value={value ?? ''}
 							onChange={onChange}
 							onBlur={onBlur}
 						>
-							<option disabled>Select venue</option>
+							<option disabled value={''}>
+								Select venue
+							</option>
 							{venues.map((venue) => (
 								<option key={venue.id} value={venue.id}>
 									{venue.venue} ({venue.cfNum})
@@ -876,6 +886,7 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 						You will not be able to modify the data after you import the fixture to the database. Are you sure you want
 						to continue? Have you double checked?
 					</p>
+					{alertState && (alertState.type === 'success' ? SuccessAlert(alertState) : ErrorAlert(alertState))}
 					<div className="modal-action">
 						<button
 							className="btn btn-primary"
@@ -898,6 +909,7 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 					</div>
 				</div>
 			</dialog>
+			{changed && <PreventUnload />}
 		</>
 	);
 }

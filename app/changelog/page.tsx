@@ -38,11 +38,6 @@ export default function Changelog() {
 						<li>Bulk add, modify, or remove games for admin</li>
 						<li>Ability to change user&apos;s role in bulk</li>
 						<li>Ability to manage teams, venues (Admin Controls)</li>
-					</ul>
-					<div className="divider"></div>
-					{/* TODO */}
-					<h2 className="text-xl font-bold">Todos</h2>
-					<ul className="list-disc list-inside">
 						<li>Ability to manually create timetable if automatic import fails (Create Timetable page admin only)</li>
 					</ul>
 				</div>
@@ -95,18 +90,6 @@ function ChangelogBox({
 				Tested by <span className="font-bold">Mason S.</span>{' '}
 				<Link className="link link-primary" href={SadCat.src} target="_blank">
 					Hello :)
-				</Link>
-			</p>
-			<p>
-			Help me save for 5 houses and a kitten{' '}
-				<Link className="link link-primary" href="https://bill-zhanxg.com/donation" target="_blank">
-					Kitten funds
-				</Link>
-			</p>
-			<p>
-				Twas Bill not I<span className="font-bold">, Mason S.</span>{' '}
-				<Link className="link link-primary" href={SadCat.src} target="_blank">
-					Hello again :)
 				</Link>
 			</p>
 		</div>

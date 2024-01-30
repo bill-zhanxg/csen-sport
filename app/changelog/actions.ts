@@ -8,6 +8,6 @@ import { redirect } from 'next/navigation';
 export async function resetGuide() {
 	const session = await auth();
 	if (session) await getXataClient().db.nextauth_users.update(session.user.id, { guided: false });
-	revalidatePath('/');
+	revalidatePath('/', 'layout');
 	redirect('/');
 }

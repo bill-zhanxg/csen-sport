@@ -2,13 +2,17 @@
 
 import { AlertType } from '@/app/components/Alert';
 import { auth } from '@/libs/auth';
-import { formatDate, formatTime } from '@/libs/formatValue';
+import { chunk, formatDate, formatTime } from '@/libs/formatValue';
+import { getXataClient } from '@/libs/xata';
+import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
+
+const xata = getXataClient();
 
 const TeamsSchema = z
 	.object({
 		id: z.string(),
-		group: z.literal('junior' || 'intermediate').optional(),
+		group: z.literal('junior').or(z.literal('intermediate')).optional(),
 		name: z.string().optional(),
 		teacher: z.string().optional(),
 		out_of_class: z.string().optional(),
@@ -89,8 +93,15 @@ export async function createWeeklySport(
 			};
 		});
 
-        // TODO Add transaction
+		const allTransactionChunks = chunk([
+			...teamRecords.map((team) => ({ insert: { table: 'teams', record: team } } as const)),
+			...venueRecords.map((venue) => ({ insert: { table: 'venues', record: venue } } as const)),
+			...gameRecords.map((games) => ({ insert: { table: 'games', record: games } } as const)),
+		]);
 
+		for (const transactionChunk of allTransactionChunks) await xata.transactions.run(transactionChunk);
+
+		revalidatePath('/weekly-sport/timetable');
 		return { type: 'success', message: 'Success' };
 	} catch (error) {
 		return { type: 'error', message: (error as Error).message };
