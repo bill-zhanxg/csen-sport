@@ -29,15 +29,15 @@ export default async function Home() {
 			<h1 className="text-2xl font-bold text-center">
 				Hello <span className="text-primary">{session?.user.name}</span>
 			</h1>
-			<h2 className="text-xl text-secondary text-center max-w-2xl">
+			<h2 className="text-xl text-secondary text-center max-w-3xl">
 				{!isTeacherBool && !session?.user.team ? (
 					<>
-						<span className="text-error">You are current not in a team, showing all upcoming weekly sport games</span>
+						<span className="text-error">You are currently not in a team, showing all upcoming weekly sport games</span>
 						<br />
-						(To select a team, click your profile and you can select your team under user settings)
+						(To select a team, navigate to Profile &gt; User Settings &gt; Preferences)
 					</>
 				) : (
-					`Here is your upcoming weekly sport games ${isTeacherBool ? 'to manage' : 'for your team'}`
+					'Here is your upcoming weekly sport schedule'
 				)}
 			</h2>
 			<main className="flex flex-col items-center gap-4 pt-0 p-4 w-full">

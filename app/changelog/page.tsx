@@ -1,3 +1,4 @@
+import SadCat from '@/app/images/sad-cat.png';
 import Link from 'next/link';
 import { RestartGuide } from './components/RestartGuide';
 
@@ -6,7 +7,7 @@ export default function Changelog() {
 		<main className="flex flex-col gap-4 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
-			<ChangelogBox version="0.1.0" latest>
+			<ChangelogBox version="0.1.0" latest release="30/01/2024">
 				<div className="flex flex-col gap-4">
 					<div className="flex items-center gap-4">
 						<div className="badge badge-secondary badge-outline">New</div>
@@ -14,13 +15,13 @@ export default function Changelog() {
 					</div>
 					<ul className="list-disc list-inside">
 						<li>First release!</li>
+						<li>Changelog page is finished</li>
 						<li>Database is ready and setup</li>
 						<li>Authentication system is tested and working</li>
 						<li>Navbar and all components are finished</li>
 						<li>Weekly Sport page is full functional</li>
-						<li>All weekly sport game display are done</li>
-						<li>Homepage is finished with displaying of upcoming game for selected team</li>
-						<li>Changelog page is finished</li>
+						<li>All weekly sport game displays are done</li>
+						<li>Homepage is finished with displaying of upcoming games for selected team</li>
 						<li>Settings page is finished and functional</li>
 						<li>CSEN page for quick access their official website</li>
 						<li>
@@ -44,14 +45,14 @@ export default function Changelog() {
 					<ul className="list-disc list-inside">
 						<li>Ability to manually create timetable if automatic import fails (Create Timetable page admin only)</li>
 					</ul>
-					<div className="divider"></div>
-					<h2 className="text-xl font-bold">Credits</h2>
-					<p>
-						Made by Bill Z{' '}
-						<Link className="link link-primary" href="https://bill-zhanxg.com" target="_blank">
-							https://bill-zhanxg.com
-						</Link>
-					</p>
+				</div>
+			</ChangelogBox>
+			<ChangelogBox version="0.0.0" release="24/08/2023">
+				<div className="flex flex-col gap-4">
+					<h2 className="text-xl font-bold">Code space initialized</h2>
+					<ul className="list-disc list-inside">
+						<li>Need to start working on this!</li>
+					</ul>
 				</div>
 			</ChangelogBox>
 		</main>
@@ -61,20 +62,53 @@ export default function Changelog() {
 function ChangelogBox({
 	version,
 	latest = false,
+	release,
 	children,
 }: {
 	version: string;
 	latest?: boolean;
+	release?: string;
 	children: React.ReactNode;
 }) {
 	return (
 		<div className="flex flex-col w-full max-w-4xl rounded-xl border-2 border-base-300 shadow-md shadow-base-300 p-6">
-			<div className="flex flex-col xs:flex-row items-end gap-4">
-				<h1 className="font-bold">Version {version}</h1>
-				{latest && <div className="badge badge-primary badge-outline">Latest</div>}
+			<div className="flex flex-col sm:flex-row justify-between">
+				<div className="flex flex-col xs:flex-row items-end gap-4">
+					<h1 className="font-bold">Version {version}</h1>
+					{latest && <div className="badge badge-primary badge-outline">Latest</div>}
+				</div>
+				<p>
+					Released on <span className="font-bold">{release}</span>
+				</p>
 			</div>
 			<div className="divider"></div>
 			{children}
+			<div className="divider"></div>
+			<h2 className="text-xl font-bold">Credits</h2>
+			<p>
+				Made by <span className="font-bold">Bill Z.</span>{' '}
+				<Link className="link link-primary" href="https://bill-zhanxg.com" target="_blank">
+					https://bill-zhanxg.com
+				</Link>
+			</p>
+			<p>
+				Tested by <span className="font-bold">Mason S.</span>{' '}
+				<Link className="link link-primary" href={SadCat.src} target="_blank">
+					Hello :)
+				</Link>
+			</p>
+			<p>
+			Help me save for 5 houses and a kitten{' '}
+				<Link className="link link-primary" href="https://bill-zhanxg.com/donation" target="_blank">
+					Kitten funds
+				</Link>
+			</p>
+			<p>
+				Twas Bill not I<span className="font-bold">, Mason S.</span>{' '}
+				<Link className="link link-primary" href={SadCat.src} target="_blank">
+					Hello again :)
+				</Link>
+			</p>
 		</div>
 	);
 }

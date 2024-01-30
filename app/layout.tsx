@@ -1,7 +1,9 @@
+import SadCat from '@/app/images/sad-cat.png';
 import { auth } from '@/libs/auth';
 import { isBlocked } from '@/libs/checkPermission';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
+import Image from 'next/image';
 import Link from 'next/link';
 import { FaHome } from 'react-icons/fa';
 import BarOfProgress from './components/BarOfProgress';
@@ -26,7 +28,15 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 			<body>
 				{session ? (
 					isBlocked(session) ? (
-						<h1 className="text-2xl">Sorry but you&apos;re been blocked from accessing this site</h1>
+						<>
+							<h1 className="text-2xl">
+								Sorry but you&apos;ve been blocked from accessing this site.{' '}
+								<Link href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" className="link link-primary" target="_blank">
+									Click here
+								</Link>
+							</h1>
+							<Image src={SadCat} alt="Sad" width={1000} height={1000} className="w-52 h-52" />
+						</>
 					) : (
 						<>
 							<div className="navbar bg-base-200 border-b-2 border-base-300 shadow-lg shadow-base-300">

@@ -14,7 +14,7 @@ const steps: { title?: ReactNode; target: string; content: string }[] = [
 	},
 	{
 		target: '#weekly-sport-btn',
-		content: 'Click here to access every weekly sport games',
+		content: 'Click here to access the weekly sport schedule',
 	},
 	{
 		target: '#csen-btn',
@@ -26,43 +26,42 @@ const steps: { title?: ReactNode; target: string; content: string }[] = [
 	},
 	{
 		target: '#users-btn',
-		content: 'Click here to access the users page, you have block, unblock, promote and demote users',
+		content: 'Click here to access the users page. Here you can block, unblock, promote and demote users',
 	},
 	{
 		target: '#teams-btn',
-		content: 'Click here to access the teams page, you can create, edit and delete teams',
+		content: 'Click here to access the teams page. Here you can create, edit and delete teams',
 	},
 	{
 		target: '#venues-btn',
-		content: 'Click here to access the venues page, you can create, edit and delete venues',
+		content: 'Click here to access the venues page. Here you can create, edit and delete venues',
 	},
 	{
 		target: '#bulk-action-btn',
 		content:
-			'Click here to access the bulk action page, you can bulk add or remove games. Ideal for when you want to heavily modify the weekly sport games',
+			'Click here to access the bulk action page. Here you can add or remove games in bulk. Ideal for heavy modification to the weekly sport schedule',
 	},
 	{
 		target: '#import-timetables-btn',
-		content:
-			'Click here to import weekly sport games from PDF, this is where you can import the weekly sport games from the CSEN fixture PDF file',
+		content: 'Click here to import a weekly sport schedule using the CSEN venue and fixture PDFs',
 	},
 	{
 		target: '#create-timetables-btn',
-		content: 'Click here to create weekly sport games manually, this is useful if the automatic import fails',
+		content: 'Click here to create weekly sport games manually. This is useful if the automatic import fails',
 	},
 	{
 		target: '#user-settings-btn',
 		content:
-			'Click here to access your user settings, you can change your name, email and team here (Student can not change name or email)',
+			'Click here to access your user settings. Here you can change your name, email and team (Students can not change name or email)',
 	},
 	{
 		target: '#changelog-btn',
 		content:
-			'Click here to access the changelog page, you can see all the changes made to this website here. Also this is where you can start this tutorial again',
+			'Click here to access the changelog page. Here you can see all the changes made to this website. *Note: You can restart the tutorial from this page',
 	},
 	{
 		target: '#logout-btn',
-		content: 'If you ever want to logout, you can click here',
+		content: 'Click here to log out',
 	},
 ];
 
