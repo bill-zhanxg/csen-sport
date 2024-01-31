@@ -79,7 +79,10 @@ export function UserTable({
 							</thead>
 							<tbody>
 								{users.map((user, index) => (
-									<tr className="hover cursor-pointer" key={user.id} onClick={() => router.push(`/users/${user.id}`)}>
+									<tr className="hover cursor-pointer" key={user.id} onClick={(e) => {
+										e.preventDefault()
+										router.push(`/users/${user.id}`)
+									}}>
 										<th className="cursor-default" onClick={(event) => event.stopPropagation()}>
 											<label>
 												<input

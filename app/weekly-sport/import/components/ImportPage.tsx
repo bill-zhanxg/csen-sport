@@ -1,17 +1,17 @@
 'use client';
 
+import { dayjs } from '@/libs/dayjs';
 import { useSignal } from '@preact/signals-react';
 import { useRouter } from 'next13-progressbar';
 import { useEffect, useMemo, useState } from 'react';
 import { pdfjs } from 'react-pdf';
 import { AlertType, ErrorAlertFixed, SuccessAlertFixed } from '../../../components/Alert';
 import { importData } from '../actions';
+import { Games, Opponents, Teams, Venues } from '../types';
 import { FIxturePages, Step1 } from './Step1';
 import { Step2 } from './Step2';
 import { Step3 } from './Step3';
 import { Step4 } from './Step4';
-import { Games, Opponents, Teams, Venues } from '../types';
-import { dayjs } from '@/libs/dayjs';
 
 export type ImportState =
 	| {
@@ -138,8 +138,11 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 					</button>
 					<button
 						className="btn btn-primary w-32 !shrink"
-						onClick={() => {
-							if (step === 4) return router.push('/weekly-sport/timetable');
+						onClick={(e) => {
+							if (step === 4) {
+								e.preventDefault();
+								return router.push('/weekly-sport/timetable');
+							}
 							setStep((step) => {
 								const newStep = step + 1;
 								setDisableNext(checkNextNeedDisable(newStep));

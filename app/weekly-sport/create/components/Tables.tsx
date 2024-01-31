@@ -389,7 +389,9 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 							onChange={onChange}
 							onBlur={onBlur}
 						>
-							<option disabled value={''}>Select a team</option>
+							<option disabled value={''}>
+								Select a team
+							</option>
 							{teams.map((team) => (
 								<option key={team.id} value={team.id}>
 									[{team.group}] {team.name}
@@ -891,12 +893,14 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 						<button
 							className="btn btn-primary"
 							disabled={loading}
-							onClick={async () => {
+							onClick={async (e) => {
 								setLoading(true);
 								const res = await createWeeklySport(teams, venues, games, dayjs.tz.guess());
 								setAlertState(res);
-								if (res?.type === 'success') router.push('/weekly-sport/timetable');
-								else setLoading(false);
+								if (res?.type === 'success') {
+									e.preventDefault();
+									router.push('/weekly-sport/timetable');
+								} else setLoading(false);
 							}}
 						>
 							Import to Database
