@@ -7,6 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { FaHome } from 'react-icons/fa';
 import BarOfProgress from './components/BarOfProgress';
+import { FeedbackButton, FeedbackDialog } from './components/Feedback';
 import { LogoutButton } from './components/LogoutButton';
 import { NavBar } from './components/NavBar';
 import { ReactJoyride } from './components/ReactJoyride';
@@ -69,12 +70,16 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 												</Link>
 											</li>
 											<li>
+												<FeedbackButton />
+											</li>
+											<li>
 												<LogoutButton />
 											</li>
 										</ul>
 									</div>
 								</div>
 							</div>
+							<FeedbackDialog session={session} />
 							{children}
 							<BarOfProgress />
 							<SentrySetUser user={{ ...session.user, ip_address: ip }} />

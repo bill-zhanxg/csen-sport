@@ -8,7 +8,7 @@ import * as Sentry from '@sentry/nextjs';
 Sentry.init({
 	dsn: 'https://9d31f1bae75a32099d8f34cf7d4fb5b9@o4505283637477376.ingest.sentry.io/4505888403554304',
 
-	enabled: process.env.NODE_ENV === 'production',
+	// enabled: process.env.NODE_ENV === 'production',
 
 	// Adjust this value in production, or use tracesSampler for greater control
 	tracesSampleRate: 0.2,
@@ -28,11 +28,5 @@ Sentry.init({
 			maskAllInputs: false,
 		}),
 		new CaptureConsole({ levels: ['error'] }),
-		new Sentry.Feedback({
-			buttonLabel: 'Bug / Feedback',
-			formTitle: 'Submit a Bug / Feedback',
-			showEmail: false,
-			showName: false,
-		}),
 	],
 });

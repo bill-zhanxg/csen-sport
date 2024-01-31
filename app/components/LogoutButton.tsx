@@ -7,11 +7,12 @@ export function LogoutButton() {
 		<button
 			id="logout-btn"
 			className="bg-red-600 hover:bg-red-800 text-white"
-			onClick={() =>
+			onClick={(e) => {
+				e.preventDefault();
 				signOut({
 					callbackUrl: '/login',
-				})
-			}
+				});
+			}}
 		>
 			Logout
 		</button>

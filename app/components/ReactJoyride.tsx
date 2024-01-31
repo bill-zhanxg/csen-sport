@@ -60,6 +60,10 @@ const steps: { title?: ReactNode; target: string; content: string }[] = [
 			'Click here to access the changelog page. Here you can see all the changes made to this website. *Note: You can restart the tutorial from this page',
 	},
 	{
+		target: '#feedback-btn',
+		content: 'Click here to submit feedback',
+	},
+	{
 		target: '#logout-btn',
 		content: 'Click here to log out',
 	},

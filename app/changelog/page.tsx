@@ -7,7 +7,33 @@ export default function Changelog() {
 		<main className="flex flex-col gap-4 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
-			<ChangelogBox version="0.1.0" latest release="30/01/2024">
+			<ChangelogBox version="0.1.1" latest release="31/01/2024">
+				<div className="flex flex-col gap-4">
+					<div className="flex items-center gap-4">
+						<div className="badge badge-secondary badge-outline">Changed</div>
+						<h2 className="text-xl font-bold">Features</h2>
+					</div>
+					<ul className="list-disc list-inside">
+						<li>
+							The submit bug and feedback button has been moved to user dropdown, due to some actions being blocked by
+							the floating menu
+						</li>
+						<li>Added a new step for guidance, which is the user feedback menu</li>
+					</ul>
+					<div className="divider"></div>
+					<h2 className="text-xl font-bold">Bug fixes</h2>
+					<ul className="list-disc list-inside">
+						<li>
+							Fix some bug where the browser will print out error log when click event is not prevented before
+							navigating (technical)
+						</li>
+						<li>
+							Updated all dependencies to latest version (technical)
+						</li>
+					</ul>
+				</div>
+			</ChangelogBox>
+			<ChangelogBox version="0.1.0" release="30/01/2024">
 				<div className="flex flex-col gap-4">
 					<div className="flex items-center gap-4">
 						<div className="badge badge-secondary badge-outline">New</div>
