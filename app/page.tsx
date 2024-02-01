@@ -1,13 +1,13 @@
 import { auth } from '@/libs/auth';
 import { isTeacher } from '@/libs/checkPermission';
-import { gamesToDates, getAndResetLastVisitDate } from '@/libs/tableHelpers';
+import { gamesToDates, getLastVisitDate } from '@/libs/tableHelpers';
 import { getXataClient } from '@/libs/xata';
 import { WeeklySportView } from './globalComponents/WeeklySportView';
 
 export default async function Home() {
 	const session = await auth();
 	const isTeacherBool = isTeacher(session);
-	const lastVisit = getAndResetLastVisitDate(session);
+	const lastVisit = getLastVisitDate(session);
 
 	const filter = {
 		date: { $ge: new Date() },

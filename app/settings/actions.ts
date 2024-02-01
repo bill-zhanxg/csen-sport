@@ -9,8 +9,8 @@ import sharp from 'sharp';
 import { z } from 'zod';
 
 const schema = z.object({
-	name: z.string().min(1).max(200).optional().nullable(),
-	email: z.string().min(1).max(200).email().optional().nullable(),
+	name: z.string().min(1).max(200).nullish(),
+	email: z.string().min(1).max(200).email().nullish(),
 	avatar: z.nullable(
 		z
 			.instanceof(File)
@@ -20,6 +20,7 @@ const schema = z.object({
 			.transform((file) => (file.type === 'application/octet-stream' ? null : file)),
 	),
 	team: z.string().min(1).max(200).nullable(),
+	reset_only_after_visit_weekly_sport: z.literal('true').or(z.literal('false')).or(z.boolean()).nullish(),
 });
 
 export async function updateProfile(prevState: FormState, formData: FormData): Promise<FormState> {
@@ -31,6 +32,7 @@ export async function updateProfile(prevState: FormState, formData: FormData): P
 		email: formData.get('email'),
 		avatar: formData.get('avatar'),
 		team: formData.get('team'),
+		reset_only_after_visit_weekly_sport: formData.get('reset_only_after_visit_weekly_sport'),
 	});
 
 	if (!parse.success) return { success: false, message: parse.error.errors[0].message };
@@ -51,6 +53,9 @@ export async function updateProfile(prevState: FormState, formData: FormData): P
 			.toBuffer();
 		image = `data:${avatar.type};base64,${result.toString('base64')}`;
 	}
+
+	if (typeof data.reset_only_after_visit_weekly_sport === 'string')
+		data.reset_only_after_visit_weekly_sport = data.reset_only_after_visit_weekly_sport === 'true';
 
 	const res = await getXataClient().db.nextauth_users.update(session.user.id, {
 		...data,

@@ -229,7 +229,7 @@ export function Step3({
 			{schoolCsenCode.value &&
 				(teams.length > 0 ? (
 					<>
-						<TeamsTable teams={teams} setTeams={setTeams} teachers={teachers} />
+						<TeamsTable teams={teams} setTeams={setTeams} games={games} setGames={setGames} teachers={teachers} />
 						<OpponentsTable opponents={opponents} setOpponents={setOpponents} />
 						<VenuesTable venues={filteredVenues} setVenues={setFilteredVenues} />
 						<GamesTable

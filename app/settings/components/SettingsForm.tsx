@@ -4,6 +4,7 @@ import { isTeacher } from '@/libs/checkPermission';
 import { SerializedTeam } from '@/libs/serializeData';
 import { FormState } from '@/libs/types';
 import { Session } from 'next-auth/types';
+import { useEffect, useRef } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { FaRegCheckCircle, FaRegTimesCircle } from 'react-icons/fa';
 import { Box } from '../../globalComponents/Box';
@@ -14,10 +15,20 @@ import { ProfilePicture } from './ProfilePicture';
 export function SettingsForm({ session, teams }: { session: Session; teams: SerializedTeam[] }) {
 	const [state, formAction] = useFormState<FormState, FormData>(updateProfile, null);
 
+	const prevState = useRef(state);
+	useEffect(() => {
+		if (prevState.current !== state) {
+			window.scrollTo({
+				top: document.body.scrollHeight,
+			});
+			prevState.current = state;
+		}
+	}, [state]);
+
 	return (
 		<form className="flex flex-col gap-4 w-full" action={formAction}>
 			<Box>
-				<h1 className="font-bold px-4">User Settings</h1>
+				<h1 className="font-bold px-4">Profile Settings</h1>
 				<div className="divider m-0"></div>
 				<div className="flex flex-col sm:flex-row justify-center w-full gap-4 items-center pt-0 p-4">
 					{/* Input Name */}
@@ -63,12 +74,56 @@ export function SettingsForm({ session, teams }: { session: Session; teams: Seri
 			</Box>
 
 			<Box>
-				<h1 className="font-bold px-4 pt-4">Preferences</h1>
+				<h1 className="font-bold px-4 pt-4">Team Preferences</h1>
 				<div className="divider m-0"></div>
 				<div className="flex flex-col sm:flex-row justify-center w-full gap-4 items-center pt-0 p-4">
 					<Preferences teams={teams} session={session} />
 				</div>
 			</Box>
+
+			<Box>
+				<h1 className="font-bold px-4 pt-4">Others</h1>
+				<div className="divider m-0"></div>
+				<div className="flex flex-col sm:flex-row justify-center w-full gap-4 items-center pt-0 p-4">
+					<label className="form-control w-full">
+						<div className="label">
+							<span className="label-text text-md font-bold">
+								Choose when changed game since last time visit (highlighted as blue) will be marked as read
+							</span>
+						</div>
+						<div>
+							{/* file deepcode ignore ReactControlledUncontrolledFormElement: Intended */}
+							<div className="form-control">
+								<label className="label cursor-pointer">
+									<span className="label-text">When visited any of read only weekly sport table (default)</span>
+									<input
+										type="radio"
+										name="reset_only_after_visit_weekly_sport"
+										value="false"
+										className="radio"
+										defaultChecked={!session.user.reset_only_after_visit_weekly_sport}
+									/>
+								</label>
+							</div>
+							<div className="form-control">
+								<label className="label cursor-pointer">
+									<span className="label-text">
+										Only when navigated to Weekly Sport page (to prevent unseen data from being marked as read)
+									</span>
+									<input
+										type="radio"
+										name="reset_only_after_visit_weekly_sport"
+										value="true"
+										className="radio"
+										defaultChecked={!!session.user.reset_only_after_visit_weekly_sport}
+									/>
+								</label>
+							</div>
+						</div>
+					</label>
+				</div>
+			</Box>
+
 			{state && (
 				<div role="alert" className={`alert ${state.success ? 'alert-success' : 'alert-error'} mt-2`}>
 					{state.success ? <FaRegCheckCircle size={20} /> : <FaRegTimesCircle size={20} />}
@@ -84,7 +139,7 @@ function Submit() {
 	const { pending } = useFormStatus();
 
 	return (
-		<button type="submit" disabled={pending} className="btn btn-primary">
+		<button type="submit" disabled={pending} className="sticky bottom-0 btn btn-primary">
 			Update Profile
 		</button>
 	);

@@ -255,8 +255,6 @@ export function TeamTable({ teams }: { teams: SerializedTeam[] }) {
 										className="btn btn-square"
 										disabled={newGroup === '' || newName === ''}
 										onClick={() => {
-											setNewGroup('');
-											setNewName('');
 											newTeam({ name: newName, isJunior: newGroup as 'junior' | 'intermediate' })
 												.then(setAlert)
 												.catch(() => {
@@ -265,6 +263,8 @@ export function TeamTable({ teams }: { teams: SerializedTeam[] }) {
 														message: 'A network error occurred. Please try again later.',
 													});
 												});
+											setNewGroup('');
+											setNewName('');
 										}}
 									>
 										<FaPlus />

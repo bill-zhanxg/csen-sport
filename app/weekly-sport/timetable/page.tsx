@@ -7,7 +7,7 @@ import { isTeacher } from '@/libs/checkPermission';
 import { getDateStart, stringifySearchParam } from '@/libs/formatValue';
 import { serializeGames } from '@/libs/serializeData';
 import { getRawTeachers, getRawTeams, getRawVenues } from '@/libs/tableData';
-import { gamesToDates, getAndResetLastVisitDate } from '@/libs/tableHelpers';
+import { gamesToDates, getLastVisitDate } from '@/libs/tableHelpers';
 import { SearchParams } from '@/libs/types';
 import { getXataClient } from '@/libs/xata';
 import Link from 'next/link';
@@ -21,7 +21,7 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 	const isPast = filter === 'past';
 	const isEdit = edit === 'true';
 	const isTeacherBool = isTeacher(session);
-	const lastVisit = getAndResetLastVisitDate(session);
+	const lastVisit = getLastVisitDate(session, true);
 
 	const dbFilter = {
 		date: isPast ? { $lt: getDateStart() } : { $ge: getDateStart() },

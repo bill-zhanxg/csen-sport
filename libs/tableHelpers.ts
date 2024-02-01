@@ -39,9 +39,10 @@ export function gamesToDates(
 	return dates;
 }
 
-export function getAndResetLastVisitDate(session: Session | null): Date {
+export function getLastVisitDate(session: Session | null, isWeeklySport = false): Date {
 	if (!session) return new Date();
 	const lastVisitDate = session?.user?.last_logged_on ? new Date(session.user.last_logged_on) : new Date();
-	getXataClient().db.nextauth_users.update(session.user.id, { last_logged_on: new Date() });
+	if (isWeeklySport || !session.user.reset_only_after_visit_weekly_sport)
+		getXataClient().db.nextauth_users.update(session.user.id, { last_logged_on: new Date() });
 	return lastVisitDate;
 }

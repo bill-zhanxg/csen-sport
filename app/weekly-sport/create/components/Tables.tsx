@@ -117,9 +117,7 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 							onChange={onChange}
 							onBlur={onBlur}
 						>
-							<option value={''} disabled>
-								Select a teacher
-							</option>
+							<option value="">Select a teacher</option>
 							{teachers.map((teacher) => (
 								<option key={teacher.id} value={teacher.id}>
 									{teacher.name}
@@ -389,9 +387,7 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 							onChange={onChange}
 							onBlur={onBlur}
 						>
-							<option disabled value={''}>
-								Select a team
-							</option>
+							<option value="">Select a team</option>
 							{teams.map((team) => (
 								<option key={team.id} value={team.id}>
 									[{team.group}] {team.name}
@@ -431,9 +427,7 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 							onChange={onChange}
 							onBlur={onBlur}
 						>
-							<option disabled value={''}>
-								Select venue
-							</option>
+							<option value="">Select venue</option>
 							{venues.map((venue) => (
 								<option key={venue.id} value={venue.id}>
 									{venue.venue} ({venue.cfNum})
@@ -457,9 +451,7 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 							onChange={onChange}
 							onBlur={onBlur}
 						>
-							<option value={''} disabled>
-								Select a teacher
-							</option>
+							<option value="">Select a teacher</option>
 							{teachers.map((teacher) => (
 								<option key={teacher.id} value={teacher.id}>
 									{teacher.name}
@@ -644,8 +636,8 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 									value={newDefaultTeacher}
 									onChange={(event) => setNewDefaultTeacher(event.target.value)}
 								>
-									<option disabled value="">
-										Teacher
+									<option value="">
+										Select a Teacher
 									</option>
 									{teachers.map((teacher) => (
 										<option key={teacher.id} value={teacher.id}>

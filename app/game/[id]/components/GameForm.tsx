@@ -54,11 +54,13 @@ export function GameForm({
 						</div>
 						<select
 							disabled={!isTeacherBool}
-							defaultValue={game.team?.id}
+							defaultValue={game.team?.id ?? ''}
 							className="select select-bordered opacity-100"
 							name="team"
 						>
-							<option disabled>Pick one</option>
+							<option disabled value="">
+								Pick one
+							</option>
 							{isTeacherBool ? (
 								teams.map((team) => (
 									<option key={team.id} value={team.id} className="text-base-content">
@@ -91,11 +93,13 @@ export function GameForm({
 						</div>
 						<select
 							disabled={!isTeacherBool}
-							defaultValue={game.venue?.id}
+							defaultValue={game.venue?.id ?? ''}
 							className="select select-bordered opacity-100"
 							name="venue"
 						>
-							<option disabled>Pick one</option>
+							<option disabled value="">
+								Pick one
+							</option>
 							{isTeacherBool ? (
 								venues.map((venue) => (
 									<option key={venue.id} value={venue.id} className="text-base-content">
@@ -115,11 +119,13 @@ export function GameForm({
 						</div>
 						<select
 							disabled={!isTeacherBool}
-							defaultValue={game.teacher?.id}
+							defaultValue={game.teacher?.id ?? ''}
 							className="select select-bordered opacity-100"
 							name="teacher"
 						>
-							<option disabled>Pick one</option>
+							<option disabled value="">
+								Pick one
+							</option>
 							{isTeacherBool ? (
 								teachers.map((teacher) => (
 									<option key={teacher.id} value={teacher.id} className="text-base-content">

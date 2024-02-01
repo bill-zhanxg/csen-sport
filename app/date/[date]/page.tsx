@@ -5,7 +5,7 @@ import { auth } from '@/libs/auth';
 import { isTeacher } from '@/libs/checkPermission';
 import { getDateEnd, getDateStart, stringifySearchParam } from '@/libs/formatValue';
 import { serializeGames } from '@/libs/serializeData';
-import { gamesToDates, getAndResetLastVisitDate } from '@/libs/tableHelpers';
+import { gamesToDates, getLastVisitDate } from '@/libs/tableHelpers';
 import { SearchParams } from '@/libs/types';
 import { getXataClient } from '@/libs/xata';
 import Link from 'next/link';
@@ -22,7 +22,7 @@ export default async function DatePage({
 	const date = new Date(parseInt(params.date));
 	let view = stringifySearchParam(searchParams).view as 'junior' | 'intermediate' | undefined;
 	if (view !== 'junior' && view !== 'intermediate') view = undefined;
-	const lastVisit = getAndResetLastVisitDate(session);
+	const lastVisit = getLastVisitDate(session);
 
 	const games = await getXataClient()
 		.db.games.select(['*', 'team.*', 'venue.*', 'teacher.*'])

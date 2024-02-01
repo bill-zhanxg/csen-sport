@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
+import { SideBySide } from '@/app/globalComponents/SideBySide';
 import {
 	CellContext,
 	ColumnDef,
@@ -9,6 +10,7 @@ import {
 	useReactTable,
 } from '@tanstack/react-table';
 import { ChangeEventHandler, Dispatch, FocusEventHandler, SetStateAction, useEffect, useMemo, useState } from 'react';
+import { FaRegTrashCan } from 'react-icons/fa6';
 import { Games, Opponents, Teams, Venues } from '../types';
 
 export function GamesTable({
@@ -95,7 +97,7 @@ export function GamesTable({
 							onChange={onChange}
 							onBlur={onBlur}
 						>
-							<option disabled>Select a team</option>
+							<option value="">Select a team</option>
 							{teams.map((team) => (
 								<option key={team.id} value={team.id}>
 									[{team.group}] {team.friendlyName}
@@ -118,7 +120,7 @@ export function GamesTable({
 							onChange={onChange}
 							onBlur={onBlur}
 						>
-							<option disabled>Select opponent</option>
+							<option value="">Select opponent</option>
 							{opponents.map((opponent) => (
 								<option key={opponent.csenCode} value={opponent.csenCode}>
 									{opponent.friendlyName}
@@ -141,7 +143,7 @@ export function GamesTable({
 							onChange={onChange}
 							onBlur={onBlur}
 						>
-							<option disabled>Select venue</option>
+							<option value="">Select a venue</option>
 							{venues.map((venue) => (
 								<option key={venue.csenCode} value={venue.csenCode}>
 									{venue.venue} ({venue.cfNum}) [{venue.csenCode}]
@@ -165,9 +167,7 @@ export function GamesTable({
 							onChange={onChange}
 							onBlur={onBlur}
 						>
-							<option value={''} disabled>
-								Select a teacher
-							</option>
+							<option value="">Select a teacher</option>
 							{teachers.map((teacher) => (
 								<option key={teacher.id} value={teacher.id}>
 									{teacher.name}
@@ -247,6 +247,61 @@ export function GamesTable({
 					);
 				},
 			},
+			{
+				id: 'actions',
+				header: () => null,
+				cell: ({ row: { original } }) => {
+					const team = teams.find((team) => team.id === original.teamId);
+					const opponent = opponents.find((opponent) => opponent.csenCode === original.opponentCode);
+					const venue = venues.find((venue) => venue.csenCode === original.venueCode);
+					const teacher = teachers.find((teacher) => teacher.id === original.teacher);
+
+					return (
+						<div className="flex gap-2 justify-end w-full">
+							<button
+								className="btn btn-error"
+								onClick={(event) => (event.currentTarget.nextElementSibling as HTMLDialogElement).showModal()}
+							>
+								<FaRegTrashCan />
+							</button>
+							<dialog className="modal">
+								<div className="modal-box">
+									<h3 className="font-bold text-lg">Confirmation</h3>
+									<p className="py-4">
+										Are you sure you want to delete the following game? This action is irreversible and requires restart
+										of the import process if accidental removal.
+									</p>
+									<SideBySide title="Date:" value={original.date} />
+									<SideBySide title="Team Group:" value={team?.group ?? '---'} />
+									<SideBySide title="Team Friendly Name:" value={team?.friendlyName ?? '---'} />
+									<SideBySide title="Opponent:" value={opponent?.friendlyName ?? '---'} />
+									<SideBySide title="Venue:" value={venue ? `${venue.venue} (${venue.cfNum})` : '---'} />
+									<SideBySide title="Teacher:" value={teacher?.name ?? '---'} />
+									<SideBySide title="Transportation:" value={original.transportation ?? '---'} />
+									<SideBySide title="Notes:" value={original.notes ?? '---'} />
+									<SideBySide title="Out of Class:" value={original.out_of_class ?? '---'} />
+									<SideBySide title="Start Time:" value={original.start ?? '---'} />
+									<div className="modal-action">
+										<form method="dialog">
+											<button
+												className="btn btn-error"
+												onClick={() => {
+													setGames((games) => games.filter((game) => game.id !== original.id));
+												}}
+											>
+												Remove
+											</button>
+										</form>
+										<form method="dialog">
+											<button className="btn">Close</button>
+										</form>
+									</div>
+								</div>
+							</dialog>
+						</div>
+					);
+				},
+			},
 		];
 	}, [teams, opponents, venues, teachers, setGames]);
 
@@ -291,7 +346,7 @@ export function GamesTable({
 								<tr key={row.id}>
 									{row.getVisibleCells().map((cell) => {
 										return (
-											<td className="p-0" key={cell.id}>
+											<td className="p-0 last:w-16" key={cell.id}>
 												{flexRender(cell.column.columnDef.cell, cell.getContext())}
 											</td>
 										);

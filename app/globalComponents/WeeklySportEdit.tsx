@@ -2,8 +2,8 @@
 'use client';
 
 import { formatIsJunior, formatTime } from '@/libs/formatValue';
-import { SerializedDateWithGames } from '@/libs/tableHelpers';
 import { SerializedGame } from '@/libs/serializeData';
+import { SerializedDateWithGames } from '@/libs/tableHelpers';
 import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
@@ -111,9 +111,7 @@ export function WeeklySportEdit({
 							onChange={onChange}
 							onBlur={onBlur}
 						>
-							<option disabled value="">
-								---
-							</option>
+							<option value="">---</option>
 							{teams.map((team) => (
 								<option key={team.id} value={team.id}>
 									[{team.isJunior ? 'Junior' : 'Intermediate'}] {team.name}
@@ -154,9 +152,7 @@ export function WeeklySportEdit({
 							onChange={onChange}
 							onBlur={onBlur}
 						>
-							<option disabled value="">
-								---
-							</option>
+							<option value="">---</option>
 							{venues.map((venue) => (
 								<option key={venue.id} value={venue.id}>
 									{venue.name} ({venue.court_field_number})
@@ -180,9 +176,7 @@ export function WeeklySportEdit({
 							onChange={onChange}
 							onBlur={onBlur}
 						>
-							<option disabled value="">
-								---
-							</option>
+							<option value="">---</option>
 							{teachers.map((teacher) => (
 								<option key={teacher.id} value={teacher.id}>
 									{teacher.name}

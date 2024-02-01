@@ -18,6 +18,11 @@ const tables = [
       { name: "image", type: "text" },
       { name: "guided", type: "bool", defaultValue: "false" },
       { name: "last_logged_on", type: "datetime" },
+      {
+        name: "reset_only_after_visit_weekly_sport",
+        type: "bool",
+        defaultValue: "false",
+      },
     ],
     revLinks: [
       { column: "user", table: "nextauth_accounts" },

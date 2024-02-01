@@ -28,6 +28,18 @@ export function UserTable({
 	const [state, formAction] = useFormState<ChangeRoleState, FormData>(changeRole, null);
 
 	const [users, setUsers] = useState(serverUsers);
+	const [search, setSearch] = useState('');
+	const [displayUsers, setDisplayUsers] = useState(serverUsers);
+
+	useEffect(() => {
+		setDisplayUsers(
+			users.filter((user) => {
+				const name = user.name as string;
+				const email = user.email as string;
+				return name.includes(search) || email.includes(search);
+			}),
+		);
+	}, [search, users]);
 
 	const blockUserDialogRef = useRef<HTMLDialogElement>(null);
 
@@ -39,9 +51,10 @@ export function UserTable({
 	}, [state, serverUsers]);
 
 	const handleOnChange = (position: number) => {
+		const displayUser = displayUsers[position];
 		setUsers(
-			users.map((user, index) =>
-				index === position ? { ...user, checked: user.id === myId ? false : !user.checked } : user,
+			users.map((user) =>
+				user.id === displayUser.id ? { ...user, checked: user.id === myId ? false : !user.checked } : user,
 			),
 		);
 	};
@@ -58,7 +71,16 @@ export function UserTable({
 					<div>Nothing Here</div>
 				) : (
 					<div className="flex flex-col gap-4 bg-base-100 rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4 overflow-auto w-full">
-						<h2 className="sticky left-0 text-xl text-center text-primary">Users Management</h2>
+						<div className="flex flex-col lg:flex-row gap-4 justify-center items-center">
+							<h2 className="sticky left-0 text-xl text-center text-primary">Users Management</h2>
+							<input
+								type="text"
+								placeholder="Search Users"
+								value={search}
+								onChange={(e) => setSearch(e.target.value)}
+								className="static lg:absolute right-6 input input-bordered w-full lg:max-w-xs"
+							/>
+						</div>
 						<table className="table">
 							<thead>
 								<tr>
@@ -78,11 +100,15 @@ export function UserTable({
 								</tr>
 							</thead>
 							<tbody>
-								{users.map((user, index) => (
-									<tr className="hover cursor-pointer" key={user.id} onClick={(e) => {
-										e.preventDefault()
-										router.push(`/users/${user.id}`)
-									}}>
+								{displayUsers.map((user, index) => (
+									<tr
+										className="hover cursor-pointer"
+										key={user.id}
+										onClick={(e) => {
+											e.preventDefault();
+											router.push(`/users/${user.id}`);
+										}}
+									>
 										<th className="cursor-default" onClick={(event) => event.stopPropagation()}>
 											<label>
 												<input
@@ -209,58 +235,7 @@ function ChangeRoleButton() {
 
 	return (
 		<>
-			<button
-				className="btn btn-info"
-				type="submit"
-				disabled={pending}
-				// onClick={() => {
-				// 	setBlockUserDialogLoading(true);
-				// 	const deletion = users?.filter((user) => user.checked).map(({ $id }) => $id);
-				// 	if (!deletion) return setBlockUserDialogError("This shouldn't happen");
-				// 	account
-				// 		.getJWT()
-				// 		.then((jwt) => {
-				// 			fetch('/users/api', {
-				// 				method: 'PATCH',
-				// 				headers: {
-				// 					'X-Appwrite-JWT': jwt,
-				// 				},
-				// 				body: JSON.stringify({ block: true, $id: deletion }),
-				// 			})
-				// 				.then((response) => {
-				// 					if (!response.ok) {
-				// 						setBlockUserDialogLoading(false);
-				// 						if (response.status === 401) setBlockUserDialogError('You are not authorized to perform this action');
-				// 						if (response.status === 404) setBlockUserDialogError("This shouldn't happen, code: 404");
-				// 						if (response.status === 500) setBlockUserDialogError('A server error occurred');
-				// 						else setBlockUserDialogError(`An unknown error occurred, code: ${response.status}`);
-				// 						return;
-				// 					}
-				// 					setBlockUserDialogError('');
-				// 					setUsers((users) =>
-				// 						users?.map((user) => (user.checked ? { ...user, checked: false, status: false } : user)),
-				// 					);
-				// 					// TODO: sorting, filling in replacement text
-				// 					setAlert({
-				// 						type: 'success',
-				// 						message: 'Successfully blocked 0 users, failed to block 0 users',
-				// 					});
-				// 					blockUserDialogRef.current?.close();
-				// 				})
-				// 				.catch((reason) => {
-				// 					// This shouldn't happen
-				// 					console.error(reason);
-				// 					setBlockUserDialogError(`This shouldn't happen: ${reason}`);
-				// 				});
-				// 		})
-				// 		.catch((err: Error) => {
-				// 			setAlert({
-				// 				type: 'error',
-				// 				message: `Failed to get client JWT for authentication: ${err.message}`,
-				// 			});
-				// 		});
-				// }}
-			>
+			<button className="btn btn-info" type="submit" disabled={pending}>
 				{pending ? <span className="loading loading-dots"></span> : 'Change Role'}
 			</button>
 			<button form="close_dialog" className="btn" disabled={pending}>

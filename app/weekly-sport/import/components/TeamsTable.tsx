@@ -3,7 +3,8 @@
 import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { ChangeEventHandler, Dispatch, FocusEventHandler, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
-import { Teams } from '../types';
+import { v4 } from 'uuid';
+import { Games, Teams } from '../types';
 
 const defaultColumn: Partial<ColumnDef<Teams[number]>> = {
 	cell: ({ getValue }) => {
@@ -14,10 +15,14 @@ const defaultColumn: Partial<ColumnDef<Teams[number]>> = {
 export function TeamsTable({
 	teams,
 	setTeams,
+	games,
+	setGames,
 	teachers,
 }: {
 	teams: Teams;
 	setTeams: Dispatch<SetStateAction<Teams>>;
+	games: Games;
+	setGames: Dispatch<SetStateAction<Games>>;
 	teachers: { id: string; name?: string | null }[];
 }) {
 	const columns = useMemo<ColumnDef<Teams[number]>[]>(() => {
@@ -123,9 +128,7 @@ export function TeamsTable({
 							onChange={onChange}
 							onBlur={onBlur}
 						>
-							<option value={''} disabled>
-								Select a teacher
-							</option>
+							<option value="">Select a teacher</option>
 							{teachers.map((teacher) => (
 								<option key={teacher.id} value={teacher.id}>
 									{teacher.name}
@@ -175,6 +178,9 @@ export function TeamsTable({
 		},
 	});
 
+	const [newGroup, setNewGroup] = useState<'' | 'junior' | 'intermediate'>('');
+	const [newName, setNewName] = useState('');
+
 	return (
 		<>
 			<p className="text-xl font-bold mt-4">Team names (Modify if needed)</p>
@@ -209,22 +215,77 @@ export function TeamsTable({
 								</tr>
 							);
 						})}
+					</tbody>
+					<tfoot>
 						<tr>
-							<td />
-							<td />
-							<td />
-							<td />
-							<td />
-							<td />
-							<td />
-							<td />
+							<td className="p-0" colSpan={4}>
+								<select
+									className="select select-bordered rounded-none w-full"
+									value={newGroup}
+									onChange={(event) => setNewGroup(event.target.value as '' | 'junior' | 'intermediate')}
+								>
+									<option disabled value="">
+										Add a Team
+									</option>
+									<option value="junior">Junior</option>
+									<option value="intermediate">Intermediate</option>
+								</select>
+							</td>
+							<td className="p-0" colSpan={4}>
+								<input
+									className="input input-bordered rounded-none w-full"
+									placeholder="Team Name"
+									value={newName}
+									onChange={(event) => setNewName(event.target.value)}
+								/>
+							</td>
 							<td className="flex justify-end p-0 pt-1">
-								<button className="btn btn-square" disabled>
+								<button
+									className="btn btn-square"
+									disabled={newGroup === '' || newName === ''}
+									onClick={() => {
+										const id = v4();
+										setTeams((teams) => {
+											return [
+												...teams,
+												{
+													id: id,
+													friendlyName: newName,
+													group: newGroup || 'junior',
+												},
+											];
+										});
+										// I know react state doesn't update immediately, but I need the id, so I'll just gonna hope it works
+										setGames((games) => {
+											const allDates = games
+												.filter(({ teamId }) => {
+													const team = teams.find((team) => team.id === teamId);
+													return team?.group === newGroup;
+												})
+												.map((game) => game.date);
+											// Remove duplicates
+											const dates = allDates.filter((date, index) => allDates.indexOf(date) === index);
+
+											return [
+												...games,
+												...dates.map((date) => ({
+													date,
+													id: v4(),
+													teamId: id,
+													opponentCode: '',
+													venueCode: '',
+												})),
+											];
+										});
+										setNewGroup('');
+										setNewName('');
+									}}
+								>
 									<FaPlus />
 								</button>
 							</td>
 						</tr>
-					</tbody>
+					</tfoot>
 				</table>
 			</div>
 		</>

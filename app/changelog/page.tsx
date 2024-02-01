@@ -4,10 +4,45 @@ import { RestartGuide } from './components/RestartGuide';
 
 export default function Changelog() {
 	return (
-		<main className="flex flex-col gap-4 items-center w-full p-6">
+		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
-			<ChangelogBox version="0.1.1" latest release="31/01/2024">
+			<ChangelogBox version="0.1.2" latest release="01/02/2024">
+				<div className="flex flex-col gap-4">
+					<div className="flex items-center gap-4">
+						<div className="badge badge-secondary badge-outline">New</div>
+						<h2 className="text-xl font-bold">Features</h2>
+					</div>
+					<ul className="list-disc list-inside">
+						<li>
+							This new update will highlight any update that has made to weekly sport game since your last visit in
+							light blue, allowing the user to see what has changed easily (new option in user setting for controlling
+							when to mark as read)
+						</li>
+						<li>
+							Allows the action of adding a team when importing timetable and automatically append games based on the
+							added team (if the newly added team is junior it will add to date with only junior games). This is useful
+							when you have extra teams that is not in the timetable such as electives (Admin feature)
+						</li>
+						<li>
+							When importing timetable or creating timetable manually, the system will allow empty team, venue, or
+							teacher been selected. It will show as &quot;---&quot; in the weekly sport page (Admin feature)
+						</li>
+						<li>
+							Add the ability to search user (Admin only)
+						</li>
+					</ul>
+					<div className="divider"></div>
+					<h2 className="text-xl font-bold">Bug fixes</h2>
+					<ul className="list-disc list-inside">
+						<li>
+							Fixed a bug where when any select menu has an empty value in /game/[id], it will select the first one
+							available instead of leaving it empty
+						</li>
+					</ul>
+				</div>
+			</ChangelogBox>
+			<ChangelogBox version="0.1.1" release="31/01/2024">
 				<div className="flex flex-col gap-4">
 					<div className="flex items-center gap-4">
 						<div className="badge badge-secondary badge-outline">Changed</div>
@@ -24,12 +59,10 @@ export default function Changelog() {
 					<h2 className="text-xl font-bold">Bug fixes</h2>
 					<ul className="list-disc list-inside">
 						<li>
-							Fix some bug where the browser will print out error log when click event is not prevented before
+							Fixed a bug where the browser will print out error log when click event is not prevented before
 							navigating (technical)
 						</li>
-						<li>
-							Updated all dependencies to latest version (technical)
-						</li>
+						<li>Updated all dependencies to latest version (technical)</li>
 					</ul>
 				</div>
 			</ChangelogBox>

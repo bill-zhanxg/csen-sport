@@ -47,7 +47,7 @@ export async function importData(
 			address,
 			court_field_number: cfNum,
 		}));
-		const findTeam = (teamId: string) => team.find((team) => team.id === teamId);
+		const findTeam = (teamId?: string) => team.find((team) => team.id === teamId);
 		const gameRecords = games.map((game) => {
 			const date = dayjs.tz(`${game.date} 12:00`, timezone).toDate();
 
@@ -58,8 +58,8 @@ export async function importData(
 				date,
 				team: game.teamId,
 				opponent:
-					opponents.find((opponent) => game.opponentCode.includes(opponent.csenCode))?.friendlyName ?? 'Not Found',
-				venue: game.venueCode.replaceAll(' ', '-'),
+					opponents.find((opponent) => game.opponentCode?.includes(opponent.csenCode))?.friendlyName ?? 'Not Found',
+				venue: game.venueCode?.replaceAll(' ', '-'),
 				teacher: game.teacher ?? findTeam(game.teamId)?.teacher,
 				transportation: game.transportation,
 				out_of_class,
@@ -83,6 +83,7 @@ export async function importData(
 			type: 'success',
 		} as const;
 	} catch (e) {
+		console.error('Bulk upload for import timetable failed', e);
 		return {
 			type: 'error',
 			message: (e as Error).message,

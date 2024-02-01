@@ -1,0 +1,17 @@
+{
+  "id": "mig_cmtld6ii4jvbeevvt330",
+  "parentID": "mig_cmt0lhkqndidkg0u7nh0",
+  "checksum": "1:95306b7198f2f03850a9d8a42cfa8564dcd1e54581b20d1393f06b9a15ac4813",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "reset_only_after_visit_weekly_sport",
+          "type": "bool",
+          "defaultValue": "false"
+        },
+        "table": "nextauth_users"
+      }
+    }
+  ]
+}

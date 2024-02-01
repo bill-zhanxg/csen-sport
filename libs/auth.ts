@@ -28,6 +28,7 @@ export const {
 				session.user.team = user.team;
 				session.user.guided = user.guided;
 				session.user.last_logged_on = user.last_logged_on;
+				session.user.reset_only_after_visit_weekly_sport = user.reset_only_after_visit_weekly_sport;
 			}
 			return session;
 		},

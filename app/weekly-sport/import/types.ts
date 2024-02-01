@@ -1,13 +1,14 @@
-import { z } from "zod";
+import { emptyToUndefined } from '@/app/globalComponents/Schemas';
+import { z } from 'zod';
 
 export const GamesSchema = z.array(
 	z.object({
 		id: z.string(),
 		date: z.string(),
-		teamId: z.string(),
-		opponentCode: z.string(),
-		venueCode: z.string(),
-		teacher: z.string().optional(),
+		teamId: emptyToUndefined(z.string().optional()),
+		opponentCode: emptyToUndefined(z.string().optional()),
+		venueCode: emptyToUndefined(z.string().optional()),
+		teacher: emptyToUndefined(z.string().optional()),
 		transportation: z.string().optional(),
 		out_of_class: z.string().optional(),
 		start: z.string().optional(),
@@ -37,10 +38,10 @@ export type Venues = z.infer<typeof VenuesSchema>;
 export const TeamsSchema = z.array(
 	z.object({
 		id: z.string(),
-		gender: z.string(),
-		sport: z.string(),
-		division: z.string(),
-		team: z.string(),
+		gender: z.string().optional(),
+		sport: z.string().optional(),
+		division: z.string().optional(),
+		team: z.string().optional(),
 		friendlyName: z.string(),
 		group: z.literal('junior').or(z.literal('intermediate')),
 		teacher: z.string().optional(),
