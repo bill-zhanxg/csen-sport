@@ -1,5 +1,5 @@
 import { dayjs } from '@/libs/dayjs';
-import { DateWithGames } from '@/libs/gamesToDates';
+import { DateWithGames } from '@/libs/tableHelpers';
 import Link from 'next/link';
 import { FaInfoCircle, FaRegEye } from 'react-icons/fa';
 import { FaLocationDot, FaPen } from 'react-icons/fa6';
@@ -10,11 +10,13 @@ export function WeeklySportView({
 	showRelative = false,
 	isTeacher,
 	hideGroup = false,
+	lastVisit,
 }: {
 	date: DateWithGames;
 	showRelative?: boolean;
 	isTeacher: boolean;
 	hideGroup?: boolean;
+	lastVisit: Date;
 }) {
 	return (
 		<div className="w-full bg-base-200 rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4 overflow-auto">
@@ -42,7 +44,10 @@ export function WeeklySportView({
 					</thead>
 					<tbody>
 						{date.games.map((game) => (
-							<tr key={game.id} className="border-base-300">
+							<tr
+								key={game.id}
+								className={`border-base-300${lastVisit < game.xata.updatedAt ? ' bg-info/20' : ''}`}
+							>
 								{hideGroup || (
 									<td>
 										{game?.team?.isJunior !== undefined ? (game.team.isJunior ? 'Junior' : 'Intermediate') : '---'}

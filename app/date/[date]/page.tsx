@@ -4,8 +4,8 @@ import { WeeklySportView } from '@/app/globalComponents/WeeklySportView';
 import { auth } from '@/libs/auth';
 import { isTeacher } from '@/libs/checkPermission';
 import { getDateEnd, getDateStart, stringifySearchParam } from '@/libs/formatValue';
-import { gamesToDates } from '@/libs/gamesToDates';
 import { serializeGames } from '@/libs/serializeData';
+import { gamesToDates, getAndResetLastVisitDate } from '@/libs/tableHelpers';
 import { SearchParams } from '@/libs/types';
 import { getXataClient } from '@/libs/xata';
 import Link from 'next/link';
@@ -22,6 +22,7 @@ export default async function DatePage({
 	const date = new Date(parseInt(params.date));
 	let view = stringifySearchParam(searchParams).view as 'junior' | 'intermediate' | undefined;
 	if (view !== 'junior' && view !== 'intermediate') view = undefined;
+	const lastVisit = getAndResetLastVisitDate(session);
 
 	const games = await getXataClient()
 		.db.games.select(['*', 'team.*', 'venue.*', 'teacher.*'])
@@ -73,7 +74,7 @@ export default async function DatePage({
 			<main className="flex flex-col items-center gap-4 pt-0 p-4 w-full">
 				{isTeacher(session) && <h1 className="font-bold">Student View ↓</h1>}
 				{dates.length > 0 ? (
-					<WeeklySportView date={dates[0]} isTeacher={false} hideGroup={!!view} />
+					<WeeklySportView date={dates[0]} isTeacher={false} hideGroup={!!view} lastVisit={lastVisit} />
 				) : (
 					<ErrorMessage code="404" message={`There are no games on ${date.toLocaleDateString()}`} />
 				)}

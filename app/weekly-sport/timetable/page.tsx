@@ -5,9 +5,9 @@ import { WeeklySportView } from '@/app/globalComponents/WeeklySportView';
 import { auth } from '@/libs/auth';
 import { isTeacher } from '@/libs/checkPermission';
 import { getDateStart, stringifySearchParam } from '@/libs/formatValue';
-import { gamesToDates } from '@/libs/gamesToDates';
 import { serializeGames } from '@/libs/serializeData';
 import { getRawTeachers, getRawTeams, getRawVenues } from '@/libs/tableData';
+import { gamesToDates, getAndResetLastVisitDate } from '@/libs/tableHelpers';
 import { SearchParams } from '@/libs/types';
 import { getXataClient } from '@/libs/xata';
 import Link from 'next/link';
@@ -21,6 +21,7 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 	const isPast = filter === 'past';
 	const isEdit = edit === 'true';
 	const isTeacherBool = isTeacher(session);
+	const lastVisit = getAndResetLastVisitDate(session);
 
 	const dbFilter = {
 		date: isPast ? { $lt: getDateStart() } : { $ge: getDateStart() },
@@ -109,7 +110,7 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 									venues={venues}
 								/>
 							) : (
-								<WeeklySportView key={date.date} date={date} isTeacher={isTeacherBool} />
+								<WeeklySportView key={date.date} date={date} isTeacher={isTeacherBool} lastVisit={lastVisit} />
 							),
 						)}
 						<PaginationMenu totalPages={Math.ceil(total / itemsPerPage)} />

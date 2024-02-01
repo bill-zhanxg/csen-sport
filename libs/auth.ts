@@ -27,6 +27,7 @@ export const {
 				session.user.role = user.role;
 				session.user.team = user.team;
 				session.user.guided = user.guided;
+				session.user.last_logged_on = user.last_logged_on;
 			}
 			return session;
 		},

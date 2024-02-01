@@ -2,7 +2,7 @@
 'use client';
 
 import { formatIsJunior, formatTime } from '@/libs/formatValue';
-import { SerializedDateWithGames } from '@/libs/gamesToDates';
+import { SerializedDateWithGames } from '@/libs/tableHelpers';
 import { SerializedGame } from '@/libs/serializeData';
 import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import dayjs from 'dayjs';

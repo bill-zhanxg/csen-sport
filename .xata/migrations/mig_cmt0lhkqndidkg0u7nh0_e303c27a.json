@@ -1,0 +1,16 @@
+{
+  "id": "mig_cmt0lhkqndidkg0u7nh0",
+  "parentID": "mig_cmq8nqbos04r9p5r44hg",
+  "checksum": "1:e303c27a334b638d37e178c5ff3ec998fc1d42188b7bd21d9d907db42503e8ac",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "last_logged_on",
+          "type": "datetime"
+        },
+        "table": "nextauth_users"
+      }
+    }
+  ]
+}

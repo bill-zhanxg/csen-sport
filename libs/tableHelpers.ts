@@ -1,6 +1,7 @@
 import { Page, SelectedPick } from '@xata.io/client';
+import { Session } from 'next-auth/types';
 import { SerializedGame } from './serializeData';
-import { GamesRecord } from './xata';
+import { GamesRecord, getXataClient } from './xata';
 
 export type DateWithGames = {
 	date: string;
@@ -20,20 +21,27 @@ export function gamesToDates(
 		| SelectedPick<GamesRecord, ('*' | 'team.*' | 'teacher.*' | 'venue.*')[]>[],
 	isTeacher: boolean,
 ): DateWithGames[] {
-	const dates: {
-		date: string;
-		rawDate: Date;
-		games: SelectedPick<GamesRecord, ('*' | 'team.*' | 'venue.*' | 'teacher.*')[]>[];
-	}[] = [];
+	const dates: DateWithGames[] = [];
 	let datesArrayIndex = 0;
 	const gamesArray = 'records' in games ? games.records : games;
 	for (const game of gamesArray) {
-		if (!game.date) continue;
-		const date = game.date.toLocaleDateString();
-		if (!dates[datesArrayIndex]) dates[datesArrayIndex] = { date, rawDate: game.date, games: [] };
+		const gameDate = game.date;
+		if (!gameDate) continue;
+		const date = gameDate.toLocaleDateString();
+		const checkArray = () => {
+			if (!dates[datesArrayIndex]) dates[datesArrayIndex] = { date, rawDate: gameDate, games: [] };
+		};
+		checkArray();
 		if (dates[datesArrayIndex].date !== date) datesArrayIndex++;
-		if (!dates[datesArrayIndex]) dates[datesArrayIndex] = { date, rawDate: game.date, games: [] };
+		checkArray();
 		dates[datesArrayIndex].games.push({ ...game, notes: isTeacher ? game.notes : undefined });
 	}
 	return dates;
+}
+
+export function getAndResetLastVisitDate(session: Session | null): Date {
+	if (!session) return new Date();
+	const lastVisitDate = session?.user?.last_logged_on ? new Date(session.user.last_logged_on) : new Date();
+	getXataClient().db.nextauth_users.update(session.user.id, { last_logged_on: new Date() });
+	return lastVisitDate;
 }
