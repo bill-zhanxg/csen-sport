@@ -6,11 +6,12 @@ export function LoginButton({ callbackUrl }: { callbackUrl?: string }) {
 	return (
 		<button
 			className="btn btn-primary w-4/5 max-w-[20rem]"
-			onClick={() =>
+			onClick={(e) => {
+				e.preventDefault();
 				signIn('azure-ad', {
 					callbackUrl,
-				})
-			}
+				});
+			}}
 		>
 			Login with Microsoft
 		</button>
