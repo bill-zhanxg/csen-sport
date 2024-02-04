@@ -61,6 +61,7 @@ export async function importData(
 					opponents.find((opponent) => game.opponentCode?.includes(opponent.csenCode))?.friendlyName ?? 'Not Found',
 				venue: game.venueCode?.replaceAll(' ', '-'),
 				teacher: game.teacher ?? findTeam(game.teamId)?.teacher,
+				extra_teachers: game.extra_teachers ?? findTeam(game.teamId)?.extra_teachers,
 				transportation: game.transportation,
 				out_of_class,
 				start,

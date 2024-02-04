@@ -3,6 +3,7 @@ import { isTeacher } from '@/libs/checkPermission';
 import { gamesToDates, getLastVisitDate } from '@/libs/tableHelpers';
 import { getXataClient } from '@/libs/xata';
 import { WeeklySportView } from './globalComponents/WeeklySportView';
+import { getRawTeachers } from '@/libs/tableData';
 
 export default async function Home() {
 	const session = await auth();
@@ -11,7 +12,16 @@ export default async function Home() {
 
 	const filter = {
 		date: { $ge: new Date() },
-		...(isTeacherBool ? { teacher: session?.user.id } : session?.user.team ? { team: session.user.team.id } : {}),
+		...(isTeacherBool
+			? {
+					$any: {
+						teacher: session?.user.id,
+						extra_teachers: { $includes: session?.user.id },
+					},
+			  }
+			: session?.user.team
+			? { team: session.user.team.id }
+			: {}),
 	};
 
 	const games = await getXataClient()
@@ -24,6 +34,7 @@ export default async function Home() {
 		});
 
 	const dates = gamesToDates(games, isTeacherBool);
+	const teachers = await getRawTeachers();
 
 	return (
 		<div className="flex flex-col items-center w-full p-6 gap-4">
@@ -50,6 +61,7 @@ export default async function Home() {
 							<WeeklySportView
 								key={date.date}
 								date={date}
+								teachers={teachers}
 								isTeacher={isTeacherBool}
 								lastVisit={lastVisit}
 								showRelative

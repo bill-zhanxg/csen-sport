@@ -19,6 +19,21 @@ export default function Changelog() {
 							for that game
 						</li>
 					</ul>
+					<div className="divider"></div>
+					<h2 className="text-xl font-bold">Bug fixes</h2>
+					<ul className="list-disc list-inside">
+						<li>
+							Fixed a crucial bug where when importing or creating timetable, the system will prioritize the display of
+							default value, therefore not showing feedback to the user if the value has been overridden
+						</li>
+						<li>
+							Fixed a crucial bug where the system will not allow the user to import or create games because linking
+							value is a empty string instead of undefined
+						</li>
+						<li>
+							Fixed a visual bug where on the game information page student view the disabled inputs are not readable in light mode
+						</li>
+					</ul>
 				</div>
 			</ChangelogBox>
 			<ChangelogBox version="0.1.2" release="01/02/2024">

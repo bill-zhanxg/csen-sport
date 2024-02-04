@@ -94,7 +94,7 @@ export function OpponentsTable({
 	return (
 		<>
 			<p className="text-xl font-bold mt-4">Opponents (Give them a friendly name)</p>
-			<div className="overflow-x-auto w-[90%]">
+			<div className="overflow-x-auto w-[98%]">
 				<table className="table text-lg">
 					<thead>
 						{table.getHeaderGroups().map((headerGroup) => (

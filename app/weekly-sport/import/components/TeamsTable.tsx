@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
+import { TeachersMultiSelect } from '@/app/globalComponents/TeachersMultiSelect';
 import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { ChangeEventHandler, Dispatch, FocusEventHandler, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
@@ -51,6 +52,7 @@ export function TeamsTable({
 				},
 				(event) => {
 					if (!('value' in event.target)) return;
+					const value = event.target.value as T;
 					if (previousValue !== value) {
 						table.options.meta?.updateData(index, id, value);
 						setPreviousValue(value);
@@ -139,6 +141,22 @@ export function TeamsTable({
 				},
 			},
 			{
+				id: 'extra_teachers',
+				accessorKey: 'extra_teachers',
+				header: 'D Extra Teachers',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string[] | undefined>(prop);
+					return TeachersMultiSelect({
+						teachers,
+						value: value ?? [],
+						onChange: (e) => {
+							if (onChange) onChange(e as any);
+							if (onBlur) onBlur(e as any);
+						},
+					});
+				},
+			},
+			{
 				id: 'out_of_class',
 				accessorKey: 'out_of_class',
 				header: 'D Out of Class',
@@ -184,7 +202,7 @@ export function TeamsTable({
 	return (
 		<>
 			<p className="text-xl font-bold mt-4">Team names (Modify if needed)</p>
-			<div className="overflow-x-auto w-[90%]">
+			<div className="overflow-x-auto w-[98%]">
 				<table className="table text-lg">
 					<thead>
 						{table.getHeaderGroups().map((headerGroup) => (
@@ -231,7 +249,7 @@ export function TeamsTable({
 									<option value="intermediate">Intermediate</option>
 								</select>
 							</td>
-							<td className="p-0" colSpan={4}>
+							<td className="p-0" colSpan={5}>
 								<input
 									className="input input-bordered rounded-none w-full"
 									placeholder="Team Name"
@@ -255,7 +273,7 @@ export function TeamsTable({
 												},
 											];
 										});
-										// I know react state doesn't update immediately, but I need the id, so I'll just gonna hope it works
+										// I know react state doesn't update immediately, but I need the id, so I'll just gonna hope it works (and it did)
 										setGames((games) => {
 											const allDates = games
 												.filter(({ teamId }) => {

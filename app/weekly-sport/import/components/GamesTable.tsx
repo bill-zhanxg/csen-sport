@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
 import { SideBySide } from '@/app/globalComponents/SideBySide';
+import { TeachersMultiSelect } from '@/app/globalComponents/TeachersMultiSelect';
 import {
 	CellContext,
 	ColumnDef,
@@ -53,6 +54,7 @@ export function GamesTable({
 				},
 				(event) => {
 					if (!('value' in event.target)) return;
+					const value = event.target.value as T;
 					if (previousValue !== value) {
 						setGames((games) => {
 							// Can not use index because it will be wrong when sorting
@@ -163,7 +165,7 @@ export function GamesTable({
 					return (
 						<select
 							className="select select-bordered rounded-none w-full"
-							value={defaultTeacher ?? value ?? ''}
+							value={value ?? defaultTeacher ?? ''}
 							onChange={onChange}
 							onBlur={onBlur}
 						>
@@ -175,6 +177,23 @@ export function GamesTable({
 							))}
 						</select>
 					);
+				},
+			},
+			{
+				id: 'extra_teachers',
+				accessorKey: 'extra_teachers',
+				header: 'Extra Teachers',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string[] | undefined>(prop);
+					const defaultExtraTeacher = teams.find((team) => team.id === prop.row.original.teamId)?.extra_teachers;
+					return TeachersMultiSelect({
+						teachers,
+						value: value ?? defaultExtraTeacher ?? [],
+						onChange: (e) => {
+							if (onChange) onChange(e as any);
+							if (onBlur) onBlur(e as any);
+						},
+					});
 				},
 			},
 			{
@@ -222,7 +241,7 @@ export function GamesTable({
 						<input
 							type="time"
 							className="bg-base-100 ml-4"
-							value={defaultTime ?? value ?? ''}
+							value={value ?? defaultTime ?? ''}
 							onChange={onChange}
 							onBlur={onBlur}
 						/>
@@ -240,7 +259,7 @@ export function GamesTable({
 						<input
 							type="time"
 							className="bg-base-100 ml-4"
-							value={defaultTime ?? value ?? ''}
+							value={value ?? defaultTime ?? ''}
 							onChange={onChange}
 							onBlur={onBlur}
 						/>
@@ -323,7 +342,7 @@ export function GamesTable({
 	return (
 		<>
 			<p className="text-xl font-bold mt-4">Games (Modify if needed)</p>
-			<div className="overflow-x-auto w-[90%]">
+			<div className="overflow-x-auto w-[98%]">
 				<table className="table text-lg">
 					<thead>
 						{table.getHeaderGroups().map((headerGroup) => (

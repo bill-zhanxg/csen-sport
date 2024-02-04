@@ -7,6 +7,8 @@ export function TeachersMultiSelect({
 	value,
 	onChange,
 	disabled,
+	actualDisabled = false,
+	className = '',
 }: {
 	teachers: RawTeacher[];
 	value?: string[];
@@ -16,11 +18,13 @@ export function TeachersMultiSelect({
 		};
 	}) => void;
 	disabled?: boolean;
+	actualDisabled?: boolean;
+	className?: string;
 }) {
 	return (
 		<MultiSelect
-			className="w-full [&>div>.dropdown-heading]:cursor-pointer text-sm text-base-content"
-			options={teachers.map(({ id, name }) => ({ value: id, label: name ?? '' }))}
+			className={`w-full [&>div>.dropdown-heading]:cursor-pointer text-sm text-base-content ${className}`}
+			options={teachers.map(({ id, name }) => ({ value: id, label: name ?? '', disabled: actualDisabled }))}
 			value={
 				value?.map((id) => ({ value: id, label: teachers.find((teacher) => teacher.id === id)?.name ?? '' })) ?? []
 			}

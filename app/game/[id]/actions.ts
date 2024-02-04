@@ -22,6 +22,10 @@ const schema = z.object({
 	opponent: z.string().optional(),
 	venue: z.string().optional(),
 	teacher: z.string().optional(),
+	extra_teachers: z
+		.string()
+		.optional()
+		.transform((val) => (val ? val.split(',') : undefined)),
 	transportation: z.string().optional(),
 	out_of_class: z.string().or(z.date()).optional(),
 	start: z.string().or(z.date()).optional(),
@@ -41,6 +45,7 @@ export async function updateGame(prevState: FormState, formData: FormData): Prom
 			opponent: formData.get('opponent'),
 			venue: formData.get('venue'),
 			teacher: formData.get('teacher'),
+			extra_teachers: formData.get('extra_teachers'),
 			transportation: formData.get('transportation'),
 			out_of_class: formData.get('out_of_class'),
 			start: formData.get('start'),

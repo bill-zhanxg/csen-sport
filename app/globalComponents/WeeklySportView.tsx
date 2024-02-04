@@ -1,18 +1,22 @@
 import { dayjs } from '@/libs/dayjs';
+import { RawTeacher } from '@/libs/tableData';
 import { DateWithGames } from '@/libs/tableHelpers';
 import Link from 'next/link';
 import { FaInfoCircle, FaRegEye } from 'react-icons/fa';
-import { FaLocationDot, FaPen } from 'react-icons/fa6';
+import { FaCirclePlus, FaLocationDot, FaPen } from 'react-icons/fa6';
 import { SideBySide } from './SideBySide';
+import { UserAvatar } from './UserAvatar';
 
 export function WeeklySportView({
 	date,
+	teachers,
 	showRelative = false,
 	isTeacher,
 	hideGroup = false,
 	lastVisit,
 }: {
 	date: DateWithGames;
+	teachers: RawTeacher[];
 	showRelative?: boolean;
 	isTeacher: boolean;
 	hideGroup?: boolean;
@@ -44,10 +48,7 @@ export function WeeklySportView({
 					</thead>
 					<tbody>
 						{date.games.map((game) => (
-							<tr
-								key={game.id}
-								className={`border-base-300${lastVisit < game.xata.updatedAt ? ' bg-info/20' : ''}`}
-							>
+							<tr key={game.id} className={`border-base-300${lastVisit < game.xata.updatedAt ? ' bg-info/20' : ''}`}>
 								{hideGroup || (
 									<td>
 										{game?.team?.isJunior !== undefined ? (game.team.isJunior ? 'Junior' : 'Intermediate') : '---'}
@@ -90,13 +91,53 @@ export function WeeklySportView({
 									)}
 								</td>
 								<td>
-									{game?.teacher?.name ? (
-										<Link href={`/users/${game.teacher.id}`} className="link link-primary">
-											{game.teacher.name}
-										</Link>
-									) : (
-										'---'
-									)}
+									<div className="flex gap-2 items-center justify-between w-full">
+										{game?.teacher?.name ? (
+											<Link href={`/users/${game.teacher.id}`} className="link link-primary">
+												{game.teacher.name}
+											</Link>
+										) : (
+											'---'
+										)}
+										{game.extra_teachers && (
+											<>
+												<label htmlFor={game.id + '-extra-teacher'} className="cursor-pointer">
+													<FaCirclePlus size={18} />
+												</label>
+
+												<input type="checkbox" id={game.id + '-extra-teacher'} className="modal-toggle" />
+												<div className="modal" role="dialog">
+													<div className="flex flex-col modal-box gap-2">
+														<h3 className="font-bold text-2xl">Extra Teachers</h3>
+														{game.extra_teachers.map((teacherId) => {
+															const teacher = teachers.find((teacher) => teacher.id === teacherId);
+															return teacher ? (
+																<Link
+																	key={teacherId}
+																	href={`/users/${teacherId}`}
+																	className="flex items-center gap-3 bg-base-200 p-2 rounded-lg cursor-pointer hover:bg-base-300 transition"
+																>
+																	<div className="avatar">
+																		<div className="mask mask-squircle w-12 h-12">
+																			<UserAvatar user={teacher} />
+																		</div>
+																	</div>
+																	<div className="text-xl font-bold">{teacher.name}</div>
+																</Link>
+															) : (
+																'---'
+															);
+														})}
+														<div className="modal-action flex-col sm:flex-row gap-2">
+															<label htmlFor={game.id + '-extra-teacher'} className="btn w-full sm:w-auto !ml-0">
+																Close
+															</label>
+														</div>
+													</div>
+												</div>
+											</>
+										)}
+									</div>
 								</td>
 								<td>{game?.transportation || '---'}</td>
 								<td>{game?.out_of_class?.toLocaleTimeString() || '---'}</td>

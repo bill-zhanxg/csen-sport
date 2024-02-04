@@ -1,6 +1,7 @@
 'use client';
 
 import { Box } from '@/app/globalComponents/Box';
+import { TeachersMultiSelect } from '@/app/globalComponents/TeachersMultiSelect';
 import { isTeacher } from '@/libs/checkPermission';
 import { dayjs } from '@/libs/dayjs';
 import { formatIsJunior } from '@/libs/formatValue';
@@ -8,6 +9,7 @@ import { SerializedGame, SerializedTeam, SerializedVenue } from '@/libs/serializ
 import { RawTeacher } from '@/libs/tableData';
 import { FormState } from '@/libs/types';
 import { Session } from 'next-auth/types';
+import { useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { FaRegCheckCircle, FaRegTimesCircle } from 'react-icons/fa';
 import { updateGame } from '../actions';
@@ -27,6 +29,8 @@ export function GameForm({
 }) {
 	const [state, formAction] = useFormState<FormState, FormData>(updateGame, null);
 	const isTeacherBool = isTeacher(session);
+
+	const [extraTeachers, setExtraTeachers] = useState<string[]>(game.extra_teachers ?? []);
 
 	return (
 		<form className="flex flex-col gap-4 w-full p-4" action={formAction}>
@@ -55,7 +59,7 @@ export function GameForm({
 						<select
 							disabled={!isTeacherBool}
 							defaultValue={game.team?.id ?? ''}
-							className="select select-bordered opacity-100"
+							className="select select-bordered opacity-100 !text-base-content"
 							name="team"
 						>
 							<option disabled value="">
@@ -94,7 +98,7 @@ export function GameForm({
 						<select
 							disabled={!isTeacherBool}
 							defaultValue={game.venue?.id ?? ''}
-							className="select select-bordered opacity-100"
+							className="select select-bordered opacity-100 !text-base-content"
 							name="venue"
 						>
 							<option disabled value="">
@@ -120,7 +124,7 @@ export function GameForm({
 						<select
 							disabled={!isTeacherBool}
 							defaultValue={game.teacher?.id ?? ''}
-							className="select select-bordered opacity-100"
+							className="select select-bordered opacity-100 !text-base-content"
 							name="teacher"
 						>
 							<option disabled value="">
@@ -139,6 +143,21 @@ export function GameForm({
 							)}
 						</select>
 					</label>
+					<div className="form-control w-full">
+						<div className="label">
+							<span className="label-text text-md font-bold">Extra Teachers</span>
+						</div>
+						{TeachersMultiSelect({
+							className: '[&>div]:[--rmsc-radius:var(--rounded-btn,0.5rem)] [&>div]:[--rmsc-bg:oklch(var(--b2))]',
+							teachers,
+							value: extraTeachers,
+							actualDisabled: !isTeacherBool,
+							onChange: (e) => {
+								setExtraTeachers(e.target.value);
+							},
+						})}
+						<input type="hidden" name="extra_teachers" value={extraTeachers.join(',')} />
+					</div>
 					<label className="form-control w-full">
 						<div className="label">
 							<span className="label-text text-md font-bold">Transportation</span>

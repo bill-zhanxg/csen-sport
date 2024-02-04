@@ -3,6 +3,7 @@
 
 import { AlertType, ErrorAlert, SuccessAlert } from '@/app/components/Alert';
 import { PreventUnload } from '@/app/globalComponents/PreventUnload';
+import { TeachersMultiSelect } from '@/app/globalComponents/TeachersMultiSelect';
 import { dayjs } from '@/libs/dayjs';
 import { RawTeacher } from '@/libs/tableData';
 import {
@@ -128,6 +129,22 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 				},
 			},
 			{
+				id: 'extra_teachers',
+				accessorKey: 'extra_teachers',
+				header: 'D Extra Teachers',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string[] | undefined>(prop);
+					return TeachersMultiSelect({
+						teachers,
+						value: value ?? [],
+						onChange: (e) => {
+							if (onChange) onChange(e as any);
+							if (onBlur) onBlur(e as any);
+						},
+					});
+				},
+			},
+			{
 				id: 'out_of_class',
 				accessorKey: 'out_of_class',
 				header: 'D Out of Class',
@@ -185,6 +202,7 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 	const [newGroup, setNewGroup] = useState<'' | 'junior' | 'intermediate'>('');
 	const [newTeamName, setNewTeamName] = useState('');
 	const [newDefaultTeacher, setNewDefaultTeacher] = useState('');
+	const [newDefaultExtraTeachers, setNewDefaultExtraTeachers] = useState<string[]>([]);
 	const [newDefaultOutOfClass, setNewDefaultOutOfClass] = useState('');
 	const [newDefaultStart, setNewDefaultStart] = useState('');
 	// #endregion
@@ -447,7 +465,7 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 					return (
 						<select
 							className="select select-bordered rounded-none w-full"
-							value={defaultTeacher ?? value ?? ''}
+							value={value ?? defaultTeacher ?? ''}
 							onChange={onChange}
 							onBlur={onBlur}
 						>
@@ -459,6 +477,23 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 							))}
 						</select>
 					);
+				},
+			},
+			{
+				id: 'extra_teachers',
+				accessorKey: 'extra_teachers',
+				header: 'Extra Teachers',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string[] | undefined>(prop);
+					const defaultExtraTeacher = teams.find((team) => team.id === prop.row.original.team)?.extra_teachers;
+					return TeachersMultiSelect({
+						teachers,
+						value: value ?? defaultExtraTeacher ?? [],
+						onChange: (e) => {
+							if (onChange) onChange(e as any);
+							if (onBlur) onBlur(e as any);
+						},
+					});
 				},
 			},
 			{
@@ -506,7 +541,7 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 						<input
 							type="time"
 							className="bg-base-100 ml-4"
-							value={defaultTime ?? value ?? ''}
+							value={value ?? defaultTime ?? ''}
 							onChange={onChange}
 							onBlur={onBlur}
 						/>
@@ -524,7 +559,7 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 						<input
 							type="time"
 							className="bg-base-100 ml-4"
-							value={defaultTime ?? value ?? ''}
+							value={value ?? defaultTime ?? ''}
 							onChange={onChange}
 							onBlur={onBlur}
 						/>
@@ -636,15 +671,22 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 									value={newDefaultTeacher}
 									onChange={(event) => setNewDefaultTeacher(event.target.value)}
 								>
-									<option value="">
-										Select a Teacher
-									</option>
+									<option value="">Select a Teacher</option>
 									{teachers.map((teacher) => (
 										<option key={teacher.id} value={teacher.id}>
 											{teacher.name}
 										</option>
 									))}
 								</select>
+							</td>
+							<td className="p-0">
+								{TeachersMultiSelect({
+									teachers,
+									value: newDefaultExtraTeachers ?? [],
+									onChange: (e) => {
+										setNewDefaultExtraTeachers(e.target.value);
+									},
+								})}
 							</td>
 							<td className="p-0">
 								<input
@@ -674,6 +716,7 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 												group: (newGroup || undefined) as any,
 												name: newTeamName || undefined,
 												teacher: newDefaultTeacher || undefined,
+												extra_teachers: newDefaultExtraTeachers || undefined,
 												out_of_class: newDefaultOutOfClass || undefined,
 												start: newDefaultStart || undefined,
 											},
@@ -681,6 +724,7 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 										setNewGroup('');
 										setNewTeamName('');
 										setNewDefaultTeacher('');
+										setNewDefaultExtraTeachers([]);
 										setNewDefaultOutOfClass('');
 										setNewDefaultStart('');
 									}}
@@ -822,7 +866,7 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 									onChange={(event) => setNewDate(event.target.value)}
 								/>
 							</td>
-							<td className="p-0" colSpan={4}>
+							<td className="p-0" colSpan={5}>
 								<select
 									className="select select-bordered rounded-none w-full"
 									value={newGameGroup}

@@ -51,7 +51,7 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 	const dates = gamesToDates(games, isTeacherBool);
 	const teams = isTeacherBool ? await getRawTeams() : [];
 	const teachers = isTeacherBool ? await getRawTeachers() : [];
-	const venues = isTeacherBool ? await getRawVenues() : [];
+	const venues = await getRawVenues();
 
 	return (
 		<div className="flex flex-col items-center w-full p-4 gap-4">
@@ -110,7 +110,13 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 									venues={venues}
 								/>
 							) : (
-								<WeeklySportView key={date.date} date={date} isTeacher={isTeacherBool} lastVisit={lastVisit} />
+								<WeeklySportView
+									key={date.date}
+									date={date}
+									teachers={teachers}
+									isTeacher={isTeacherBool}
+									lastVisit={lastVisit}
+								/>
 							),
 						)}
 						<PaginationMenu totalPages={Math.ceil(total / itemsPerPage)} />

@@ -4,6 +4,7 @@ import { dayjs } from '@/libs/dayjs';
 
 import { AlertType, ErrorAlert, SuccessAlert } from '@/app/components/Alert';
 import { PreventUnload } from '@/app/globalComponents/PreventUnload';
+import { TeachersMultiSelect } from '@/app/globalComponents/TeachersMultiSelect';
 import { formatDate, formatIsJunior, formatTime } from '@/libs/formatValue';
 import { SerializedGameWithId } from '@/libs/serializeData';
 import { RawTeacher, RawTeam, RawVenue } from '@/libs/tableData';
@@ -41,7 +42,7 @@ export function GamesTable({
 
 	const columns = useMemo<ColumnDef<SerializedGameWithId>[]>(() => {
 		function editable<T>(
-			{ getValue, row: { original }, column: { id }, table }: CellContext<SerializedGameWithId, unknown>,
+			{ getValue, row: { original }, column: { id } }: CellContext<SerializedGameWithId, unknown>,
 			type: 'text' | 'date' | 'time' = 'text',
 		): [T, ChangeEventHandler<HTMLElement> | undefined, FocusEventHandler<HTMLElement> | undefined] {
 			let initialValue = getValue() as T;
@@ -63,6 +64,7 @@ export function GamesTable({
 				},
 				(event) => {
 					if (!('value' in event.target)) return;
+					const value = event.target.value as T;
 					if (previousValue !== value) {
 						let importValue = value;
 						if (type === 'date') importValue = formatDate(importValue as string) as any;
@@ -192,6 +194,22 @@ export function GamesTable({
 				},
 			},
 			{
+				id: 'extra_teachers',
+				accessorFn: (row) => row.extra_teachers,
+				header: 'Extra Teachers',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string[] | undefined>(prop);
+					return TeachersMultiSelect({
+						teachers,
+						value: value ?? [],
+						onChange: (e) => {
+							if (onChange) onChange(e as any);
+							if (onBlur) onBlur(e as any);
+						},
+					});
+				},
+			},
+			{
 				id: 'transportation',
 				accessorKey: 'transportation',
 				header: 'Transportation',
@@ -293,6 +311,7 @@ export function GamesTable({
 	const [newOpponent, setNewOpponent] = useState('');
 	const [newVenue, setNewVenue] = useState('');
 	const [newTeacher, setNewTeacher] = useState('');
+	const [newExtraTeachers, setNewExtraTeachers] = useState<string[]>([]);
 	const [newTransportation, setNewTransportation] = useState('');
 	const [newNotes, setNewNotes] = useState('');
 	const [newOutOfClass, setNewOutOfClass] = useState('');
@@ -404,6 +423,15 @@ export function GamesTable({
 								</select>
 							</td>
 							<td className="p-0">
+								{TeachersMultiSelect({
+									teachers,
+									value: newExtraTeachers ?? [],
+									onChange: (e) => {
+										setNewExtraTeachers(e.target.value);
+									},
+								})}
+							</td>
+							<td className="p-0">
 								<input
 									className="input input-bordered rounded-none w-full"
 									placeholder="Transportation"
@@ -449,6 +477,7 @@ export function GamesTable({
 											opponent: newOpponent || undefined,
 											venue: newVenue || undefined,
 											teacher: newTeacher || undefined,
+											extra_teachers: newExtraTeachers || undefined,
 											transportation: newTransportation || undefined,
 											notes: newNotes || undefined,
 											out_of_class: formatTime(date, newOutOfClass),
@@ -467,6 +496,7 @@ export function GamesTable({
 										setNewOpponent('');
 										setNewVenue('');
 										setNewTeacher('');
+										setNewExtraTeachers([]);
 										setNewTransportation('');
 										setNewNotes('');
 										setNewOutOfClass('');

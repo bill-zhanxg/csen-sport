@@ -13,7 +13,7 @@ export default async function EditGame({ params }: { params: { id: string } }) {
 
 	const teams = isTeacherBool ? await getRawTeams() : [];
 	const venues = isTeacherBool ? await getRawVenues() : [];
-	const teachers = isTeacherBool ? await getRawTeachers() : [];
+	const teachers = await getRawTeachers();
 
 	if (!game) return <ErrorMessage code="404" message="Game not found" />;
 
