@@ -1,0 +1,16 @@
+{
+  "id": "mig_cmuvta9828dmmgqmlhjg",
+  "parentID": "mig_cmtld6ii4jvbeevvt330",
+  "checksum": "1:8e99935c4b46333649d3846f676325aa10867f5a52893e55c790dd36fe88c211",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "extra_teachers",
+          "type": "multiple"
+        },
+        "table": "games"
+      }
+    }
+  ]
+}

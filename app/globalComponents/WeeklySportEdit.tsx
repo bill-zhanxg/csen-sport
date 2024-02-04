@@ -1,25 +1,19 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 'use client';
 
+import { dayjs } from '@/libs/dayjs';
 import { formatIsJunior, formatTime } from '@/libs/formatValue';
 import { SerializedGame } from '@/libs/serializeData';
 import { SerializedDateWithGames } from '@/libs/tableHelpers';
 import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
-import timezone from 'dayjs/plugin/timezone';
-import utc from 'dayjs/plugin/utc';
 import Link from 'next/link';
 import { ChangeEventHandler, FocusEventHandler, useEffect, useMemo, useState } from 'react';
 import { FaPlus, FaRegTrashCan } from 'react-icons/fa6';
 import { RawTeacher, RawTeam, RawVenue } from '../../libs/tableData';
 import { AlertType, ErrorAlertFixed, SuccessAlertFixed } from '../components/Alert';
 import { SideBySide } from './SideBySide';
+import { TeachersMultiSelect } from './TeachersMultiSelect';
 import { deleteGame, newGame, updateGame } from './WeeklySportEditActions';
-
-dayjs.extend(customParseFormat);
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 const defaultColumn: Partial<ColumnDef<SerializedGame>> = {
 	cell: ({ getValue }) => {
@@ -187,6 +181,22 @@ export function WeeklySportEdit({
 				},
 			},
 			{
+				id: 'extra_teachers',
+				accessorFn: (row) => row.extra_teachers,
+				header: 'Extra Teachers',
+				cell: (prop) => {
+					const [value, disabled, onChange] = editable<string[] | undefined | null>(prop, true);
+					return TeachersMultiSelect({
+						teachers,
+						value: value ?? [],
+						onChange: (e) => {
+							if (onChange) onChange(e as any);
+						},
+						disabled,
+					});
+				},
+			},
+			{
 				id: 'transportation',
 				accessorKey: 'transportation',
 				header: 'Transportation',
@@ -332,6 +342,7 @@ export function WeeklySportEdit({
 	const [newOpponent, setNewOpponent] = useState('');
 	const [newVenue, setNewVenue] = useState('');
 	const [newTeacher, setNewTeacher] = useState('');
+	const [newExtraTeachers, setNewExtraTeachers] = useState<string[]>([]);
 	const [newTransportation, setNewTransportation] = useState('');
 	const [newNotes, setNewNotes] = useState('');
 	const [newOutOfClass, setNewOutOfClass] = useState('');
@@ -340,12 +351,11 @@ export function WeeklySportEdit({
 	return (
 		<>
 			<div className="w-full bg-base-100 rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4">
-				<Link
-					href={`/date/${date.rawDate.valueOf()}`}
-					className="block sticky left-0 text-xl text-center link link-primary"
-				>
-					Weekly Sport {date.date}
-				</Link>
+				<div className="flex justify-center sticky left-0">
+					<Link href={`/date/${date.rawDate.valueOf()}`} className="text-xl text-center link link-primary">
+						Weekly Sport {date.date}
+					</Link>
+				</div>
 				<div className="overflow-x-auto">
 					<table className="table text-lg">
 						<thead>
@@ -441,6 +451,15 @@ export function WeeklySportEdit({
 									</select>
 								</td>
 								<td className="p-0">
+									{TeachersMultiSelect({
+										teachers,
+										value: newExtraTeachers ?? [],
+										onChange: (e) => {
+											setNewExtraTeachers(e.target.value);
+										},
+									})}
+								</td>
+								<td className="p-0">
 									<input
 										className="input input-bordered rounded-none w-full"
 										placeholder="Transportation"
@@ -483,6 +502,7 @@ export function WeeklySportEdit({
 												opponent: newOpponent,
 												venue: newVenue,
 												teacher: newTeacher,
+												extra_teachers: newExtraTeachers,
 												transportation: newTransportation,
 												notes: newNotes,
 												out_of_class: formatTime(date.rawDate, newOutOfClass),
@@ -499,6 +519,7 @@ export function WeeklySportEdit({
 											setNewOpponent('');
 											setNewVenue('');
 											setNewTeacher('');
+											setNewExtraTeachers([]);
 											setNewTransportation('');
 											setNewNotes('');
 											setNewOutOfClass('');

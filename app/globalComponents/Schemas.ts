@@ -10,6 +10,7 @@ export const UpdateGameSchema = z.object({
 	opponent: z.string().optional(),
 	venue: emptyToUndefined(z.string().optional()),
 	teacher: emptyToUndefined(z.string().optional()),
+	extra_teachers: z.string().array().optional(),
 	transportation: z.string().optional(),
 	out_of_class: z.date().optional(),
 	start: z.date().optional(),

@@ -43,6 +43,7 @@ export type SerializedGame = {
 		id?: string;
 		name?: string | null;
 	} | null;
+	extra_teachers?: string[] | null;
 	transportation?: string | null;
 	out_of_class?: Date | null;
 	start?: Date | null;
@@ -56,6 +57,7 @@ export type SerializedGameWithId = {
 	team?: string | null;
 	venue?: string | null;
 	teacher?: string | null;
+	extra_teachers?: string[] | null;
 	transportation?: string | null;
 	out_of_class?: Date | null;
 	start?: Date | null;
@@ -84,6 +86,7 @@ export function serializeGame(
 		venue,
 		team,
 		teacher,
+		extra_teachers,
 		transportation,
 		out_of_class,
 		start,
@@ -110,6 +113,7 @@ export function serializeGame(
 			id: teacher?.id,
 			name: teacher?.name,
 		},
+		extra_teachers: extra_teachers,
 		transportation,
 		out_of_class,
 		start,
@@ -125,6 +129,7 @@ export function serializeGameWithId(
 		venue,
 		team,
 		teacher,
+		extra_teachers,
 		transportation,
 		out_of_class,
 		start,
@@ -139,6 +144,7 @@ export function serializeGameWithId(
 		team: team?.id,
 		venue: venue?.id,
 		teacher: teacher?.id,
+		extra_teachers,
 		transportation,
 		out_of_class,
 		start,

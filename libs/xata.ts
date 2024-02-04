@@ -92,6 +92,7 @@ const tables = [
       { name: "teacher", type: "link", link: { table: "nextauth_users" } },
       { name: "opponent", type: "string" },
       { name: "out_of_class", type: "datetime" },
+      { name: "extra_teachers", type: "multiple" },
     ],
   },
   {

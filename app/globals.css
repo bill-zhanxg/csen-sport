@@ -12,6 +12,17 @@
 	h1 {
 		@apply text-2xl;
 	}
+
+	* {
+		--rmsc-main: oklch(var(--p));
+		--rmsc-hover: oklch(var(--b3));
+		--rmsc-selected: oklch(var(--p) / 0.5);
+		--rmsc-border: oklch(var(--bc) / 0.2);
+		--rmsc-gray: oklch(var(--bc / 0.6));
+		--rmsc-bg: oklch(var(--b1));
+		--rmsc-radius: 0;
+		--rmsc-h: 2.85rem;
+	}
 }
 
 @layer components {

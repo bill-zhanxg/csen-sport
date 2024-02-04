@@ -7,7 +7,21 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
-			<ChangelogBox version="0.1.2" latest release="01/02/2024">
+			<ChangelogBox version="0.1.3" latest release="04/02/2024">
+				<div className="flex flex-col gap-4">
+					<div className="flex items-center gap-4">
+						<div className="badge badge-secondary badge-outline">New</div>
+						<h2 className="text-xl font-bold">Features</h2>
+					</div>
+					<ul className="list-disc list-inside">
+						<li>
+							You can now add extra teachers to a game, this is useful when you have more than one teacher responsible
+							for that game
+						</li>
+					</ul>
+				</div>
+			</ChangelogBox>
+			<ChangelogBox version="0.1.2" release="01/02/2024">
 				<div className="flex flex-col gap-4">
 					<div className="flex items-center gap-4">
 						<div className="badge badge-secondary badge-outline">New</div>
@@ -28,9 +42,7 @@ export default function Changelog() {
 							When importing timetable or creating timetable manually, the system will allow empty team, venue, or
 							teacher been selected. It will show as &quot;---&quot; in the weekly sport page (Admin feature)
 						</li>
-						<li>
-							Add the ability to search user (Admin only)
-						</li>
+						<li>Add the ability to search user (Admin only)</li>
 					</ul>
 					<div className="divider"></div>
 					<h2 className="text-xl font-bold">Bug fixes</h2>
@@ -59,8 +71,8 @@ export default function Changelog() {
 					<h2 className="text-xl font-bold">Bug fixes</h2>
 					<ul className="list-disc list-inside">
 						<li>
-							Fixed a bug where the browser will print out error log when click event is not prevented before
-							navigating (technical)
+							Fixed a bug where the browser will print out error log when click event is not prevented before navigating
+							(technical)
 						</li>
 						<li>Updated all dependencies to latest version (technical)</li>
 					</ul>
