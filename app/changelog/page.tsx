@@ -18,6 +18,10 @@ export default function Changelog() {
 							You can now add extra teachers to a game, this is useful when you have more than one teacher responsible
 							for that game
 						</li>
+						<li>
+							Automatically collapse navigation menu when user click on any link, this will reduce the amount of clicks
+							required to open and close the menu
+						</li>
 					</ul>
 					<div className="divider"></div>
 					<h2 className="text-xl font-bold">Bug fixes</h2>
@@ -31,7 +35,8 @@ export default function Changelog() {
 							value is a empty string instead of undefined
 						</li>
 						<li>
-							Fixed a visual bug where on the game information page student view the disabled inputs are not readable in light mode
+							Fixed a visual bug where on the game information page student view the disabled inputs are not readable in
+							light mode
 						</li>
 					</ul>
 				</div>

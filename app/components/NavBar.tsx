@@ -1,3 +1,5 @@
+'use client';
+
 import { Session } from 'next-auth/types';
 import Link from 'next/link';
 import { FaBars } from 'react-icons/fa';
@@ -59,6 +61,13 @@ const menu: Menu = [
 ];
 
 export function NavBar({ session }: { session: Session }) {
+	function handleMobileLiClick() {
+		const element = document.activeElement;
+		if (element && 'blur' in element) {
+			(element as HTMLElement).blur();
+		}
+	}
+
 	const menuFiltered =
 		session.user.role === 'admin'
 			? menu
@@ -86,7 +95,7 @@ export function NavBar({ session }: { session: Session }) {
 								<ul className="p-2">
 									{item.href.map((item) => (
 										<li key={item.id}>
-											<Link id={item.id + '-mobile'} href={item.href}>
+											<Link id={item.id + '-mobile'} href={item.href} onClick={handleMobileLiClick}>
 												{item.name}
 											</Link>
 										</li>
@@ -95,7 +104,7 @@ export function NavBar({ session }: { session: Session }) {
 							</li>
 						) : (
 							<li key={item.id}>
-								<Link id={item.id + '-mobile'} href={item.href}>
+								<Link id={item.id + '-mobile'} href={item.href} onClick={handleMobileLiClick}>
 									{item.name}
 								</Link>
 							</li>
@@ -113,7 +122,15 @@ export function NavBar({ session }: { session: Session }) {
 									<ul className="p-2 border border-primary">
 										{item.href.map((item) => (
 											<li className="w-36" key={item.id}>
-												<Link id={item.id} href={item.href}>
+												<Link
+													id={item.id}
+													href={item.href}
+													onClick={(event) => {
+														const details = event.currentTarget.parentElement?.parentElement
+															?.parentElement as HTMLDetailsElement;
+														details.open = false;
+													}}
+												>
 													{item.name}
 												</Link>
 											</li>
