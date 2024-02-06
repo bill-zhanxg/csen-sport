@@ -47,7 +47,7 @@ export async function importData(
 			address,
 			court_field_number: cfNum,
 		}));
-		const findTeam = (teamId?: string) => team.find((team) => team.id === teamId);
+		const findTeam = (teamId?: string | null) => team.find((team) => team.id === teamId);
 		const gameRecords = games.map((game) => {
 			const date = dayjs.tz(`${game.date} 12:00`, timezone).toDate();
 
