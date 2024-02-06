@@ -203,6 +203,11 @@ function ChangelogBox({
 					Hello :)
 				</Link>
 			</p>
+			<p>
+				<Link className="link link-primary" href="https://github.com/bill-zhanxg/csen-sport" target="_blank">
+					Source code
+				</Link>
+			</p>
 		</div>
 	);
 }
