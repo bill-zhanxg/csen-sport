@@ -111,6 +111,7 @@ export function Step3({
 							const gameRemap: {
 								date: string;
 								team: TeamCode;
+								position: 'home' | 'away';
 								opponent: string;
 								venue: string;
 							}[] = [];
@@ -123,15 +124,18 @@ export function Step3({
 										if ('text' in verses) continue;
 										let myTeam: string | undefined;
 										let opponent: string | undefined;
+										let position: 'home' | 'away' | undefined;
 										if (verses.team1.includes(currentSchoolCsenCode)) {
 											myTeam = verses.team1;
 											opponent = verses.team2;
+											position = 'home';
 										}
 										if (verses.team2.includes(currentSchoolCsenCode)) {
 											myTeam = verses.team2;
 											opponent = verses.team1;
+											position = 'away';
 										}
-										if (!myTeam || !opponent) continue;
+										if (!myTeam || !opponent || !position) continue;
 
 										if (!teamCodes.find((code) => code.name === myTeam && code.sport === sport)) {
 											teamCodes.push({
@@ -151,6 +155,7 @@ export function Step3({
 												name: myTeam,
 												sport,
 											},
+											position,
 											opponent,
 											venue: verses.venue,
 										});
@@ -190,6 +195,7 @@ export function Step3({
 									id: v4(),
 									date,
 									teamId: team.id,
+									position: game.position,
 									opponentCode: opponent,
 									venueCode: venue,
 								});

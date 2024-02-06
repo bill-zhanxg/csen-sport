@@ -1,15 +1,16 @@
-import { emptyToUndefined } from '@/app/globalComponents/Schemas';
+import { emptyToNull } from '@/app/globalComponents/Schemas';
 import { z } from 'zod';
 
 export const GamesSchema = z.array(
 	z.object({
 		id: z.string(),
 		date: z.string(),
-		teamId: emptyToUndefined(z.string().optional()),
-		opponentCode: emptyToUndefined(z.string().optional()),
-		venueCode: emptyToUndefined(z.string().optional()),
-		teacher: emptyToUndefined(z.string().optional()),
-		extra_teachers: emptyToUndefined(z.string().array().optional()),
+		teamId: emptyToNull(z.string().nullish()),
+		position: z.literal('home').or(z.literal('away')).optional(),
+		opponentCode: emptyToNull(z.string().nullish()),
+		venueCode: emptyToNull(z.string().nullish()),
+		teacher: emptyToNull(z.string().nullish()),
+		extra_teachers: emptyToNull(z.string().array().nullish()),
 		transportation: z.string().optional(),
 		out_of_class: z.string().optional(),
 		start: z.string().optional(),
@@ -42,11 +43,11 @@ export const TeamsSchema = z.array(
 		gender: z.string().optional(),
 		sport: z.string().optional(),
 		division: z.string().optional(),
-		team: emptyToUndefined(z.string().optional()),
+		team: emptyToNull(z.string().nullish()),
 		friendlyName: z.string(),
 		group: z.literal('junior').or(z.literal('intermediate')),
-		teacher:emptyToUndefined(z.string().optional()),
-		extra_teachers: emptyToUndefined(z.string().array().optional()),
+		teacher: emptyToNull(z.string().nullish()),
+		extra_teachers: emptyToNull(z.string().array().nullish()),
 		out_of_class: z.string().optional(),
 		start: z.string().optional(),
 	}),

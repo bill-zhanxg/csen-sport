@@ -1,0 +1,16 @@
+{
+  "id": "mig_cn0ua9vm8faduriik9a0",
+  "parentID": "mig_cmuvta9828dmmgqmlhjg",
+  "checksum": "1:e6c30239525a961898d45008dc77eceb8e36944154ca1899b992dcc643b96941",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "isHome",
+          "type": "bool"
+        },
+        "table": "games"
+      }
+    }
+  ]
+}

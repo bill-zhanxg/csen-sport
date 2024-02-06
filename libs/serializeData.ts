@@ -36,13 +36,14 @@ export function serializeVenue({ id, name, address, court_field_number }: VenueR
 export type SerializedGame = {
 	id: string;
 	date?: Date | null;
+	team: PartialBy<SerializedTeam, 'id'> | null;
+	isHome?: boolean | null;
 	opponent?: string | null;
-	team?: PartialBy<SerializedTeam, 'id'> | null;
-	venue?: PartialBy<SerializedVenue, 'id'> | null;
-	teacher?: {
+	venue: PartialBy<SerializedVenue, 'id'> | null;
+	teacher: {
 		id?: string;
 		name?: string | null;
-	} | null;
+	};
 	extra_teachers?: string[] | null;
 	transportation?: string | null;
 	out_of_class?: Date | null;
@@ -53,10 +54,11 @@ export type SerializedGame = {
 export type SerializedGameWithId = {
 	id: string;
 	date?: Date | null;
+	team?: string;
+	isHome?: boolean | null;
 	opponent?: string | null;
-	team?: string | null;
-	venue?: string | null;
-	teacher?: string | null;
+	venue?: string;
+	teacher?: string;
 	extra_teachers?: string[] | null;
 	transportation?: string | null;
 	out_of_class?: Date | null;
@@ -82,9 +84,10 @@ export function serializeGame(
 	{
 		id,
 		date,
+		team,
+		isHome,
 		opponent,
 		venue,
-		team,
 		teacher,
 		extra_teachers,
 		transportation,
@@ -97,12 +100,13 @@ export function serializeGame(
 	return {
 		id,
 		date,
-		opponent,
 		team: {
 			id: team?.id,
 			name: team?.name,
 			isJunior: team?.isJunior,
 		},
+		isHome: isHome,
+		opponent,
 		venue: {
 			id: venue?.id,
 			name: venue?.name,
@@ -125,9 +129,10 @@ export function serializeGameWithId(
 	{
 		id,
 		date,
+		team,
+		isHome,
 		opponent,
 		venue,
-		team,
 		teacher,
 		extra_teachers,
 		transportation,
@@ -140,8 +145,9 @@ export function serializeGameWithId(
 	return {
 		id,
 		date,
-		opponent,
 		team: team?.id,
+		isHome,
+		opponent,
 		venue: venue?.id,
 		teacher: teacher?.id,
 		extra_teachers,

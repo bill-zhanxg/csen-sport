@@ -1,4 +1,5 @@
 import { dayjs } from '@/libs/dayjs';
+import { formatIsHome, formatIsJunior } from '@/libs/formatValue';
 import { RawTeacher } from '@/libs/tableData';
 import { DateWithGames } from '@/libs/tableHelpers';
 import Link from 'next/link';
@@ -37,6 +38,7 @@ export function WeeklySportView({
 						<tr>
 							{hideGroup || <th>Group</th>}
 							<th>Team</th>
+							<th>Position</th>
 							<th>Opponent</th>
 							<th>Venue</th>
 							<th>Teacher</th>
@@ -49,12 +51,9 @@ export function WeeklySportView({
 					<tbody>
 						{date.games.map((game) => (
 							<tr key={game.id} className={`border-base-300${lastVisit < game.xata.updatedAt ? ' bg-info/20' : ''}`}>
-								{hideGroup || (
-									<td>
-										{game?.team?.isJunior !== undefined ? (game.team.isJunior ? 'Junior' : 'Intermediate') : '---'}
-									</td>
-								)}
+								{hideGroup || <td>{game?.team?.isJunior !== null ? formatIsJunior(game.team?.isJunior) : '---'}</td>}
 								<td>{game?.team?.name || '---'}</td>
+								<td>{game.isHome !== null ? formatIsHome(game.isHome) : '---'}</td>
 								<td>{game?.opponent || '---'}</td>
 								<td>
 									{game?.venue?.name ? (

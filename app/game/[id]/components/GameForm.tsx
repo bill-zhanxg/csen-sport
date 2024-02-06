@@ -80,6 +80,21 @@ export function GameForm({
 					</label>
 					<label className="form-control w-full">
 						<div className="label">
+							<span className="label-text text-md font-bold">Position</span>
+						</div>
+						<select
+							disabled={!isTeacherBool}
+							defaultValue={game.isHome === undefined || game.isHome === null ? '' : game.isHome ? 'home' : 'away'}
+							className="select select-bordered opacity-100 !text-base-content"
+							name="position"
+						>
+							<option value="">Pick one</option>
+							<option value="home">Home</option>
+							<option value="away">Away</option>
+						</select>
+					</label>
+					<label className="form-control w-full">
+						<div className="label">
 							<span className="label-text text-md font-bold">Opponent</span>
 						</div>
 						<input
@@ -148,7 +163,9 @@ export function GameForm({
 							<span className="label-text text-md font-bold">Extra Teachers</span>
 						</div>
 						{TeachersMultiSelect({
-							className: '[&>div]:[--rmsc-radius:var(--rounded-btn,0.5rem)] [&>div]:[--rmsc-bg:oklch(var(--b2))]',
+							className: `[&>div]:[--rmsc-radius:var(--rounded-btn,0.5rem)]${
+								!isTeacherBool ? ' [&>div]:[--rmsc-bg:oklch(var(--b2))]' : ''
+							}`,
 							teachers,
 							value: extraTeachers,
 							actualDisabled: !isTeacherBool,

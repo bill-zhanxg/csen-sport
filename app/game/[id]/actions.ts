@@ -18,10 +18,15 @@ const schema = z.object({
 		.refine((val) => (typeof val === 'string' ? val?.match(/^\d{4}-\d{2}-\d{2}$/) : true), {
 			message: 'Date must be in the format YYYY-MM-DD',
 		}),
-	team: z.string().optional(),
+	team: z.string().nullish(),
+	isHome: z
+		.string()
+		.or(z.boolean())
+		.nullish()
+		.transform((val) => (typeof val === 'string' ? (val ? val === 'home' : null) : val)),
 	opponent: z.string().optional(),
-	venue: z.string().optional(),
-	teacher: z.string().optional(),
+	venue: z.string().nullish(),
+	teacher: z.string().nullish(),
 	extra_teachers: z
 		.string()
 		.optional()
@@ -42,6 +47,7 @@ export async function updateGame(prevState: FormState, formData: FormData): Prom
 			timezone: formData.get('timezone'),
 			date: formData.get('date'),
 			team: formData.get('team'),
+			isHome: formData.get('position'),
 			opponent: formData.get('opponent'),
 			venue: formData.get('venue'),
 			teacher: formData.get('teacher'),

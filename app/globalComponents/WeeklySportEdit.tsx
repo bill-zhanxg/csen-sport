@@ -7,7 +7,7 @@ import { SerializedGame } from '@/libs/serializeData';
 import { SerializedDateWithGames } from '@/libs/tableHelpers';
 import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import Link from 'next/link';
-import { ChangeEventHandler, FocusEventHandler, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, ChangeEventHandler, FocusEventHandler, useEffect, useMemo, useState } from 'react';
 import { FaPlus, FaRegTrashCan } from 'react-icons/fa6';
 import { RawTeacher, RawTeam, RawVenue } from '../../libs/tableData';
 import { AlertType, ErrorAlertFixed, SuccessAlertFixed } from '../components/Alert';
@@ -69,7 +69,7 @@ export function WeeklySportEdit({
 			function uploadData(newValue?: T) {
 				setDisabled(true);
 
-				let importValue = newValue ?? value;
+				let importValue = newValue === undefined ? value : newValue;
 
 				if (isTime) {
 					const time: Date | undefined = formatTime(original.date, importValue as string);
@@ -111,6 +111,37 @@ export function WeeklySportEdit({
 									[{team.isJunior ? 'Junior' : 'Intermediate'}] {team.name}
 								</option>
 							))}
+						</select>
+					);
+				},
+			},
+			{
+				id: 'isHome',
+				accessorKey: 'isHome',
+				header: 'Position',
+				cell: (prop) => {
+					const [value, disabled, onChange, onBlur] = editable<boolean>(prop, true);
+					const convertToBoolean = (event: ChangeEvent<HTMLSelectElement>) =>
+						({
+							target: {
+								value: event.target.value ? event.target.value === 'home' : null,
+							},
+						} as any);
+					return (
+						<select
+							className="select select-bordered rounded-none w-full"
+							value={value === undefined || value === null ? '' : value ? 'home' : 'away'}
+							disabled={disabled}
+							onChange={(event) => {
+								if (onChange) onChange(convertToBoolean(event));
+							}}
+							onBlur={(event) => {
+								if (onBlur) onBlur(convertToBoolean(event));
+							}}
+						>
+							<option value="">Select a position</option>
+							<option value="home">Home</option>
+							<option value="away">Away</option>
 						</select>
 					);
 				},
@@ -339,6 +370,7 @@ export function WeeklySportEdit({
 		return date.games.map((game) => game.team?.id);
 	}, [date.games]);
 	const [newTeam, setNewTeam] = useState('');
+	const [newPosition, setNewPosition] = useState<'' | 'home' | 'away'>('');
 	const [newOpponent, setNewOpponent] = useState('');
 	const [newVenue, setNewVenue] = useState('');
 	const [newTeacher, setNewTeacher] = useState('');
@@ -411,6 +443,17 @@ export function WeeklySportEdit({
 									</select>
 								</td>
 								<td className="p-0">
+									<select
+										className="select select-bordered rounded-none w-full"
+										value={newPosition}
+										onChange={(event) => setNewPosition(event.target.value as '' | 'home' | 'away')}
+									>
+										<option value="">Position</option>
+										<option value="home">Home</option>
+										<option value="away">Away</option>
+									</select>
+								</td>
+								<td className="p-0">
 									<input
 										className="input input-bordered rounded-none w-full"
 										placeholder="Opponent"
@@ -424,9 +467,7 @@ export function WeeklySportEdit({
 										value={newVenue}
 										onChange={(event) => setNewVenue(event.target.value)}
 									>
-										<option disabled value="">
-											Venue
-										</option>
+										<option value="">Venue</option>
 										{venues.map((venue) => (
 											<option key={venue.id} value={venue.id}>
 												{venue.name} ({venue.court_field_number})
@@ -440,9 +481,7 @@ export function WeeklySportEdit({
 										value={newTeacher}
 										onChange={(event) => setNewTeacher(event.target.value)}
 									>
-										<option disabled value="">
-											Teacher
-										</option>
+										<option value="">Teacher</option>
 										{teachers.map((teacher) => (
 											<option key={teacher.id} value={teacher.id}>
 												{teacher.name}
@@ -499,6 +538,7 @@ export function WeeklySportEdit({
 											newGame({
 												date: date.rawDate,
 												team: newTeam,
+												isHome: newPosition === 'home',
 												opponent: newOpponent,
 												venue: newVenue,
 												teacher: newTeacher,

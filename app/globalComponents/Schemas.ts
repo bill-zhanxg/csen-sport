@@ -1,15 +1,16 @@
 import { z } from 'zod';
 
-export function emptyToUndefined<T extends z.ZodTypeAny>(zodType: T) {
-	return z.preprocess((val) => (val === '' ? undefined : val), zodType);
+export function emptyToNull<T extends z.ZodTypeAny>(zodType: T) {
+	return z.preprocess((val) => (val === '' ? null : val), zodType);
 }
 
 export const UpdateGameSchema = z.object({
 	date: z.date().optional(),
-	team: emptyToUndefined(z.string().optional()),
+	team: emptyToNull(z.string().nullish()),
+	isHome: z.boolean().nullish(),
 	opponent: z.string().optional(),
-	venue: emptyToUndefined(z.string().optional()),
-	teacher: emptyToUndefined(z.string().optional()),
+	venue: emptyToNull(z.string().nullish()),
+	teacher: emptyToNull(z.string().nullish()),
 	extra_teachers: z.string().array().optional(),
 	transportation: z.string().optional(),
 	out_of_class: z.date().optional(),

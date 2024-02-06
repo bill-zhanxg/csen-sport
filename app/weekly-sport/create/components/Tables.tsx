@@ -416,6 +416,26 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 				},
 			},
 			{
+				id: 'position',
+				accessorKey: 'position',
+				header: 'Position',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<string>(prop);
+					return (
+						<select
+							className="select select-bordered rounded-none w-full"
+							value={value ?? ''}
+							onChange={onChange}
+							onBlur={onBlur}
+						>
+							<option value="">Select a position</option>
+							<option value="home">Home</option>
+							<option value="away">Away</option>
+						</select>
+					);
+				},
+			},
+			{
 				id: 'opponent',
 				accessorKey: 'opponent',
 				header: 'Opponent',
@@ -866,7 +886,7 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 									onChange={(event) => setNewDate(event.target.value)}
 								/>
 							</td>
-							<td className="p-0" colSpan={5}>
+							<td className="p-0" colSpan={6}>
 								<select
 									className="select select-bordered rounded-none w-full"
 									value={newGameGroup}

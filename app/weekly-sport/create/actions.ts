@@ -1,7 +1,7 @@
 'use server';
 
 import { AlertType } from '@/app/components/Alert';
-import { emptyToUndefined } from '@/app/globalComponents/Schemas';
+import { emptyToNull } from '@/app/globalComponents/Schemas';
 import { auth } from '@/libs/auth';
 import { chunk, formatDate, formatTime } from '@/libs/formatValue';
 import { getXataClient } from '@/libs/xata';
@@ -15,8 +15,8 @@ const TeamsSchema = z
 		id: z.string(),
 		group: z.literal('junior').or(z.literal('intermediate')).optional(),
 		name: z.string().optional(),
-		teacher: emptyToUndefined(z.string().optional()),
-		extra_teachers: emptyToUndefined(z.string().array().optional()),
+		teacher: emptyToNull(z.string().nullish()),
+		extra_teachers: emptyToNull(z.string().array().nullish()),
 		out_of_class: z.string().optional(),
 		start: z.string().optional(),
 	})
@@ -35,11 +35,12 @@ const GamesSchema = z
 	.object({
 		id: z.string(),
 		date: z.string().optional(),
-		team: emptyToUndefined(z.string().optional()),
+		team: z.string().optional(),
+		position: emptyToNull(z.literal('home').or(z.literal('away')).nullish()),
 		opponent: z.string().optional(),
-		venue: emptyToUndefined(z.string().optional()),
-		teacher: emptyToUndefined(z.string().optional()),
-		extra_teachers: emptyToUndefined(z.string().array().optional()),
+		venue: emptyToNull(z.string().nullish()),
+		teacher: emptyToNull(z.string().nullish()),
+		extra_teachers: emptyToNull(z.string().array().nullish()),
 		transportation: z.string().optional(),
 		out_of_class: z.string().optional(),
 		start: z.string().optional(),
@@ -86,6 +87,7 @@ export async function createWeeklySport(
 			return {
 				date,
 				team: game.team,
+				isHome: game.position !== undefined ? game.position === 'home' : undefined,
 				opponent: game.opponent,
 				venue: game.venue,
 				teacher: game.teacher ?? findTeam(game.team)?.teacher,

@@ -57,6 +57,7 @@ export async function importData(
 			return {
 				date,
 				team: game.teamId,
+				isHome: game.position ? game.position === 'home' : undefined,
 				opponent:
 					opponents.find((opponent) => game.opponentCode?.includes(opponent.csenCode))?.friendlyName ?? 'Not Found',
 				venue: game.venueCode?.replaceAll(' ', '-'),

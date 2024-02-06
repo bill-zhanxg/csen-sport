@@ -20,7 +20,6 @@ const config: Config & {
 		'./app/**/*.{js,ts,jsx,tsx,mdx}',
 	],
 	theme: {
-		extend: {},
 		screens: {
 			xs: '300px',
 			...defaultTheme.screens,

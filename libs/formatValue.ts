@@ -5,6 +5,10 @@ export function formatIsJunior(isJunior?: boolean | null): string {
 	return isJunior ? 'Junior' : 'Intermediate';
 }
 
+export function formatIsHome(isHome?: boolean | null): string {
+	return isHome ? 'Home' : 'Away';
+}
+
 export function stringifySearchParam(searchParams: SearchParams): { [key: string]: string | undefined } {
 	for (const key in searchParams) {
 		if (Array.isArray(searchParams[key])) searchParams[key] = searchParams[key]?.[0];

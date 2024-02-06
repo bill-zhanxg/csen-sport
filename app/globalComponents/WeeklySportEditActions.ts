@@ -62,7 +62,6 @@ async function gameAction(
 		// We only want to revalidate the timetable if a game was deleted or created
 		if (revalidate) revalidatePath('/weekly-sport/timetable');
 		if (!res) return { type: 'error', message: `The game you are trying to ${action.slice(0, -1)} does not exist` };
-		// TODO
 		return { type: 'success', message: `Successfully ${action} a game that is on "${res.date?.toDateString()}"` };
 	} catch (error) {
 		return { type: 'error', message: (error as Error).message };

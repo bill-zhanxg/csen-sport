@@ -7,7 +7,27 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
-			<ChangelogBox version="0.1.3" latest release="04/02/2024">
+			<ChangelogBox version="0.1.4" latest release="06/02/2024">
+				<div className="flex flex-col gap-4">
+					<div className="flex items-center gap-4">
+						<div className="badge badge-secondary badge-outline">New</div>
+						<h2 className="text-xl font-bold">Features</h2>
+					</div>
+					<ul className="list-disc list-inside">
+						<li>A new field called position which indicates if the game is home or away</li>
+					</ul>
+					<div className="divider"></div>
+					<h2 className="text-xl font-bold">Bug fixes</h2>
+					<ul className="list-disc list-inside">
+						<li>Fixed a bug where the system will not remove the value of a cell when been set to --- or select</li>
+						<li>
+							Fixed a bug where the visual for extra teacher is disabled when admin or teacher trying to access it
+						</li>
+						<li>Fixed a bug where when downloading games as excel file, I forgot to add two new fields to the sheet</li>
+					</ul>
+				</div>
+			</ChangelogBox>
+			<ChangelogBox version="0.1.3" release="04/02/2024">
 				<div className="flex flex-col gap-4">
 					<div className="flex items-center gap-4">
 						<div className="badge badge-secondary badge-outline">New</div>

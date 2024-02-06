@@ -110,6 +110,25 @@ export function GamesTable({
 				},
 			},
 			{
+				id: 'position',
+				accessorKey: 'position',
+				header: 'Position',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<'home' | 'away'>(prop);
+					return (
+						<select
+							className="select select-bordered rounded-none w-full"
+							value={value}
+							onChange={onChange}
+							onBlur={onBlur}
+						>
+							<option value="home">Home</option>
+							<option value="away">Away</option>
+						</select>
+					);
+				},
+			},
+			{
 				id: 'opponentCode',
 				accessorKey: 'opponentCode',
 				header: 'Opponent',

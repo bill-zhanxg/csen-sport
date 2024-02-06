@@ -93,6 +93,7 @@ const tables = [
       { name: "opponent", type: "string" },
       { name: "out_of_class", type: "datetime" },
       { name: "extra_teachers", type: "multiple" },
+      { name: "isHome", type: "bool" },
     ],
   },
   {
