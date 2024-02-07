@@ -1,6 +1,6 @@
 namespace NodeJS {
 	interface ProcessEnv {
-		NEXTAUTH_URL: string;
+		AUTH_URL: string;
 
 		XATA_BRANCH: string;
 		XATA_API_KEY: string;
