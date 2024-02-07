@@ -5,6 +5,7 @@ type team = { id: string };
 
 interface CustomUser {
 	/** The role of the user. */
+	id: string;
 	role?: role | null;
 	team?: team | null;
 	guided?: boolean | null;

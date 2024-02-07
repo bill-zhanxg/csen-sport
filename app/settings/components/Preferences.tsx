@@ -2,7 +2,7 @@
 
 import { isTeacher } from '@/libs/checkPermission';
 import { SerializedTeam } from '@/libs/serializeData';
-import { Session } from 'next-auth/types';
+import { Session } from 'next-auth';
 import { useEffect, useState } from 'react';
 
 export function Preferences({ teams, session }: { teams: SerializedTeam[]; session: Session }) {
@@ -27,7 +27,9 @@ export function Preferences({ teams, session }: { teams: SerializedTeam[]; sessi
 		<div className="flex justify-center flex-col w-full">
 			<label className="form-control w-full">
 				{isTeacher(session) && (
-					<p className='text-xl font-bold text-primary'>You are a teacher, games shown in home page will be already filtered to the games you are in charge of</p>
+					<p className="text-xl font-bold text-primary">
+						You are a teacher, games shown in home page will be already filtered to the games you are in charge of
+					</p>
 				)}
 				<div className="label">
 					<span className="label-text">Pick Your Group</span>

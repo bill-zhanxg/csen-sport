@@ -8,7 +8,7 @@ import { formatIsJunior } from '@/libs/formatValue';
 import { SerializedGame, SerializedTeam, SerializedVenue } from '@/libs/serializeData';
 import { RawTeacher } from '@/libs/tableData';
 import { FormState } from '@/libs/types';
-import { Session } from 'next-auth/types';
+import { Session } from 'next-auth';
 import { useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { FaRegCheckCircle, FaRegTimesCircle } from 'react-icons/fa';

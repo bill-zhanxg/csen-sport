@@ -3,7 +3,7 @@
 import { isTeacher } from '@/libs/checkPermission';
 import { SerializedTeam } from '@/libs/serializeData';
 import { FormState } from '@/libs/types';
-import { Session } from 'next-auth/types';
+import { Session } from 'next-auth';
 import { useEffect, useRef } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { FaRegCheckCircle, FaRegTimesCircle } from 'react-icons/fa';

@@ -18,7 +18,7 @@ export function UserTable({
 	myId,
 	users: serverUsers,
 }: {
-	myId: string;
+	myId?: string;
 	users: (JSONData<SelectedPick<NextauthUsersRecord, ('email' | 'name' | 'image' | 'role')[]>> & {
 		checked: boolean;
 	})[];

@@ -1,7 +1,7 @@
 'use client';
 
 import { captureMessage, captureUserFeedback, lastEventId } from '@sentry/nextjs';
-import { Session } from 'next-auth/types';
+import { Session } from 'next-auth';
 import { useState } from 'react';
 import { SuccessAlert } from './Alert';
 

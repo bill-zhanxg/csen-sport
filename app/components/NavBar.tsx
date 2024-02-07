@@ -1,6 +1,6 @@
 'use client';
 
-import { Session } from 'next-auth/types';
+import { Session } from 'next-auth';
 import Link from 'next/link';
 import { FaBars } from 'react-icons/fa';
 

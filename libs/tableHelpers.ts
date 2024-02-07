@@ -1,5 +1,5 @@
 import { Page, SelectedPick } from '@xata.io/client';
-import { Session } from 'next-auth/types';
+import { Session } from 'next-auth';
 import { SerializedGame } from './serializeData';
 import { GamesRecord, getXataClient } from './xata';
 
