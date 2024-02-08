@@ -1,15 +1,8 @@
 import { auth } from '@/libs/auth';
-import buildUrl from 'build-url-ts';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {
 	const session = await auth();
-	console.log(
-		buildUrl(process.env.BASE_URL, {
-			path: 'login',
-		}),
-	);
-
 	if (!session)
 		return NextResponse.redirect(
 			new URL(process.env.BASE_URL).href + `login?redirect=${encodeURIComponent(request.nextUrl.pathname)}`,
