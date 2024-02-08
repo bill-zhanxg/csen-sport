@@ -1,6 +1,5 @@
-import { auth } from '@/libs/auth';
+import { auth, signIn } from '@/libs/auth';
 import { redirect } from 'next/navigation';
-import { LoginButton } from './components/LoginButton';
 
 type ErrorCodes =
 	| 'OAuthSignin'
@@ -20,6 +19,7 @@ export default async function Login({
 	searchParams: {
 		redirect: string | string[] | undefined;
 		error: ErrorCodes | string | string[] | undefined;
+		message: string | string[] | undefined;
 	};
 }) {
 	const callbackURL = typeof searchParams.redirect === 'string' ? searchParams.redirect : searchParams.redirect?.[0];
@@ -30,9 +30,19 @@ export default async function Login({
 	return (
 		<div className="flex flex-col justify-center items-center gap-3 h-full">
 			<h1 className="text-4xl text-center font-bold p-5">CSEN Sport Login</h1>
-			<LoginButton callbackUrl={decodeURIComponent(callbackURL ?? '')} />
+			<form
+				className="w-4/5 max-w-[20rem]"
+				action={async () => {
+					'use server';
+					await signIn('azure-ad');
+				}}
+			>
+				<button type="submit" className="btn btn-primary w-full">
+					Login with Microsoft
+				</button>
+			</form>
 			{/* Error */}
-			{searchParams.error && (
+			{(searchParams.message || searchParams.error) && (
 				<div className="alert alert-error w-4/5 max-w-[20rem]">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -47,7 +57,7 @@ export default async function Login({
 							d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
 						/>
 					</svg>
-					<span>Error: {getMessages(searchParams.error)}</span>
+					<span>Error: {searchParams.message || getMessages(searchParams.error)}</span>
 				</div>
 			)}
 		</div>

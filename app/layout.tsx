@@ -1,5 +1,5 @@
 import SadCat from '@/app/images/sad-cat.png';
-import { auth } from '@/libs/auth';
+import { auth, signOut } from '@/libs/auth';
 import { isBlocked } from '@/libs/checkPermission';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
@@ -8,7 +8,6 @@ import Link from 'next/link';
 import { FaHome } from 'react-icons/fa';
 import BarOfProgress from './components/BarOfProgress';
 import { FeedbackButton, FeedbackDialog } from './components/Feedback';
-import { LogoutButton } from './components/LogoutButton';
 import { NavBar } from './components/NavBar';
 import { ReactJoyride } from './components/ReactJoyride';
 import { SentrySetUser } from './components/SentrySetUser';
@@ -73,7 +72,22 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 												<FeedbackButton />
 											</li>
 											<li>
-												<LogoutButton />
+												{/* <LogoutButton /> */}
+												<form
+													className="menu-title !p-0"
+													action={async () => {
+														'use server';
+														await signOut();
+													}}
+												>
+													<button
+														type="submit"
+														id="logout-btn"
+														className="bg-red-600 hover:bg-red-800 text-white rounded-lg px-4 py-2 text-sm w-full transition duration-200 active:bg-red-950"
+													>
+														Logout
+													</button>
+												</form>
 											</li>
 										</ul>
 									</div>

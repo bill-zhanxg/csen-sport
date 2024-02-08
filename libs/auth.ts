@@ -5,10 +5,7 @@ import { XataClient } from './xata';
 
 const client = new XataClient();
 
-export const {
-	handlers: { GET, POST },
-	auth,
-} = NextAuth({
+export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
 	adapter: XataAdapter(client),
 	session: {
 		strategy: 'database',
@@ -36,5 +33,6 @@ export const {
 	pages: {
 		signIn: '/login',
 	},
+	basePath: '/api/auth',
 	debug: process.env.NODE_ENV === 'development',
 });
