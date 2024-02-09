@@ -72,7 +72,6 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 												<FeedbackButton />
 											</li>
 											<li>
-												{/* <LogoutButton /> */}
 												<form
 													className="menu-title !p-0"
 													action={async () => {
