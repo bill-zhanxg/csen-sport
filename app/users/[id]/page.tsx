@@ -32,7 +32,7 @@ export default async function User({
 						<div className="flex flex-col gap-1 justify-center">
 							<h2 className="text-4xl">{user.name}</h2>
 							<h3 className="text-xl">{user.email}</h3>
-							<div className="badge badge-primary gap-2 capitalize rounded-md">{user.role}</div>
+							<div className="badge badge-primary gap-2 capitalize rounded-md">{user.role ?? 'Student'}</div>
 						</div>
 					</div>
 				</div>

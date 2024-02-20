@@ -35,6 +35,10 @@ export default function Changelog() {
 							When you importing and the script can not find a venue, the default name will be the CSEN Code instead of
 							Not Found for easier identification
 						</li>
+						<li>
+							Fixed a visual bug when the user&apos;s role in the database is null but they&apos;re student, the
+							user/[id] page will display a blank square, now it&apos;s fixed
+						</li>
 					</List>
 					<Divider />
 					{/* TODO */}
