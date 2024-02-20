@@ -21,6 +21,13 @@ const schema = z.object({
 	),
 	team: z.string().min(1).max(200).nullable(),
 	reset_only_after_visit_weekly_sport: z.literal('true').or(z.literal('false')).or(z.boolean()).nullish(),
+	auto_timezone: z.literal('on').or(z.boolean()).nullish(),
+	timezone: z
+		.string()
+		.min(1)
+		.max(200)
+		.refine((timezone) => Intl.supportedValuesOf('timeZone').includes(timezone))
+		.nullish(),
 });
 
 export async function updateProfile(prevState: FormState, formData: FormData): Promise<FormState> {
@@ -33,6 +40,8 @@ export async function updateProfile(prevState: FormState, formData: FormData): P
 		avatar: formData.get('avatar'),
 		team: formData.get('team'),
 		reset_only_after_visit_weekly_sport: formData.get('reset_only_after_visit_weekly_sport'),
+		auto_timezone: formData.get('auto_timezone'),
+		timezone: formData.get('timezone'),
 	});
 
 	if (!parse.success) return { success: false, message: parse.error.errors[0].message };
@@ -56,6 +65,14 @@ export async function updateProfile(prevState: FormState, formData: FormData): P
 
 	if (typeof data.reset_only_after_visit_weekly_sport === 'string')
 		data.reset_only_after_visit_weekly_sport = data.reset_only_after_visit_weekly_sport === 'true';
+
+	if (data.auto_timezone === 'on') {
+		data.auto_timezone = true;
+		delete data.timezone;
+	} else {
+		if (!data.timezone) data.auto_timezone = true;
+		else data.auto_timezone = false;
+	}
 
 	const res = await getXataClient().db.nextauth_users.update(session.user.id, {
 		...data,

@@ -1,0 +1,13 @@
+{
+  "id": "mig_cna4f2u9rm774vunt970",
+  "parentID": "mig_cna492m9rm774vunt95g",
+  "checksum": "1:ed985424c75ef093f07eb20d179ac2a188fbd66e9a883b0e5408c578e4a19ac3",
+  "operations": [
+    {
+      "removeColumn": {
+        "column": "timezone",
+        "table": "nextauth_users"
+      }
+    }
+  ]
+}

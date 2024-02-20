@@ -15,6 +15,7 @@ export function WeeklySportView({
 	isTeacher,
 	hideGroup = false,
 	lastVisit,
+	timezone,
 }: {
 	date: DateWithGames;
 	teachers: RawTeacher[];
@@ -22,6 +23,7 @@ export function WeeklySportView({
 	isTeacher: boolean;
 	hideGroup?: boolean;
 	lastVisit: Date;
+	timezone: string;
 }) {
 	return (
 		<div className="w-full bg-base-200 rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4 overflow-auto">
@@ -29,8 +31,8 @@ export function WeeklySportView({
 				href={`/date/${date.rawDate.valueOf()}`}
 				className="block sticky left-0 text-xl text-center link link-primary"
 			>
-				Weekly Sport {date.rawDate.toLocaleDateString()}
-				{showRelative && ` (${dayjs(date.rawDate).fromNow()})`}
+				Weekly Sport {dayjs.tz(date.rawDate, timezone).format('DD/MM/YYYY')}
+				{showRelative && ` (${dayjs.tz(date.rawDate, timezone).fromNow()})`}
 			</Link>
 			<div className="w-full mt-2">
 				<table className="table">
@@ -139,8 +141,8 @@ export function WeeklySportView({
 									</div>
 								</td>
 								<td>{game?.transportation || '---'}</td>
-								<td>{game?.out_of_class?.toLocaleTimeString() || '---'}</td>
-								<td>{game?.start?.toLocaleTimeString() || '---'}</td>
+								<td>{game?.out_of_class ? dayjs.tz(game?.out_of_class, timezone).format('LT') : '---'}</td>
+								<td>{game?.start ? dayjs.tz(game?.start, timezone).format('LT') : '---'}</td>
 								{isTeacher && <td>{game?.notes || '---'}</td>}
 								<td>
 									<div className="flex gap-2 justify-end w-full">

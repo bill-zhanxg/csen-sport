@@ -11,6 +11,8 @@ interface CustomUser {
 	guided?: boolean | null;
 	last_logged_on?: string | null;
 	reset_only_after_visit_weekly_sport?: boolean | null;
+	timezone?: string | null;
+	auto_timezone?: boolean | null;
 }
 declare module 'next-auth' {
 	interface Session {

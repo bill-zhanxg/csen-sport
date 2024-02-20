@@ -550,23 +550,25 @@ export function GamesTable({
 					</tfoot>
 				</table>
 				<div className="mt-2"></div>
-				{alert && (alert.type === 'error' ? ErrorAlert(alert) : SuccessAlert(alert))}
-				<button
-					className="btn btn-primary w-full mt-2"
-					disabled={!changed || loading}
-					onClick={async () => {
-						setLoading(true);
-						const res = await updateGamesBulk(changes.value);
-						if (res?.type === 'success') {
-							setChanged(false);
-							changes.value = [];
-						}
-						setAlert(res);
-						setLoading(false);
-					}}
-				>
-					Update Games
-				</button>
+				<div className='sticky left-0'>
+					{alert && (alert.type === 'error' ? ErrorAlert(alert) : SuccessAlert(alert))}
+					<button
+						className="btn btn-primary w-full mt-2"
+						disabled={!changed || loading}
+						onClick={async () => {
+							setLoading(true);
+							const res = await updateGamesBulk(changes.value);
+							if (res?.type === 'success') {
+								setChanged(false);
+								changes.value = [];
+							}
+							setAlert(res);
+							setLoading(false);
+						}}
+					>
+						Update Games
+					</button>
+				</div>
 			</div>
 			{changed && <PreventUnload />}
 		</>

@@ -5,12 +5,12 @@ import { auth } from '@/libs/auth';
 import { isTeacher } from '@/libs/checkPermission';
 import { getDateEnd, getDateStart, stringifySearchParam } from '@/libs/formatValue';
 import { serializeGames } from '@/libs/serializeData';
+import { getRawTeachers } from '@/libs/tableData';
 import { gamesToDates, getLastVisitDate } from '@/libs/tableHelpers';
 import { SearchParams } from '@/libs/types';
 import { getXataClient } from '@/libs/xata';
 import Link from 'next/link';
 import { Copy } from './components/Copy';
-import { getRawTeachers } from '@/libs/tableData';
 
 export default async function DatePage({
 	params,
@@ -76,7 +76,14 @@ export default async function DatePage({
 			<main className="flex flex-col items-center gap-4 pt-0 p-4 w-full">
 				{isTeacher(session) && <h1 className="font-bold">Student View ↓</h1>}
 				{dates.length > 0 ? (
-					<WeeklySportView date={dates[0]} isTeacher={false} teachers={teachers} hideGroup={!!view} lastVisit={lastVisit} />
+					<WeeklySportView
+						date={dates[0]}
+						isTeacher={false}
+						teachers={teachers}
+						hideGroup={!!view}
+						lastVisit={lastVisit}
+						timezone={session?.user.timezone ?? ''}
+					/>
 				) : (
 					<ErrorMessage code="404" message={`There are no games on ${date.toLocaleDateString()}`} />
 				)}

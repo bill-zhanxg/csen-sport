@@ -7,33 +7,50 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
+			<ChangelogBox version="0.1.5" latest release="20/02/2024">
+				<>
+					<Heading badge={'New'} title={'Features'} />
+					<List>
+						<li>Database: add a new user named CRT</li>
+						<li>Add a new setting: Timezone</li>
+					</List>
+					<Divider />
+					<Title>Bug fixes</Title>
+					<List>
+						<li>Make the other setting page more understandable (Still pretty hard to understand)</li>
+						<li>
+							Improved the visual of the Update Profile button in user setting page where it does not look good on
+							mobile because it sticks to the very bottom of the page
+						</li>
+						<li>
+							Added a new timezone system where the system will store users timezone to database to avoid wrong time
+							being shown for out of class and start time
+						</li>
+						<li>Fix a visual bug where update button is not sticky in bulk action</li>
+					</List>
+				</>
+			</ChangelogBox>
 			<ChangelogBox version="0.1.4" latest release="06/02/2024">
-				<div className="flex flex-col gap-4">
-					<div className="flex items-center gap-4">
-						<div className="badge badge-secondary badge-outline">New</div>
-						<h2 className="text-xl font-bold">Features</h2>
-					</div>
-					<ul className="list-disc list-inside">
+				<>
+					<Heading badge={'New'} title={'Features'} />
+					<List>
 						<li>A new field called position which indicates if the game is home or away</li>
-					</ul>
-					<div className="divider"></div>
-					<h2 className="text-xl font-bold">Bug fixes</h2>
-					<ul className="list-disc list-inside">
+					</List>
+					<Divider />
+					<Title>Bug fixes</Title>
+					<List>
 						<li>Fixed a bug where the system will not remove the value of a cell when been set to --- or select</li>
 						<li>
 							Fixed a bug where the visual for extra teacher is disabled when admin or teacher trying to access it
 						</li>
 						<li>Fixed a bug where when downloading games as excel file, I forgot to add two new fields to the sheet</li>
-					</ul>
-				</div>
+					</List>
+				</>
 			</ChangelogBox>
 			<ChangelogBox version="0.1.3" release="04/02/2024">
-				<div className="flex flex-col gap-4">
-					<div className="flex items-center gap-4">
-						<div className="badge badge-secondary badge-outline">New</div>
-						<h2 className="text-xl font-bold">Features</h2>
-					</div>
-					<ul className="list-disc list-inside">
+				<>
+					<Heading badge={'New'} title={'Features'} />
+					<List>
 						<li>
 							You can now add extra teachers to a game, this is useful when you have more than one teacher responsible
 							for that game
@@ -42,10 +59,10 @@ export default function Changelog() {
 							Automatically collapse navigation menu when user click on any link, this will reduce the amount of clicks
 							required to open and close the menu
 						</li>
-					</ul>
-					<div className="divider"></div>
-					<h2 className="text-xl font-bold">Bug fixes</h2>
-					<ul className="list-disc list-inside">
+					</List>
+					<Divider />
+					<Title>Bug fixes</Title>
+					<List>
 						<li>
 							Fixed a crucial bug where when importing or creating timetable, the system will prioritize the display of
 							default value, therefore not showing feedback to the user if the value has been overridden
@@ -58,16 +75,13 @@ export default function Changelog() {
 							Fixed a visual bug where on the game information page student view the disabled inputs are not readable in
 							light mode
 						</li>
-					</ul>
-				</div>
+					</List>
+				</>
 			</ChangelogBox>
 			<ChangelogBox version="0.1.2" release="01/02/2024">
-				<div className="flex flex-col gap-4">
-					<div className="flex items-center gap-4">
-						<div className="badge badge-secondary badge-outline">New</div>
-						<h2 className="text-xl font-bold">Features</h2>
-					</div>
-					<ul className="list-disc list-inside">
+				<>
+					<Heading badge={'New'} title={'Features'} />
+					<List>
 						<li>
 							This new update will highlight any update that has made to weekly sport game since your last visit in
 							light blue, allowing the user to see what has changed easily (new option in user setting for controlling
@@ -83,48 +97,42 @@ export default function Changelog() {
 							teacher been selected. It will show as &quot;---&quot; in the weekly sport page (Admin feature)
 						</li>
 						<li>Add the ability to search user (Admin only)</li>
-					</ul>
-					<div className="divider"></div>
-					<h2 className="text-xl font-bold">Bug fixes</h2>
-					<ul className="list-disc list-inside">
+					</List>
+					<Divider />
+					<Title>Bug fixes</Title>
+					<List>
 						<li>
 							Fixed a bug where when any select menu has an empty value in /game/[id], it will select the first one
 							available instead of leaving it empty
 						</li>
-					</ul>
-				</div>
+					</List>
+				</>
 			</ChangelogBox>
 			<ChangelogBox version="0.1.1" release="31/01/2024">
-				<div className="flex flex-col gap-4">
-					<div className="flex items-center gap-4">
-						<div className="badge badge-secondary badge-outline">Changed</div>
-						<h2 className="text-xl font-bold">Features</h2>
-					</div>
-					<ul className="list-disc list-inside">
+				<>
+					<Heading badge={'Changed'} title={'Features'} />
+					<List>
 						<li>
 							The submit bug and feedback button has been moved to user dropdown, due to some actions being blocked by
 							the floating menu
 						</li>
 						<li>Added a new step for guidance, which is the user feedback menu</li>
-					</ul>
-					<div className="divider"></div>
-					<h2 className="text-xl font-bold">Bug fixes</h2>
-					<ul className="list-disc list-inside">
+					</List>
+					<Divider />
+					<Title>Bug fixes</Title>
+					<List>
 						<li>
 							Fixed a bug where the browser will print out error log when click event is not prevented before navigating
 							(technical)
 						</li>
 						<li>Updated all dependencies to latest version (technical)</li>
-					</ul>
-				</div>
+					</List>
+				</>
 			</ChangelogBox>
 			<ChangelogBox version="0.1.0" release="30/01/2024">
-				<div className="flex flex-col gap-4">
-					<div className="flex items-center gap-4">
-						<div className="badge badge-secondary badge-outline">New</div>
-						<h2 className="text-xl font-bold">Features</h2>
-					</div>
-					<ul className="list-disc list-inside">
+				<>
+					<Heading badge={'New'} title={'Features'} />
+					<List>
 						<li>First release!</li>
 						<li>Changelog page is finished</li>
 						<li>Database is ready and setup</li>
@@ -139,10 +147,10 @@ export default function Changelog() {
 							Website guidance is finished and working (you can restart the guide by clicking the &quot;Restart
 							Guide&quot; button on the top)
 						</li>
-					</ul>
-					<div className="divider"></div>
-					<h2 className="text-xl font-bold">For Teacher and Admin</h2>
-					<ul className="list-disc list-inside">
+					</List>
+					<Divider />
+					<Title>For Teacher and Admin</Title>
+					<List>
 						<li>Ability to import weekly sport fixture to database via PDF (Import page admin only)</li>
 						<li>Ability to add, edit and delete weekly sport games manually (Weekly Sport page teacher view)</li>
 						<li>Ability to export weekly sport fixture to Excel document (Bulk Action page admin only)</li>
@@ -150,16 +158,16 @@ export default function Changelog() {
 						<li>Ability to change user&apos;s role in bulk</li>
 						<li>Ability to manage teams, venues (Admin Controls)</li>
 						<li>Ability to manually create timetable if automatic import fails (Create Timetable page admin only)</li>
-					</ul>
-				</div>
+					</List>
+				</>
 			</ChangelogBox>
 			<ChangelogBox version="0.0.0" release="24/08/2023">
-				<div className="flex flex-col gap-4">
-					<h2 className="text-xl font-bold">Code space initialized</h2>
-					<ul className="list-disc list-inside">
+				<>
+					<Title>Code space initialized</Title>
+					<List>
 						<li>Need to start working on this!</li>
-					</ul>
-				</div>
+					</List>
+				</>
 			</ChangelogBox>
 		</main>
 	);
@@ -188,9 +196,9 @@ function ChangelogBox({
 				</p>
 			</div>
 			<div className="divider"></div>
-			{children}
+			<div className="flex flex-col gap-4">{children}</div>
 			<div className="divider"></div>
-			<h2 className="text-xl font-bold">Credits</h2>
+			<Title>Credits</Title>
 			<p>
 				Made by <span className="font-bold">Bill Z.</span>{' '}
 				<Link className="link link-primary" href="https://bill-zhanxg.com" target="_blank">
@@ -210,4 +218,25 @@ function ChangelogBox({
 			</p>
 		</div>
 	);
+}
+
+function Divider() {
+	return <div className="divider -m-0.5"></div>;
+}
+
+function List({ children }: { children: React.ReactNode }) {
+	return <ul className="list-disc list-inside">{children}</ul>;
+}
+
+function Heading({ badge, title }: { badge: string; title: string }) {
+	return (
+		<div className="flex items-center gap-4">
+			<div className="badge badge-secondary badge-outline">{badge}</div>
+			<Title>{title}</Title>
+		</div>
+	);
+}
+
+function Title({ children }: { children: React.ReactNode }) {
+	return <h2 className="text-xl font-bold">{children}</h2>;
 }

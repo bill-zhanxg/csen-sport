@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { FaHome } from 'react-icons/fa';
 import BarOfProgress from './components/BarOfProgress';
 import { FeedbackButton, FeedbackDialog } from './components/Feedback';
+import { HandleUserTimezone } from './components/HandleUserTimezone';
 import { NavBar } from './components/NavBar';
 import { ReactJoyride } from './components/ReactJoyride';
 import { SentrySetUser } from './components/SentrySetUser';
@@ -95,6 +96,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 							<FeedbackDialog session={session} />
 							{children}
 							<BarOfProgress />
+							{session.user.auto_timezone && <HandleUserTimezone />}
 							<SentrySetUser user={{ ...session.user, ip_address: ip }} />
 							{!session.user.guided && <ReactJoyride />}
 						</>

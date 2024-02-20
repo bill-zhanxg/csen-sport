@@ -1,0 +1,17 @@
+{
+  "id": "mig_cna4f51pd1c408r1j1ig",
+  "parentID": "mig_cna4f2u9rm774vunt970",
+  "checksum": "1:54ce5b4140d163726a403a75a7b501635f4e74c1c38f55d98a06d8a49a4c09e5",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "timezone",
+          "type": "string",
+          "defaultValue": "Australia/Sydney"
+        },
+        "table": "nextauth_users"
+      }
+    }
+  ]
+}

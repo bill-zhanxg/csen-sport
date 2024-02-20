@@ -1,0 +1,17 @@
+{
+  "id": "mig_cna5aeeibhib47821ofg",
+  "parentID": "mig_cna4f51pd1c408r1j1ig",
+  "checksum": "1:8885f9ae0b0c17efd9f9c131210a0ea94051dac478fda3444007efc8c340245a",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "auto_timezone",
+          "type": "bool",
+          "defaultValue": "true"
+        },
+        "table": "nextauth_users"
+      }
+    }
+  ]
+}

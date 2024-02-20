@@ -116,6 +116,7 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 									teachers={teachers}
 									isTeacher={isTeacherBool}
 									lastVisit={lastVisit}
+									timezone={session?.user.timezone ?? ''}
 								/>
 							),
 						)}

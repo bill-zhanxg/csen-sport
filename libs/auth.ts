@@ -1,12 +1,10 @@
 import { XataAdapter } from '@auth/xata-adapter';
 import NextAuth from 'next-auth';
 import AzureADProvider from 'next-auth/providers/azure-ad';
-import { XataClient } from './xata';
-
-const client = new XataClient();
+import { getXataClient } from './xata';
 
 export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
-	adapter: XataAdapter(client),
+	adapter: XataAdapter(getXataClient()),
 	session: {
 		strategy: 'database',
 	},
@@ -26,6 +24,8 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
 				session.user.guided = user.guided;
 				session.user.last_logged_on = user.last_logged_on;
 				session.user.reset_only_after_visit_weekly_sport = user.reset_only_after_visit_weekly_sport;
+				session.user.timezone = user.timezone;
+				session.user.auto_timezone = user.auto_timezone;
 			}
 			return session;
 		},

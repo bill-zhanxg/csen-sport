@@ -1,10 +1,11 @@
 'use client';
 
 import { isTeacher } from '@/libs/checkPermission';
+import { dayjs } from '@/libs/dayjs';
 import { SerializedTeam } from '@/libs/serializeData';
 import { FormState } from '@/libs/types';
 import { Session } from 'next-auth';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { FaRegCheckCircle, FaRegTimesCircle } from 'react-icons/fa';
 import { Box } from '../../globalComponents/Box';
@@ -24,6 +25,8 @@ export function SettingsForm({ session, teams }: { session: Session; teams: Seri
 			prevState.current = state;
 		}
 	}, [state]);
+
+	const [autoTimezone, setAutoTimezone] = useState(session.user.auto_timezone ?? true);
 
 	return (
 		<form className="flex flex-col gap-4 w-full" action={formAction}>
@@ -95,7 +98,9 @@ export function SettingsForm({ session, teams }: { session: Session; teams: Seri
 							{/* file deepcode ignore ReactControlledUncontrolledFormElement: Intended */}
 							<div className="form-control">
 								<label className="label cursor-pointer">
-									<span className="label-text">When visited any of read only weekly sport table (default)</span>
+									<span className="label-text">
+										When visited Home, Weekly Sport page, or any weekly sport schedule page (default)
+									</span>
 									<input
 										type="radio"
 										name="reset_only_after_visit_weekly_sport"
@@ -124,6 +129,42 @@ export function SettingsForm({ session, teams }: { session: Session; teams: Seri
 				</div>
 			</Box>
 
+			<Box>
+				<h1 className="font-bold px-4 pt-4">Timezone</h1>
+				<div className="divider m-0"></div>
+				<div className="flex flex-col sm:flex-row justify-center w-full gap-4 items-center pt-0 p-4">
+					<label className="form-control w-full">
+						<div className="form-control max-w-72">
+							<label className="label cursor-pointer gap-2">
+								<input
+									type="checkbox"
+									name="auto_timezone"
+									checked={autoTimezone}
+									className="checkbox"
+									onChange={(e) => setAutoTimezone(e.target.checked)}
+								/>
+								<span className="label-text">Automatically detect timezone (default)</span>
+							</label>
+						</div>
+						<div className="label">
+							<span className="label-text">Pick Your Timezone</span>
+						</div>
+						<select
+							name="timezone"
+							className="select select-bordered"
+							defaultValue={session.user.timezone ?? dayjs.tz.guess()}
+							disabled={autoTimezone}
+						>
+							{Intl.supportedValuesOf('timeZone').map((tz) => (
+								<option key={tz} value={tz}>
+									{tz}
+								</option>
+							))}
+						</select>
+					</label>
+				</div>
+			</Box>
+
 			{state && (
 				<div role="alert" className={`alert ${state.success ? 'alert-success' : 'alert-error'} mt-2`}>
 					{state.success ? <FaRegCheckCircle size={20} /> : <FaRegTimesCircle size={20} />}
@@ -139,7 +180,7 @@ function Submit() {
 	const { pending } = useFormStatus();
 
 	return (
-		<button type="submit" disabled={pending} className="sticky bottom-0 btn btn-primary">
+		<button type="submit" disabled={pending} className="sticky bottom-2 btn btn-primary">
 			Update Profile
 		</button>
 	);

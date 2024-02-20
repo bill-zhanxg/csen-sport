@@ -1,9 +1,9 @@
 import { auth } from '@/libs/auth';
 import { isTeacher } from '@/libs/checkPermission';
+import { getRawTeachers } from '@/libs/tableData';
 import { gamesToDates, getLastVisitDate } from '@/libs/tableHelpers';
 import { getXataClient } from '@/libs/xata';
 import { WeeklySportView } from './globalComponents/WeeklySportView';
-import { getRawTeachers } from '@/libs/tableData';
 
 export default async function Home() {
 	const session = await auth();
@@ -65,6 +65,7 @@ export default async function Home() {
 								isTeacher={isTeacherBool}
 								lastVisit={lastVisit}
 								showRelative
+								timezone={session?.user.timezone ?? ''}
 							/>
 						))}
 					</>
