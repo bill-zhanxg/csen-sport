@@ -36,6 +36,12 @@ export default function Changelog() {
 							Not Found for easier identification
 						</li>
 					</List>
+					<Divider />
+					{/* TODO */}
+					<Title>Todo List</Title>
+					<List>
+						<li>Add default section for import (admin)</li>
+					</List>
 				</>
 			</ChangelogBox>
 			<ChangelogBox version="0.1.4" latest release="06/02/2024">
