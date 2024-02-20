@@ -58,8 +58,7 @@ export async function importData(
 				date,
 				team: game.teamId,
 				isHome: game.position ? game.position === 'home' : undefined,
-				opponent:
-					opponents.find((opponent) => game.opponentCode?.includes(opponent.csenCode))?.friendlyName ?? 'Not Found',
+				opponent: opponents.find((opponent) => game.opponentCode?.includes(opponent.csenCode))?.friendlyName ?? '',
 				venue: game.venueCode?.replaceAll(' ', '-'),
 				teacher: game.teacher ?? findTeam(game.teamId)?.teacher,
 				extra_teachers: game.extra_teachers ?? findTeam(game.teamId)?.extra_teachers,

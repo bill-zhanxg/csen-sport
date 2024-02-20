@@ -209,7 +209,7 @@ export function Step3({
 								if (!result)
 									return {
 										csenCode: venueCode,
-										venue: 'Not Found',
+										venue: venueCode,
 										address: 'Not Found',
 										cfNum: 'Not Found',
 									};

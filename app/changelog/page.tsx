@@ -27,6 +27,14 @@ export default function Changelog() {
 							being shown for out of class and start time
 						</li>
 						<li>Fix a visual bug where update button is not sticky in bulk action</li>
+						<li>
+							Fixed a bug where when you create new teams when importing timetable the opponent for all the team based
+							game will be Not Found, now it is an empty string instead
+						</li>
+						<li>
+							When you importing and the script can not find a venue, the default name will be the CSEN Code instead of
+							Not Found for easier identification
+						</li>
 					</List>
 				</>
 			</ChangelogBox>
