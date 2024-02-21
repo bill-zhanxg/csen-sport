@@ -7,7 +7,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { pdfjs } from 'react-pdf';
 import { AlertType, ErrorAlertFixed, SuccessAlertFixed } from '../../../components/Alert';
 import { importData } from '../actions';
-import { Games, Opponents, Teams, Venues } from '../types';
+import { Defaults, Games, Opponents, Teams, Venues } from '../types';
 import { FIxturePages, Step1 } from './Step1';
 import { Step2 } from './Step2';
 import { Step3 } from './Step3';
@@ -45,6 +45,7 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 		else return true;
 	}
 
+	const [defaults, setDefaults] = useState<Defaults>({});
 	const [teams, setTeams] = useState<Teams>([]);
 	const [opponents, setOpponents] = useState<Opponents>([]);
 	const [filteredVenues, setFilteredVenues] = useState<Venues>([]);
@@ -62,6 +63,11 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 				})
 				.catch(() => {
 					// Shouldn't happen
+					setImportState({
+						type: 'error',
+						message: 'An unknown error occurred while importing data. Please try again.',
+					});
+					setNextLoading(false);
 				});
 		};
 	}, [teams, opponents, filteredVenues, games]);
@@ -110,6 +116,8 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 						fixtures={fixturePages}
 						venues={venues}
 						teachers={teachers}
+						defaults={defaults}
+						setDefaults={setDefaults}
 						teams={teams}
 						setTeams={setTeams}
 						opponents={opponents}

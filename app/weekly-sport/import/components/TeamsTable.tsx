@@ -2,10 +2,19 @@
 
 import { TeachersMultiSelect } from '@/app/globalComponents/TeachersMultiSelect';
 import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import { ChangeEventHandler, Dispatch, FocusEventHandler, SetStateAction, useEffect, useMemo, useState } from 'react';
+import {
+	ChangeEventHandler,
+	Dispatch,
+	FocusEventHandler,
+	SetStateAction,
+	useEffect,
+	useMemo,
+	useState,
+	useTransition,
+} from 'react';
 import { FaPlus } from 'react-icons/fa';
 import { v4 } from 'uuid';
-import { Games, Teams } from '../types';
+import { Defaults, Games, Teams } from '../types';
 
 const defaultColumn: Partial<ColumnDef<Teams[number]>> = {
 	cell: ({ getValue }) => {
@@ -16,15 +25,15 @@ const defaultColumn: Partial<ColumnDef<Teams[number]>> = {
 export function TeamsTable({
 	teams,
 	setTeams,
-	games,
 	setGames,
 	teachers,
+	defaults,
 }: {
 	teams: Teams;
 	setTeams: Dispatch<SetStateAction<Teams>>;
-	games: Games;
 	setGames: Dispatch<SetStateAction<Games>>;
 	teachers: { id: string; name?: string | null }[];
+	defaults: Defaults;
 }) {
 	const columns = useMemo<ColumnDef<Teams[number]>[]>(() => {
 		function editable<T>({
@@ -126,7 +135,7 @@ export function TeamsTable({
 					return (
 						<select
 							className="select select-bordered rounded-none w-full"
-							value={value ?? ''}
+							value={value ?? defaults.default_teacher ?? ''}
 							onChange={onChange}
 							onBlur={onBlur}
 						>
@@ -148,7 +157,7 @@ export function TeamsTable({
 					const [value, onChange, onBlur] = editable<string[] | undefined>(prop);
 					return TeachersMultiSelect({
 						teachers,
-						value: value ?? [],
+						value: value ?? defaults.default_extra_teachers ?? [],
 						onChange: (e) => {
 							if (onChange) onChange(e as any);
 							if (onBlur) onBlur(e as any);
@@ -163,7 +172,13 @@ export function TeamsTable({
 				cell: (prop) => {
 					const [value, onChange, onBlur] = editable<string | undefined>(prop);
 					return (
-						<input type="time" className="bg-base-100 ml-4" value={value ?? ''} onChange={onChange} onBlur={onBlur} />
+						<input
+							type="time"
+							className="bg-base-100 ml-4"
+							value={value ?? defaults.default_out_of_class ?? ''}
+							onChange={onChange}
+							onBlur={onBlur}
+						/>
 					);
 				},
 			},
@@ -174,12 +189,18 @@ export function TeamsTable({
 				cell: (prop) => {
 					const [value, onChange, onBlur] = editable<string | undefined>(prop);
 					return (
-						<input type="time" className="bg-base-100 ml-4" value={value ?? ''} onChange={onChange} onBlur={onBlur} />
+						<input
+							type="time"
+							className="bg-base-100 ml-4"
+							value={value ?? defaults.default_start ?? ''}
+							onChange={onChange}
+							onBlur={onBlur}
+						/>
 					);
 				},
 			},
 		];
-	}, [teachers]);
+	}, [teachers, defaults]);
 
 	const table = useReactTable({
 		columns,
@@ -198,6 +219,8 @@ export function TeamsTable({
 
 	const [newGroup, setNewGroup] = useState<'' | 'junior' | 'intermediate'>('');
 	const [newName, setNewName] = useState('');
+
+	const [pendingTransition, startTransition] = useTransition();
 
 	return (
 		<>
@@ -273,27 +296,29 @@ export function TeamsTable({
 												},
 											];
 										});
-										// I know react state doesn't update immediately, but I need the id, so I'll just gonna hope it works (and it did)
-										setGames((games) => {
-											const allDates = games
-												.filter(({ teamId }) => {
-													const team = teams.find((team) => team.id === teamId);
-													return team?.group === newGroup;
-												})
-												.map((game) => game.date);
-											// Remove duplicates
-											const dates = allDates.filter((date, index) => allDates.indexOf(date) === index);
+										startTransition(() => {
+											// I know react state doesn't update immediately, but I need the id, so I'll just gonna hope it works (and it did)
+											setGames((games) => {
+												const allDates = games
+													.filter(({ teamId }) => {
+														const team = teams.find((team) => team.id === teamId);
+														return team?.group === newGroup;
+													})
+													.map((game) => game.date);
+												// Remove duplicates
+												const dates = allDates.filter((date, index) => allDates.indexOf(date) === index);
 
-											return [
-												...games,
-												...dates.map((date) => ({
-													date,
-													id: v4(),
-													teamId: id,
-													opponentCode: '',
-													venueCode: '',
-												})),
-											];
+												return [
+													...games,
+													...dates.map((date) => ({
+														date,
+														id: v4(),
+														teamId: id,
+														opponentCode: '',
+														venueCode: '',
+													})),
+												];
+											});
 										});
 										setNewGroup('');
 										setNewName('');

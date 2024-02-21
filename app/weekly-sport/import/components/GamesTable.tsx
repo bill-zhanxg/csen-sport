@@ -12,7 +12,7 @@ import {
 } from '@tanstack/react-table';
 import { ChangeEventHandler, Dispatch, FocusEventHandler, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { FaRegTrashCan } from 'react-icons/fa6';
-import { Games, Opponents, Teams, Venues } from '../types';
+import { Defaults, Games, Opponents, Teams, Venues } from '../types';
 
 export function GamesTable({
 	teams,
@@ -21,6 +21,7 @@ export function GamesTable({
 	games,
 	setGames,
 	teachers,
+	defaults,
 }: {
 	teams: Teams;
 	opponents: Opponents;
@@ -28,6 +29,7 @@ export function GamesTable({
 	games: Games;
 	setGames: Dispatch<SetStateAction<Games>>;
 	teachers: { id: string; name?: string | null }[];
+	defaults: Defaults;
 }) {
 	const columns = useMemo<ColumnDef<Games[number]>[]>(() => {
 		function editable<T>({
@@ -184,7 +186,7 @@ export function GamesTable({
 					return (
 						<select
 							className="select select-bordered rounded-none w-full"
-							value={value ?? defaultTeacher ?? ''}
+							value={value ?? defaultTeacher ?? defaults.default_teacher ?? ''}
 							onChange={onChange}
 							onBlur={onBlur}
 						>
@@ -207,7 +209,7 @@ export function GamesTable({
 					const defaultExtraTeacher = teams.find((team) => team.id === prop.row.original.teamId)?.extra_teachers;
 					return TeachersMultiSelect({
 						teachers,
-						value: value ?? defaultExtraTeacher ?? [],
+						value: value ?? defaultExtraTeacher ?? defaults.default_extra_teachers ?? [],
 						onChange: (e) => {
 							if (onChange) onChange(e as any);
 							if (onBlur) onBlur(e as any);
@@ -260,7 +262,7 @@ export function GamesTable({
 						<input
 							type="time"
 							className="bg-base-100 ml-4"
-							value={value ?? defaultTime ?? ''}
+							value={value ?? defaultTime ?? defaults.default_out_of_class ?? ''}
 							onChange={onChange}
 							onBlur={onBlur}
 						/>
@@ -278,7 +280,7 @@ export function GamesTable({
 						<input
 							type="time"
 							className="bg-base-100 ml-4"
-							value={value ?? defaultTime ?? ''}
+							value={value ?? defaultTime ?? defaults.default_start ?? ''}
 							onChange={onChange}
 							onBlur={onBlur}
 						/>
@@ -341,7 +343,7 @@ export function GamesTable({
 				},
 			},
 		];
-	}, [teams, opponents, venues, teachers, setGames]);
+	}, [teams, opponents, venues, teachers, setGames, defaults]);
 
 	const table = useReactTable({
 		columns,

@@ -53,3 +53,11 @@ export const TeamsSchema = z.array(
 	}),
 );
 export type Teams = z.infer<typeof TeamsSchema>;
+
+export const DefaultsSchema = z.object({
+	default_teacher: emptyToNull(z.string().nullish()),
+	default_extra_teachers: emptyToNull(z.string().array().nullish()),
+	default_out_of_class: z.string().optional(),
+	default_start: z.string().optional(),
+})
+export type Defaults = z.infer<typeof DefaultsSchema>;

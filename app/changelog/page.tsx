@@ -7,7 +7,36 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
-			<ChangelogBox version="0.1.5" latest release="20/02/2024">
+			<ChangelogBox version="0.1.6" release="20/02/2024">
+				<>
+					<Heading badge={'New'} title={'Features'} />
+					<List>
+						{/* TODO */}
+						<li>
+							Not finished: Add default section for import, allows to set default teacher, extra teacher, out of class
+							time, and start time
+						</li>
+						<li>
+							Experimental (not finished): Resolve the lag when change value in import page with useTransition react
+							hook
+						</li>
+					</List>
+					<Divider />
+					<Title>Bug fixes</Title>
+					<List>
+						<li>
+							Codebase: Switched from manually stating the latest release, now use css to automatic select the first one
+							(Changelog page)
+						</li>
+						<li>
+							Improvement: When user sign up, instead of using 64x64 profile picture, now it use 648x648 for better
+							visual. Otherwise it is not even readable (existing user need to change their profile manually)
+						</li>
+						<li>Add handle for no internet connect when importing timetable</li>
+					</List>
+				</>
+			</ChangelogBox>
+			<ChangelogBox version="0.1.5" release="20/02/2024">
 				<>
 					<Heading badge={'New'} title={'Features'} />
 					<List>
@@ -40,15 +69,9 @@ export default function Changelog() {
 							user/[id] page will display a blank square, now it&apos;s fixed
 						</li>
 					</List>
-					<Divider />
-					{/* TODO */}
-					<Title>Todo List</Title>
-					<List>
-						<li>Add default section for import (admin)</li>
-					</List>
 				</>
 			</ChangelogBox>
-			<ChangelogBox version="0.1.4" latest release="06/02/2024">
+			<ChangelogBox version="0.1.4" release="06/02/2024">
 				<>
 					<Heading badge={'New'} title={'Features'} />
 					<List>
@@ -193,21 +216,19 @@ export default function Changelog() {
 
 function ChangelogBox({
 	version,
-	latest = false,
 	release,
 	children,
 }: {
 	version: string;
-	latest?: boolean;
 	release?: string;
 	children: React.ReactNode;
 }) {
 	return (
-		<div className="flex flex-col w-full max-w-4xl rounded-xl border-2 border-base-300 shadow-md shadow-base-300 p-6">
+		<div className="flex flex-col w-full max-w-4xl rounded-xl border-2 border-base-300 shadow-md shadow-base-300 p-6 [&_.latest-changelog]:first-of-type:inline-flex">
 			<div className="flex flex-col sm:flex-row justify-between">
 				<div className="flex flex-col xs:flex-row items-end gap-4">
 					<h1 className="font-bold">Version {version}</h1>
-					{latest && <div className="badge badge-primary badge-outline">Latest</div>}
+					<div className="latest-changelog badge badge-primary badge-outline hidden">Latest</div>
 				</div>
 				<p>
 					Released on <span className="font-bold">{release}</span>

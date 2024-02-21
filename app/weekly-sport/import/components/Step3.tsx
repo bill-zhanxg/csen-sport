@@ -3,7 +3,8 @@ import { Signal, useSignal } from '@preact/signals-react';
 import { RowData } from '@tanstack/react-table';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { v4 } from 'uuid';
-import { Games, Opponents, Teams, Venues } from '../types';
+import { Defaults, Games, Opponents, Teams, Venues } from '../types';
+import { DefaultSection } from './DefaultSection';
 import { GamesTable } from './GamesTable';
 import { OpponentsTable } from './OpponentsTable';
 import { FIxturePages } from './Step1';
@@ -22,6 +23,8 @@ export function Step3({
 	fixtures,
 	venues,
 	teachers,
+	defaults,
+	setDefaults,
 	teams,
 	setTeams,
 	opponents,
@@ -36,6 +39,8 @@ export function Step3({
 	fixtures: Signal<FIxturePages>;
 	venues: Signal<Venues>;
 	teachers: { id: string; name?: string | null }[];
+	defaults: Defaults;
+	setDefaults: Dispatch<SetStateAction<Defaults>>;
 	teams: Teams;
 	setTeams: Dispatch<SetStateAction<Teams>>;
 	opponents: Opponents;
@@ -235,7 +240,8 @@ export function Step3({
 			{schoolCsenCode.value &&
 				(teams.length > 0 ? (
 					<>
-						<TeamsTable teams={teams} setTeams={setTeams} games={games} setGames={setGames} teachers={teachers} />
+						<DefaultSection defaults={defaults} setDefaults={setDefaults} teachers={teachers} />
+						<TeamsTable teams={teams} setTeams={setTeams} setGames={setGames} teachers={teachers} defaults={defaults} />
 						<OpponentsTable opponents={opponents} setOpponents={setOpponents} />
 						<VenuesTable venues={filteredVenues} setVenues={setFilteredVenues} />
 						<GamesTable
@@ -245,6 +251,7 @@ export function Step3({
 							games={games}
 							setGames={setGames}
 							teachers={teachers}
+							defaults={defaults}
 						/>
 					</>
 				) : (
