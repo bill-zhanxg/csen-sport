@@ -7,14 +7,48 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
-			<ChangelogBox version="0.1.6" release="20/02/2024">
+			<ChangelogBox version="0.1.7" release="22/02/2024">
 				<>
 					<Heading badge={'New'} title={'Features'} />
 					<List>
-						{/* TODO */}
 						<li>
-							Not finished: Add default section for import, allows to set default teacher, extra teacher, out of class
-							time, and start time
+							Finished: Add default section for import, allows to set default teacher, extra teacher, out of class time,
+							and start time
+						</li>
+						<li>Finished: Resolve the lag with useTransition react hook when change values for the following:</li>
+						<List className="!list-[circle] ml-4">
+							<li>User page search now use defer update</li>
+							<li>In import page, default sections values changes display are deferred</li>
+							<li>
+								In import page, any change to team&apos;s fields, visual update to the rest of the games are deferred
+								to prevent lag
+							</li>
+							<li>In import page, addition of team will be deferred when updating the UI</li>
+							<li>
+								In import page, all changes for Opponents table and Venues table&apos;s values are deferred when
+								updating the UI
+							</li>
+							<li>In import page, the removal of any games will be deferred when updating the UI</li>
+						</List>
+					</List>
+					<Divider />
+					<Title>Bug fixes</Title>
+					<List>
+						<li>
+							Improved visual for displaying weekly sport on mobile by decreasing the padding for more information to be
+							displayed
+						</li>
+						<li>Renamed Team names to Teams in import page because it fits better</li>
+					</List>
+				</>
+			</ChangelogBox>
+			<ChangelogBox version="0.1.6" release="21/02/2024">
+				<>
+					<Heading badge={'New'} title={'Features'} />
+					<List>
+						<li>
+							Not finished (server side): Add default section for import, allows to set default teacher, extra teacher,
+							out of class time, and start time
 						</li>
 						<li>
 							Experimental (not finished): Resolve the lag when change value in import page with useTransition react
@@ -263,8 +297,8 @@ function Divider() {
 	return <div className="divider -m-0.5"></div>;
 }
 
-function List({ children }: { children: React.ReactNode }) {
-	return <ul className="list-disc list-inside">{children}</ul>;
+function List({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+	return <ul className={`list-disc list-inside ${className}`}>{children}</ul>;
 }
 
 function Heading({ badge, title }: { badge: string; title: string }) {

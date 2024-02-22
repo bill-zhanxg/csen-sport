@@ -10,7 +10,18 @@ import utc from 'dayjs/plugin/utc';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { ImportState } from './components/ImportPage';
-import { Games, GamesSchema, Opponents, OpponentsSchema, Teams, TeamsSchema, Venues, VenuesSchema } from './types';
+import {
+	Defaults,
+	DefaultsSchema,
+	Games,
+	GamesSchema,
+	Opponents,
+	OpponentsSchema,
+	Teams,
+	TeamsSchema,
+	Venues,
+	VenuesSchema,
+} from './types';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -24,6 +35,7 @@ export async function importData(
 	opponentsRaw: Opponents,
 	venuesRaw: Venues,
 	gamesRaw: Games,
+	defaultsRaw: Defaults,
 	timezoneRaw: string,
 ): Promise<ImportState> {
 	const session = await auth();
@@ -34,6 +46,7 @@ export async function importData(
 		const opponents = OpponentsSchema.parse(opponentsRaw);
 		const venues = VenuesSchema.parse(venuesRaw);
 		const games = GamesSchema.parse(gamesRaw);
+		const defaults = DefaultsSchema.parse(defaultsRaw);
 		const timezone = TimezoneSchema.parse(timezoneRaw);
 
 		const teamRecords = team.map(({ id, friendlyName, group }) => ({
@@ -51,8 +64,12 @@ export async function importData(
 		const gameRecords = games.map((game) => {
 			const date = dayjs.tz(`${game.date} 12:00`, timezone).toDate();
 
-			const out_of_class = formatTime(date, game.out_of_class ?? findTeam(game.teamId)?.out_of_class, timezone);
-			const start = formatTime(date, game.start ?? findTeam(game.teamId)?.start, timezone);
+			const out_of_class = formatTime(
+				date,
+				game.out_of_class ?? findTeam(game.teamId)?.out_of_class ?? defaults.default_out_of_class,
+				timezone,
+			);
+			const start = formatTime(date, game.start ?? findTeam(game.teamId)?.start ?? defaults.default_start, timezone);
 
 			return {
 				date,
@@ -60,8 +77,8 @@ export async function importData(
 				isHome: game.position ? game.position === 'home' : undefined,
 				opponent: opponents.find((opponent) => game.opponentCode?.includes(opponent.csenCode))?.friendlyName ?? '',
 				venue: game.venueCode?.replaceAll(' ', '-'),
-				teacher: game.teacher ?? findTeam(game.teamId)?.teacher,
-				extra_teachers: game.extra_teachers ?? findTeam(game.teamId)?.extra_teachers,
+				teacher: game.teacher ?? findTeam(game.teamId)?.teacher ?? defaults.default_teacher,
+				extra_teachers: game.extra_teachers ?? findTeam(game.teamId)?.extra_teachers ?? defaults.default_extra_teachers,
 				transportation: game.transportation,
 				out_of_class,
 				start,

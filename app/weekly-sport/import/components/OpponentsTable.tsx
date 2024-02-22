@@ -1,7 +1,16 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
 import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import { ChangeEventHandler, Dispatch, FocusEventHandler, SetStateAction, useEffect, useMemo, useState } from 'react';
+import {
+	ChangeEventHandler,
+	Dispatch,
+	FocusEventHandler,
+	SetStateAction,
+	useEffect,
+	useMemo,
+	useState,
+	useTransition,
+} from 'react';
 import { Opponents } from '../types';
 
 const defaultColumn: Partial<ColumnDef<Opponents[number]>> = {
@@ -22,9 +31,9 @@ export function OpponentsTable({
 			getValue,
 			row: { index },
 			column: { id },
-			table,
 		}: CellContext<Opponents[number], unknown>): [
 			T,
+			boolean,
 			ChangeEventHandler<HTMLElement> | undefined,
 			FocusEventHandler<HTMLElement> | undefined,
 		] {
@@ -34,8 +43,10 @@ export function OpponentsTable({
 			useEffect(() => {
 				setValue(initialValue);
 			}, [initialValue]);
+			const [pendingTransition, startTransition] = useTransition();
 			return [
 				value,
+				pendingTransition,
 				(event) => {
 					if (!('value' in event.target)) return;
 					const newValue = event.target.value as T;
@@ -44,7 +55,12 @@ export function OpponentsTable({
 				(event) => {
 					if (!('value' in event.target)) return;
 					if (previousValue !== value) {
-						table.options.meta?.updateData(index, id, value);
+						startTransition(() => {
+							setOpponents((opponents) => {
+								opponents[index][id as keyof (typeof opponents)[number]] = value as string;
+								return [...opponents];
+							});
+						});
 						setPreviousValue(value);
 					}
 				},
@@ -62,11 +78,12 @@ export function OpponentsTable({
 				accessorKey: 'friendlyName',
 				header: 'Friendly Name',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string>(prop);
 					return (
 						<input
 							className="input input-bordered rounded-none w-full"
 							value={value}
+							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
 						/>
@@ -74,21 +91,13 @@ export function OpponentsTable({
 				},
 			},
 		];
-	}, []);
+	}, [setOpponents]);
 
 	const table = useReactTable({
 		columns,
 		defaultColumn,
 		data: opponents,
 		getCoreRowModel: getCoreRowModel(),
-		meta: {
-			updateData: (rowIndex, columnId, value) => {
-				setOpponents((opponents) => {
-					opponents[rowIndex][columnId as keyof (typeof opponents)[number]] = value as string;
-					return [...opponents];
-				});
-			},
-		},
 	});
 
 	return (

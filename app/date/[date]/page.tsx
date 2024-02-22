@@ -40,7 +40,7 @@ export default async function DatePage({
 	const teachers = await getRawTeachers();
 
 	return (
-		<div className="flex flex-col items-center w-full p-4 gap-4">
+		<div className="flex flex-col items-center w-full sm:p-4 gap-4">
 			{isTeacher(session) && (
 				<div className="p-4 w-full">
 					<div className="flex flex-col items-center gap-2 rounded-xl border-2 border-error shadow-lg shadow-error p-4 w-full">

@@ -1,7 +1,16 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
 import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import { ChangeEventHandler, Dispatch, FocusEventHandler, SetStateAction, useEffect, useMemo, useState } from 'react';
+import {
+	ChangeEventHandler,
+	Dispatch,
+	FocusEventHandler,
+	SetStateAction,
+	useEffect,
+	useMemo,
+	useState,
+	useTransition,
+} from 'react';
 import { Venues } from '../types';
 
 const defaultColumn: Partial<ColumnDef<Venues[number]>> = {
@@ -16,9 +25,9 @@ export function VenuesTable({ venues, setVenues }: { venues: Venues; setVenues: 
 			getValue,
 			row: { index },
 			column: { id },
-			table,
 		}: CellContext<Venues[number], unknown>): [
 			T,
+			boolean,
 			ChangeEventHandler<HTMLElement> | undefined,
 			FocusEventHandler<HTMLElement> | undefined,
 		] {
@@ -28,8 +37,10 @@ export function VenuesTable({ venues, setVenues }: { venues: Venues; setVenues: 
 			useEffect(() => {
 				setValue(initialValue);
 			}, [initialValue]);
+			const [pendingTransition, startTransition] = useTransition();
 			return [
 				value,
+				pendingTransition,
 				(event) => {
 					if (!('value' in event.target)) return;
 					const newValue = event.target.value as T;
@@ -38,7 +49,12 @@ export function VenuesTable({ venues, setVenues }: { venues: Venues; setVenues: 
 				(event) => {
 					if (!('value' in event.target)) return;
 					if (previousValue !== value) {
-						table.options.meta?.updateData(index, id, value);
+						startTransition(() => {
+							setVenues((venues) => {
+								venues[index][id as keyof (typeof venues)[number]] = value as string;
+								return [...venues];
+							});
+						});
 						setPreviousValue(value);
 					}
 				},
@@ -56,13 +72,14 @@ export function VenuesTable({ venues, setVenues }: { venues: Venues; setVenues: 
 				accessorKey: 'venue',
 				header: 'Venue',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string>(prop);
 					return (
 						<input
 							className={`input input-bordered rounded-none w-full ${
 								value === 'Not Found' ? 'bg-error text-error-content' : ''
 							}`}
 							value={value}
+							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
 						/>
@@ -74,13 +91,14 @@ export function VenuesTable({ venues, setVenues }: { venues: Venues; setVenues: 
 				accessorKey: 'address',
 				header: 'Address',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string>(prop);
 					return (
 						<input
 							className={`input input-bordered rounded-none w-full ${
 								value === 'Not Found' ? 'bg-error text-error-content' : ''
 							}`}
 							value={value}
+							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
 						/>
@@ -92,13 +110,14 @@ export function VenuesTable({ venues, setVenues }: { venues: Venues; setVenues: 
 				accessorKey: 'cfNum',
 				header: 'Court / Field Number',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string>(prop);
 					return (
 						<input
 							className={`input input-bordered rounded-none w-full ${
 								value === 'Not Found' ? 'bg-error text-error-content' : ''
 							}`}
 							value={value}
+							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
 						/>
@@ -106,21 +125,13 @@ export function VenuesTable({ venues, setVenues }: { venues: Venues; setVenues: 
 				},
 			},
 		];
-	}, []);
+	}, [setVenues]);
 
 	const table = useReactTable({
 		columns,
 		defaultColumn,
 		data: venues,
 		getCoreRowModel: getCoreRowModel(),
-		meta: {
-			updateData: (rowIndex, columnId, value) => {
-				setVenues((venues) => {
-					venues[rowIndex][columnId as keyof (typeof venues)[number]] = value as string;
-					return [...venues];
-				});
-			},
-		},
 	});
 
 	return (

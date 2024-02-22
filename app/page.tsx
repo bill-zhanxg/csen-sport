@@ -37,7 +37,7 @@ export default async function Home() {
 	const teachers = await getRawTeachers();
 
 	return (
-		<div className="flex flex-col items-center w-full p-6 gap-4">
+		<div className="flex flex-col items-center w-full py-6 p-1 sm:p-6 gap-4">
 			<h1 className="text-2xl font-bold text-center">
 				Hello <span className="text-primary">{session?.user.name}</span>
 			</h1>
@@ -52,7 +52,7 @@ export default async function Home() {
 					'Here is your upcoming weekly sport schedule'
 				)}
 			</h2>
-			<main className="flex flex-col items-center gap-4 pt-0 p-4 w-full">
+			<main className="flex flex-col items-center gap-4 pt-0 p-1 sm:p-4 w-full">
 				{dates.length < 1 ? (
 					<div>Nothing Here</div>
 				) : (

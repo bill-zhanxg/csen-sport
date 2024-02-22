@@ -5,7 +5,7 @@ import { UserAvatar } from '@/app/globalComponents/UserAvatar';
 import { NextauthUsersRecord } from '@/libs/xata';
 import { JSONData, SelectedPick } from '@xata.io/client';
 import { useRouter } from 'next13-progressbar';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { changeRole } from '../actions';
 
@@ -62,6 +62,8 @@ export function UserTable({
 		setUsers(users.map((user) => ({ ...user, checked: user.id === myId ? false : checked })));
 	};
 
+	const [searchPending, searchTransition] = useTransition();
+
 	if (!users) return <ErrorMessage code="501" message="There is no users in the database" />;
 
 	return (
@@ -73,13 +75,16 @@ export function UserTable({
 					<div className="flex flex-col gap-4 bg-base-100 rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4 overflow-auto w-full">
 						<div className="flex flex-col lg:flex-row gap-4 justify-center items-center">
 							<h2 className="sticky left-0 text-xl text-center text-primary">Users Management</h2>
-							<input
-								type="text"
-								placeholder="Search Users"
-								value={search}
-								onChange={(e) => setSearch(e.target.value)}
-								className="static lg:absolute right-6 input input-bordered w-full lg:max-w-xs"
-							/>
+							<label className="static lg:absolute right-6 input input-bordered w-full lg:max-w-xs flex items-center gap-2">
+								<input
+									type="text"
+									placeholder="Search Users"
+									value={search}
+									onChange={(e) => searchTransition(() => setSearch(e.target.value))}
+									className="grow"
+								/>
+								{searchPending && <span className="loading loading-spinner loading-md"></span>}
+							</label>
 						</div>
 						<table className="table">
 							<thead>

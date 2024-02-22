@@ -40,9 +40,9 @@ export function TeamsTable({
 			getValue,
 			row: { index },
 			column: { id },
-			table,
 		}: CellContext<Teams[number], unknown>): [
 			T,
+			boolean,
 			ChangeEventHandler<HTMLElement> | undefined,
 			FocusEventHandler<HTMLElement> | undefined,
 		] {
@@ -52,8 +52,10 @@ export function TeamsTable({
 			useEffect(() => {
 				setValue(initialValue);
 			}, [initialValue]);
+			const [pendingTransition, startTransition] = useTransition();
 			return [
 				value,
+				pendingTransition,
 				(event) => {
 					if (!('value' in event.target)) return;
 					const newValue = event.target.value as T;
@@ -63,7 +65,12 @@ export function TeamsTable({
 					if (!('value' in event.target)) return;
 					const value = event.target.value as T;
 					if (previousValue !== value) {
-						table.options.meta?.updateData(index, id, value);
+						startTransition(() => {
+							setTeams((teams) => {
+								teams[index][id as keyof (typeof teams)[number]] = value as any;
+								return [...teams];
+							});
+						});
 						setPreviousValue(value);
 					}
 				},
@@ -96,11 +103,12 @@ export function TeamsTable({
 				accessorKey: 'friendlyName',
 				header: 'Friendly Name',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string>(prop);
 					return (
 						<input
 							className="input input-bordered rounded-none w-full"
 							value={value}
+							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
 						/>
@@ -112,11 +120,12 @@ export function TeamsTable({
 				accessorKey: 'group',
 				header: 'Group',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<'junior' | 'intermediate'>(prop);
+					const [value, disabled, onChange, onBlur] = editable<'junior' | 'intermediate'>(prop);
 					return (
 						<select
 							className="select select-bordered rounded-none w-full"
 							value={value}
+							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
 						>
@@ -131,11 +140,12 @@ export function TeamsTable({
 				accessorKey: 'teacher',
 				header: 'Default Teacher',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string | undefined>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string | undefined>(prop);
 					return (
 						<select
 							className="select select-bordered rounded-none w-full"
 							value={value ?? defaults.default_teacher ?? ''}
+							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
 						>
@@ -154,10 +164,11 @@ export function TeamsTable({
 				accessorKey: 'extra_teachers',
 				header: 'D Extra Teachers',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string[] | undefined>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string[] | undefined>(prop);
 					return TeachersMultiSelect({
 						teachers,
 						value: value ?? defaults.default_extra_teachers ?? [],
+						disabled,
 						onChange: (e) => {
 							if (onChange) onChange(e as any);
 							if (onBlur) onBlur(e as any);
@@ -170,12 +181,13 @@ export function TeamsTable({
 				accessorKey: 'out_of_class',
 				header: 'D Out of Class',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string | undefined>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string | undefined>(prop);
 					return (
 						<input
 							type="time"
-							className="bg-base-100 ml-4"
+							className={`bg-base-100 ml-4${disabled ? ' bg-base-200' : ''}`}
 							value={value ?? defaults.default_out_of_class ?? ''}
+							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
 						/>
@@ -187,12 +199,13 @@ export function TeamsTable({
 				accessorKey: 'start',
 				header: 'D Start Time',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string | undefined>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string | undefined>(prop);
 					return (
 						<input
 							type="time"
-							className="bg-base-100 ml-4"
+							className={`bg-base-100 ml-4${disabled ? ' bg-base-200' : ''}`}
 							value={value ?? defaults.default_start ?? ''}
+							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
 						/>
@@ -200,21 +213,13 @@ export function TeamsTable({
 				},
 			},
 		];
-	}, [teachers, defaults]);
+	}, [teachers, defaults, setTeams]);
 
 	const table = useReactTable({
 		columns,
 		defaultColumn,
 		data: teams,
 		getCoreRowModel: getCoreRowModel(),
-		meta: {
-			updateData: (rowIndex, columnId, value) => {
-				setTeams((teams) => {
-					teams[rowIndex][columnId as keyof (typeof teams)[number]] = value as any;
-					return [...teams];
-				});
-			},
-		},
 	});
 
 	const [newGroup, setNewGroup] = useState<'' | 'junior' | 'intermediate'>('');
@@ -224,7 +229,7 @@ export function TeamsTable({
 
 	return (
 		<>
-			<p className="text-xl font-bold mt-4">Team names (Modify if needed)</p>
+			<p className="text-xl font-bold mt-4">Teams (Modify if needed)</p>
 			<div className="overflow-x-auto w-[98%]">
 				<table className="table text-lg">
 					<thead>
@@ -263,6 +268,7 @@ export function TeamsTable({
 								<select
 									className="select select-bordered rounded-none w-full"
 									value={newGroup}
+									disabled={pendingTransition}
 									onChange={(event) => setNewGroup(event.target.value as '' | 'junior' | 'intermediate')}
 								>
 									<option disabled value="">
@@ -277,6 +283,7 @@ export function TeamsTable({
 									className="input input-bordered rounded-none w-full"
 									placeholder="Team Name"
 									value={newName}
+									disabled={pendingTransition}
 									onChange={(event) => setNewName(event.target.value)}
 								/>
 							</td>
@@ -286,17 +293,17 @@ export function TeamsTable({
 									disabled={newGroup === '' || newName === ''}
 									onClick={() => {
 										const id = v4();
-										setTeams((teams) => {
-											return [
-												...teams,
-												{
-													id: id,
-													friendlyName: newName,
-													group: newGroup || 'junior',
-												},
-											];
-										});
 										startTransition(() => {
+											setTeams((teams) => {
+												return [
+													...teams,
+													{
+														id: id,
+														friendlyName: newName,
+														group: newGroup || 'junior',
+													},
+												];
+											});
 											// I know react state doesn't update immediately, but I need the id, so I'll just gonna hope it works (and it did)
 											setGames((games) => {
 												const allDates = games

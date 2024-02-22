@@ -56,7 +56,7 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 	const startImport = useMemo(() => {
 		return () => {
 			setImportState({ type: 'loading' });
-			importData(teams, opponents, filteredVenues, games, dayjs.tz.guess())
+			importData(teams, opponents, filteredVenues, games, defaults, dayjs.tz.guess())
 				.then((res) => {
 					setImportState(res);
 					setNextLoading(false);
@@ -70,7 +70,7 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 					setNextLoading(false);
 				});
 		};
-	}, [teams, opponents, filteredVenues, games]);
+	}, [teams, opponents, filteredVenues, games, defaults]);
 
 	useEffect(() => {
 		if (step === 4) startImport();

@@ -54,9 +54,9 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 	const venues = await getRawVenues();
 
 	return (
-		<div className="flex flex-col items-center w-full p-4 gap-4">
+		<div className="flex flex-col items-center w-full sm:p-4 gap-4">
 			<h1 className="text-2xl font-bold text-center">Weekly Sport Timetable</h1>
-			<div className="flex flex-col sm:flex-row gap-4 py-2 px-4 w-full sm:w-auto">
+			<div className="flex flex-col sm:flex-row gap-4 py-2 px-1 sm:px-4 w-full sm:w-auto">
 				<Tabs>
 					<Link
 						href={`/weekly-sport/timetable?edit=${edit}`}
@@ -92,7 +92,7 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 					</Tabs>
 				)}
 			</div>
-			<main className="flex flex-col items-center gap-4 pt-0 p-4 w-full">
+			<main className="flex flex-col items-center gap-4 pt-0 p-1 sm:p-4 w-full">
 				{dates.length < 1 ? (
 					<div>Nothing Here</div>
 				) : (

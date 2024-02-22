@@ -10,7 +10,16 @@ import {
 	getSortedRowModel,
 	useReactTable,
 } from '@tanstack/react-table';
-import { ChangeEventHandler, Dispatch, FocusEventHandler, SetStateAction, useEffect, useMemo, useState } from 'react';
+import {
+	ChangeEventHandler,
+	Dispatch,
+	FocusEventHandler,
+	SetStateAction,
+	useEffect,
+	useMemo,
+	useState,
+	useTransition,
+} from 'react';
 import { FaRegTrashCan } from 'react-icons/fa6';
 import { Defaults, Games, Opponents, Teams, Venues } from '../types';
 
@@ -38,6 +47,7 @@ export function GamesTable({
 			column: { id },
 		}: CellContext<Games[number], unknown>): [
 			T,
+			boolean,
 			ChangeEventHandler<HTMLElement> | undefined,
 			FocusEventHandler<HTMLElement> | undefined,
 		] {
@@ -47,8 +57,10 @@ export function GamesTable({
 			useEffect(() => {
 				setValue(initialValue);
 			}, [initialValue]);
+			const [pendingTransition, startTransition] = useTransition();
 			return [
 				value,
+				pendingTransition,
 				(event) => {
 					if (!('value' in event.target)) return;
 					const newValue = event.target.value as T;
@@ -58,11 +70,13 @@ export function GamesTable({
 					if (!('value' in event.target)) return;
 					const value = event.target.value as T;
 					if (previousValue !== value) {
-						setGames((games) => {
-							// Can not use index because it will be wrong when sorting
-							const index = games.findIndex((game) => game.id === original.id);
-							games[index][id as keyof Games[number]] = value as any;
-							return [...games];
+						startTransition(() => {
+							setGames((games) => {
+								// Can not use index because it will be wrong when sorting
+								const index = games.findIndex((game) => game.id === original.id);
+								games[index][id as keyof Games[number]] = value as any;
+								return [...games];
+							});
 						});
 						setPreviousValue(value);
 					}
@@ -76,12 +90,13 @@ export function GamesTable({
 				accessorKey: 'date',
 				header: 'Date',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string>(prop);
 					return (
 						<input
 							type="date"
 							className="bg-base-100 px-4 w-full"
 							value={value ?? ''}
+							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
 						/>
@@ -93,11 +108,12 @@ export function GamesTable({
 				accessorKey: 'teamId',
 				header: 'Team',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string>(prop);
 					return (
 						<select
 							className="select select-bordered rounded-none w-full"
 							value={value}
+							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
 						>
@@ -116,11 +132,12 @@ export function GamesTable({
 				accessorKey: 'position',
 				header: 'Position',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<'home' | 'away'>(prop);
+					const [value, disabled, onChange, onBlur] = editable<'home' | 'away'>(prop);
 					return (
 						<select
 							className="select select-bordered rounded-none w-full"
 							value={value}
+							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
 						>
@@ -135,11 +152,12 @@ export function GamesTable({
 				accessorKey: 'opponentCode',
 				header: 'Opponent',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string>(prop);
 					return (
 						<select
 							className="select select-bordered rounded-none w-full"
 							value={value}
+							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
 						>
@@ -158,11 +176,12 @@ export function GamesTable({
 				accessorKey: 'venueCode',
 				header: 'Venue',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string>(prop);
 					return (
 						<select
 							className="select select-bordered rounded-none w-full"
 							value={value}
+							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
 						>
@@ -181,12 +200,13 @@ export function GamesTable({
 				accessorKey: 'teacher',
 				header: 'Teacher',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string | undefined>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string | undefined>(prop);
 					const defaultTeacher = teams.find((team) => team.id === prop.row.original.teamId)?.teacher;
 					return (
 						<select
 							className="select select-bordered rounded-none w-full"
 							value={value ?? defaultTeacher ?? defaults.default_teacher ?? ''}
+							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
 						>
@@ -205,11 +225,12 @@ export function GamesTable({
 				accessorKey: 'extra_teachers',
 				header: 'Extra Teachers',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string[] | undefined>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string[] | undefined>(prop);
 					const defaultExtraTeacher = teams.find((team) => team.id === prop.row.original.teamId)?.extra_teachers;
 					return TeachersMultiSelect({
 						teachers,
 						value: value ?? defaultExtraTeacher ?? defaults.default_extra_teachers ?? [],
+						disabled,
 						onChange: (e) => {
 							if (onChange) onChange(e as any);
 							if (onBlur) onBlur(e as any);
@@ -222,12 +243,13 @@ export function GamesTable({
 				accessorKey: 'transportation',
 				header: 'Transportation',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string>(prop);
 					return (
 						<input
 							className="input input-bordered rounded-none w-full"
 							placeholder="Optional"
 							value={value ?? ''}
+							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
 						/>
@@ -239,12 +261,13 @@ export function GamesTable({
 				accessorKey: 'notes',
 				header: 'Notes',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string>(prop);
 					return (
 						<input
 							className="input input-bordered rounded-none w-full"
 							placeholder="Extra info"
 							value={value ?? ''}
+							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
 						/>
@@ -256,13 +279,14 @@ export function GamesTable({
 				accessorKey: 'out_of_class',
 				header: 'Out of Class',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string | undefined>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string | undefined>(prop);
 					const defaultTime = teams.find((team) => team.id === prop.row.original.teamId)?.out_of_class;
 					return (
 						<input
 							type="time"
-							className="bg-base-100 ml-4"
+							className={`bg-base-100 ml-4${disabled ? ' bg-base-200' : ''}`}
 							value={value ?? defaultTime ?? defaults.default_out_of_class ?? ''}
+							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
 						/>
@@ -274,13 +298,14 @@ export function GamesTable({
 				accessorKey: 'start',
 				header: 'Start Time',
 				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string | undefined>(prop);
+					const [value, disabled, onChange, onBlur] = editable<string | undefined>(prop);
 					const defaultTime = teams.find((team) => team.id === prop.row.original.teamId)?.start;
 					return (
 						<input
 							type="time"
-							className="bg-base-100 ml-4"
+							className={`bg-base-100 ml-4${disabled ? ' bg-base-200' : ''}`}
 							value={value ?? defaultTime ?? defaults.default_start ?? ''}
+							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
 						/>
@@ -343,7 +368,7 @@ export function GamesTable({
 				},
 			},
 		];
-	}, [teams, opponents, venues, teachers, setGames, defaults]);
+	}, [teams, opponents, venues, teachers, defaults, setGames]);
 
 	const table = useReactTable({
 		columns,
