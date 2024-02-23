@@ -7,6 +7,17 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
+			<ChangelogBox version="0.1.8" release="22/02/2024">
+				<>
+					<Title>Bug fixes</Title>
+					<List>
+						<li>
+							Fixed an issue where in weekly sport page extra teacher is empty on student view because it was not
+							exposed from backend
+						</li>
+					</List>
+				</>
+			</ChangelogBox>
 			<ChangelogBox version="0.1.7" release="22/02/2024">
 				<>
 					<Heading badge={'New'} title={'Features'} />
@@ -20,8 +31,8 @@ export default function Changelog() {
 							<li>User page search now use defer update</li>
 							<li>In import page, default sections values changes display are deferred</li>
 							<li>
-								In import page, any change to team&apos;s fields, visual update to the rest of the games are deferred
-								to prevent lag
+								In import page, any change to team&apos;s fields, visual update to the rest of the games are deferred to
+								prevent lag
 							</li>
 							<li>In import page, addition of team will be deferred when updating the UI</li>
 							<li>

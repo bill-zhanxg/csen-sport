@@ -50,7 +50,7 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 
 	const dates = gamesToDates(games, isTeacherBool);
 	const teams = isTeacherBool ? await getRawTeams() : [];
-	const teachers = isTeacherBool ? await getRawTeachers() : [];
+	const teachers = await getRawTeachers();
 	const venues = await getRawVenues();
 
 	return (
