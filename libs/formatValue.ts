@@ -2,7 +2,7 @@ import { dayjs } from './dayjs';
 import { SearchParams } from './types';
 
 export function formatIsJunior(isJunior?: boolean | null): string {
-	return isJunior ? 'Junior' : 'Intermediate';
+	return isJunior ? 'Junior (Y7-8)' : 'Intermediate (Y9-10)';
 }
 
 export function formatIsHome(isHome?: boolean | null): string {

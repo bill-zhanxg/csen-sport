@@ -43,8 +43,8 @@ export function Preferences({ teams, session }: { teams: SerializedTeam[]; sessi
 					}}
 				>
 					<option value="default">Default (Both)</option>
-					<option value="junior">Junior</option>
-					<option value="intermediate">Intermediate</option>
+					<option value="junior">Junior (Year 7 - 8)</option>
+					<option value="intermediate">Intermediate (Year 9 - 10)</option>
 				</select>
 				<div className="label">
 					<span className="label-text">Pick Your Team</span>
