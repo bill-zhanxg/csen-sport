@@ -15,6 +15,7 @@ export default function Changelog() {
 							Fixed an issue where in weekly sport page extra teacher is empty on student view because it was not
 							exposed from backend
 						</li>
+						<li>Add year level indicator for junior and intermediate</li>
 					</List>
 				</>
 			</ChangelogBox>
