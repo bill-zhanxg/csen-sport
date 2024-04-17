@@ -8,7 +8,7 @@ export default async function Users() {
 	const session = await auth();
 	if (!session || !isAdmin(session)) return Unauthorized();
 
-	const users = await getXataClient().db.nextauth_users.select(['email', 'name', 'image', 'role']).getMany();
+	const users = await getXataClient().db.nextauth_users.select(['email', 'name', 'image', 'role']).getAll();
 
 	return (
 		<UserTable

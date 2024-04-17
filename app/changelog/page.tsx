@@ -7,6 +7,20 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
+			<ChangelogBox version="0.1.9" release="22/02/2024">
+				<>
+					<Title>Bug fixes</Title>
+					<List>
+						<li>
+							TEMP FIX: Fix an issue where only 20 users are displayed in the user page. This is a temporary fix until I
+							optimize it
+						</li>
+						<li>
+							More bug fixes coming soon
+						</li>
+					</List>
+				</>
+			</ChangelogBox>
 			<ChangelogBox version="0.1.8" release="22/02/2024">
 				<>
 					<Title>Bug fixes</Title>
