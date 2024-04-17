@@ -1,6 +1,6 @@
 'use client';
 
-import { captureMessage, captureUserFeedback, lastEventId } from '@sentry/nextjs';
+import { captureMessage, captureUserFeedback } from '@sentry/nextjs';
 import { Session } from 'next-auth';
 import { useState } from 'react';
 import { SuccessAlert } from './Alert';
@@ -55,8 +55,7 @@ export function FeedbackDialog({ session }: { session: Session }) {
 							className="btn btn-primary"
 							disabled={!description}
 							onClick={() => {
-								let event_id = lastEventId();
-								if (!event_id) event_id = captureMessage('User Feedback');
+								const event_id = captureMessage('User Feedback');
 
 								const userFeedback = {
 									event_id,
