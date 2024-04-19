@@ -76,7 +76,7 @@ export function SettingsForm({ session, teams }: { session: Session; teams: Seri
 				</div>
 			</Box>
 
-			<Box>
+			<Box id='team-preferences'>
 				<h1 className="font-bold px-4 pt-4">Team Preferences</h1>
 				<div className="divider m-0"></div>
 				<div className="flex flex-col sm:flex-row justify-center w-full gap-4 items-center pt-0 p-4">
