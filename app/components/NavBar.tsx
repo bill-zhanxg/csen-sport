@@ -2,13 +2,15 @@
 
 import { Session } from 'next-auth';
 import Link from 'next/link';
-import { FaBars } from 'react-icons/fa';
+import { MouseEventHandler } from 'react';
+import { FaBars, FaExternalLinkAlt } from 'react-icons/fa';
 
 type Menu = {
 	id: string;
 	name: string;
 	href: string | { id: string; name: string; href: string; admin?: boolean }[];
 	admin?: boolean;
+	external?: boolean;
 }[];
 const menu: Menu = [
 	{
@@ -19,7 +21,8 @@ const menu: Menu = [
 	{
 		id: 'csen-btn',
 		name: 'CSEN',
-		href: '/csen',
+		href: 'https://www.csen.au/semester-sport/',
+		external: true,
 	},
 	{
 		id: 'admin-control-btn',
@@ -95,18 +98,14 @@ export function NavBar({ session }: { session: Session }) {
 								<ul className="p-2">
 									{item.href.map((item) => (
 										<li key={item.id}>
-											<Link id={item.id + '-mobile'} href={item.href} onClick={handleMobileLiClick}>
-												{item.name}
-											</Link>
+											<MenuItem mobile item={item} onClick={handleMobileLiClick} />
 										</li>
 									))}
 								</ul>
 							</li>
 						) : (
 							<li key={item.id}>
-								<Link id={item.id + '-mobile'} href={item.href} onClick={handleMobileLiClick}>
-									{item.name}
-								</Link>
+								<MenuItem mobile item={item} onClick={handleMobileLiClick} />
 							</li>
 						),
 					)}
@@ -122,17 +121,14 @@ export function NavBar({ session }: { session: Session }) {
 									<ul className="p-2 border border-primary">
 										{item.href.map((item) => (
 											<li className="w-36" key={item.id}>
-												<Link
-													id={item.id}
-													href={item.href}
+												<MenuItem
+													item={item}
 													onClick={(event) => {
 														const details = event.currentTarget.parentElement?.parentElement
 															?.parentElement as HTMLDetailsElement;
 														details.open = false;
 													}}
-												>
-													{item.name}
-												</Link>
+												/>
 											</li>
 										))}
 									</ul>
@@ -140,14 +136,35 @@ export function NavBar({ session }: { session: Session }) {
 							</li>
 						) : (
 							<li key={item.id}>
-								<Link id={item.id} href={item.href}>
-									{item.name}
-								</Link>
+								<MenuItem item={item} />
 							</li>
 						),
 					)}
 				</ul>
 			</div>
 		</>
+	);
+}
+
+function MenuItem({
+	mobile = false,
+	item,
+	onClick,
+}: {
+	mobile?: boolean;
+	item: Menu[number];
+	onClick?: MouseEventHandler<HTMLAnchorElement>;
+}) {
+	const suffix = mobile ? '-mobile' : '';
+	return (
+		<Link
+			id={item.id + suffix}
+			href={item.href as string}
+			onClick={onClick}
+			target={item.external ? '_blank' : '_self'}
+		>
+			{item.name}
+			{item.external && <FaExternalLinkAlt />}
+		</Link>
 	);
 }
