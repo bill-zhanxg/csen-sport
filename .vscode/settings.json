@@ -8,6 +8,7 @@
         "nextauth",
         "nextjs",
         "nprogress",
+        "opentelemetry",
         "progressbar",
         "rmsc",
         "tailwindcss",

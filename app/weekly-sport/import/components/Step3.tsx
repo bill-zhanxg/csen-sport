@@ -84,8 +84,8 @@ export function Step3({
 													games: game.games.filter((game) => {
 														if (
 															'text' in game ||
-															game.team1.includes(currentSchoolCsenCode) ||
-															game.team2.includes(currentSchoolCsenCode)
+															game.team1?.includes(currentSchoolCsenCode) ||
+															game.team2?.includes(currentSchoolCsenCode)
 														)
 															return true;
 														return false;
