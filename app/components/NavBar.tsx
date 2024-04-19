@@ -20,6 +20,11 @@ const menu: Menu = [
 		href: '/weekly-sport/timetable',
 	},
 	{
+		id: 'tickets-btn',
+		name: 'Tickets',
+		href: '/tickets',
+	},
+	{
 		id: 'csen-btn',
 		name: 'CSEN',
 		href: 'https://www.csen.au/semester-sport/',
