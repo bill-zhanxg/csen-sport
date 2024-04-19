@@ -1,5 +1,6 @@
 'use client';
 
+import { isAdmin } from '@/libs/checkPermission';
 import { Session } from 'next-auth';
 import Link from 'next/link';
 import { MouseEventHandler } from 'react';
@@ -71,14 +72,11 @@ export function NavBar({ session }: { session: Session }) {
 		}
 	}
 
-	const menuFiltered =
-		session.user.role === 'admin'
-			? menu
-			: menu
-					.filter((item) => !item.admin)
-					.map((item) =>
-						Array.isArray(item.href) ? { ...item, href: item.href.filter((item) => !item.admin) } : item,
-					);
+	const menuFiltered = isAdmin(session)
+		? menu
+		: menu
+				.filter((item) => !item.admin)
+				.map((item) => (Array.isArray(item.href) ? { ...item, href: item.href.filter((item) => !item.admin) } : item));
 
 	return (
 		<>

@@ -1,12 +1,12 @@
 import { auth } from '@/libs/auth';
 import { isAdmin } from '@/libs/checkPermission';
+import { serializeGamesWithId } from '@/libs/serializeData';
 import { getRawTeachers, getRawTeams, getRawVenues } from '@/libs/tableData';
 import { getXataClient } from '@/libs/xata';
 import Link from 'next/link';
 import { Unauthorized } from '../globalComponents/Unauthorized';
 import { Danger } from './components/Danger';
 import { GamesTable } from './components/GamesTable';
-import { serializeGame, serializeGames, serializeGamesWithId } from '@/libs/serializeData';
 
 const xata = getXataClient();
 

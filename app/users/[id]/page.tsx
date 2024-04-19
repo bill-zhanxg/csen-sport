@@ -17,7 +17,7 @@ export default async function User({
 	const user = await getXataClient().db.nextauth_users.read(params.id, ['email', 'name', 'image', 'role']);
 	if (!user) return <ErrorMessage code="404" message="The user you're looking for can not be found" />;
 
-	if (!isAdmin(session) && user.role !== 'teacher' && user.role !== 'admin') return Unauthorized();
+	if (!isAdmin(session)) return Unauthorized();
 
 	return (
 		<div className="flex justify-center items-center h-[80vh] w-full">

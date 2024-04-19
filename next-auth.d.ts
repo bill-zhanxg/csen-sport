@@ -1,6 +1,6 @@
 import { DefaultSession } from 'next-auth';
 
-type role = 'admin' | 'teacher' | 'blocked' | 'student' | null;
+type role = 'admin' | 'teacher' | 'blocked' | 'student' | 'developer' | null;
 type team = { id: string };
 
 interface CustomUser {
