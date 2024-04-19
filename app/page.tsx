@@ -3,6 +3,7 @@ import { isTeacher } from '@/libs/checkPermission';
 import { getRawTeachers } from '@/libs/tableData';
 import { gamesToDates, getLastVisitDate } from '@/libs/tableHelpers';
 import { getXataClient } from '@/libs/xata';
+import Link from 'next/link';
 import { WeeklySportView } from './globalComponents/WeeklySportView';
 
 export default async function Home() {
@@ -41,12 +42,12 @@ export default async function Home() {
 			<h1 className="text-2xl font-bold text-center">
 				Hello <span className="text-primary">{session?.user.name}</span>
 			</h1>
-			<h2 className="text-xl text-secondary text-center max-w-3xl">
+			<h2 className="text-xl text-center max-w-3xl">
 				{!isTeacherBool && !session?.user.team ? (
 					<>
 						<span className="text-error">You are currently not in a team, showing all upcoming weekly sport games</span>
 						<br />
-						(To select a team, navigate to Profile &gt; User Settings &gt; Preferences)
+						<Link className='link link-secondary' href="/settings#team-preferences">Click here to select your team</Link>
 					</>
 				) : (
 					'Here is your upcoming weekly sport schedule'

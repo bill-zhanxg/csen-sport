@@ -16,7 +16,12 @@ export default function Changelog() {
 							optimize it
 						</li>
 						<li>
-							More bug fixes coming soon
+							CSEN updated their PDF again, hot fix the extract data script to handle the new (weird) format (some teams
+							are missing team 2). Planning to rewrite this function for visual PDF editor
+						</li>
+						<li>
+							Because of how CSEN website for some reason updated their SSL certificate, the iframe will throw not
+							secure error due to browser cache (I think), so now it is an external link
 						</li>
 					</List>
 				</>
