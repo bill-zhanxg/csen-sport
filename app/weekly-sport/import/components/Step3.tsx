@@ -73,6 +73,7 @@ export function Step3({
 							return setAlert({ type: 'error', message: 'Please enter your CSEN school code' });
 						}
 						if (currentSchoolCsenCode === schoolCsenCode.value) return;
+						console.log(fixtures.value);
 						filteredFixtures.value = fixtures.value.map((page) => {
 							return {
 								...page,
@@ -84,8 +85,8 @@ export function Step3({
 													games: game.games.filter((game) => {
 														if (
 															'text' in game ||
-															game.team1.includes(currentSchoolCsenCode) ||
-															game.team2.includes(currentSchoolCsenCode)
+															game.team1?.includes(currentSchoolCsenCode) ||
+															game.team2?.includes(currentSchoolCsenCode)
 														)
 															return true;
 														return false;
