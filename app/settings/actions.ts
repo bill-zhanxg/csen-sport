@@ -57,7 +57,10 @@ export async function updateProfile(prevState: FormState, formData: FormData): P
 	if (avatar) {
 		// Result need to be below 204800 bytes
 		const result = await sharp(await avatar.arrayBuffer())
-			.resize(1000, 1000)
+			.resize(1000, 1000, {
+				fit: 'inside',
+				withoutEnlargement: true,
+			})
 			.withMetadata()
 			.toBuffer();
 		image = `data:${avatar.type};base64,${result.toString('base64')}`;
