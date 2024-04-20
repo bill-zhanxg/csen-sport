@@ -17,6 +17,11 @@ const steps: { title?: ReactNode; target: string; content: string }[] = [
 		content: 'Click here to access the weekly sport schedule',
 	},
 	{
+		target: '#tickets-btn',
+		content:
+			'Manage, view, or create tickets here. These requests might be for troubleshooting issues, getting help with a service, or asking any questions you might have',
+	},
+	{
 		target: '#csen-btn',
 		content: 'Click here to view the official CSEN website',
 	},

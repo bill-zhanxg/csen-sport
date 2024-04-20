@@ -7,7 +7,28 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
-			<ChangelogBox version="0.1.9" release="22/02/2024">
+			<ChangelogBox version="0.2.0" release="xx/04/2024">
+				<>
+					<Heading badge="New" title="Features" />
+					<List>
+						<li>feat(tickets): Add a new ticket system for user to report bugs and feedback (Minor version bump)</li>
+						<li>
+							feat(role): Add developer role to allow the developer to access the ticket system and view the feedbacks
+							and bugs
+						</li>
+					</List>
+					<Divider />
+					<Title>Bug fixes</Title>
+					<List>
+						<li>docs(changelog): Fixed incorrect dates in changelog</li>
+						<li>refactor(version): Refactor the versioning system to follow semantic versioning https://semver.org/</li>
+						<li>chore: dependency update</li>
+						<li>fix(error): Add new error boundaries, so that error won&apos;t crash the entire client</li>
+						<li>refactor(global-error): Display more information about the error and make it looks good</li>
+					</List>
+				</>
+			</ChangelogBox>
+			<ChangelogBox version="0.1.9" release="19/04/2024">
 				<>
 					<Title>Bug fixes</Title>
 					<List>
@@ -23,10 +44,11 @@ export default function Changelog() {
 							Because of how CSEN website for some reason updated their SSL certificate, the iframe will throw not
 							secure error due to browser cache (I think), so now it is an external link
 						</li>
+						<li>style(home): update select team text, so that it Link to setting page for easier understanding</li>
 					</List>
 				</>
 			</ChangelogBox>
-			<ChangelogBox version="0.1.8" release="22/02/2024">
+			<ChangelogBox version="0.1.8" release="25/02/2024">
 				<>
 					<Title>Bug fixes</Title>
 					<List>

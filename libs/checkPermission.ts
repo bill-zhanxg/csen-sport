@@ -1,7 +1,7 @@
 import { Session } from 'next-auth';
 
 export function isAdmin(session: Session | null): boolean {
-	return session?.user.role === 'admin';
+	return session?.user.role === 'admin' || session?.user.role === 'developer';
 }
 
 export function isTeacher(session: Session | null): boolean {
