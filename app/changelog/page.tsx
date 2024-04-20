@@ -25,6 +25,7 @@ export default function Changelog() {
 						<li>chore: dependency update</li>
 						<li>fix(error): Add new error boundaries, so that error won&apos;t crash the entire client</li>
 						<li>refactor(global-error): Display more information about the error and make it looks good</li>
+						<li>fix(setting): profile picture too large to upload to database</li>
 					</List>
 				</>
 			</ChangelogBox>
