@@ -13,8 +13,8 @@ export default function Changelog() {
 					<List>
 						<li>feat(tickets): Add a new ticket system for user to report bugs and feedback (Minor version bump)</li>
 						<li>
-							feat(role): Add developer role to allow the developer to access the ticket system and view the
-							feedbacks and bugs
+							feat(role): Add developer role to allow the developer to access the ticket system and view the feedbacks
+							and bugs
 						</li>
 					</List>
 					<Divider />
@@ -23,6 +23,8 @@ export default function Changelog() {
 						<li>docs(changelog): Fixed incorrect dates in changelog</li>
 						<li>refactor(version): Refactor the versioning system to follow semantic versioning https://semver.org/</li>
 						<li>chore: dependency update</li>
+						<li>fix(error): Add new error boundaries, so that error won&apos;t crash the entire client</li>
+						<li>refactor(global-error): Display more information about the error and make it looks good</li>
 					</List>
 				</>
 			</ChangelogBox>
