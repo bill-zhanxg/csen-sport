@@ -26,6 +26,10 @@ export default function Changelog() {
 						<li>fix(error): Add new error boundaries, so that error won&apos;t crash the entire client</li>
 						<li>refactor(global-error): Display more information about the error and make it looks good</li>
 						<li>fix(setting): profile picture too large to upload to database</li>
+						<li>
+							fix(timezone_setting): adding handler for older browser that does not support th function
+							Intl.supportedValuesOf
+						</li>
 					</List>
 				</>
 			</ChangelogBox>
