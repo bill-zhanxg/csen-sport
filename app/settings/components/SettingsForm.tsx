@@ -26,6 +26,9 @@ export function SettingsForm({ session, teams }: { session: Session; teams: Seri
 		}
 	}, [state]);
 
+	const supportedTimezones =
+		typeof Intl.supportedValuesOf === 'undefined' ? undefined : Intl.supportedValuesOf('timeZone');
+
 	const [autoTimezone, setAutoTimezone] = useState(session.user.auto_timezone ?? true);
 
 	return (
@@ -76,7 +79,7 @@ export function SettingsForm({ session, teams }: { session: Session; teams: Seri
 				</div>
 			</Box>
 
-			<Box id='team-preferences'>
+			<Box id="team-preferences">
 				<h1 className="font-bold px-4 pt-4">Team Preferences</h1>
 				<div className="divider m-0"></div>
 				<div className="flex flex-col sm:flex-row justify-center w-full gap-4 items-center pt-0 p-4">
@@ -153,13 +156,19 @@ export function SettingsForm({ session, teams }: { session: Session; teams: Seri
 							name="timezone"
 							className="select select-bordered"
 							defaultValue={session.user.timezone ?? dayjs.tz.guess()}
-							disabled={autoTimezone}
+							disabled={autoTimezone || supportedTimezones === undefined}
 						>
-							{Intl.supportedValuesOf('timeZone').map((tz) => (
-								<option key={tz} value={tz}>
-									{tz}
+							{supportedTimezones !== undefined ? (
+								supportedTimezones.map((tz) => (
+									<option key={tz} value={tz}>
+										{tz}
+									</option>
+								))
+							) : (
+								<option key="unsupported">
+									Your browser does not support timezone detection, please update your browser
 								</option>
-							))}
+							)}
 						</select>
 					</label>
 				</div>

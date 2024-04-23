@@ -21,7 +21,7 @@ export async function getXataFile(
 
 	if (!file || (file.name === 'undefined' && file.size === 0 && file.type === 'application/octet-stream'))
 		return [null, null];
-	if (file.size < 204_800) {
+	if (file.size < 20_000_000) {
 		const arrayBuffer = await file.arrayBuffer();
 		return [
 			{
