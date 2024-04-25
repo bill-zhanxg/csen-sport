@@ -1,0 +1,16 @@
+{
+  "id": "mig_cojnhfks18i4cg97almg",
+  "parentID": "mig_cojnh54s18i4cg97allg",
+  "checksum": "1:99ffe537b1f58f6b087905c6aa0485c779bf8b92ed95baea2b9348321b754613",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "ticket_id",
+          "type": "string"
+        },
+        "table": "ticket_messages"
+      }
+    }
+  ]
+}

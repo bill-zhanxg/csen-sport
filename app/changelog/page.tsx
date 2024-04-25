@@ -12,10 +12,15 @@ export default function Changelog() {
 					<Heading badge="New" title="Features" />
 					<List>
 						<li>feat(tickets): Add a new ticket system for user to report bugs and feedback (Minor version bump)</li>
-						<li>
-							feat(role): Add developer role to allow the developer to access the ticket system and view the feedbacks
-							and bugs
-						</li>
+						<List className="!list-[circle] ml-4">
+							<li>
+								feat(role): Add developer role to allow the developer to access the ticket system and view the feedbacks
+								and bugs
+							</li>
+							<li>feat(package): Added framer motion for better animation</li>
+							<li>feat(real_time): Add real time messaging support</li>
+							<li>feat(messaging): Messaging design finished and functioning</li>
+						</List>
 					</List>
 					<Divider />
 					<Title>Bug fixes</Title>
@@ -31,6 +36,7 @@ export default function Changelog() {
 							Intl.supportedValuesOf
 						</li>
 						<li>fix(sentry_logging): Limit the amount of replays and error reports to prevent overload sentry plan</li>
+						<li>typo(JoyRide): Fix grammar issue for guide</li>
 					</List>
 				</>
 			</ChangelogBox>

@@ -5,7 +5,7 @@ export function UserAvatar({
 	className = '',
 }: {
 	user: {
-		id: string;
+		id?: string | null;
 		name?: string | null;
 		email?: string | null;
 		image?: string | null;
@@ -17,7 +17,7 @@ export function UserAvatar({
 	) : (
 		<Image
 			src={`https://icotar.com/${user.name ? 'initials' : 'avatar'}/${encodeURI(
-				user.name ?? (user.email || user.id),
+				user.name ?? (user.email || user.id || ''),
 			)}.png`}
 			width={500}
 			height={500}

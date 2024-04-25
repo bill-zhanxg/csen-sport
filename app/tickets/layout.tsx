@@ -1,8 +1,21 @@
 import { auth } from '@/libs/auth';
+import { getXataClient } from '@/libs/xata';
+import { Unauthorized } from '../globalComponents/Unauthorized';
 import { CreateTicketButton } from './components/CreateTicketButton';
+import { TicketsList } from './components/TicketsList';
+
+const xata = getXataClient();
 
 export default async function Tickets({ children }: { children: React.ReactNode }) {
 	const session = await auth();
+	if (!session) return Unauthorized();
+
+	const tickets = await xata.db.tickets
+		.filter({
+			createdBy: session.user.id,
+			closed: false,
+		})
+		.getAll();
 
 	return (
 		<div className="flex w-full h-full-nav overflow-auto">
@@ -16,20 +29,7 @@ export default async function Tickets({ children }: { children: React.ReactNode 
 						Closed
 					</a>
 				</div>
-				{[...Array(20)].map((_, i) => (
-					<div
-						key={i}
-						className={`flex justify-between py-2 px-4 w-full rounded-md ${
-							i === 1 ? 'bg-base-200 hover:bg-base-300' : 'hover:bg-base-200'
-						}`}
-					>
-						<div>
-							<h3 className="text-xl font-bold">Title</h3>
-							<p>Latest text</p>
-						</div>
-						<div>16/16/1616</div>
-					</div>
-				))}
+				<TicketsList tickets={tickets.toSerializable()} timezone={session.user.timezone ?? ''} />
 			</div>
 			{children}
 		</div>

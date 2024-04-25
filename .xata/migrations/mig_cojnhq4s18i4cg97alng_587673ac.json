@@ -1,0 +1,19 @@
+{
+  "id": "mig_cojnhq4s18i4cg97alng",
+  "parentID": "mig_cojnhfks18i4cg97almg",
+  "checksum": "1:587673ac05a53a340524720a072e3b98d859d81e6b2f8358d629f238ef52ff93",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "sender",
+          "type": "link",
+          "link": {
+            "table": "nextauth_users"
+          }
+        },
+        "table": "ticket_messages"
+      }
+    }
+  ]
+}

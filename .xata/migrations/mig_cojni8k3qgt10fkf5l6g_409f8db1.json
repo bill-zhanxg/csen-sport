@@ -1,0 +1,18 @@
+{
+  "id": "mig_cojni8k3qgt10fkf5l6g",
+  "parentID": "mig_cojnhq4s18i4cg97alng",
+  "checksum": "1:409f8db19bda1fff82af3210b8eaf033fa965c2dabfcd288d8aceef91565b587",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "seen",
+          "type": "bool",
+          "notNull": true,
+          "defaultValue": "false"
+        },
+        "table": "ticket_messages"
+      }
+    }
+  ]
+}

@@ -1,6 +1,8 @@
-import { SelectedPick } from '@xata.io/client';
+import { CustomUser } from '@/next-auth';
+import { Page, SelectedPick } from '@xata.io/client';
+import { User } from 'next-auth';
 import { RawTeam, RawVenue } from './tableData';
-import { GamesRecord, TeamsRecord, VenuesRecord } from './xata';
+import { GamesRecord, TeamsRecord, TicketMessagesRecord, VenuesRecord } from './xata';
 
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
@@ -155,5 +157,60 @@ export function serializeGameWithId(
 		out_of_class,
 		start,
 		notes: isTeacher ? notes : undefined,
+	};
+}
+
+// Tickets
+export type SerializedTicketMessage = {
+	id: string;
+	ticket_id?: string | null;
+	sender?: {
+		id?: string | null;
+		name?: string | null;
+		email?: string | null;
+		image?: string | null;
+	} | null;
+	seen: boolean;
+	message?: string | null;
+	xata: {
+		createdAt: Date;
+		updatedAt: Date;
+	};
+};
+
+export function serializeTicketMessages(
+	messages:
+		| Page<
+				TicketMessagesRecord,
+				SelectedPick<TicketMessagesRecord, ('*' | 'sender.name' | 'sender.email' | 'sender.image')[]>
+		  >
+		| SelectedPick<TicketMessagesRecord, ('*' | 'sender.name' | 'sender.email' | 'sender.image')[]>[],
+): SerializedTicketMessage[] {
+	const messagesArray = 'records' in messages ? messages.records : messages;
+	return messagesArray.map((message) => serializeTicketMessage(message));
+}
+
+export function serializeTicketMessage({
+	id,
+	ticket_id,
+	sender,
+	seen,
+	message,
+	xata,
+}:
+	| SelectedPick<TicketMessagesRecord, ('*' | 'sender.name' | 'sender.email' | 'sender.image')[]>
+	| (Readonly<SelectedPick<TicketMessagesRecord, ['*']>> & { sender: CustomUser & User })): SerializedTicketMessage {
+	return {
+		id,
+		ticket_id,
+		sender: {
+			id: sender?.id,
+			name: sender?.name,
+			email: sender?.email,
+			image: sender?.image,
+		},
+		seen,
+		message,
+		xata,
 	};
 }

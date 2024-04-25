@@ -1,0 +1,12 @@
+{
+  "id": "mig_cojnh54s18i4cg97allg",
+  "parentID": "mig_cojng44s18i4cg97alk0",
+  "checksum": "1:16216684245b8477c33209ff8f3e6e9e642812e58c1718fab3d8629f0aa2f70e",
+  "operations": [
+    {
+      "addTable": {
+        "table": "ticket_messages"
+      }
+    }
+  ]
+}
