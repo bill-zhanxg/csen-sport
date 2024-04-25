@@ -27,9 +27,10 @@ export default function Changelog() {
 						<li>refactor(global-error): Display more information about the error and make it looks good</li>
 						<li>fix(setting): profile picture too large to upload to database</li>
 						<li>
-							fix(timezone_setting): adding handler for older browser that does not support th function
+							fix(timezone_setting): adding handler for older browser that does not support the function
 							Intl.supportedValuesOf
 						</li>
+						<li>fix(sentry_logging): Limit the amount of replays and error reports to prevent overload sentry plan</li>
 					</List>
 				</>
 			</ChangelogBox>
