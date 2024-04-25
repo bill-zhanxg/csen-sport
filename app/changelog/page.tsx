@@ -20,6 +20,7 @@ export default function Changelog() {
 							<li>feat(package): Added framer motion for better animation</li>
 							<li>feat(real_time): Add real time messaging support</li>
 							<li>feat(messaging): Messaging design finished and functioning</li>
+							<li>feat(optimistic_messages_update): Show messaging sending status</li>
 						</List>
 					</List>
 					<Divider />

@@ -2,8 +2,7 @@ import { Unauthorized } from '@/app/globalComponents/Unauthorized';
 import { auth } from '@/libs/auth';
 import { SerializedTicketMessage, serializeTicketMessage, serializeTicketMessages } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
-import { MessageInput } from './components/MessageInput';
-import { Messages } from './components/Messages';
+import { MessageTab } from './components/MessagesTab';
 import { ticketMessageEmitter } from './message-stream/eventListner';
 
 export const revalidate = 0;
@@ -30,8 +29,9 @@ export default async function TicketMessages({ params }: { params: { id: string 
 		return serializeTicketMessages(messages);
 	}
 
-	async function sendMessage(message: string) {
+	async function sendMessage(messageRaw: string) {
 		'use server';
+		const message = messageRaw.trim();
 		if (!message || !session) return;
 		const data = await xata.db.ticket_messages.create({
 			ticket_id,
@@ -44,10 +44,7 @@ export default async function TicketMessages({ params }: { params: { id: string 
 	// TODO: Mobile
 	return (
 		<div className="flex flex-col items-center w-full h-full p-8 pb-2 overflow-auto relative bg-base-200">
-			<div className="grow max-w-[100rem] w-full">
-				<Messages user={session.user} ticketId={ticket_id} getMessages={getMessages} />
-			</div>
-			<MessageInput sendMessage={sendMessage} />
+			<MessageTab user={session.user} ticketId={ticket_id} getMessages={getMessages} sendMessage={sendMessage} />
 		</div>
 	);
 }
