@@ -1,4 +1,5 @@
 import { Unauthorized } from '@/app/globalComponents/Unauthorized';
+import NotFound from '@/app/not-found';
 import { auth } from '@/libs/auth';
 import { SerializedTicketMessage, serializeTicketMessage, serializeTicketMessages } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
@@ -14,6 +15,9 @@ export default async function TicketMessages({ params }: { params: { id: string 
 	if (!session) return Unauthorized();
 
 	const ticket_id = params.id;
+	const ticket = await xata.db.tickets.read(ticket_id);
+	if (!ticket) return NotFound();
+	if (ticket.createdBy?.id !== session.user.id) return Unauthorized();
 
 	async function getMessages(): Promise<SerializedTicketMessage[]> {
 		'use server';
