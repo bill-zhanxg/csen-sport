@@ -25,6 +25,7 @@ export default function Changelog() {
 							<li>feat(messaging): paginated infinite scroll for messages and auto scrolls</li>
 							<li>feat(kysely): add join table functions for database with kysely</li>
 							<li>feat(nav): close ticket functioning</li>
+							<li>revert(kysely): remove kysely, this does not work</li>
 						</List>
 					</List>
 					<Divider />

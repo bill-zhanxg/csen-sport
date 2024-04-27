@@ -1,16 +1,10 @@
 import { auth } from '@/libs/auth';
-import { isDeveloper } from '@/libs/checkPermission';
-import { DatabaseSchema, getXataClient } from '@/libs/xata';
-import { Model, XataDialect } from '@xata.io/kysely';
-import { Kysely } from 'kysely';
+import { getXataClient } from '@/libs/xata';
 import { Unauthorized } from '../globalComponents/Unauthorized';
 import { CreateTicketButton } from './components/CreateTicketButton';
 import { TicketsList } from './components/TicketsList';
 
 const xata = getXataClient();
-const db = new Kysely<Model<DatabaseSchema>>({
-	dialect: new XataDialect({ xata }),
-});
 
 export default async function Tickets({ children }: { children: React.ReactNode }) {
 	const session = await auth();
@@ -27,10 +21,6 @@ export default async function Tickets({ children }: { children: React.ReactNode 
 				closed,
 			})
 			.getAll();
-		const query = db
-			.selectFrom('tickets')
-			.where('createdBy', '=', isDeveloper(session) ? undefined : session.user.id)
-			.where('closed', '=', closed);
 
 		return tickets.toSerializable();
 	}
