@@ -24,6 +24,7 @@ export default function Changelog() {
 							<li>feat(tickets_list): open and closed tabs functioning</li>
 							<li>feat(messaging): paginated infinite scroll for messages and auto scrolls</li>
 							<li>feat(kysely): add join table functions for database with kysely</li>
+							<li>feat(nav): close ticket functioning</li>
 						</List>
 					</List>
 					<Divider />

@@ -3,7 +3,7 @@ import { SerializedTicketMessage } from '@/libs/serializeData';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSSEWriter } from 'ts-sse';
 import { TicketEvents } from '../../types';
-import { ticketMessageEmitter } from './eventListner';
+import { ticketMessageEmitter } from './eventListener';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';

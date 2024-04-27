@@ -6,7 +6,8 @@ import { getXataClient } from '@/libs/xata';
 import { FaRegQuestionCircle } from 'react-icons/fa';
 import { FaEllipsisVertical } from 'react-icons/fa6';
 import { MessageTab } from './components/MessagesTab';
-import { ticketMessageEmitter } from './message-stream/eventListner';
+import { ticketMessageEmitter } from './message-stream/eventListener';
+import { closeTicket } from './actions';
 
 export const revalidate = 0;
 
@@ -72,7 +73,21 @@ export default async function TicketMessages({ params }: { params: { id: string 
 					</div>
 					<ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
 						<li>
-							<a className="btn-error">Close Ticket</a>
+							<form
+								className="menu-title !p-0"
+								action={async () => {
+									'use server';
+									await closeTicket(ticket_id);
+									// TODO: user feedback
+								}}
+							>
+								<button
+									type="submit"
+									className="bg-red-600 hover:bg-red-800 text-white rounded-lg px-4 py-2 text-sm w-full transition duration-200 active:bg-red-950"
+								>
+									Close Ticket
+								</button>
+							</form>
 						</li>
 					</ul>
 				</div>
