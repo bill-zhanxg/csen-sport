@@ -3,6 +3,8 @@ import NotFound from '@/app/not-found';
 import { auth } from '@/libs/auth';
 import { SerializedTicketMessage, serializeTicketMessage, serializeTicketMessages } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
+import { FaRegQuestionCircle } from 'react-icons/fa';
+import { FaEllipsisVertical } from 'react-icons/fa6';
 import { MessageTab } from './components/MessagesTab';
 import { ticketMessageEmitter } from './message-stream/eventListner';
 
@@ -19,17 +21,28 @@ export default async function TicketMessages({ params }: { params: { id: string 
 	if (!ticket) return NotFound();
 	if (ticket.createdBy?.id !== session.user.id) return Unauthorized();
 
-	async function getMessages(): Promise<SerializedTicketMessage[]> {
+	async function getPaginatedMessages(offset?: number) {
 		'use server';
-		const messages = await xata.db.ticket_messages
+		return xata.db.ticket_messages
 			.select(['*', 'sender.name', 'sender.email', 'sender.image'])
 			.filter({ ticket_id })
-			.sort('xata.createdAt')
+			.sort('xata.createdAt', 'desc')
 			.getPaginated({
 				pagination: {
-					size: 100,
+					offset,
+					size: 20,
 				},
 			});
+	}
+	async function getMessages(): Promise<SerializedTicketMessage[]> {
+		'use server';
+		const messages = await getPaginatedMessages();
+		return serializeTicketMessages(messages);
+	}
+	async function getNextPage(messageCount: number): Promise<SerializedTicketMessage[]> {
+		'use server';
+		if (typeof messageCount !== 'number') return [];
+		const messages = await getPaginatedMessages(messageCount);
 		return serializeTicketMessages(messages);
 	}
 
@@ -47,8 +60,30 @@ export default async function TicketMessages({ params }: { params: { id: string 
 
 	// TODO: Mobile
 	return (
-		<div className="flex flex-col items-center w-full h-full p-8 pb-2 overflow-auto relative bg-base-200">
-			<MessageTab user={session.user} ticketId={ticket_id} getMessages={getMessages} sendMessage={sendMessage} />
+		<div id="chat" className="flex flex-col items-center w-full h-full px-8 py-2 overflow-auto relative bg-base-200">
+			<div className="flex justify-between sticky top-0 w-full bg-base-100 z-10 py-2 px-4 rounded-lg">
+				<div className="flex items-center gap-2 text-center">
+					<FaRegQuestionCircle size={40} />
+					<h2 className="text-3xl font-bold">{ticket.title}</h2>
+				</div>
+				<div className="dropdown dropdown-end">
+					<div tabIndex={0} role="button" className="btn">
+						<FaEllipsisVertical />
+					</div>
+					<ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+						<li>
+							<a className="btn-error">Close Ticket</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<MessageTab
+				user={session.user}
+				ticketId={ticket_id}
+				getMessages={getMessages}
+				getNextPage={getNextPage}
+				sendMessage={sendMessage}
+			/>
 		</div>
 	);
 }

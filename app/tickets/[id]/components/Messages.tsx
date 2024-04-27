@@ -4,7 +4,7 @@ import { UserAvatar } from '@/app/globalComponents/UserAvatar';
 import { dayjs } from '@/libs/dayjs';
 import { SerializedTicketMessage } from '@/libs/serializeData';
 import { User } from 'next-auth';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { FaTriangleExclamation } from 'react-icons/fa6';
 import { TicketEventType } from '../../types';
 import { OptimisticMessages } from './MessagesTab';
@@ -13,20 +13,56 @@ export function Messages({
 	user,
 	ticketId,
 	getMessages,
+	getNextPage,
 	optimisticMessages,
 }: {
 	user: User;
 	ticketId: string;
 	getMessages: () => Promise<SerializedTicketMessage[]>;
+	getNextPage: (messageCount: number) => Promise<SerializedTicketMessage[]>;
 	optimisticMessages: OptimisticMessages;
 }) {
 	const [messages, setMessages] = useState<SerializedTicketMessage[] | null | 'error'>(null);
+	const [loadingMessages, setLoadingMessages] = useState<boolean | null | 'error'>(true);
+	const [isTop, setIsTop] = useState(false);
+	const [isBottom, setIsBottom] = useState(true);
+	const chat = useRef<HTMLElement | null>(null);
+
+	const scrollToBottom = useCallback(() => {
+		const c = chat.current;
+		if (c) {
+			c.scrollTo(0, c.scrollHeight);
+		}
+	}, []);
+	const scrollIfBottom = useCallback(() => {
+		if (isBottom) scrollToBottom();
+	}, [isBottom, scrollToBottom]);
 
 	useEffect(() => {
+		const c = document.getElementById('chat');
+		// Set ref after load
+		chat.current = c;
 		getMessages()
-			.then(setMessages)
+			.then((messages) => {
+				setMessages(messages.toReversed());
+				scrollToBottom();
+				// Prevent message not loading if the the screen is very tall
+				if (c) setIsTop(c.scrollTop < 30);
+				setLoadingMessages(false);
+			})
 			.catch(() => setMessages('error'));
-	}, [getMessages]);
+
+		if (c) {
+			c.onscroll = () => {
+				setIsTop(c.scrollTop < 30);
+				setIsBottom(c.scrollHeight - c.clientHeight <= c.scrollTop + 1);
+			};
+
+			return () => {
+				c.onscroll = null;
+			};
+		}
+	}, [getMessages, scrollToBottom]);
 
 	useEffect(() => {
 		const eventSource = new EventSource(`/tickets/${ticketId}/message-stream`);
@@ -43,6 +79,33 @@ export function Messages({
 			eventSource.close();
 		};
 	}, [ticketId]);
+
+	useEffect(() => {
+		scrollToBottom();
+	}, [optimisticMessages, scrollToBottom]);
+	useEffect(() => {
+		scrollIfBottom();
+	}, [messages, scrollIfBottom]);
+
+	useEffect(() => {
+		if (isTop) {
+			const c = chat.current;
+			if (loadingMessages !== false || !messages) return;
+			setLoadingMessages(true);
+			getNextPage(messages.length)
+				.then((newMessages) => {
+					if (newMessages.length < 1) return setLoadingMessages(null);
+					// Scroll down 1 px if user is at the top to prevent infinite loading
+					if (c?.scrollTop === 0) c.scrollTo(0, 1);
+					setMessages((prev) => {
+						if (prev === 'error') return prev;
+						return [...newMessages.toReversed(), ...(prev ?? [])];
+					});
+					setLoadingMessages(false);
+				})
+				.catch(() => setLoadingMessages('error'));
+		}
+	}, [isTop, messages, loadingMessages, getNextPage]);
 
 	if (messages === 'error')
 		return (
@@ -61,10 +124,21 @@ export function Messages({
 
 	return messages === null ? (
 		<div className="flex items-center justify-center h-full">
-			<span className="loading loading-bars loading-lg"></span>
+			<span className="loading loading-dots loading-lg"></span>
 		</div>
 	) : (
 		<>
+			{loadingMessages === null ? (
+				<div className="flex items-center justify-center h-10">You&apos;re at the top of the page</div>
+			) : loadingMessages === 'error' ? (
+				<div className="flex items-center justify-center h-10">There is an error loading messages</div>
+			) : (
+				loadingMessages && (
+					<div className="flex items-center justify-center h-10">
+						<span className="loading loading-bars loading-md"></span>
+					</div>
+				)
+			)}
 			{messages.map((message) => (
 				<div key={message.id} className="w-full min-h-24">
 					<div className={`chat ${message.sender?.id === user.id ? 'chat-end' : 'chat-start'}`}>

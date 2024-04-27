@@ -22,6 +22,7 @@ export default function Changelog() {
 							<li>feat(messaging): Messaging design finished and functioning</li>
 							<li>feat(optimistic_messages_update): Show messaging sending status</li>
 							<li>feat(tickets_list): open and closed tabs functioning</li>
+							<li>feat(messaging): paginated infinite scroll for messages and auto scrolls</li>
 						</List>
 					</List>
 					<Divider />

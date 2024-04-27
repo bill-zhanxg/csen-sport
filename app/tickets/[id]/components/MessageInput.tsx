@@ -56,7 +56,7 @@ export function MessageInput({
 				}}
 				autoFocus
 			/>
-			<button className="btn btn-primary" disabled={!message} onClick={send}>
+			<button className="btn btn-primary" disabled={!message.trim()} onClick={send}>
 				<FaPaperPlane size={20} />
 			</button>
 		</div>

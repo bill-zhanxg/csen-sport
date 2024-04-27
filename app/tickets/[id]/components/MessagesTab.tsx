@@ -15,11 +15,13 @@ export function MessageTab({
 	user,
 	ticketId,
 	getMessages,
+	getNextPage,
 	sendMessage,
 }: {
 	user: User;
 	ticketId: string;
 	getMessages: () => Promise<SerializedTicketMessage[]>;
+	getNextPage: (messageCount: number) => Promise<SerializedTicketMessage[]>;
 	sendMessage: (message: string) => Promise<void>;
 }) {
 	const [optimisticMessages, setOptimisticMessages] = useState<OptimisticMessages>([]);
@@ -27,7 +29,7 @@ export function MessageTab({
 	return (
 		<>
 			<div className="grow max-w-[100rem] w-full">
-				<Messages user={user} ticketId={ticketId} getMessages={getMessages} optimisticMessages={optimisticMessages} />
+				<Messages user={user} ticketId={ticketId} getMessages={getMessages} getNextPage={getNextPage} optimisticMessages={optimisticMessages} />
 			</div>
 			<MessageInput sendMessage={sendMessage} setOptimisticMessages={setOptimisticMessages} />
 		</>
