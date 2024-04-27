@@ -5,6 +5,7 @@
         "daisyui",
         "Datetime",
         "deepcode",
+        "kysely",
         "nextauth",
         "nextjs",
         "nprogress",

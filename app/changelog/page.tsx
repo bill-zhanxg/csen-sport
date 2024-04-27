@@ -23,6 +23,7 @@ export default function Changelog() {
 							<li>feat(optimistic_messages_update): Show messaging sending status</li>
 							<li>feat(tickets_list): open and closed tabs functioning</li>
 							<li>feat(messaging): paginated infinite scroll for messages and auto scrolls</li>
+							<li>feat(kysely): add join table functions for database with kysely</li>
 						</List>
 					</List>
 					<Divider />
