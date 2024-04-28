@@ -28,6 +28,8 @@ export default function Changelog() {
 							<li>revert(kysely): remove kysely, this does not work</li>
 							<li>feat(ticket_layout): show the latest message for ticket and time of sending</li>
 							<li>fix(typing): improve typescript typing for eventEmitters</li>
+							<li>feat(ticket_layout): add sorting for tickets</li>
+							<li>feat(ticket_layout): add real time for message update and ticket update</li>
 						</List>
 					</List>
 					<Divider />

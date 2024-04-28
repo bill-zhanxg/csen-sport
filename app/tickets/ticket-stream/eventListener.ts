@@ -7,9 +7,18 @@ interface TicketEventType {
 		message: SerializedTicketMessage;
 		ticket: SerializedTicket;
 	}) => void;
+	'new-ticket': (data: {
+		ticket: SerializedTicket & {
+			creatorId: string;
+		};
+	}) => void;
 }
 
-class TicketEmitter extends EventEmitter {}
+class TicketEmitter extends EventEmitter {
+	constructor() {
+		super();
+	}
+}
 declare interface TicketEmitter {
 	on<U extends keyof TicketEventType>(event: U, listener: TicketEventType[U]): this;
 	emit<U extends keyof TicketEventType>(event: U, ...args: Parameters<TicketEventType[U]>): boolean;

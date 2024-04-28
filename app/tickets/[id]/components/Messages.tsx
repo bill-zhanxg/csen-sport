@@ -68,10 +68,9 @@ export function Messages({
 		const eventSource = new EventSource(`/tickets/${ticketId}/message-stream`);
 		eventSource.onmessage = (event) => {
 			const data = JSON.parse(event.data) as TicketMessageEventType;
-			console.log(data);
 			setMessages((prev) => {
-				if (prev === 'error') return prev;
-				return [...(prev ?? []), data.message];
+				if (!prev || prev === 'error' || prev.map((message) => message.id).includes(data.message.id)) return prev;
+				return [...prev, data.message];
 			});
 		};
 
@@ -91,6 +90,7 @@ export function Messages({
 		if (isTop) {
 			const c = chat.current;
 			if (loadingMessages !== false || !messages) return;
+			setIsTop(false);
 			setLoadingMessages(true);
 			getNextPage(messages.length)
 				.then((newMessages) => {
@@ -99,6 +99,7 @@ export function Messages({
 					if (c?.scrollTop === 0) c.scrollTo(0, 1);
 					setMessages((prev) => {
 						if (prev === 'error') return prev;
+						newMessages = newMessages.filter((message) => !prev?.map((m) => m.id).includes(message.id));
 						return [...newMessages.toReversed(), ...(prev ?? [])];
 					});
 					setLoadingMessages(false);

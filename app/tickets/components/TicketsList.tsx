@@ -5,15 +5,17 @@ import { SerializedTicket } from '@/libs/serializeData';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FaTriangleExclamation } from 'react-icons/fa6';
 import { TicketEventType } from '../types';
 
 export function TicketsList({
 	getTickets,
+	getNextPage,
 	timezone,
 }: {
 	getTickets: (closed: boolean) => Promise<SerializedTicket[]>;
+	getNextPage: (closed: boolean, messageCount: number) => Promise<SerializedTicket[]>;
 	timezone: string;
 }) {
 	const [tickets, setTickets] = useState<SerializedTicket[] | null | 'error'>(null);
@@ -21,6 +23,10 @@ export function TicketsList({
 	const path = usePathname();
 	const lastPath = path.split('/').pop();
 	const [selected, setSelected] = useState(lastPath);
+
+	const ticketElement = useRef<HTMLElement | null>(null);
+	const [isBottom, setIsBottom] = useState(false);
+	const [loadingTickets, setLoadingTickets] = useState<boolean | null | 'error'>(true);
 
 	useEffect(() => {
 		if (lastPath) setSelected(lastPath);
@@ -30,27 +36,98 @@ export function TicketsList({
 	const closed = params.get('status') === 'closed';
 
 	useEffect(() => {
+		const t = document.getElementById('tickets');
+		// Set ref after load
+		ticketElement.current = t;
+
 		setTickets(null);
 		getTickets(closed)
-			.then(setTickets)
+			.then((tickets) => {
+				setTickets(tickets);
+				// Prevent message not loading if the the screen is very tall
+				if (t) setIsBottom(t.scrollHeight - t.clientHeight <= t.scrollTop + 1);
+				setLoadingTickets(false);
+			})
 			.catch(() => setTickets('error'));
+
+		if (t) {
+			t.onscroll = () => {
+				setIsBottom(t.scrollHeight - t.clientHeight <= t.scrollTop + 1);
+			};
+
+			return () => {
+				t.onscroll = null;
+			};
+		}
 	}, [getTickets, closed]);
 
 	useEffect(() => {
 		const eventSource = new EventSource(`/tickets/ticket-stream`);
 		eventSource.onmessage = (event) => {
 			const data = JSON.parse(event.data) as TicketEventType;
-			console.log(data);
-			// setMessages((prev) => {
-			// 	if (prev === 'error') return prev;
-			// 	return [...(prev ?? []), data.message];
-			// });
+			if (data.type === 'new-message') {
+				setTickets((prev) => {
+					if (!prev || prev === 'error') return prev;
+					const updateIndex = prev.findIndex((ticket) => ticket.id === data.ticket.id);
+					if (updateIndex === -1)
+						return [
+							{
+								id: data.ticket.id,
+								title: data.ticket.title,
+								latest_message: {
+									message: data.message.message,
+									createdAt: data.message.xata.createdAt,
+								},
+							},
+							...prev,
+						];
+
+					prev[updateIndex].latest_message = {
+						message: data.message.message,
+						createdAt: data.message.xata.createdAt,
+					};
+					// Move it to front
+					prev.unshift(prev.splice(updateIndex, 1)[0]);
+					return [...prev];
+				});
+			} else if (data.type === 'new') {
+				setTickets((prev) => {
+					if (!prev || prev === 'error') return prev;
+					return [
+						{
+							id: data.ticket.id,
+							title: data.ticket.title,
+							latest_message: null,
+						},
+						...prev,
+					];
+				});
+			}
 		};
 
 		return () => {
 			eventSource.close();
 		};
 	}, []);
+
+	useEffect(() => {
+		if (isBottom) {
+			if (loadingTickets !== false || !tickets) return;
+			setIsBottom(false);
+			setLoadingTickets(true);
+			getNextPage(closed, tickets.length)
+				.then((newTickets) => {
+					if (newTickets.length < 1) return setLoadingTickets(null);
+					setTickets((prev) => {
+						if (!prev || prev === 'error') return prev;
+						newTickets = newTickets.filter((ticket) => !prev.map((t) => t.id).includes(ticket.id));
+						return [...prev, ...newTickets];
+					});
+					setLoadingTickets(false);
+				})
+				.catch(() => setLoadingTickets('error'));
+		}
+	}, [isBottom, closed, tickets, loadingTickets, getNextPage]);
 
 	return (
 		<>
@@ -83,18 +160,32 @@ export function TicketsList({
 						)}
 						<Link
 							href={`/tickets/${ticket.id}`}
-							className="relative flex justify-between py-2 px-4 w-full rounded-md cursor-pointer z-10 hover:bg-base-300/30"
+							className="relative flex justify-between gap-4 py-2 px-4 w-full rounded-md cursor-pointer z-10 hover:bg-base-300/30 min-w-0"
 							prefetch={false}
 						>
-							<div>
-								<h3 className="text-xl font-bold">{ticket.title}</h3>
-								<p>{ticket.latest_message?.message ?? '(No Message)'}</p>
+							<div className="overflow-hidden">
+								<h3 className="text-xl font-bold text-ellipsis overflow-hidden">{ticket.title}</h3>
+								<p className="text-ellipsis overflow-hidden">{ticket.latest_message?.message ?? '(No Message)'}</p>
 							</div>
-							{/* TODO: handle null */}
-							<div>{dayjs.tz(ticket.latest_message?.createdAt, timezone).format('LT')}</div>
+							<div className="min-w-fit">
+								{ticket.latest_message?.createdAt
+									? dayjs.tz(ticket.latest_message.createdAt, timezone).format('LT')
+									: '----'}
+							</div>
 						</Link>
 					</div>
 				))
+			)}
+			{loadingTickets === null ? (
+				<div className="flex items-center justify-center h-10">You&apos;re at the bottom</div>
+			) : loadingTickets === 'error' ? (
+				<div className="flex items-center justify-center h-10">There is an error loading tickets</div>
+			) : (
+				loadingTickets && (
+					<div className="flex items-center justify-center h-10">
+						<span className="loading loading-bars loading-md"></span>
+					</div>
+				)
 			)}
 		</>
 	);

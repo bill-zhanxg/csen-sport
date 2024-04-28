@@ -2,9 +2,11 @@ import { auth } from '@/libs/auth';
 import { isDeveloper } from '@/libs/checkPermission';
 import { SerializedTicket, serializeTickets } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
+import { redirect } from 'next/navigation';
 import { Unauthorized } from '../globalComponents/Unauthorized';
 import { CreateTicketButton } from './components/CreateTicketButton';
 import { TicketsList } from './components/TicketsList';
+import { ticketEmitter } from './ticket-stream/eventListener';
 
 const xata = getXataClient();
 
@@ -23,10 +25,12 @@ export default async function Tickets({ children }: { children: React.ReactNode 
 				closed,
 			})
 			.select(['*', 'latest_message.message', 'latest_message.xata.createdAt'])
+			.sort('latest_message.xata.createdAt', 'asc')
+			.sort('xata.createdAt', 'desc')
 			.getPaginated({
 				pagination: {
 					offset,
-					size: 20,
+					size: 50,
 				},
 			});
 	}
@@ -44,11 +48,33 @@ export default async function Tickets({ children }: { children: React.ReactNode 
 		return serializeTickets(tickets);
 	}
 
+	async function createTicket(data: FormData) {
+		'use server';
+		const session = await auth();
+		const title = data.get('title');
+		if (!title || typeof title !== 'string' || !session) return;
+
+		const { id } = await xata.db.tickets.create({
+			title: title,
+			createdBy: session.user.id,
+		});
+
+		ticketEmitter.emit('new-ticket', {
+			ticket: {
+				id,
+				title,
+				creatorId: session.user.id,
+			},
+		});
+
+		redirect(`/tickets/${id}`);
+	}
+
 	return (
 		<div className="flex w-full h-full-nav overflow-auto">
-			<div className="flex flex-col w-[30rem] max-w-[30rem] h-full p-4 overflow-auto">
-				<CreateTicketButton />
-				<TicketsList getTickets={getTickets} timezone={session.user.timezone ?? ''} />
+			<div id="tickets" className="flex flex-col w-[30rem] max-w-[30rem] h-full p-4 overflow-auto">
+				<CreateTicketButton createTicket={createTicket} />
+				<TicketsList getTickets={getTickets} getNextPage={getNextPage} timezone={session.user.timezone ?? ''} />
 			</div>
 			{children}
 		</div>

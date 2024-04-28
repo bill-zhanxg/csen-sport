@@ -36,8 +36,22 @@ export async function GET(req: NextRequest) {
 	};
 	ticketEmitter.on('new-message', onMessage);
 
+	const onNewTicket = async ({
+        ticket,
+	}: {
+        ticket: SerializedTicket & {
+            creatorId: string;
+		};
+	}) => {
+		if (isDeveloper(session) || ticket.creatorId === session.user.id)
+			notifier.update({ data: { type: 'new', ticket } });
+    };
+	ticketEmitter.on('new-ticket', onNewTicket);
+    console.log(onNewTicket)
+
 	req.signal.onabort = () => {
 		ticketEmitter.removeListener('new-message', onMessage);
+		ticketEmitter.removeListener('new', onNewTicket);
 		notifier.close({ data: {} });
 	};
 

@@ -18,7 +18,12 @@ export type TicketMessageEvents = EventNotifier<{
 	};
 }>;
 
-export type TicketEventType = { type: 'new-message'; message: SerializedTicketMessage; ticket: SerializedTicket };
+export type TicketEventType =
+	| { type: 'new-message'; message: SerializedTicketMessage; ticket: SerializedTicket }
+	| {
+			type: 'new';
+			ticket: SerializedTicket;
+	  };
 
 export type TicketEvents = EventNotifier<{
 	update: {
