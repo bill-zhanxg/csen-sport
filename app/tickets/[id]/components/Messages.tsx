@@ -6,7 +6,7 @@ import { SerializedTicketMessage } from '@/libs/serializeData';
 import { User } from 'next-auth';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { FaTriangleExclamation } from 'react-icons/fa6';
-import { TicketEventType } from '../../types';
+import { TicketMessageEventType } from '../../types';
 import { OptimisticMessages } from './MessagesTab';
 
 export function Messages({
@@ -67,7 +67,7 @@ export function Messages({
 	useEffect(() => {
 		const eventSource = new EventSource(`/tickets/${ticketId}/message-stream`);
 		eventSource.onmessage = (event) => {
-			const data = JSON.parse(event.data) as TicketEventType;
+			const data = JSON.parse(event.data) as TicketMessageEventType;
 			console.log(data);
 			setMessages((prev) => {
 				if (prev === 'error') return prev;

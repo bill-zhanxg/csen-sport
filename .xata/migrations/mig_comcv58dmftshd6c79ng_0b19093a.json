@@ -1,0 +1,19 @@
+{
+  "id": "mig_comcv58dmftshd6c79ng",
+  "parentID": "mig_cokv2vitkr4uecv52k9g",
+  "checksum": "1:0b19093a093a7938e0ec78443c8caabfa672c8ac963aa8464ef84b82f0703072",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "latest_message",
+          "type": "link",
+          "link": {
+            "table": "ticket_messages"
+          }
+        },
+        "table": "tickets"
+      }
+    }
+  ]
+}

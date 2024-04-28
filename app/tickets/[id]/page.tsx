@@ -5,9 +5,10 @@ import { SerializedTicketMessage, serializeTicketMessage, serializeTicketMessage
 import { getXataClient } from '@/libs/xata';
 import { FaRegQuestionCircle } from 'react-icons/fa';
 import { FaEllipsisVertical } from 'react-icons/fa6';
+import { ticketEmitter } from '../ticket-stream/eventListener';
+import { closeTicket } from './actions';
 import { MessageTab } from './components/MessagesTab';
 import { ticketMessageEmitter } from './message-stream/eventListener';
-import { closeTicket } from './actions';
 
 export const revalidate = 0;
 
@@ -21,6 +22,11 @@ export default async function TicketMessages({ params }: { params: { id: string 
 	const ticket = await xata.db.tickets.read(ticket_id);
 	if (!ticket) return NotFound();
 	if (ticket.createdBy?.id !== session.user.id) return Unauthorized();
+	const serializedTicket = {
+		id: ticket.id,
+		title: ticket.title,
+	};
+	const ticket_creator = ticket.createdBy.id;
 
 	async function getPaginatedMessages(offset?: number) {
 		'use server';
@@ -50,13 +56,23 @@ export default async function TicketMessages({ params }: { params: { id: string 
 	async function sendMessage(messageRaw: string) {
 		'use server';
 		const message = messageRaw.trim();
-		if (!message || !session) return;
+		if (!message || !session || !ticket_id) return;
 		const data = await xata.db.ticket_messages.create({
 			ticket_id,
 			sender: session.user.id,
 			message,
 		});
 		ticketMessageEmitter.emit(ticket_id, serializeTicketMessage({ ...data, sender: session.user as any }));
+		ticketEmitter.emit('new-message', {
+			ticket_creator_id: ticket_creator,
+			message: serializeTicketMessage({ ...data, sender: session.user as any }),
+			ticket: serializedTicket,
+		});
+
+		await xata.db.tickets.update({
+			id: ticket_id,
+			latest_message: data.id,
+		});
 	}
 
 	// TODO: Mobile

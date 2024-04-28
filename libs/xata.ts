@@ -131,6 +131,11 @@ const tables = [
         defaultValue: "Untitled",
       },
       { name: "closed", type: "bool", notNull: true, defaultValue: "false" },
+      {
+        name: "latest_message",
+        type: "link",
+        link: { table: "ticket_messages" },
+      },
     ],
   },
   {
@@ -142,6 +147,7 @@ const tables = [
       { name: "message", type: "text" },
       { name: "attachments", type: "file[]" },
     ],
+    revLinks: [{ column: "latest_message", table: "tickets" }],
   },
 ] as const;
 

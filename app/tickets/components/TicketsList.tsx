@@ -1,24 +1,22 @@
 'use client';
 
 import { dayjs } from '@/libs/dayjs';
-import { TicketsRecord } from '@/libs/xata';
-import { JSONData, SelectedPick } from '@xata.io/client';
+import { SerializedTicket } from '@/libs/serializeData';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FaTriangleExclamation } from 'react-icons/fa6';
+import { TicketEventType } from '../types';
 
 export function TicketsList({
 	getTickets,
 	timezone,
 }: {
-	getTickets: (closed: boolean) => Promise<JSONData<Readonly<SelectedPick<TicketsRecord, ['*']>>>[]>;
+	getTickets: (closed: boolean) => Promise<SerializedTicket[]>;
 	timezone: string;
 }) {
-	const [tickets, setTickets] = useState<JSONData<Readonly<SelectedPick<TicketsRecord, ['*']>>>[] | null | 'error'>(
-		null,
-	);
+	const [tickets, setTickets] = useState<SerializedTicket[] | null | 'error'>(null);
 
 	const path = usePathname();
 	const lastPath = path.split('/').pop();
@@ -37,6 +35,22 @@ export function TicketsList({
 			.then(setTickets)
 			.catch(() => setTickets('error'));
 	}, [getTickets, closed]);
+
+	useEffect(() => {
+		const eventSource = new EventSource(`/tickets/ticket-stream`);
+		eventSource.onmessage = (event) => {
+			const data = JSON.parse(event.data) as TicketEventType;
+			console.log(data);
+			// setMessages((prev) => {
+			// 	if (prev === 'error') return prev;
+			// 	return [...(prev ?? []), data.message];
+			// });
+		};
+
+		return () => {
+			eventSource.close();
+		};
+	}, []);
 
 	return (
 		<>
@@ -74,10 +88,10 @@ export function TicketsList({
 						>
 							<div>
 								<h3 className="text-xl font-bold">{ticket.title}</h3>
-								<p>Latest text</p>
+								<p>{ticket.latest_message?.message ?? '(No Message)'}</p>
 							</div>
-							{/* TODO: change to latest message date, and relative */}
-							<div>{dayjs.tz(ticket.xata.createdAt, timezone).format('LT')}</div>
+							{/* TODO: handle null */}
+							<div>{dayjs.tz(ticket.latest_message?.createdAt, timezone).format('LT')}</div>
 						</Link>
 					</div>
 				))

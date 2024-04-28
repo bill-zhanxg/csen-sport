@@ -1,4 +1,6 @@
 import { auth } from '@/libs/auth';
+import { isDeveloper } from '@/libs/checkPermission';
+import { SerializedTicket, serializeTickets } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
 import { Unauthorized } from '../globalComponents/Unauthorized';
 import { CreateTicketButton } from './components/CreateTicketButton';
@@ -10,19 +12,36 @@ export default async function Tickets({ children }: { children: React.ReactNode 
 	const session = await auth();
 	if (!session) return Unauthorized();
 
-	async function getTickets(closed?: boolean) {
+	async function getPaginatedTickets(closed?: boolean, offset?: number) {
 		'use server';
-		if (!session) return [];
+		if (!session) return undefined;
 		if (closed === undefined) closed = false;
 
-		const tickets = await xata.db.tickets
+		return xata.db.tickets
 			.filter({
-				createdBy: session.user.id,
+				createdBy: isDeveloper(session) ? undefined : session.user.id,
 				closed,
 			})
-			.getAll();
-
-		return tickets.toSerializable();
+			.select(['*', 'latest_message.message', 'latest_message.xata.createdAt'])
+			.getPaginated({
+				pagination: {
+					offset,
+					size: 20,
+				},
+			});
+	}
+	async function getTickets(closed?: boolean) {
+		'use server';
+		const tickets = await getPaginatedTickets(closed);
+		if (!tickets) return [];
+		return serializeTickets(tickets);
+	}
+	async function getNextPage(closed: boolean, messageCount: number): Promise<SerializedTicket[]> {
+		'use server';
+		if (typeof messageCount !== 'number') return [];
+		const tickets = await getPaginatedTickets(closed, messageCount);
+		if (!tickets) return [];
+		return serializeTickets(tickets);
 	}
 
 	return (

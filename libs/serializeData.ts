@@ -2,7 +2,7 @@ import { CustomUser } from '@/next-auth';
 import { Page, SelectedPick } from '@xata.io/client';
 import { User } from 'next-auth';
 import { RawTeam, RawVenue } from './tableData';
-import { GamesRecord, TeamsRecord, TicketMessagesRecord, VenuesRecord } from './xata';
+import { GamesRecord, TeamsRecord, TicketMessagesRecord, TicketsRecord, VenuesRecord } from './xata';
 
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
@@ -161,6 +161,42 @@ export function serializeGameWithId(
 }
 
 // Tickets
+export type SerializedTicket = {
+	id: string;
+	title: string;
+	latest_message?: {
+		message?: string | null;
+		createdAt?: Date | null;
+	} | null;
+};
+
+export function serializeTickets(
+	tickets: Page<
+		TicketsRecord,
+		SelectedPick<TicketsRecord, ('*' | 'latest_message.xata.createdAt' | 'latest_message.message')[]>
+	>,
+): SerializedTicket[] {
+	return tickets.records.map((ticket) => serializeTicket(ticket));
+}
+
+export function serializeTicket({
+	id,
+	title,
+	latest_message,
+}: SelectedPick<
+	TicketsRecord,
+	('*' | 'latest_message.xata.createdAt' | 'latest_message.message')[]
+>): SerializedTicket {
+	return {
+		id,
+		title,
+		latest_message: {
+			message: latest_message?.message,
+			createdAt: latest_message?.xata.createdAt,
+		},
+	};
+}
+
 export type SerializedTicketMessage = {
 	id: string;
 	ticket_id?: string | null;

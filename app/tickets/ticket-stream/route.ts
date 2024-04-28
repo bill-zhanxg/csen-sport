@@ -1,37 +1,43 @@
 import { auth } from '@/libs/auth';
 import { isDeveloper } from '@/libs/checkPermission';
-import { SerializedTicketMessage } from '@/libs/serializeData';
+import { SerializedTicket, SerializedTicketMessage } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSSEWriter } from 'ts-sse';
-import { TicketMessageEvents } from '../../types';
-import { ticketMessageEmitter } from './eventListener';
+import { TicketEvents } from '../types';
+import { ticketEmitter } from './eventListener';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const xata = getXataClient();
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest) {
 	const session = await auth();
 	if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-	const ticket = await xata.db.tickets.read(params.id, ['createdBy.id']);
-	if (!isDeveloper(session) && ticket?.createdBy?.id !== session.user.id)
-		return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
 	const responseStream = new TransformStream();
 	const writer = responseStream.writable.getWriter();
 	const encoder = new TextEncoder();
 
-	const notifier = getSSEWriter(writer, encoder) as TicketMessageEvents;
+	const notifier = getSSEWriter(writer, encoder) as TicketEvents;
 
-	const onMessage = async (message: SerializedTicketMessage) => {
-		notifier.update({ data: { type: 'new', message } });
+	const onMessage = async ({
+		ticket_creator_id,
+		message,
+		ticket,
+	}: {
+		ticket_creator_id: string;
+		message: SerializedTicketMessage;
+		ticket: SerializedTicket;
+	}) => {
+		if (isDeveloper(session) || ticket_creator_id === session.user.id)
+			notifier.update({ data: { type: 'new-message', message, ticket } });
 	};
-	ticketMessageEmitter.on(params.id, onMessage);
+	ticketEmitter.on('new-message', onMessage);
 
 	req.signal.onabort = () => {
-		ticketMessageEmitter.removeListener(params.id, onMessage);
+		ticketEmitter.removeListener('new-message', onMessage);
 		notifier.close({ data: {} });
 	};
 

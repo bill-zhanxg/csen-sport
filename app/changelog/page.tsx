@@ -26,6 +26,8 @@ export default function Changelog() {
 							<li>feat(kysely): add join table functions for database with kysely</li>
 							<li>feat(nav): close ticket functioning</li>
 							<li>revert(kysely): remove kysely, this does not work</li>
+							<li>feat(ticket_layout): show the latest message for ticket and time of sending</li>
+							<li>fix(typing): improve typescript typing for eventEmitters</li>
 						</List>
 					</List>
 					<Divider />
