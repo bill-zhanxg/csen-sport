@@ -40,7 +40,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 						</>
 					) : (
 						<>
-							<div className="navbar bg-base-200 border-b-2 border-base-300 shadow-lg shadow-base-300">
+							<div className="navbar bg-base-200 border-b-2 border-base-300 shadow-lg shadow-base-300 h-[70px]">
 								<div className="navbar-start">
 									<Link id="home-btn" href="/" className="btn btn-ghost normal-case text-xl">
 										<FaHome />
@@ -93,8 +93,8 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 									</div>
 								</div>
 							</div>
-							<FeedbackDialog session={session} />
 							{children}
+							<FeedbackDialog session={session} />
 							<BarOfProgress />
 							{session.user.auto_timezone && <HandleUserTimezone />}
 							<SentrySetUser user={{ ...session.user, ip_address: ip }} />

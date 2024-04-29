@@ -1,0 +1,18 @@
+{
+  "id": "mig_cojng44s18i4cg97alk0",
+  "parentID": "mig_cojndoks18i4cg97alj0",
+  "checksum": "1:9ad450bdf46f8ae279bc645e5c03da3e037213febd52d3cb3a5086c315c1a451",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "closed",
+          "type": "bool",
+          "notNull": true,
+          "defaultValue": "false"
+        },
+        "table": "tickets"
+      }
+    }
+  ]
+}

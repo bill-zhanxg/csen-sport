@@ -10,7 +10,7 @@ const Joyride = dynamic(() => import('react-joyride'), { ssr: false });
 const steps: { title?: ReactNode; target: string; content: string }[] = [
 	{
 		target: '#home-btn',
-		content: 'Click here whenever you want to go back to the homepage',
+		content: 'Click here to return to your homepage',
 	},
 	{
 		target: '#weekly-sport-btn',

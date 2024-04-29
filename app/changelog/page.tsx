@@ -7,15 +7,36 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
-			<ChangelogBox version="0.2.0" release="xx/04/2024">
+			<ChangelogBox version="0.2.0" release="29/04/2024">
 				<>
 					<Heading badge="New" title="Features" />
 					<List>
 						<li>feat(tickets): Add a new ticket system for user to report bugs and feedback (Minor version bump)</li>
-						<li>
-							feat(role): Add developer role to allow the developer to access the ticket system and view the feedbacks
-							and bugs
-						</li>
+						<List className="!list-[circle] ml-4">
+							<li>
+								feat(role): Add developer role to allow the developer to access the ticket system and view the feedbacks
+								and bugs
+							</li>
+							<li>feat(package): Added framer motion for better animation</li>
+							<li>feat(real_time): Add real time messaging support</li>
+							<li>feat(messaging): Messaging design finished and functioning</li>
+							<li>feat(optimistic_messages_update): Show messaging sending status</li>
+							<li>feat(tickets_list): open and closed tabs functioning</li>
+							<li>feat(messaging): paginated infinite scroll for messages and auto scrolls</li>
+							<li>feat(kysely): add join table functions for database with kysely</li>
+							<li>feat(nav): close ticket functioning</li>
+							<li>revert(kysely): remove kysely, this does not work</li>
+							<li>feat(ticket_layout): show the latest message for ticket and time of sending</li>
+							<li>fix(typing): improve typescript typing for eventEmitters</li>
+							<li>feat(ticket_layout): add sorting for tickets</li>
+							<li>feat(ticket_layout): add real time for message update and ticket update</li>
+							<li>
+								feat(ticket_layout): ticket list change sorting strategy to sort by latest message, then by created date
+							</li>
+							<li>feat(status): real time ticket status change (close & open) and fix bugs</li>
+							<li>fix(date): tested with Brodie and fix wrong date display bug</li>
+							<li>feat(read): Mark message as read in real time and loading</li>
+						</List>
 					</List>
 					<Divider />
 					<Title>Bug fixes</Title>
@@ -27,9 +48,11 @@ export default function Changelog() {
 						<li>refactor(global-error): Display more information about the error and make it looks good</li>
 						<li>fix(setting): profile picture too large to upload to database</li>
 						<li>
-							fix(timezone_setting): adding handler for older browser that does not support th function
+							fix(timezone_setting): adding handler for older browser that does not support the function
 							Intl.supportedValuesOf
 						</li>
+						<li>fix(sentry_logging): Limit the amount of replays and error reports to prevent overload sentry plan</li>
+						<li>typo(JoyRide): Fix grammar issue for guide</li>
 					</List>
 				</>
 			</ChangelogBox>

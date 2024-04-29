@@ -1,0 +1,19 @@
+{
+  "id": "mig_cojndass18i4cg97alh0",
+  "parentID": "mig_cojnd6ss18i4cg97alg0",
+  "checksum": "1:6730ea90204e5b5babc891bcc15ee21cf9041db11bbb4beafb568f3a4bd3ba77",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "createdBy",
+          "type": "link",
+          "link": {
+            "table": "nextauth_users"
+          }
+        },
+        "table": "tickets"
+      }
+    }
+  ]
+}

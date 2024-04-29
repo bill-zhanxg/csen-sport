@@ -1,0 +1,16 @@
+{
+  "id": "mig_cokv2vitkr4uecv52k9g",
+  "parentID": "mig_cojnihcs18i4cg97alog",
+  "checksum": "1:458b32f9170ac4a8878329b9dc98a3a411aa9f4039387f5def0b646b277f0c83",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "attachments",
+          "type": "file[]"
+        },
+        "table": "ticket_messages"
+      }
+    }
+  ]
+}

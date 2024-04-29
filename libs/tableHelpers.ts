@@ -27,6 +27,7 @@ export function gamesToDates(
 	for (const game of gamesArray) {
 		const gameDate = game.date;
 		if (!gameDate) continue;
+		// TODO: use user timezone instead
 		const date = gameDate.toLocaleDateString();
 		const checkArray = () => {
 			if (!dates[datesArrayIndex]) dates[datesArrayIndex] = { date, rawDate: gameDate, games: [] };
