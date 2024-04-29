@@ -102,6 +102,11 @@ export function TicketsList({
 						...prev,
 					];
 				});
+			} else if (data.type === 'toggle-status') {
+				setTickets((prev) => {
+					if (!prev || prev === 'error') return prev;
+					return prev.filter((ticket) => ticket.id !== data.ticket_id);
+				});
 			}
 		};
 
@@ -163,7 +168,7 @@ export function TicketsList({
 								<motion.div layoutId="nav-bar" className="w-full h-full absolute bg-base-200 rounded-lg" />
 							)}
 							<Link
-								href={`/tickets/${ticket.id}`}
+								href={`/tickets/${ticket.id}${closed ? '?status=closed' : ''}`}
 								className="relative flex justify-between gap-4 py-2 px-4 w-full rounded-md cursor-pointer z-10 hover:bg-base-300/30 min-w-0"
 								prefetch={false}
 							>

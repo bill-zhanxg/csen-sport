@@ -23,7 +23,8 @@ export type TicketEventType =
 	| {
 			type: 'new';
 			ticket: SerializedTicket;
-	  };
+	  }
+	| { type: 'toggle-status'; ticket_id: string };
 
 export type TicketEvents = EventNotifier<{
 	update: {

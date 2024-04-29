@@ -1,5 +1,6 @@
 import { SerializedTicket, SerializedTicketMessage } from '@/libs/serializeData';
 import { EventEmitter } from 'events';
+import '../[id]/actions';
 
 interface TicketEventType {
 	'new-message': (data: {
@@ -12,6 +13,7 @@ interface TicketEventType {
 			creatorId: string;
 		};
 	}) => void;
+	'toggle-status': (data: { ticket_creator_id: string; ticket_id: string }) => void;
 }
 
 class TicketEmitter extends EventEmitter {

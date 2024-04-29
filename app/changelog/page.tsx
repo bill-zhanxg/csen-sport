@@ -33,6 +33,7 @@ export default function Changelog() {
 							<li>
 								feat(ticket_layout): ticket list change sorting strategy to sort by latest message, then by created date
 							</li>
+							<li>feat(status): real time ticket status change (close & open) and fix bugs</li>
 						</List>
 					</List>
 					<Divider />

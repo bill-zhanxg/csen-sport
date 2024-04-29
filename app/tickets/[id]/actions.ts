@@ -1,10 +1,18 @@
-'use server'
+'use server';
 
-import { getXataClient } from "@/libs/xata";
+import { getXataClient } from '@/libs/xata';
+import { ticketEmitter } from '../ticket-stream/eventListener';
 
 const xata = getXataClient();
 
-export async function closeTicket(id: string) {
-    if (typeof id !== 'string') return;
-    return xata.db.tickets.update(id, { closed: true });
+export async function toggleTicketStatus(id: string, close: boolean) {
+	if (typeof id !== 'string' || typeof close !== 'boolean') return;
+	const ticket = await xata.db.tickets.update(id, { closed: close });
+	if (ticket?.createdBy?.id) {
+		console.log('emitting toggle-status');
+		ticketEmitter.emit('toggle-status', {
+			ticket_creator_id: ticket.createdBy.id,
+			ticket_id: id,
+		});
+	}
 }

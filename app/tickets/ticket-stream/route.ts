@@ -22,6 +22,11 @@ export async function GET(req: NextRequest) {
 
 	const notifier = getSSEWriter(writer, encoder) as TicketEvents;
 
+	const allowPass = (creator: string) => {
+		if (isDeveloper(session) || creator === session.user.id) return true;
+		return false;
+	};
+
 	const onMessage = async ({
 		ticket_creator_id,
 		message,
@@ -31,27 +36,31 @@ export async function GET(req: NextRequest) {
 		message: SerializedTicketMessage;
 		ticket: SerializedTicket;
 	}) => {
-		if (isDeveloper(session) || ticket_creator_id === session.user.id)
-			notifier.update({ data: { type: 'new-message', message, ticket } });
+		if (allowPass(ticket_creator_id)) notifier.update({ data: { type: 'new-message', message, ticket } });
 	};
 	ticketEmitter.on('new-message', onMessage);
 
 	const onNewTicket = async ({
-        ticket,
+		ticket,
 	}: {
-        ticket: SerializedTicket & {
-            creatorId: string;
+		ticket: SerializedTicket & {
+			creatorId: string;
 		};
 	}) => {
-		if (isDeveloper(session) || ticket.creatorId === session.user.id)
-			notifier.update({ data: { type: 'new', ticket } });
-    };
+		if (allowPass(ticket.creatorId)) notifier.update({ data: { type: 'new', ticket } });
+	};
 	ticketEmitter.on('new-ticket', onNewTicket);
-    console.log(onNewTicket)
+
+	const onCloseTicket = async ({ ticket_creator_id, ticket_id }: { ticket_creator_id: string; ticket_id: string }) => {
+		console.log('received + emitting toggle-status');
+		if (allowPass(ticket_creator_id)) notifier.update({ data: { type: 'toggle-status', ticket_id } });
+	};
+	ticketEmitter.on('toggle-status', onCloseTicket);
 
 	req.signal.onabort = () => {
 		ticketEmitter.removeListener('new-message', onMessage);
 		ticketEmitter.removeListener('new', onNewTicket);
+		ticketEmitter.removeListener('toggle-status', onCloseTicket);
 		notifier.close({ data: {} });
 	};
 
