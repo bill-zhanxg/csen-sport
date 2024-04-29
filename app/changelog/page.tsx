@@ -30,6 +30,9 @@ export default function Changelog() {
 							<li>fix(typing): improve typescript typing for eventEmitters</li>
 							<li>feat(ticket_layout): add sorting for tickets</li>
 							<li>feat(ticket_layout): add real time for message update and ticket update</li>
+							<li>
+								feat(ticket_layout): ticket list change sorting strategy to sort by latest message, then by created date
+							</li>
 						</List>
 					</List>
 					<Divider />

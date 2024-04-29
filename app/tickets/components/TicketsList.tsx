@@ -153,28 +153,41 @@ export function TicketsList({
 			) : tickets.length < 1 ? (
 				<div className="text-center">Looks empty</div>
 			) : (
-				tickets.map((ticket) => (
-					<div key={ticket.id} className="relative">
-						{selected === ticket.id && (
-							<motion.div layoutId="nav-bar" className="w-full h-full absolute bg-base-200 rounded-lg" />
-						)}
-						<Link
-							href={`/tickets/${ticket.id}`}
-							className="relative flex justify-between gap-4 py-2 px-4 w-full rounded-md cursor-pointer z-10 hover:bg-base-300/30 min-w-0"
-							prefetch={false}
-						>
-							<div className="overflow-hidden">
-								<h3 className="text-xl font-bold text-ellipsis overflow-hidden">{ticket.title}</h3>
-								<p className="text-ellipsis overflow-hidden">{ticket.latest_message?.message ?? '(No Message)'}</p>
-							</div>
-							<div className="min-w-fit">
-								{ticket.latest_message?.createdAt
-									? dayjs.tz(ticket.latest_message.createdAt, timezone).format('LT')
-									: '----'}
-							</div>
-						</Link>
-					</div>
-				))
+				tickets.map((ticket) => {
+					const datetime = ticket.latest_message?.createdAt
+						? dayjs.tz(ticket.latest_message.createdAt, timezone)
+						: undefined;
+					return (
+						<div key={ticket.id} className="relative">
+							{selected === ticket.id && (
+								<motion.div layoutId="nav-bar" className="w-full h-full absolute bg-base-200 rounded-lg" />
+							)}
+							<Link
+								href={`/tickets/${ticket.id}`}
+								className="relative flex justify-between gap-4 py-2 px-4 w-full rounded-md cursor-pointer z-10 hover:bg-base-300/30 min-w-0"
+								prefetch={false}
+							>
+								<div className="overflow-hidden">
+									<h3 className="text-xl font-bold text-ellipsis overflow-hidden">{ticket.title}</h3>
+									<p className="text-ellipsis overflow-hidden">{ticket.latest_message?.message ?? '(No Message)'}</p>
+								</div>
+								<div className="min-w-fit">
+									{datetime ? (
+										<div className="tooltip" data-tip={datetime.format('DD/MM/YYYY LT')}>
+											{datetime.isToday()
+												? datetime.format('LT')
+												: datetime.isYesterday()
+												? 'Yesterday'
+												: datetime.format('DD/MM/YYYY')}
+										</div>
+									) : (
+										'----'
+									)}
+								</div>
+							</Link>
+						</div>
+					);
+				})
 			)}
 			{loadingTickets === null ? (
 				<div className="flex items-center justify-center h-10">You&apos;re at the bottom</div>

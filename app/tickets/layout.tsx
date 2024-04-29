@@ -25,7 +25,7 @@ export default async function Tickets({ children }: { children: React.ReactNode 
 				closed,
 			})
 			.select(['*', 'latest_message.message', 'latest_message.xata.createdAt'])
-			.sort('latest_message.xata.createdAt', 'asc')
+			.sort('latest_message.xata.createdAt', 'desc')
 			.sort('xata.createdAt', 'desc')
 			.getPaginated({
 				pagination: {
