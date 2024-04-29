@@ -1,14 +1,15 @@
 import { Unauthorized } from '@/app/globalComponents/Unauthorized';
 import NotFound from '@/app/not-found';
 import { auth } from '@/libs/auth';
+import { isDeveloper } from '@/libs/checkPermission';
 import { SerializedTicketMessage, serializeTicketMessage, serializeTicketMessages } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
 import { FaRegQuestionCircle } from 'react-icons/fa';
 import { FaEllipsisVertical } from 'react-icons/fa6';
 import { ticketEmitter } from '../ticket-stream/eventListener';
+import { ActionList } from './components/ActionList';
 import { MessageTab } from './components/MessagesTab';
 import { ticketMessageEmitter } from './message-stream/eventListener';
-import { ActionList } from './components/ActionList';
 
 export const revalidate = 0;
 
@@ -21,7 +22,7 @@ export default async function TicketMessages({ params }: { params: { id: string 
 	const ticket_id = params.id;
 	const ticket = await xata.db.tickets.read(ticket_id);
 	if (!ticket) return NotFound();
-	if (ticket.createdBy?.id !== session.user.id) return Unauthorized();
+	if (!ticket.createdBy || (!isDeveloper(session) && ticket.createdBy?.id !== session.user.id)) return Unauthorized();
 	const serializedTicket = {
 		id: ticket.id,
 		title: ticket.title,
@@ -30,7 +31,7 @@ export default async function TicketMessages({ params }: { params: { id: string 
 
 	async function getPaginatedMessages(offset?: number) {
 		'use server';
-		return xata.db.ticket_messages
+		const messages = await xata.db.ticket_messages
 			.select(['*', 'sender.name', 'sender.email', 'sender.image'])
 			.filter({ ticket_id })
 			.sort('xata.createdAt', 'desc')
@@ -40,6 +41,27 @@ export default async function TicketMessages({ params }: { params: { id: string 
 					size: 20,
 				},
 			});
+
+		// Mark messages as seen
+		// const unseenMessages = messages.records
+		// 	.filter((message) => !message.seen && message.sender?.id !== session?.user.id)
+		// 	.map((message) => message.id);
+		// xata.transactions.run([
+		// 	{
+		// 		update: {
+		// 			id: '',
+		// 			table: 'ticket_messages',
+		// 			fields: {
+		// 				seen: true,
+		// 			},
+		// 		},
+		// 	},
+		// ]);
+		// messages.records.forEach((message) => {
+		// 	if (unseenMessages.includes(message.id)) message.seen = true;
+		// });
+
+		return messages;
 	}
 	async function getMessages(): Promise<SerializedTicketMessage[]> {
 		'use server';
@@ -87,9 +109,7 @@ export default async function TicketMessages({ params }: { params: { id: string 
 					<div tabIndex={0} role="button" className="btn">
 						<FaEllipsisVertical />
 					</div>
-					<ActionList 
-						ticketId={ticket_id}
-					/>
+					<ActionList ticketId={ticket_id} />
 				</div>
 			</div>
 			<MessageTab

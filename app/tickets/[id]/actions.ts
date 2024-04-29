@@ -9,7 +9,6 @@ export async function toggleTicketStatus(id: string, close: boolean) {
 	if (typeof id !== 'string' || typeof close !== 'boolean') return;
 	const ticket = await xata.db.tickets.update(id, { closed: close });
 	if (ticket?.createdBy?.id) {
-		console.log('emitting toggle-status');
 		ticketEmitter.emit('toggle-status', {
 			ticket_creator_id: ticket.createdBy.id,
 			ticket_id: id,

@@ -52,7 +52,6 @@ export async function GET(req: NextRequest) {
 	ticketEmitter.on('new-ticket', onNewTicket);
 
 	const onCloseTicket = async ({ ticket_creator_id, ticket_id }: { ticket_creator_id: string; ticket_id: string }) => {
-		console.log('received + emitting toggle-status');
 		if (allowPass(ticket_creator_id)) notifier.update({ data: { type: 'toggle-status', ticket_id } });
 	};
 	ticketEmitter.on('toggle-status', onCloseTicket);

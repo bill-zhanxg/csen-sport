@@ -160,7 +160,7 @@ export function TicketsList({
 			) : (
 				tickets.map((ticket) => {
 					const datetime = ticket.latest_message?.createdAt
-						? dayjs.tz(ticket.latest_message.createdAt, timezone)
+						? dayjs.tz(new Date(ticket.latest_message.createdAt), timezone)
 						: undefined;
 					return (
 						<div key={ticket.id} className="relative">

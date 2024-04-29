@@ -77,7 +77,7 @@ export function Messages({
 		return () => {
 			eventSource.close();
 		};
-	}, [ticketId]);
+	}, [ticketId, user]);
 
 	useEffect(() => {
 		scrollToBottom();
@@ -140,30 +140,28 @@ export function Messages({
 					</div>
 				)
 			)}
-			{messages.map((message) => (
-				<div key={message.id} className="w-full min-h-24">
-					<div className={`chat ${message.sender?.id === user.id ? 'chat-end' : 'chat-start'}`}>
-						<div className="chat-image avatar">
-							<div className="w-10 rounded-full">
-								<UserAvatar user={message.sender ?? {}} className="rounded-full" />
+			{messages.map((message) => {
+				const datetime = dayjs.tz(new Date(message.xata.createdAt), user.timezone ?? undefined);
+				return (
+					<div key={message.id} className="w-full min-h-24">
+						<div className={`chat ${message.sender?.id === user.id ? 'chat-end' : 'chat-start'}`}>
+							<div className="chat-image avatar">
+								<div className="w-10 rounded-full">
+									<UserAvatar user={message.sender ?? {}} className="rounded-full" />
+								</div>
 							</div>
-						</div>
-						<div className="chat-header">
-							{message.sender?.name ?? 'Unknown'}
-							<div
-								className="tooltip"
-								data-tip={dayjs.tz(message.xata.createdAt, user.timezone ?? undefined).format('llll')}
-							>
-								<time className="text-xs opacity-50 ml-2">
-									{dayjs.tz(message.xata.createdAt, user.timezone ?? undefined).format('LT')}
-								</time>
+							<div className="chat-header">
+								{message.sender?.name ?? 'Unknown'}
+								<div className="tooltip" data-tip={datetime.format('llll')}>
+									<time className="text-xs opacity-50 ml-2">{datetime.format('LT')}</time>
+								</div>
 							</div>
+							<div className="chat-bubble break-words">{message.message}</div>
+							<div className="chat-footer opacity-50">{message.seen ? 'Seen' : 'Delivered'}</div>
 						</div>
-						<div className="chat-bubble break-words">{message.message}</div>
-						<div className="chat-footer opacity-50">{message.seen ? 'Seen' : 'Delivered'}</div>
 					</div>
-				</div>
-			))}
+				);
+			})}
 			{optimisticMessages.map((message) => (
 				<div key={message.id} className="w-full min-h-24">
 					<div className={`chat chat-end`}>

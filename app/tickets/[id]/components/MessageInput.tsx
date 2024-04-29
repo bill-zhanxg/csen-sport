@@ -38,7 +38,7 @@ export function MessageInput({
 
 	return (
 		<div className="flex gap-2 items-end w-full sticky bottom-0 bg-base-100 p-2 rounded-lg h-16 max-h-96">
-			<button className="btn">
+			<button className="btn btn-disabled">
 				<FaPaperclip size={20} />
 			</button>
 			<textarea

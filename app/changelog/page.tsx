@@ -34,6 +34,7 @@ export default function Changelog() {
 								feat(ticket_layout): ticket list change sorting strategy to sort by latest message, then by created date
 							</li>
 							<li>feat(status): real time ticket status change (close & open) and fix bugs</li>
+							<li>fix(date): tested with Brodie and fix wrong date display bug</li>
 						</List>
 					</List>
 					<Divider />

@@ -72,7 +72,7 @@ export default async function Tickets({ children }: { children: React.ReactNode 
 
 	return (
 		<div className="flex w-full h-full-nav overflow-auto">
-			<div id="tickets" className="flex flex-col w-[30rem] max-w-[30rem] h-full p-4 overflow-auto">
+			<div id="tickets" className="flex flex-col w-[30rem] max-w-[30rem] h-full p-4 overflow-x-hidden">
 				<CreateTicketButton createTicket={createTicket} />
 				<TicketsList getTickets={getTickets} getNextPage={getNextPage} timezone={session.user.timezone ?? ''} />
 			</div>
