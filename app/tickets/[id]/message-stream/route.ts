@@ -25,8 +25,13 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 
 	const notifier = getSSEWriter(writer, encoder) as TicketMessageEvents;
 
-	const onMessage = async (message: SerializedTicketMessage) => {
-		notifier.update({ data: { type: 'new', message } });
+	const onMessage = async (
+		message: SerializedTicketMessage & {
+			type: 'new' | 'update';
+		},
+	) => {
+		if (message.type === 'new') notifier.update({ data: { type: 'new', message } });
+		else if (message.type === 'update') notifier.update({ data: { type: 'update', message } });
 	};
 	ticketMessageEmitter.on(params.id, onMessage);
 

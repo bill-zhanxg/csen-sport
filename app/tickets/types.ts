@@ -1,7 +1,7 @@
 import { SerializedTicket, SerializedTicketMessage } from '@/libs/serializeData';
 import { EventNotifier } from 'ts-sse';
 
-export type TicketMessageEventType = { type: 'new'; message: SerializedTicketMessage };
+export type TicketMessageEventType = { type: 'new'; message: SerializedTicketMessage } | { type: 'update'; message: SerializedTicketMessage };
 
 export type TicketMessageEvents = EventNotifier<{
 	update: {

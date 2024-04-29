@@ -7,6 +7,7 @@ import { User } from 'next-auth';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { FaTriangleExclamation } from 'react-icons/fa6';
 import { TicketMessageEventType } from '../../types';
+import { markMessageAsSeen } from '../actions';
 import { OptimisticMessages } from './MessagesTab';
 
 export function Messages({
@@ -68,10 +69,21 @@ export function Messages({
 		const eventSource = new EventSource(`/tickets/${ticketId}/message-stream`);
 		eventSource.onmessage = (event) => {
 			const data = JSON.parse(event.data) as TicketMessageEventType;
-			setMessages((prev) => {
-				if (!prev || prev === 'error' || prev.map((message) => message.id).includes(data.message.id)) return prev;
-				return [...prev, data.message];
-			});
+			if (data.type === 'new') {
+				setMessages((prev) => {
+					if (!prev || prev === 'error' || prev.map((message) => message.id).includes(data.message.id)) return prev;
+					return [...prev, data.message];
+				});
+				if (data.message.sender?.id !== user.id) markMessageAsSeen(data.message.id);
+			} else if (data.type === 'update') {
+				setMessages((prev) => {
+					if (!prev || prev === 'error') return prev;
+					const index = prev.findIndex((message) => message.id === data.message.id);
+					if (index === -1) return prev;
+					prev[index] = data.message;
+					return [...prev];
+				});
+			}
 		};
 
 		return () => {

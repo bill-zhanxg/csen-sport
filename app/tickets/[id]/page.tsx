@@ -43,23 +43,32 @@ export default async function TicketMessages({ params }: { params: { id: string 
 			});
 
 		// Mark messages as seen
-		// const unseenMessages = messages.records
-		// 	.filter((message) => !message.seen && message.sender?.id !== session?.user.id)
-		// 	.map((message) => message.id);
-		// xata.transactions.run([
-		// 	{
-		// 		update: {
-		// 			id: '',
-		// 			table: 'ticket_messages',
-		// 			fields: {
-		// 				seen: true,
-		// 			},
-		// 		},
-		// 	},
-		// ]);
-		// messages.records.forEach((message) => {
-		// 	if (unseenMessages.includes(message.id)) message.seen = true;
-		// });
+		const unseenMessages = messages.records
+			.filter((message) => !message.seen && message.sender?.id !== session?.user.id)
+			.map((message) => message.id);
+		xata.transactions.run(
+			unseenMessages.map((id) => ({
+				update: {
+					id: id,
+					table: 'ticket_messages',
+					fields: {
+						seen: true,
+					},
+				},
+			})),
+		);
+		messages.records.map((message) => {
+			if (unseenMessages.includes(message.id)) {
+				ticketMessageEmitter.emit(ticket_id, {
+					...serializeTicketMessage({
+						...message,
+						seen: true,
+					}),
+					type: 'update',
+				});
+			}
+			return message;
+		});
 
 		return messages;
 	}
@@ -84,7 +93,10 @@ export default async function TicketMessages({ params }: { params: { id: string 
 			sender: session.user.id,
 			message,
 		});
-		ticketMessageEmitter.emit(ticket_id, serializeTicketMessage({ ...data, sender: session.user as any }));
+		ticketMessageEmitter.emit(ticket_id, {
+			...serializeTicketMessage({ ...data, sender: session.user as any }),
+			type: 'new',
+		});
 		ticketEmitter.emit('new-message', {
 			ticket_creator_id: ticket_creator,
 			message: serializeTicketMessage({ ...data, sender: session.user as any }),

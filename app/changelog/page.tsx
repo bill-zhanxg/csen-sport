@@ -35,6 +35,7 @@ export default function Changelog() {
 							</li>
 							<li>feat(status): real time ticket status change (close & open) and fix bugs</li>
 							<li>fix(date): tested with Brodie and fix wrong date display bug</li>
+							<li>feat(read): Mark message as read in real time and loading</li>
 						</List>
 					</List>
 					<Divider />
