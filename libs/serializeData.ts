@@ -51,6 +51,7 @@ export type SerializedGame = {
 	out_of_class?: Date | null;
 	start?: Date | null;
 	notes?: string | null;
+	confirmed: boolean;
 };
 
 export type SerializedGameWithId = {
@@ -66,6 +67,7 @@ export type SerializedGameWithId = {
 	out_of_class?: Date | null;
 	start?: Date | null;
 	notes?: string | null;
+	confirmed: boolean;
 };
 
 export function serializeGames(
@@ -96,6 +98,7 @@ export function serializeGame(
 		out_of_class,
 		start,
 		notes,
+		confirmed,
 	}: SelectedPick<GamesRecord, ('*' | 'team.*' | 'venue.*' | 'teacher.*')[]>,
 	isTeacher: boolean,
 ): SerializedGame {
@@ -124,6 +127,7 @@ export function serializeGame(
 		out_of_class,
 		start,
 		notes: isTeacher ? notes : undefined,
+		confirmed: isTeacher ? confirmed : false,
 	};
 }
 
@@ -141,6 +145,7 @@ export function serializeGameWithId(
 		out_of_class,
 		start,
 		notes,
+		confirmed,
 	}: SelectedPick<GamesRecord, ('*' | 'team.id' | 'venue.id' | 'teacher.id')[]>,
 	isTeacher: boolean,
 ) {
@@ -157,6 +162,7 @@ export function serializeGameWithId(
 		out_of_class,
 		start,
 		notes: isTeacher ? notes : undefined,
+		confirmed: isTeacher ? confirmed : false,
 	};
 }
 

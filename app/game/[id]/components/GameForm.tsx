@@ -227,6 +227,21 @@ export function GameForm({
 							/>
 						</label>
 					)}
+					{isTeacherBool && (
+						<label className="form-control flex-row justify-between items-center w-full mt-4">
+							<div className="label">
+								<span className="label-text text-md font-bold">Confirmed</span>
+							</div>
+							<input
+								type="checkbox"
+								placeholder="Type here"
+								disabled={!isTeacherBool}
+								defaultChecked={game.confirmed}
+								name="confirmed"
+								className="checkbox checkbox-primary !opacity-80"
+							/>
+						</label>
+					)}
 				</div>
 			</Box>
 			{state && (

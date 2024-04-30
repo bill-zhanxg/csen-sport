@@ -43,7 +43,7 @@ export function GamesTable({
 	const columns = useMemo<ColumnDef<SerializedGameWithId>[]>(() => {
 		function editable<T>(
 			{ getValue, row: { original }, column: { id } }: CellContext<SerializedGameWithId, unknown>,
-			type: 'text' | 'date' | 'time' = 'text',
+			type: 'text' | 'date' | 'time' | 'checkbox' = 'text',
 		): [T, ChangeEventHandler<HTMLElement> | undefined, FocusEventHandler<HTMLElement> | undefined] {
 			let initialValue = getValue() as T;
 			if (type === 'date')
@@ -59,7 +59,8 @@ export function GamesTable({
 				value,
 				(event) => {
 					if (!('value' in event.target)) return;
-					const newValue = event.target.value as T;
+					let newValue = event.target.value as T;
+					if (type === 'checkbox') newValue = (event.currentTarget as any).checked as any;
 					setValue(newValue);
 				},
 				(event) => {
@@ -69,6 +70,7 @@ export function GamesTable({
 						let importValue = value;
 						if (type === 'date') importValue = formatDate(importValue as string) as any;
 						if (type === 'time') importValue = formatTime(original.date, importValue as string) as any;
+						if (type === 'checkbox') importValue = (event.currentTarget as any).checked as any;
 						const index = changes.value.findIndex((change) => change.type !== 'delete' && change.id === original.id);
 						if (index !== -1) {
 							(changes.value[index] as any).value[id] = importValue;
@@ -78,7 +80,7 @@ export function GamesTable({
 								id: original.id,
 								value: {
 									[id]: importValue,
-								},
+								} as any,
 							});
 						setChanged(true);
 						setPreviousValue(value);
@@ -274,6 +276,25 @@ export function GamesTable({
 				},
 			},
 			{
+				id: 'confirmed',
+				accessorKey: 'confirmed',
+				header: 'Confirmed',
+				cell: (prop) => {
+					const [value, onChange, onBlur] = editable<boolean>(prop, 'checkbox');
+					return (
+						<div className="flex justify-center w-full">
+							<input
+								type="checkbox"
+								className="checkbox checkbox-primary"
+								checked={value ?? false}
+								onChange={onChange}
+								onBlur={onBlur}
+							/>
+						</div>
+					);
+				},
+			},
+			{
 				id: 'out_of_class',
 				accessorKey: 'out_of_class',
 				header: 'Out of Class',
@@ -345,6 +366,7 @@ export function GamesTable({
 	const [newExtraTeachers, setNewExtraTeachers] = useState<string[]>([]);
 	const [newTransportation, setNewTransportation] = useState('');
 	const [newNotes, setNewNotes] = useState('');
+	const [newConfirmed, setNewConfirmed] = useState(false);
 	const [newOutOfClass, setNewOutOfClass] = useState('');
 	const [newStart, setNewStart] = useState('');
 
@@ -486,6 +508,17 @@ export function GamesTable({
 								/>
 							</td>
 							<td className="p-0">
+								<div className="flex justify-center w-full">
+									<input
+										type="checkbox"
+										className="checkbox checkbox-primary"
+										placeholder="Confirmed"
+										checked={newConfirmed}
+										onChange={(event) => setNewConfirmed(event.currentTarget.checked)}
+									/>
+								</div>
+							</td>
+							<td className="p-0">
 								<input
 									type="time"
 									className="bg-base-100 ml-4"
@@ -519,6 +552,7 @@ export function GamesTable({
 											extra_teachers: newExtraTeachers || undefined,
 											transportation: newTransportation || undefined,
 											notes: newNotes || undefined,
+											confirmed: newConfirmed,
 											out_of_class: formatTime(date, newOutOfClass),
 											start: formatTime(date, newStart),
 										};
@@ -539,6 +573,7 @@ export function GamesTable({
 										setNewExtraTeachers([]);
 										setNewTransportation('');
 										setNewNotes('');
+										setNewConfirmed(false);
 										setNewOutOfClass('');
 										setNewStart('');
 									}}
@@ -550,7 +585,7 @@ export function GamesTable({
 					</tfoot>
 				</table>
 				<div className="mt-2"></div>
-				<div className='sticky left-0'>
+				<div className="sticky left-0">
 					{alert && (alert.type === 'error' ? ErrorAlert(alert) : SuccessAlert(alert))}
 					<button
 						className="btn btn-primary w-full mt-2"

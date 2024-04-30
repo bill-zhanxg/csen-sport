@@ -39,6 +39,7 @@ export function WeeklySportEdit({
 			{ getValue, row: { original }, column: { id } }: CellContext<SerializedGame, unknown>,
 			changeOnChange: boolean = false,
 			isTime: boolean = false,
+			isCheckbox: boolean = false,
 		): [T, boolean, ChangeEventHandler<HTMLElement> | undefined, FocusEventHandler<HTMLElement> | undefined] {
 			let initialValue = getValue() as T;
 			if (isTime)
@@ -54,7 +55,8 @@ export function WeeklySportEdit({
 				disabled,
 				(event) => {
 					if (!('value' in event.target)) return;
-					const newValue = event.target.value as T;
+					let newValue = event.target.value as T;
+					if (isCheckbox) newValue = (event.currentTarget as any).checked as any;
 					setValue(newValue);
 					if (changeOnChange) uploadData(newValue);
 				},
@@ -76,7 +78,7 @@ export function WeeklySportEdit({
 					importValue = time as any;
 				}
 
-				updateGame(original.id, { [id]: importValue })
+				updateGame(original.id, { [id]: importValue } as any)
 					.then((res) => {
 						setAlert(res);
 						setDisabled(false);
@@ -262,6 +264,26 @@ export function WeeklySportEdit({
 				},
 			},
 			{
+				id: 'confirmed',
+				accessorKey: 'confirmed',
+				header: 'Confirmed',
+				cell: (prop) => {
+					const [value, disabled, onChange, onBlur] = editable<boolean>(prop, true, false, true);
+					return (
+						<div className="flex justify-center w-full">
+							<input
+								type="checkbox"
+								className="checkbox checkbox-primary"
+								checked={value ?? false}
+								disabled={disabled}
+								onChange={onChange}
+								onBlur={onBlur}
+							/>
+						</div>
+					);
+				},
+			},
+			{
 				id: 'out_of_class',
 				accessorKey: 'out_of_class',
 				header: 'Out of Class',
@@ -328,6 +350,7 @@ export function WeeklySportEdit({
 									<SideBySide title="Out of Class:" value={original.out_of_class?.toLocaleTimeString() ?? '---'} />
 									<SideBySide title="Start:" value={original.start?.toLocaleTimeString() ?? '---'} />
 									<SideBySide title="Notes:" value={original.notes ?? '---'} />
+									<SideBySide title="Confirmed:" value={original.confirmed ? 'Yes' : 'No'} />
 									<div className="modal-action">
 										<form method="dialog">
 											<button
@@ -377,6 +400,7 @@ export function WeeklySportEdit({
 	const [newExtraTeachers, setNewExtraTeachers] = useState<string[]>([]);
 	const [newTransportation, setNewTransportation] = useState('');
 	const [newNotes, setNewNotes] = useState('');
+	const [newConfirmed, setNewConfirmed] = useState(false);
 	const [newOutOfClass, setNewOutOfClass] = useState('');
 	const [newStart, setNewStart] = useState('');
 
@@ -515,6 +539,17 @@ export function WeeklySportEdit({
 									/>
 								</td>
 								<td className="p-0">
+									<div className="flex justify-center w-full">
+										<input
+											type="checkbox"
+											className="checkbox checkbox-primary"
+											placeholder="Confirmed"
+											checked={newConfirmed}
+											onChange={(event) => setNewConfirmed(event.currentTarget.checked)}
+										/>
+									</div>
+								</td>
+								<td className="p-0">
 									<input
 										type="time"
 										className="bg-base-100 ml-4"
@@ -545,6 +580,7 @@ export function WeeklySportEdit({
 												extra_teachers: newExtraTeachers,
 												transportation: newTransportation,
 												notes: newNotes,
+												confirmed: newConfirmed,
 												out_of_class: formatTime(date.rawDate, newOutOfClass),
 												start: formatTime(date.rawDate, newStart),
 											})
@@ -562,6 +598,7 @@ export function WeeklySportEdit({
 											setNewExtraTeachers([]);
 											setNewTransportation('');
 											setNewNotes('');
+											setNewConfirmed(false);
 											setNewOutOfClass('');
 											setNewStart('');
 										}}
