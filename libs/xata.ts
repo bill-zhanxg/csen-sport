@@ -98,6 +98,7 @@ const tables = [
       { name: "out_of_class", type: "datetime" },
       { name: "extra_teachers", type: "multiple" },
       { name: "isHome", type: "bool" },
+      { name: "confirmed", type: "bool", notNull: true, defaultValue: "false" },
     ],
   },
   {

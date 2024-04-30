@@ -16,4 +16,5 @@ export const UpdateGameSchema = z.object({
 	out_of_class: z.date().optional(),
 	start: z.date().optional(),
 	notes: z.string().optional(),
+	confirmed: z.boolean().optional().default(false),
 });

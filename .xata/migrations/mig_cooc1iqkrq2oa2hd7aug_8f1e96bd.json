@@ -1,0 +1,18 @@
+{
+  "id": "mig_cooc1iqkrq2oa2hd7aug",
+  "parentID": "mig_comcv58dmftshd6c79ng",
+  "checksum": "1:8f1e96bd435aa59954793b6b51e81ade8c7e479493271ae332834f34291aa570",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "confirmed",
+          "type": "bool",
+          "notNull": true,
+          "defaultValue": "false"
+        },
+        "table": "games"
+      }
+    }
+  ]
+}

@@ -35,11 +35,16 @@ const schema = z.object({
 	out_of_class: z.string().or(z.date()).optional(),
 	start: z.string().or(z.date()).optional(),
 	notes: z.string().optional(),
+	confirmed: z
+		.string()
+		.nullable()
+		.transform((val) => (val ? val === 'on' : false)),
 });
 
 export async function updateGame(prevState: FormState, formData: FormData): Promise<FormState> {
 	const session = await auth();
 	if (!session || !isTeacher(session)) return { success: false, message: 'Unauthorized' };
+	console.log(formData.get('confirmed'));
 
 	try {
 		let data = schema.parse({
@@ -56,6 +61,7 @@ export async function updateGame(prevState: FormState, formData: FormData): Prom
 			out_of_class: formData.get('out_of_class'),
 			start: formData.get('start'),
 			notes: formData.get('notes'),
+			confirmed: formData.get('confirmed'),
 		});
 
 		if (typeof data.out_of_class === 'string') {

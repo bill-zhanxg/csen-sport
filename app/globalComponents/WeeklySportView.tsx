@@ -47,6 +47,7 @@ export function WeeklySportView({
 							<th>Transportation</th>
 							<th>Out of Class</th>
 							<th>Start time</th>
+							{isTeacher && <th>Confirmed</th>}
 							{isTeacher && <th>Notes</th>}
 						</tr>
 					</thead>
@@ -143,6 +144,11 @@ export function WeeklySportView({
 								<td>{game?.transportation || '---'}</td>
 								<td>{game?.out_of_class ? dayjs.tz(game?.out_of_class, timezone).format('LT') : '---'}</td>
 								<td>{game?.start ? dayjs.tz(game?.start, timezone).format('LT') : '---'}</td>
+								{isTeacher && (
+									<td>
+										<input type="checkbox" disabled className="checkbox checkbox-primary !opacity-80 !cursor-default" checked={game.confirmed} />
+									</td>
+								)}
 								{isTeacher && <td>{game?.notes || '---'}</td>}
 								<td>
 									<div className="flex gap-2 justify-end w-full">
