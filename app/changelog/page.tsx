@@ -7,6 +7,14 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
+			<ChangelogBox version="0.2.2" release="30/04/2024">
+				<>
+					<Title>Bug fixes</Title>
+					<List>
+						<li>fix(ticket): add mobile support for ticket</li>
+					</List>
+				</>
+			</ChangelogBox>
 			<ChangelogBox version="0.2.1" release="30/04/2024">
 				<>
 					<Heading badge="New" title="Features" />
