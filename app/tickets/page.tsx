@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 export default async function Tickets() {
 	return (
-		<div className="flex flex-col items-center justify-center w-full h-full p-8 pb-2 overflow-auto relative bg-base-200 text-center">
+		<div className="sm:flex flex-col items-center justify-center w-full h-full p-8 pb-2 overflow-auto relative bg-base-200 text-center hidden">
 			<div className="flex items-center gap-2">
 				<Image src={Icon} alt="Logo" width={50} height={50} />
 				<h1 className="font-bold text-3xl">CSEN Sport Ticket System</h1>

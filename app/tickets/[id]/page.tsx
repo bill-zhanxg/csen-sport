@@ -109,7 +109,6 @@ export default async function TicketMessages({ params }: { params: { id: string 
 		});
 	}
 
-	// TODO: Mobile
 	return (
 		<div id="chat" className="flex flex-col items-center w-full h-full px-8 py-2 overflow-auto relative bg-base-200">
 			<div className="flex justify-between sticky top-0 w-full bg-base-100 z-10 py-2 px-4 rounded-lg">

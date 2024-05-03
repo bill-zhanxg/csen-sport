@@ -4,8 +4,7 @@ import { SerializedTicket, serializeTickets } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
 import { redirect } from 'next/navigation';
 import { Unauthorized } from '../globalComponents/Unauthorized';
-import { CreateTicketButton } from './components/CreateTicketButton';
-import { TicketsList } from './components/TicketsList';
+import { LeftBar } from './components/LeftBar';
 import { ticketEmitter } from './ticket-stream/eventListener';
 
 const xata = getXataClient();
@@ -72,10 +71,12 @@ export default async function Tickets({ children }: { children: React.ReactNode 
 
 	return (
 		<div className="flex w-full h-full-nav overflow-auto">
-			<div id="tickets" className="flex flex-col w-[30rem] max-w-[30rem] h-full p-4 overflow-x-hidden">
-				<CreateTicketButton createTicket={createTicket} />
-				<TicketsList getTickets={getTickets} getNextPage={getNextPage} timezone={session.user.timezone ?? ''} />
-			</div>
+			<LeftBar
+				createTicket={createTicket}
+				getTickets={getTickets}
+				getNextPage={getNextPage}
+				timezone={session.user.timezone ?? ''}
+			/>
 			{children}
 		</div>
 	);
