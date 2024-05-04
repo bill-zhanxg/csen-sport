@@ -6,11 +6,12 @@ import { getXataClient } from '@/libs/xata';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { ChangeRoleState } from './components/UserTable';
+import { RoleSchema } from './schema';
 
 const schema = z
 	.object({
 		users: z.string(),
-		role: z.literal('student').or(z.literal('teacher')).or(z.literal('admin')).or(z.literal('blocked')),
+		role: RoleSchema,
 	})
 	.transform((data) => {
 		const users = data.users.split(',').map((user) => user.trim());

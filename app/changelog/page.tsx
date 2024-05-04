@@ -7,6 +7,15 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
+			<ChangelogBox version="0.3.0" release="xx/05/2024">
+				<>
+					<Heading badge="Revamp" title="Features" />
+					<List>
+						<li>revamp(users): Revamp the users page to allow pagination and better search functionality</li>
+						<li>feat(user): Allow admin to change the role of the user when viewing the user page</li>
+					</List>
+				</>
+			</ChangelogBox>
 			<ChangelogBox version="0.2.2" release="30/04/2024">
 				<>
 					<Title>Bug fixes</Title>
