@@ -7,7 +7,7 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
-			<ChangelogBox version="0.3.0" release="xx/05/2024">
+			<ChangelogBox version="0.3.0" release="04/05/2024">
 				<>
 					<Heading badge="Revamp" title="Features" />
 					<List>
@@ -16,6 +16,7 @@ export default function Changelog() {
 						<li>
 							fix(pagination_menu): Minimum page number of 1 to prevent next page button enable when there is no page
 						</li>
+						<li>fix(users): Fix some visual issue in user page</li>
 					</List>
 				</>
 			</ChangelogBox>
