@@ -46,7 +46,7 @@ export default async function Users({ searchParams }: { searchParams: SearchPara
 	return (
 		<>
 			<UserTable myId={session.user.id} users={users.records.toSerializable()} />
-			<div className="pb-4">
+			<div className="py-4">
 				<PaginationMenu totalPages={Math.ceil(total / pageSize)} />
 			</div>
 		</>
