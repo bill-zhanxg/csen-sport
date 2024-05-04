@@ -13,6 +13,9 @@ export default function Changelog() {
 					<List>
 						<li>revamp(users): Revamp the users page to allow pagination and better search functionality</li>
 						<li>feat(user): Allow admin to change the role of the user when viewing the user page</li>
+						<li>
+							fix(pagination_menu): Minimum page number of 1 to prevent next page button enable when there is no page
+						</li>
 					</List>
 				</>
 			</ChangelogBox>

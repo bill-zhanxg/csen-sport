@@ -25,7 +25,7 @@ export function PaginationMenu({ totalPages, ...props }: { totalPages: number })
 		<Pagination
 			page={currentPage}
 			onPageChange={(page) => router.push(`${pathname}?${createQueryString('page', page.toString())}`)}
-			total={totalPages}
+			total={Math.max(totalPages, 1)}
 			boundaries={1}
 			siblings={1}
 			className="mx-auto flex items-center justify-center gap-1 w-full"
