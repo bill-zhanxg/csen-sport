@@ -1,11 +1,13 @@
 'use client';
 
+import { DebouncedInput } from '@/app/globalComponents/DebouncedInput';
 import { ErrorMessage } from '@/app/globalComponents/ErrorMessage';
 import { UserAvatar } from '@/app/globalComponents/UserAvatar';
 import { NextauthUsersRecord } from '@/libs/xata';
 import { JSONData, SelectedPick } from '@xata.io/client';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useRouter } from 'next13-progressbar';
-import { useEffect, useRef, useState, useTransition } from 'react';
+import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { changeRole } from '../actions';
 
@@ -16,76 +18,72 @@ export type ChangeRoleState = null | {
 
 export function UserTable({
 	myId,
-	users: serverUsers,
+	users,
 }: {
 	myId?: string;
-	users: (JSONData<SelectedPick<NextauthUsersRecord, ('email' | 'name' | 'image' | 'role')[]>> & {
-		checked: boolean;
-	})[];
+	users: JSONData<SelectedPick<NextauthUsersRecord, ('email' | 'name' | 'image' | 'role')[]>>[];
 }) {
 	const router = useRouter();
+	const pathname = usePathname();
 
 	const [state, formAction] = useFormState<ChangeRoleState, FormData>(changeRole, null);
 
-	const [users, setUsers] = useState(serverUsers);
-	const [search, setSearch] = useState('');
-	const [displayUsers, setDisplayUsers] = useState(serverUsers);
+	// New
+	const [selectedUsers, setSelectedUsers] = useState<
+		JSONData<SelectedPick<NextauthUsersRecord, ('email' | 'name' | 'image' | 'role')[]>>[]
+	>([]);
 
-	useEffect(() => {
-		setDisplayUsers(
-			users.filter((user) => {
-				const name = user.name as string;
-				const email = user.email as string;
-				return name.includes(search) || email.includes(search);
-			}),
-		);
-	}, [search, users]);
+	const searchParams = useSearchParams();
+	const searchParamsFilter = searchParams.get('search');
+
+	const createQueryPathName = useCallback(
+		(newParams: { name: string; value: string }[]) => {
+			const params = new URLSearchParams(searchParams.toString());
+			newParams.forEach((newParam) => {
+				params.set(newParam.name, newParam.value);
+			});
+
+			return pathname + '?' + params.toString();
+		},
+		[searchParams, pathname],
+	);
 
 	const blockUserDialogRef = useRef<HTMLDialogElement>(null);
 
 	useEffect(() => {
 		if (state?.success) {
-			setUsers(serverUsers);
+			setSelectedUsers([]);
 			blockUserDialogRef.current?.close();
 		}
-	}, [state, serverUsers]);
-
-	const handleOnChange = (position: number) => {
-		const displayUser = displayUsers[position];
-		setUsers(
-			users.map((user) =>
-				user.id === displayUser.id ? { ...user, checked: user.id === myId ? false : !user.checked } : user,
-			),
-		);
-	};
-	const handleSelectAll = (checked: boolean) => {
-		setUsers(users.map((user) => ({ ...user, checked: user.id === myId ? false : checked })));
-	};
-
-	const [searchPending, searchTransition] = useTransition();
+	}, [state]);
 
 	if (!users) return <ErrorMessage code="501" message="There is no users in the database" />;
 
 	return (
 		<>
 			<main className="flex flex-col items-center gap-4 p-4 overflow-auto w-full">
-				{users.length < 1 ? (
-					<div>Nothing Here</div>
-				) : (
-					<div className="flex flex-col gap-4 bg-base-100 rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4 overflow-auto w-full">
-						<div className="flex flex-col lg:flex-row gap-4 justify-center items-center">
-							<h2 className="sticky left-0 text-xl text-center text-primary">Users Management</h2>
-							<label className="static lg:absolute right-6 input input-bordered w-full lg:max-w-xs flex items-center gap-2">
-								<input
-									type="text"
-									placeholder="Search Users"
-									value={search}
-									onChange={(e) => searchTransition(() => setSearch(e.target.value))}
-									className="grow"
-								/>
-								{searchPending && <span className="loading loading-spinner loading-md"></span>}
-							</label>
-						</div>
+				<div className="flex flex-col gap-4 bg-base-100 rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4 overflow-auto w-full">
+					<div className="flex flex-col lg:flex-row gap-4 justify-center items-center">
+						<h2 className="sticky left-0 text-xl text-center text-primary">Users Management</h2>
+						<label className="static lg:absolute right-6 input input-bordered w-full lg:max-w-xs flex items-center gap-2">
+							<DebouncedInput
+								type="text"
+								placeholder="Search Users"
+								value={searchParamsFilter ?? ''}
+								onChange={(value) => {
+									const url = createQueryPathName([
+										{
+											name: 'search',
+											value: value,
+										},
+									]);
+									router.push(url);
+								}}
+								className="grow"
+							/>
+						</label>
+					</div>
+					{users.length > 0 ? (
 						<table className="table">
 							<thead>
 								<tr>
@@ -94,8 +92,23 @@ export function UserTable({
 											<input
 												type="checkbox"
 												className="checkbox"
-												checked={users.filter((user) => user.id !== myId).every((user) => user.checked)}
-												onChange={(event) => handleSelectAll(event.target.checked)}
+												checked={users.every(
+													(user) => selectedUsers.map((user) => user.id).includes(user.id) || user.id === myId,
+												)}
+												onChange={(event) => {
+													setSelectedUsers((selectedUsers) => {
+														if (event.target.checked) {
+															const selectedIds = selectedUsers.map((user) => user.id);
+															const addUsers = users.filter(
+																(user) => !selectedIds.includes(user.id) && user.id !== myId,
+															);
+															return [...selectedUsers, ...addUsers];
+														} else {
+															const userIds = users.map((user) => user.id);
+															return [...selectedUsers.filter((user) => !userIds.includes(user.id))];
+														}
+													});
+												}}
 											/>
 										</label>
 									</th>
@@ -105,7 +118,7 @@ export function UserTable({
 								</tr>
 							</thead>
 							<tbody>
-								{displayUsers.map((user, index) => (
+								{users.map((user) => (
 									<tr
 										className="hover cursor-pointer"
 										key={user.id}
@@ -120,8 +133,16 @@ export function UserTable({
 													type="checkbox"
 													className="checkbox"
 													disabled={user.id === myId}
-													checked={user.checked}
-													onChange={() => handleOnChange(index)}
+													checked={selectedUsers.map((user) => user.id).includes(user.id)}
+													onChange={() => {
+														if (selectedUsers.map((user) => user.id).includes(user.id)) {
+															setSelectedUsers((selectedUsers) =>
+																selectedUsers.filter((selectedUser) => selectedUser.id !== user.id),
+															);
+														} else {
+															setSelectedUsers((selectedUsers) => [...selectedUsers, user]);
+														}
+													}}
 													onClick={(event) => event.stopPropagation()}
 												/>
 											</label>
@@ -130,16 +151,7 @@ export function UserTable({
 											<div className="flex items-center gap-3">
 												<div className="avatar">
 													<div className="mask mask-squircle w-12 h-12">
-														<UserAvatar
-															user={
-																user as {
-																	id: string;
-																	name?: string | null | undefined;
-																	email?: string | null | undefined;
-																	image?: string | null | undefined;
-																}
-															}
-														/>
+														<UserAvatar user={user as any} />
 													</div>
 												</div>
 												<div>
@@ -157,17 +169,38 @@ export function UserTable({
 								))}
 							</tbody>
 						</table>
-					</div>
-				)}
+					) : (
+						<div className="text-center">
+							<p>No users found</p>
+						</div>
+					)}
+				</div>
 			</main>
 			<dialog ref={blockUserDialogRef} className="modal">
 				<div className="modal-box max-w-4xl">
 					<h3 className="font-bold text-lg">Change Users&apos; Role</h3>
-					<p className="py-4">
-						You will be changing the role of the selected users. This will limit or grant access to certain resources.
-					</p>
+					<div className="pb-4">
+						<p className="text-center font-bold">Selected Users</p>
+						<div className="grid grid-cols-[repeat(auto-fit,minmax(13rem,1fr))] gap-2 overflow-auto max-h-96">
+							{selectedUsers.map((user) => (
+								<div key={user.id} className="flex items-center gap-3 bg-base-200 rounded-lg p-2">
+									<div className="avatar">
+										<div className="mask mask-squircle w-12 h-12">
+											<UserAvatar user={user as any} />
+										</div>
+									</div>
+									<div>
+										<div className="font-bold">{(user.name as string) ?? 'Unnamed'}</div>
+									</div>
+								</div>
+							))}
+						</div>
+						<p>
+							You will be changing the role of the selected users. This will limit or grant access to certain resources.
+						</p>
+					</div>
 					<form action={formAction}>
-						<input type="hidden" name="users" value={users.filter((user) => user.checked).map(({ id }) => id)} />
+						<input type="hidden" name="users" value={selectedUsers.map(({ id }) => id)} />
 						<div className="flex flex-col sm:flex-row justify-around">
 							<label className="flex flex-row-reverse sm:flex-row label cursor-pointer gap-2">
 								<input type="radio" name="role" value="student" className="radio radio-success" required />
@@ -211,17 +244,17 @@ export function UserTable({
 				</div>
 				<form id="close_dialog" method="dialog" />
 			</dialog>
-			{users.some((user) => user.checked) && (
-				<div className="flex justify-center sticky bottom-5 px-4 w-full z-10">
+			{selectedUsers.length > 0 && (
+				<div className="flex justify-center sticky bottom-5 px-4 pb-4 w-full z-10">
 					<div className="flex flex-col sm:flex-row gap-2 items-center justify-between p-4 bg-base-200 shadow-md border-solid border-2 border-base-300 rounded-lg h-32 sm:h-16 w-full">
 						<span className="flex items-center gap-2">
 							<span className="flex justify-center items-center bg-primary rounded-md h-6 w-6 text-white">
-								{users.filter((user) => user.checked).length}
+								{selectedUsers.length}
 							</span>
 							Users Selected
 						</span>
 						<div className="flex justify-center items-center h-full gap-2">
-							<button className="btn btn-neutral" onClick={() => handleSelectAll(false)}>
+							<button className="btn btn-neutral" onClick={() => setSelectedUsers([])}>
 								Cancel
 							</button>
 							<button className="btn btn-info" onClick={() => blockUserDialogRef.current?.showModal()}>
