@@ -35,6 +35,7 @@ export function UserTable({
 
 	const searchParams = useSearchParams();
 	const searchParamsFilter = searchParams.get('search');
+	const page = searchParams.get('page') ?? '1';
 
 	const createQueryPathName = useCallback(
 		(newParams: { name: string; value: string }[]) => {
@@ -171,7 +172,10 @@ export function UserTable({
 						</table>
 					) : (
 						<div className="text-center">
-							<p>No users found</p>
+							<p>
+								No users found
+								{page !== '1' && `, maybe they are hidden in page 1? You're currently on page ${page}`}
+							</p>
 						</div>
 					)}
 				</div>
