@@ -18,6 +18,7 @@ export default function Changelog() {
 						</li>
 						<li>fix(users): Fix some visual issue in user page</li>
 						<li>fix(user): Add user sorting (creation date descending)</li>
+						<li>typo(user): Give more detail on for No user found</li>
 					</List>
 				</>
 			</ChangelogBox>
