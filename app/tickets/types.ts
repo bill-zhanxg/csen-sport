@@ -1,7 +1,9 @@
 import { SerializedTicket, SerializedTicketMessage } from '@/libs/serializeData';
 import { EventNotifier } from 'ts-sse';
 
-export type TicketMessageEventType = { type: 'new'; message: SerializedTicketMessage } | { type: 'update'; message: SerializedTicketMessage };
+export type TicketMessageEventType =
+	| { type: 'new'; message: SerializedTicketMessage }
+	| { type: 'update'; message: SerializedTicketMessage };
 
 export type TicketMessageEvents = EventNotifier<{
 	update: {
@@ -20,6 +22,7 @@ export type TicketMessageEvents = EventNotifier<{
 
 export type TicketEventType =
 	| { type: 'new-message'; message: SerializedTicketMessage; ticket: SerializedTicket }
+	| { type: 'update-message'; message: SerializedTicketMessage; ticket: SerializedTicket }
 	| {
 			type: 'new';
 			ticket: SerializedTicket;

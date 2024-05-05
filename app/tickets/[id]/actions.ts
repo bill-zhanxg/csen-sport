@@ -1,7 +1,7 @@
 'use server';
 
 import { auth } from '@/libs/auth';
-import { serializeTicketMessage } from '@/libs/serializeData';
+import { serializeTicket, serializeTicketMessage } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
 import { ticketEmitter } from '../ticket-stream/eventListener';
 import { ticketMessageEmitter } from './message-stream/eventListener';
@@ -25,9 +25,18 @@ export async function markMessageAsSeen(id: string) {
 	if (!session || typeof id !== 'string') return;
 	await xata.db.ticket_messages.update(id, { seen: true });
 	const message = await xata.db.ticket_messages.read(id, ['*', 'sender.name', 'sender.email', 'sender.image']);
-	if (message)
+	if (message) {
 		ticketMessageEmitter.emit(message.ticket_id || '', {
 			...serializeTicketMessage(message),
 			type: 'update',
 		});
+		const ticket = await xata.db.tickets.read(message.ticket_id ?? '', ['*', 'latest_message.*']);
+		if (ticket && ticket.createdBy?.id) {
+			ticketEmitter.emit('update-message', {
+				ticket_creator_id: ticket.createdBy.id,
+				message: serializeTicketMessage(message),
+				ticket: serializeTicket(ticket),
+			});
+		}
+	}
 }

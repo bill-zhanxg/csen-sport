@@ -1,6 +1,7 @@
 import SadCat from '@/app/images/sad-cat.png';
 import { auth, signOut } from '@/libs/auth';
-import { isBlocked } from '@/libs/checkPermission';
+import { isBlocked, isDeveloper } from '@/libs/checkPermission';
+import { getXataClient } from '@/libs/xata';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import Image from 'next/image';
@@ -15,6 +16,8 @@ import { SentrySetUser } from './components/SentrySetUser';
 import { UserAvatar } from './globalComponents/UserAvatar';
 import './globals.css';
 
+const xata = getXataClient();
+
 export const metadata: Metadata = {
 	title: 'CSEN Sport',
 	description: 'CSEN Sport',
@@ -23,6 +26,36 @@ export const metadata: Metadata = {
 export default async function MainLayout({ children }: { children: React.ReactNode }) {
 	const session = await auth();
 	const ip = headers().get('x-forwarded-for');
+
+	async function ticketUnread() {
+		'use server';
+		if (!session) return false;
+		const belongsTo = (
+			await xata.db.tickets
+				.filter({
+					closed: false,
+					'createdBy.id': isDeveloper(session) ? undefined : session.user.id,
+				})
+				.select(['id'])
+				.getAll()
+		).map((ticket) => ticket.id);
+		const unread = await xata.db.ticket_messages
+			.filter({
+				$all: {
+					seen: false,
+					ticket_id: {
+						$any: belongsTo,
+					},
+					'sender.id': {
+						$isNot: session.user.id,
+					},
+				},
+			})
+			.getFirst();
+		return !!unread;
+	}
+
+	const unread = await ticketUnread();
 
 	return (
 		<html lang="en">
@@ -46,7 +79,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 										<FaHome />
 									</Link>
 								</div>
-								<NavBar session={session} />
+								<NavBar session={session} initUnread={unread} ticketUnread={ticketUnread} />
 								<div className="navbar-end">
 									<div className="dropdown dropdown-end">
 										<div className="flex items-center h-full">

@@ -3,8 +3,10 @@
 import { isAdmin } from '@/libs/checkPermission';
 import { Session } from 'next-auth';
 import Link from 'next/link';
-import { MouseEventHandler } from 'react';
+import { usePathname } from 'next/navigation';
+import { MouseEventHandler, useEffect, useState } from 'react';
 import { FaBars, FaExternalLinkAlt } from 'react-icons/fa';
+import { TicketEventType } from '../tickets/types';
 
 type Menu = {
 	id: string;
@@ -69,13 +71,42 @@ const menu: Menu = [
 	},
 ];
 
-export function NavBar({ session }: { session: Session }) {
-	function handleMobileLiClick() {
-		const element = document.activeElement;
-		if (element && 'blur' in element) {
-			(element as HTMLElement).blur();
-		}
-	}
+export function NavBar({
+	session,
+	initUnread,
+	ticketUnread,
+}: {
+	session: Session;
+	initUnread: boolean;
+	ticketUnread: () => Promise<boolean>;
+}) {
+	const [unread, setUnread] = useState(initUnread);
+	const [recheck, setRecheck] = useState(false);
+
+	useEffect(() => {
+		const eventSource = new EventSource('/tickets/ticket-stream');
+		eventSource.onmessage = async (event) => {
+			const data = JSON.parse(event.data) as TicketEventType;
+			if (data.type === 'new-message') setUnread(true);
+			else if (data.type === 'update-message' || data.type === 'toggle-status') setRecheck(true);
+		};
+
+		return () => {
+			eventSource.close();
+		};
+	}, []);
+
+	// TODO: TEST
+	useEffect(() => {
+		if (recheck)
+			ticketUnread()
+				.then(setUnread)
+				.finally(() =>
+					setTimeout(() => {
+						setRecheck(false);
+					}, 3000),
+				);
+	}, [recheck, ticketUnread]);
 
 	const menuFiltered = isAdmin(session)
 		? menu
@@ -147,27 +178,39 @@ export function NavBar({ session }: { session: Session }) {
 			</div>
 		</>
 	);
-}
 
-function MenuItem({
-	mobile = false,
-	item,
-	onClick,
-}: {
-	mobile?: boolean;
-	item: Menu[number];
-	onClick?: MouseEventHandler<HTMLAnchorElement>;
-}) {
-	const suffix = mobile ? '-mobile' : '';
-	return (
-		<Link
-			id={item.id + suffix}
-			href={item.href as string}
-			onClick={onClick}
-			target={item.external ? '_blank' : '_self'}
-		>
-			{item.name}
-			{item.external && <FaExternalLinkAlt />}
-		</Link>
-	);
+	function MenuItem({
+		mobile = false,
+		item,
+		onClick,
+	}: {
+		mobile?: boolean;
+		item: Menu[number];
+		onClick?: MouseEventHandler<HTMLAnchorElement>;
+	}) {
+		const badge = item.id === 'tickets-btn' && unread;
+
+		const suffix = mobile ? '-mobile' : '';
+		return (
+			<Link
+				id={item.id + suffix}
+				href={item.href as string}
+				onClick={onClick}
+				target={item.external ? '_blank' : '_self'}
+			>
+				<div className="indicator">
+					{badge && <span className="indicator-item badge badge-primary h-1 p-1 [--tw-translate-x:120%]"></span>}
+					{item.name}
+				</div>
+				{item.external && <FaExternalLinkAlt />}
+			</Link>
+		);
+	}
+
+	function handleMobileLiClick() {
+		const element = document.activeElement;
+		if (element && 'blur' in element) {
+			(element as HTMLElement).blur();
+		}
+	}
 }

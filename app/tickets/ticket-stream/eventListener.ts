@@ -8,6 +8,11 @@ interface TicketEventType {
 		message: SerializedTicketMessage;
 		ticket: SerializedTicket;
 	}) => void;
+	'update-message': (data: {
+		ticket_creator_id: string;
+		message: SerializedTicketMessage;
+		ticket: SerializedTicket;
+	}) => void;
 	'new-ticket': (data: {
 		ticket: SerializedTicket & {
 			creatorId: string;
