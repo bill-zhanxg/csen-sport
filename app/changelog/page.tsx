@@ -17,6 +17,9 @@ export default function Changelog() {
 							fix(pagination_menu): Minimum page number of 1 to prevent next page button enable when there is no page
 						</li>
 						<li>fix(users): Fix some visual issue in user page</li>
+						<li>
+							fix(user): Add user sorting (creation date descending)
+						</li>
 					</List>
 				</>
 			</ChangelogBox>

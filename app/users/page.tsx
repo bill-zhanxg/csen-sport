@@ -33,6 +33,7 @@ export default async function Users({ searchParams }: { searchParams: SearchPara
 			.catch(() => ({ summaries: [{ total: 0 }] }))
 	).summaries[0].total;
 	const users = await xata.db.nextauth_users
+		.sort('xata.createdAt', 'desc')
 		.filter(filter)
 		.select(['email', 'name', 'image', 'role'])
 		.getPaginated({
