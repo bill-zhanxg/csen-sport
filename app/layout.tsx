@@ -34,7 +34,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 			await xata.db.tickets
 				.filter({
 					closed: false,
-					'createdBy.id': isDeveloper(session) ? undefined : session.user.id,
+					'createdBy.id': isDeveloper(session) ? undefined : session?.user.id,
 				})
 				.select(['id'])
 				.getAll()
@@ -47,7 +47,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 						$any: belongsTo,
 					},
 					'sender.id': {
-						$isNot: session.user.id,
+						$isNot: session?.user.id || '',
 					},
 				},
 			})

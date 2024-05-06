@@ -20,6 +20,10 @@ export default function Changelog() {
 							fix(ticket): Fixed an issue where the messages will shown as delivered when the user first load the
 							messages
 						</li>
+						<li>
+							fix(layout): Emergency fix for the layout where user is not defined when not signed in, causing the entire
+							website to be down
+						</li>
 					</List>
 				</>
 			</ChangelogBox>
