@@ -7,6 +7,15 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
+			<ChangelogBox version="0.3.1" release="05/05/2024">
+				<>
+					<List>
+						<li>fix(ticket): Adding indicators for unread messages</li>
+						<li>fix(ticket_list): Adding unread highlight</li>
+						<li>fix(ticket): Fixed a server side bug where I remove the wrong listener which caused Aborted</li>
+					</List>
+				</>
+			</ChangelogBox>
 			<ChangelogBox version="0.3.0" release="04/05/2024">
 				<>
 					<Heading badge="Revamp" title="Features" />

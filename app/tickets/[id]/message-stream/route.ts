@@ -33,8 +33,8 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 		if (message.type === 'new') notifier.update({ data: { type: 'new', message } });
 		else if (message.type === 'update') notifier.update({ data: { type: 'update', message } });
 	};
-	ticketMessageEmitter.on(params.id, onMessage);
 
+	ticketMessageEmitter.on(params.id, onMessage);
 	req.signal.onabort = () => {
 		ticketMessageEmitter.removeListener(params.id, onMessage);
 		notifier.close({ data: {} });

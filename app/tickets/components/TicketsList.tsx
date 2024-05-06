@@ -3,6 +3,7 @@
 import { dayjs } from '@/libs/dayjs';
 import { SerializedTicket } from '@/libs/serializeData';
 import { motion } from 'framer-motion';
+import { Session } from 'next-auth';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -13,10 +14,12 @@ export function TicketsList({
 	getTickets,
 	getNextPage,
 	timezone,
+	session,
 }: {
 	getTickets: (closed: boolean) => Promise<SerializedTicket[]>;
 	getNextPage: (closed: boolean, messageCount: number) => Promise<SerializedTicket[]>;
 	timezone: string;
+	session: Session;
 }) {
 	const [tickets, setTickets] = useState<SerializedTicket[] | null | 'error'>(null);
 
@@ -44,7 +47,7 @@ export function TicketsList({
 		getTickets(closed)
 			.then((tickets) => {
 				setTickets(tickets);
-				// Prevent message not loading if the the screen is very tall
+				// Prevent tickets not loading if the the screen is very tall
 				if (t) setIsBottom(t.scrollHeight - t.clientHeight <= t.scrollTop + 1);
 				setLoadingTickets(false);
 			})
@@ -75,19 +78,42 @@ export function TicketsList({
 								id: data.ticket.id,
 								title: data.ticket.title,
 								latest_message: {
+									id: data.message.id,
 									message: data.message.message,
+									seen: data.message.seen,
 									createdAt: data.message.xata.createdAt,
+									senderId: data.message.sender?.id,
 								},
 							},
 							...prev,
 						];
 
 					prev[updateIndex].latest_message = {
+						id: data.message.id,
 						message: data.message.message,
+						seen: data.message.seen,
 						createdAt: data.message.xata.createdAt,
+						senderId: data.message.sender?.id,
 					};
 					// Move it to front
 					prev.unshift(prev.splice(updateIndex, 1)[0]);
+					return [...prev];
+				});
+			} else if (data.type === 'update-message') {
+				setTickets((prev) => {
+					if (!prev || prev === 'error') return prev;
+					const updateIndex = prev.findIndex((ticket) => ticket.id === data.ticket.id);
+					if (updateIndex === -1) return prev;
+					// If the message is the latest message
+					if (prev[updateIndex].latest_message?.id === data.message.id) {
+						prev[updateIndex].latest_message = {
+							id: data.message.id,
+							message: data.message.message,
+							seen: data.message.seen,
+							createdAt: data.message.xata.createdAt,
+							senderId: data.message.sender?.id,
+						};
+					}
 					return [...prev];
 				});
 			} else if (data.type === 'new') {
@@ -176,7 +202,7 @@ export function TicketsList({
 									<h3 className="text-xl font-bold text-ellipsis overflow-hidden">{ticket.title}</h3>
 									<p className="text-ellipsis overflow-hidden">{ticket.latest_message?.message ?? '(No Message)'}</p>
 								</div>
-								<div className="min-w-fit">
+								<div className="flex flex-col justify-between items-end min-w-fit">
 									{datetime ? (
 										<div className="tooltip" data-tip={datetime.format('DD/MM/YYYY LT')}>
 											{datetime.isToday()
@@ -188,6 +214,9 @@ export function TicketsList({
 									) : (
 										'----'
 									)}
+									{ticket.latest_message &&
+										ticket.latest_message.senderId !== session.user.id &&
+										!ticket.latest_message.seen && <div className="badge badge-primary badge-md"></div>}
 								</div>
 							</Link>
 						</div>
