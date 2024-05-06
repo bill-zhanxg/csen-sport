@@ -87,16 +87,15 @@ export function NavBar({
 		const eventSource = new EventSource('/tickets/ticket-stream');
 		eventSource.onmessage = async (event) => {
 			const data = JSON.parse(event.data) as TicketEventType;
-			if (data.type === 'new-message') setUnread(true);
+			if (data.type === 'new-message' && data.message.sender?.id !== session.user.id) setUnread(true);
 			else if (data.type === 'update-message' || data.type === 'toggle-status') setRecheck(true);
 		};
 
 		return () => {
 			eventSource.close();
 		};
-	}, []);
+	}, [session]);
 
-	// TODO: TEST
 	useEffect(() => {
 		if (recheck)
 			ticketUnread()
