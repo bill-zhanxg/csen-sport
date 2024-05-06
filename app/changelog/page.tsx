@@ -13,6 +13,13 @@ export default function Changelog() {
 						<li>fix(ticket): Adding indicators for unread messages</li>
 						<li>fix(ticket_list): Adding unread highlight</li>
 						<li>fix(ticket): Fixed a server side bug where I remove the wrong listener which caused Aborted</li>
+						<li>
+							fix(ticket): Fixed an issue where unread badge will appear when the user is the one who sent the message
+						</li>
+						<li>
+							fix(ticket): Fixed an issue where the messages will shown as delivered when the user first load the
+							messages
+						</li>
 					</List>
 				</>
 			</ChangelogBox>

@@ -63,7 +63,7 @@ export default async function TicketMessages({ params }: { params: { id: string 
 				},
 			})),
 		);
-		messages.records.forEach((oldMessage) => {
+		messages.records.forEach((oldMessage, index) => {
 			const message = {
 				...oldMessage,
 				seen: true,
@@ -80,6 +80,7 @@ export default async function TicketMessages({ params }: { params: { id: string 
 						ticket: serializeTicket(ticket),
 					});
 				}
+				messages.records[index] = message;
 			}
 		});
 
