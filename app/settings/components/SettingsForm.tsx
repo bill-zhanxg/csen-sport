@@ -15,6 +15,12 @@ import { ProfilePicture } from './ProfilePicture';
 
 export function SettingsForm({ session, teams }: { session: Session; teams: SerializedTeam[] }) {
 	const [state, formAction] = useFormState<FormState, FormData>(updateProfile, null);
+	const [autoTimezone, setAutoTimezone] = useState(session.user.auto_timezone ?? true);
+	const [supportedTimezones, setSupportedTimezones] = useState<string[] | undefined | null>(undefined);
+
+	useEffect(() => {
+		setSupportedTimezones(typeof Intl.supportedValuesOf === 'undefined' ? null : Intl.supportedValuesOf('timeZone'));
+	}, []);
 
 	const prevState = useRef(state);
 	useEffect(() => {
@@ -25,11 +31,6 @@ export function SettingsForm({ session, teams }: { session: Session; teams: Seri
 			prevState.current = state;
 		}
 	}, [state]);
-
-	const supportedTimezones =
-		typeof Intl.supportedValuesOf === 'undefined' ? undefined : Intl.supportedValuesOf('timeZone');
-
-	const [autoTimezone, setAutoTimezone] = useState(session.user.auto_timezone ?? true);
 
 	return (
 		<form className="flex flex-col gap-4 w-full" action={formAction}>
@@ -158,16 +159,18 @@ export function SettingsForm({ session, teams }: { session: Session; teams: Seri
 							defaultValue={session.user.timezone ?? dayjs.tz.guess()}
 							disabled={autoTimezone || supportedTimezones === undefined}
 						>
-							{supportedTimezones !== undefined ? (
+							{supportedTimezones === undefined ? (
+								<option key="loading">Loading...</option>
+							) : supportedTimezones === null ? (
+								<option key="unsupported">
+									Your browser does not support timezone detection, please update your browser
+								</option>
+							) : (
 								supportedTimezones.map((tz) => (
 									<option key={tz} value={tz}>
 										{tz}
 									</option>
 								))
-							) : (
-								<option key="unsupported">
-									Your browser does not support timezone detection, please update your browser
-								</option>
 							)}
 						</select>
 					</label>

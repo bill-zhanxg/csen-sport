@@ -29,6 +29,10 @@ export default function Changelog() {
 							fix(home): weekly sport view with relative time will use the start time of the first game in the list, if
 							not found then fall back to the default time for the date instead
 						</li>
+						<li>
+							fix(settings): fixed a hydration error that is caused because of inconsistent timezone fetching between
+							server and client
+						</li>
 					</List>
 				</>
 			</ChangelogBox>
