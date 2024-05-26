@@ -12,7 +12,8 @@ export default async function Home() {
 	const lastVisit = getLastVisitDate(session);
 
 	const filter = {
-		date: { $ge: new Date() },
+		// The date in the database is 12 noon in the imported timezone, so we need to minus 12 hours to the current date
+		date: { $ge: new Date(new Date().getTime() - 12 * 60 * 60 * 1000) },
 		...(isTeacherBool
 			? {
 					$any: {
@@ -47,7 +48,9 @@ export default async function Home() {
 					<>
 						<span className="text-error">You are currently not in a team, showing all upcoming weekly sport games</span>
 						<br />
-						<Link className='link link-secondary' href="/settings#team-preferences">Click here to select your team</Link>
+						<Link className="link link-secondary" href="/settings#team-preferences">
+							Click here to select your team
+						</Link>
 					</>
 				) : (
 					'Here is your upcoming weekly sport schedule'

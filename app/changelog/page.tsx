@@ -21,6 +21,14 @@ export default function Changelog() {
 							fix(WeeklySportView): disable game prefetch because it causes fetch error and does not help with
 							performance
 						</li>
+						<li>
+							fix(home): game will not display if current time is past 12 noon, now it will show games that has past
+							noon but still on the same day
+						</li>
+						<li>
+							fix(home): weekly sport view with relative time will use the start time of the first game in the list, if
+							not found then fall back to the default time for the date instead
+						</li>
 					</List>
 				</>
 			</ChangelogBox>
