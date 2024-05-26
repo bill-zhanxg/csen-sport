@@ -33,6 +33,7 @@ export default function Changelog() {
 							fix(settings): fixed a hydration error that is caused because of inconsistent timezone fetching between
 							server and client
 						</li>
+						<li>fix(dependencies): regenerate package-lock.json</li>
 					</List>
 				</>
 			</ChangelogBox>
