@@ -7,6 +7,35 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
+			<ChangelogBox version="0.3.2" release="26/05/2024">
+				<>
+					<Title>Bug fixes</Title>
+					<List>
+						<li>chore(dependency): update all dependencies</li>
+						<li>chore(nextauth): remove basePath and AUTH_URL env because it is not needed anymore</li>
+						<li>
+							fix(middleware): when the url path is / and user is not logged in, redirect to /login without the redirect
+							parameter
+						</li>
+						<li>
+							fix(WeeklySportView): disable game prefetch because it causes fetch error and does not help with
+							performance
+						</li>
+						<li>
+							fix(home): game will not display if current time is past 12 noon, now it will show games that has past
+							noon but still on the same day
+						</li>
+						<li>
+							fix(home): weekly sport view with relative time will use the start time of the first game in the list, if
+							not found then fall back to the default time for the date instead
+						</li>
+						<li>
+							fix(settings): fixed a hydration error that is caused because of inconsistent timezone fetching between
+							server and client
+						</li>
+					</List>
+				</>
+			</ChangelogBox>
 			<ChangelogBox version="0.3.1" release="05/05/2024">
 				<>
 					<List>

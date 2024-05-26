@@ -34,6 +34,5 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
 	pages: {
 		signIn: '/login',
 	},
-	basePath: '/api/auth',
 	debug: process.env.NODE_ENV === 'development',
 });
