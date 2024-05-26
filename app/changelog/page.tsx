@@ -7,6 +7,19 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
+			<ChangelogBox version="0.2.3" release="26/05/2024">
+				<>
+					<Title>Bug fixes</Title>
+					<List>
+						<li>chore(dependency): update all dependencies</li>
+						<li>chore(nextauth): remove basePath and AUTH_URL env because it is not needed anymore</li>
+						<li>
+							fix(middleware): when the url path is / and user is not logged in, redirect to /login without the redirect
+							parameter
+						</li>
+					</List>
+				</>
+			</ChangelogBox>
 			<ChangelogBox version="0.2.2" release="30/04/2024">
 				<>
 					<Title>Bug fixes</Title>
