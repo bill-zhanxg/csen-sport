@@ -17,6 +17,10 @@ export default function Changelog() {
 							fix(middleware): when the url path is / and user is not logged in, redirect to /login without the redirect
 							parameter
 						</li>
+						<li>
+							fix(WeeklySportView): disable game prefetch because it causes fetch error and does not help with
+							performance
+						</li>
 					</List>
 				</>
 			</ChangelogBox>

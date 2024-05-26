@@ -146,13 +146,18 @@ export function WeeklySportView({
 								<td>{game?.start ? dayjs.tz(game?.start, timezone).format('LT') : '---'}</td>
 								{isTeacher && (
 									<td>
-										<input type="checkbox" disabled className="checkbox checkbox-primary !opacity-80 !cursor-default" checked={game.confirmed} />
+										<input
+											type="checkbox"
+											disabled
+											className="checkbox checkbox-primary !opacity-80 !cursor-default"
+											checked={game.confirmed}
+										/>
 									</td>
 								)}
 								{isTeacher && <td>{game?.notes || '---'}</td>}
 								<td>
 									<div className="flex gap-2 justify-end w-full">
-										<Link className="btn btn-active" href={`/game/${game.id}`}>
+										<Link className="btn btn-active" href={`/game/${game.id}`} prefetch={false}>
 											{isTeacher ? <FaPen /> : <FaRegEye />}
 										</Link>
 									</div>
