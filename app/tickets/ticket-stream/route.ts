@@ -38,7 +38,18 @@ export async function GET(req: NextRequest) {
 	}) => {
 		if (allowPass(ticket_creator_id)) notifier.update({ data: { type: 'new-message', message, ticket } });
 	};
-	ticketEmitter.on('new-message', onMessage);
+
+	const updateMessage = async ({
+		ticket_creator_id,
+		message,
+		ticket,
+	}: {
+		ticket_creator_id: string;
+		message: SerializedTicketMessage;
+		ticket: SerializedTicket;
+	}) => {
+		if (allowPass(ticket_creator_id)) notifier.update({ data: { type: 'update-message', message, ticket } });
+	};
 
 	const onNewTicket = async ({
 		ticket,
@@ -49,16 +60,20 @@ export async function GET(req: NextRequest) {
 	}) => {
 		if (allowPass(ticket.creatorId)) notifier.update({ data: { type: 'new', ticket } });
 	};
-	ticketEmitter.on('new-ticket', onNewTicket);
 
 	const onCloseTicket = async ({ ticket_creator_id, ticket_id }: { ticket_creator_id: string; ticket_id: string }) => {
 		if (allowPass(ticket_creator_id)) notifier.update({ data: { type: 'toggle-status', ticket_id } });
 	};
+
+	ticketEmitter.on('new-message', onMessage);
+	ticketEmitter.on('update-message', updateMessage);
+	ticketEmitter.on('new-ticket', onNewTicket);
 	ticketEmitter.on('toggle-status', onCloseTicket);
 
 	req.signal.onabort = () => {
 		ticketEmitter.removeListener('new-message', onMessage);
-		ticketEmitter.removeListener('new', onNewTicket);
+		ticketEmitter.removeListener('update-message', updateMessage);
+		ticketEmitter.removeListener('new-ticket', onNewTicket);
 		ticketEmitter.removeListener('toggle-status', onCloseTicket);
 		notifier.close({ data: {} });
 	};

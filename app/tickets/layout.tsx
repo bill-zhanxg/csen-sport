@@ -23,7 +23,7 @@ export default async function Tickets({ children }: { children: React.ReactNode 
 				createdBy: isDeveloper(session) ? undefined : session.user.id,
 				closed,
 			})
-			.select(['*', 'latest_message.message', 'latest_message.xata.createdAt'])
+			.select(['*', 'latest_message.*'])
 			.sort('latest_message.xata.createdAt', 'desc')
 			.sort('xata.createdAt', 'desc')
 			.getPaginated({
@@ -76,6 +76,7 @@ export default async function Tickets({ children }: { children: React.ReactNode 
 				getTickets={getTickets}
 				getNextPage={getNextPage}
 				timezone={session.user.timezone ?? ''}
+				session={session}
 			/>
 			{children}
 		</div>

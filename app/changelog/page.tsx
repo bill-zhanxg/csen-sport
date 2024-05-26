@@ -7,7 +7,7 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
-			<ChangelogBox version="0.2.3" release="26/05/2024">
+			<ChangelogBox version="0.3.2" release="26/05/2024">
 				<>
 					<Title>Bug fixes</Title>
 					<List>
@@ -33,6 +33,41 @@ export default function Changelog() {
 							fix(settings): fixed a hydration error that is caused because of inconsistent timezone fetching between
 							server and client
 						</li>
+					</List>
+				</>
+			</ChangelogBox>
+			<ChangelogBox version="0.3.1" release="05/05/2024">
+				<>
+					<List>
+						<li>fix(ticket): Adding indicators for unread messages</li>
+						<li>fix(ticket_list): Adding unread highlight</li>
+						<li>fix(ticket): Fixed a server side bug where I remove the wrong listener which caused Aborted</li>
+						<li>
+							fix(ticket): Fixed an issue where unread badge will appear when the user is the one who sent the message
+						</li>
+						<li>
+							fix(ticket): Fixed an issue where the messages will shown as delivered when the user first load the
+							messages
+						</li>
+						<li>
+							fix(layout): Emergency fix for the layout where user is not defined when not signed in, causing the entire
+							website to be down
+						</li>
+					</List>
+				</>
+			</ChangelogBox>
+			<ChangelogBox version="0.3.0" release="04/05/2024">
+				<>
+					<Heading badge="Revamp" title="Features" />
+					<List>
+						<li>revamp(users): Revamp the users page to allow pagination and better search functionality</li>
+						<li>feat(user): Allow admin to change the role of the user when viewing the user page</li>
+						<li>
+							fix(pagination_menu): Minimum page number of 1 to prevent next page button enable when there is no page
+						</li>
+						<li>fix(users): Fix some visual issue in user page</li>
+						<li>fix(user): Add user sorting (creation date descending)</li>
+						<li>typo(user): Give more detail on for No user found</li>
 					</List>
 				</>
 			</ChangelogBox>

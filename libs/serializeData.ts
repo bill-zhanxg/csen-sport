@@ -171,16 +171,16 @@ export type SerializedTicket = {
 	id: string;
 	title: string;
 	latest_message?: {
+		id: string;
 		message?: string | null;
+		seen: boolean;
 		createdAt?: Date | null;
+		senderId?: string | null;
 	} | null;
 };
 
 export function serializeTickets(
-	tickets: Page<
-		TicketsRecord,
-		SelectedPick<TicketsRecord, ('*' | 'latest_message.xata.createdAt' | 'latest_message.message')[]>
-	>,
+	tickets: Page<TicketsRecord, SelectedPick<TicketsRecord, ('*' | 'latest_message.*')[]>>,
 ): SerializedTicket[] {
 	return tickets.records.map((ticket) => serializeTicket(ticket));
 }
@@ -189,17 +189,19 @@ export function serializeTicket({
 	id,
 	title,
 	latest_message,
-}: SelectedPick<
-	TicketsRecord,
-	('*' | 'latest_message.xata.createdAt' | 'latest_message.message')[]
->): SerializedTicket {
+}: SelectedPick<TicketsRecord, ('*' | 'latest_message.*')[]>): SerializedTicket {
 	return {
 		id,
 		title,
-		latest_message: {
-			message: latest_message?.message,
-			createdAt: latest_message?.xata.createdAt,
-		},
+		latest_message: latest_message
+			? {
+					id: latest_message.id,
+					message: latest_message.message,
+					seen: latest_message.seen,
+					createdAt: latest_message.xata.createdAt,
+					senderId: latest_message.sender?.id,
+			  }
+			: latest_message,
 	};
 }
 

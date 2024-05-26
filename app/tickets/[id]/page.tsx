@@ -2,7 +2,12 @@ import { Unauthorized } from '@/app/globalComponents/Unauthorized';
 import NotFound from '@/app/not-found';
 import { auth } from '@/libs/auth';
 import { isDeveloper } from '@/libs/checkPermission';
-import { SerializedTicketMessage, serializeTicketMessage, serializeTicketMessages } from '@/libs/serializeData';
+import {
+	SerializedTicketMessage,
+	serializeTicket,
+	serializeTicketMessage,
+	serializeTicketMessages,
+} from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
 import { FaRegQuestionCircle } from 'react-icons/fa';
 import { FaEllipsisVertical } from 'react-icons/fa6';
@@ -41,6 +46,7 @@ export default async function TicketMessages({ params }: { params: { id: string 
 					size: 20,
 				},
 			});
+		const ticket = await xata.db.tickets.read(ticket_id, ['*', 'latest_message.*']);
 
 		// Mark messages as seen
 		const unseenMessages = messages.records
@@ -57,17 +63,25 @@ export default async function TicketMessages({ params }: { params: { id: string 
 				},
 			})),
 		);
-		messages.records.map((message) => {
+		messages.records.forEach((oldMessage, index) => {
+			const message = {
+				...oldMessage,
+				seen: true,
+			};
 			if (unseenMessages.includes(message.id)) {
 				ticketMessageEmitter.emit(ticket_id, {
-					...serializeTicketMessage({
-						...message,
-						seen: true,
-					}),
+					...serializeTicketMessage(message),
 					type: 'update',
 				});
+				if (ticket && ticket.createdBy?.id) {
+					ticketEmitter.emit('update-message', {
+						ticket_creator_id: ticket.createdBy.id,
+						message: serializeTicketMessage(message),
+						ticket: serializeTicket(ticket),
+					});
+				}
+				messages.records[index] = message;
 			}
-			return message;
 		});
 
 		return messages;
