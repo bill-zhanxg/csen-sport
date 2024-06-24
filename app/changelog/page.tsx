@@ -12,7 +12,8 @@ export default function Changelog() {
 					<Title>Bug fixes</Title>
 					<List>
 						<li>chore(dependency): update all dependencies</li>
-						<li>chore(WeeklySportView): Fixed an issue where extra teacher show plus sign even when there is none</li>
+						<li>fix(WeeklySportView): fixed an issue where extra teacher show plus sign even when there is none</li>
+						<li>fix(WeeklySportView): add new sorting for each date that sort team name in A to Z</li>
 					</List>
 				</>
 			</ChangelogBox>

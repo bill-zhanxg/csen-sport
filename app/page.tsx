@@ -28,6 +28,7 @@ export default async function Home() {
 
 	const games = await getXataClient()
 		.db.games.select(['*', 'team.*', 'venue.*', 'teacher.*'])
+		.sort('team.name', 'asc')
 		.sort('date', 'asc')
 		.filter(filter)
 		.getMany({
