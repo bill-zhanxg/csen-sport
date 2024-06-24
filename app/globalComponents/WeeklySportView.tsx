@@ -101,7 +101,7 @@ export function WeeklySportView({
 										) : (
 											'---'
 										)}
-										{game.extra_teachers && (
+										{game.extra_teachers && game.extra_teachers.length > 0 && (
 											<>
 												<label htmlFor={game.id + '-extra-teacher'} className="cursor-pointer">
 													<FaCirclePlus size={18} />
