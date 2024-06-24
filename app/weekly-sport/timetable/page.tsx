@@ -41,7 +41,7 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 		.filter(dbFilter)
 		.getPaginated({
 			consistency: 'eventual',
-			sort: [{ 'team.name': 'asc' }, { date: isPast ? 'desc' : 'asc' }],
+			sort: [{ date: isPast ? 'desc' : 'asc' }, { 'team.name': 'asc' }],
 			pagination: {
 				size: itemsPerPage,
 				offset: page ? (parseInt(page) - 1) * itemsPerPage : 0,
