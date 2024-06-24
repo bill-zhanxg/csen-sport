@@ -7,6 +7,16 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
+			<ChangelogBox version="0.3.3" release="24/06/2024">
+				<>
+					<Title>Bug fixes</Title>
+					<List>
+						<li>chore(dependency): update all dependencies</li>
+						<li>fix(WeeklySportView): fixed an issue where extra teacher show plus sign even when there is none</li>
+						<li>fix(WeeklySportView): add new sorting for each date that sort team name in A to Z</li>
+					</List>
+				</>
+			</ChangelogBox>
 			<ChangelogBox version="0.3.2" release="26/05/2024">
 				<>
 					<Title>Bug fixes</Title>

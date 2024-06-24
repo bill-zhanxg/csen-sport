@@ -36,12 +36,12 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 			},
 		})
 	).summaries[0].total;
-	const games = await getXataClient()
-		.db.games.select(['*', 'team.*', 'venue.*', 'teacher.*'])
+	const games = await xata.db.games
+		.select(['*', 'team.*', 'venue.*', 'teacher.*'])
 		.filter(dbFilter)
 		.getPaginated({
 			consistency: 'eventual',
-			sort: [{ date: isPast ? 'desc' : 'asc' }],
+			sort: [{ 'team.name': 'asc' }, { date: isPast ? 'desc' : 'asc' }],
 			pagination: {
 				size: itemsPerPage,
 				offset: page ? (parseInt(page) - 1) * itemsPerPage : 0,
