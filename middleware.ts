@@ -11,6 +11,7 @@ export async function middleware(request: NextRequest) {
 		);
 
 	// Modify the request headers with client's IP address
+	console.log(request.headers);
 	const requestHeaders = new Headers(request.headers);
 	const ip = request.ip || '';
 	requestHeaders.set('x-forwarded-for', ip);
