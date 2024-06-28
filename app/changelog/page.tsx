@@ -7,6 +7,15 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
+			<ChangelogBox version="0.3.4" release="28/06/2024">
+				<>
+					<Title>Bug fixes</Title>
+					<List>
+						<li>chore(login): rename Microsoft Azure AD to Microsoft Entra ID</li>
+						<li>fix(login): Currently fixing some problem with login system (auth.js) might expect some downtime for debugging</li>
+					</List>
+				</>
+			</ChangelogBox>
 			<ChangelogBox version="0.3.3" release="24/06/2024">
 				<>
 					<Title>Bug fixes</Title>

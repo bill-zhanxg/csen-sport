@@ -6,6 +6,7 @@
         "daisyui",
         "Datetime",
         "deepcode",
+        "entra",
         "kysely",
         "nextauth",
         "nextjs",
