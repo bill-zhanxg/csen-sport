@@ -35,7 +35,7 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 	const venues = useSignal<Venues>([]);
 
 	useEffect(() => {
-		pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString();
+		pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 	}, []);
 
 	const [alert, setAlert] = useState<AlertType>(null);
