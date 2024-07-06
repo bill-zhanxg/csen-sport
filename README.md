@@ -16,11 +16,17 @@ This project is a system designed to streamline the CSEN schedule management for
 - **Schedule management**: View, add, edit, and delete schedules. Find important details like departure time, opponent, venue, and estimated time of departure (ETD)
 
   ![Timetable](.img/timetable.jpeg)
+
+- View venue details and edit venue information
+
   ![Venue](.img/venue_info.jpeg)
+
+- Edit and create timetables
+
   ![Edit timetable](.img/edit_timetable.jpeg)
   ![Create timetable](.img/create_timetable.jpeg)
 
-- **Ticket system**: Ability for user to create tickets for help
+- **Ticket system**: Ability for users to create tickets for help
 
   ![Ticket](.img/ticket.jpeg)
 
