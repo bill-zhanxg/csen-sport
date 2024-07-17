@@ -8,7 +8,7 @@ import { pdfjs } from 'react-pdf';
 import { AlertType, ErrorAlertFixed, SuccessAlertFixed } from '../../../components/Alert';
 import { importData } from '../actions';
 import { Defaults, Games, Opponents, Teams, Venues } from '../types';
-import { FIxturePages, Step1 } from './Step1';
+import { FixturePages, Step1 } from './Step1';
 import { Step2 } from './Step2';
 import { Step3 } from './Step3';
 import { Step4 } from './Step4';
@@ -22,7 +22,7 @@ export type ImportState =
 			message: string;
 	  };
 
-export function ImportPage({ teachers }: { teachers: { id: string; name?: string | null }[] }) {
+export default function ImportPage({ teachers }: { teachers: { id: string; name?: string | null }[] }) {
 	const router = useRouter();
 
 	const [step, setStep] = useState(1);
@@ -31,7 +31,7 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 	const [disableNext, setDisableNext] = useState(true);
 	const [nextLoading, setNextLoading] = useState(false);
 
-	const fixturePages = useSignal<FIxturePages>([]);
+	const fixturePages = useSignal<FixturePages>([]);
 	const venues = useSignal<Venues>([]);
 
 	useEffect(() => {
@@ -174,6 +174,26 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 						)}
 					</button>
 				</div>
+				{step === 2 && (
+					<div className="flex justify-end w-full max-w-xl">
+						<button
+							className="link link-primary text-sm"
+							onClick={() =>
+								setStep((step) => {
+									const newStep = step + 1;
+									setDisableNext(checkNextNeedDisable(newStep));
+									if (newStep === 4) {
+										setDisablePrevious(true);
+										setNextLoading(true);
+									}
+									return newStep;
+								})
+							}
+						>
+							Skip this step
+						</button>
+					</div>
+				)}
 			</main>
 			{alert &&
 				(alert.type === 'success' ? (

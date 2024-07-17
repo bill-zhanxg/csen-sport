@@ -7,6 +7,13 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
+			<ChangelogBox version="0.4.0" release="17/07/2024">
+				<>
+					<List>
+						<li>refactor(WeeklySportImport): Add support for Excel fixture import</li>
+					</List>
+				</>
+			</ChangelogBox>
 			<ChangelogBox version="0.3.3" release="24/06/2024">
 				<>
 					<Title>Bug fixes</Title>
