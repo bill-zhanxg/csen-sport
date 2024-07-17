@@ -7,7 +7,7 @@ import { Defaults, Games, Opponents, Teams, Venues } from '../types';
 import { DefaultSection } from './DefaultSection';
 import { GamesTable } from './GamesTable';
 import { OpponentsTable } from './OpponentsTable';
-import { FIxturePages } from './Step1';
+import { FixturePages } from './Step1';
 import { TeamsTable } from './TeamsTable';
 import { VenuesTable } from './VenuesTable';
 
@@ -36,7 +36,7 @@ export function Step3({
 }: {
 	setDisableNext: Dispatch<SetStateAction<boolean>>;
 	setAlert: (alert: { type: 'success' | 'error'; message: string } | null) => void;
-	fixtures: Signal<FIxturePages>;
+	fixtures: Signal<FixturePages>;
 	venues: Signal<Venues>;
 	teachers: { id: string; name?: string | null }[];
 	defaults: Defaults;
@@ -52,7 +52,7 @@ export function Step3({
 }) {
 	const [currentSchoolCsenCode, setSchoolCsenCodeInput] = useState('');
 	const schoolCsenCode = useSignal<string | undefined>(undefined);
-	const filteredFixtures = useSignal<FIxturePages>([]);
+	const filteredFixtures = useSignal<FixturePages>([]);
 
 	return (
 		<>
@@ -119,6 +119,7 @@ export function Step3({
 								position: 'home' | 'away';
 								opponent: string;
 								venue: string;
+								notes?: string;
 							}[] = [];
 							for (let i = 0; i < item.games.length; i++) {
 								const games = item.games[i];
@@ -163,6 +164,7 @@ export function Step3({
 											position,
 											opponent,
 											venue: verses.venue,
+											notes: verses.notes,
 										});
 									}
 								}
@@ -196,6 +198,7 @@ export function Step3({
 								const opponent = game.opponent;
 								const venue = game.venue;
 								const date = game.date;
+								const notes = game.notes;
 								games.push({
 									id: v4(),
 									date,
@@ -203,6 +206,7 @@ export function Step3({
 									position: game.position,
 									opponentCode: opponent,
 									venueCode: venue,
+									notes,
 								});
 							});
 						}
@@ -232,6 +236,7 @@ export function Step3({
 
 						if (teams.length > 0) setDisableNext(false);
 						else setDisableNext(true);
+						console.log(games);
 					}}
 				>
 					Filter
