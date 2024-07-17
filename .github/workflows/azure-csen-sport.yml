@@ -4,9 +4,8 @@
 name: Build and deploy - CSEN Sport
 
 on:
-  push:
-    branches:
-      - master
+  release:
+    types: [published]
   workflow_dispatch:
 
 jobs:
