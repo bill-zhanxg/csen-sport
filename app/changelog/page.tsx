@@ -11,6 +11,7 @@ export default function Changelog() {
 				<>
 					<List>
 						<li>chore(dependency): update all dependencies</li>
+						<li>fix(spelling): Google Map -&gt; Google Maps</li>
 					</List>
 				</>
 			</ChangelogBox>

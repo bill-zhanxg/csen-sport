@@ -79,7 +79,7 @@ export function WeeklySportView({
 															target="_blank"
 															className="btn btn-primary"
 														>
-															<FaLocationDot size={16} /> Open in Google Map
+															<FaLocationDot size={16} /> Open in Google Maps
 														</Link>
 														<label htmlFor={game.venue.id} className="btn w-full sm:w-auto !ml-0">
 															Close
