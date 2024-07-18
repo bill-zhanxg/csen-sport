@@ -1,12 +1,15 @@
 import { dayjs } from '@/libs/dayjs';
 import { formatIsHome, formatIsJunior } from '@/libs/formatValue';
+import { serializeGame } from '@/libs/serializeData';
 import { RawTeacher } from '@/libs/tableData';
 import { DateWithGames } from '@/libs/tableHelpers';
+import { getXataClient } from '@/libs/xata';
 import Link from 'next/link';
 import { FaInfoCircle, FaRegEye } from 'react-icons/fa';
 import { FaCirclePlus, FaLocationDot, FaPen } from 'react-icons/fa6';
 import { SideBySide } from './SideBySide';
 import { UserAvatar } from './UserAvatar';
+import { Checkbox } from './WeeklySportViewComponents/Checkbox';
 
 export function WeeklySportView({
 	date,
@@ -25,6 +28,15 @@ export function WeeklySportView({
 	lastVisit: Date;
 	timezone: string;
 }) {
+	async function updateConfirmed(id: string, checked: boolean) {
+		'use server';
+		if (!isTeacher) return false;
+		return getXataClient()
+			.db.games.update(id, { confirmed: checked })
+			.then(() => true)
+			.catch(() => false);
+	}
+
 	return (
 		<div className="w-full bg-base-200 rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4 overflow-auto">
 			<Link
@@ -146,12 +158,7 @@ export function WeeklySportView({
 								<td>{game?.start ? dayjs.tz(game?.start, timezone).format('LT') : '---'}</td>
 								{isTeacher && (
 									<td>
-										<input
-											type="checkbox"
-											disabled
-											className="checkbox checkbox-primary !opacity-80 !cursor-default"
-											checked={game.confirmed}
-										/>
+										<Checkbox game={serializeGame(game, isTeacher)} updateConfirmed={updateConfirmed} />
 									</td>
 								)}
 								{isTeacher && <td>{game?.notes || '---'}</td>}

@@ -7,6 +7,13 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
+			<ChangelogBox version="0.5.0" release="18/07/2024">
+				<>
+					<List>
+						<li>feat: ability for teacher to toggle the Confirmed column without going to edit mode</li>
+					</List>
+				</>
+			</ChangelogBox>
 			<ChangelogBox version="0.4.1" release="17/07/2024">
 				<>
 					<List>
