@@ -11,6 +11,7 @@ export default function Changelog() {
 				<>
 					<List>
 						<li>chore(tickets): add profile icon for developers on chat header</li>
+						<li>chore(tickets): add the ability to delete ticket for developers</li>
 					</List>
 				</>
 			</ChangelogBox>

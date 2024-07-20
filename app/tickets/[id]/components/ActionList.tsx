@@ -2,7 +2,7 @@
 
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next13-progressbar';
-import { toggleTicketStatus } from '../actions';
+import { deleteTicket, toggleTicketStatus } from '../actions';
 
 export function ActionList({ ticketId, isDev }: { ticketId: string; isDev: boolean }) {
 	const router = useRouter();
@@ -29,8 +29,8 @@ export function ActionList({ ticketId, isDev }: { ticketId: string; isDev: boole
 					<button
 						className="bg-yellow-600 hover:bg-yellow-800 text-white rounded-lg px-4 py-2 text-sm w-full transition duration-200 active:bg-yellow-950 rounded-t-none"
 						onClick={async () => {
+							await deleteTicket(ticketId);
 							router.push(`/tickets${closed ? '?status=closed' : ''}`);
-							await toggleTicketStatus(ticketId, !closed);
 						}}
 					>
 						Delete Ticket
