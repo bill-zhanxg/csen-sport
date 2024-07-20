@@ -7,6 +7,14 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
+			<ChangelogBox version="0.5.2" release="20/07/2024">
+				<>
+					<List>
+						<li>chore(tickets): add profile icon for developers on chat header</li>
+						<li>chore(tickets): add the ability to delete ticket for developers</li>
+					</List>
+				</>
+			</ChangelogBox>
 			<ChangelogBox version="0.5.1" release="18/07/2024">
 				<>
 					<List>

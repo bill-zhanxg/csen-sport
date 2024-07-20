@@ -1,6 +1,7 @@
 'use server';
 
 import { auth } from '@/libs/auth';
+import { isDeveloper } from '@/libs/checkPermission';
 import { serializeTicket, serializeTicketMessage } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
 import { ticketEmitter } from '../ticket-stream/eventListener';
@@ -39,4 +40,10 @@ export async function markMessageAsSeen(id: string) {
 			});
 		}
 	}
+}
+
+export async function deleteTicket(id: string) {
+	const session = await auth();
+	if (!isDeveloper(session) || typeof id !== 'string') return;
+	await xata.db.tickets.delete(id);
 }
