@@ -7,6 +7,14 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
+			<ChangelogBox version="0.5.1" release="18/07/2024">
+				<>
+					<List>
+						<li>fix: add developer has been notified text to error messages</li>
+						<li>fix: add .env file back for AUTH_URL</li>
+					</List>
+				</>
+			</ChangelogBox>
 			<ChangelogBox version="0.5.0" release="18/07/2024">
 				<>
 					<List>
