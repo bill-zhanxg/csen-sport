@@ -148,6 +148,9 @@ export function Step1({
 					a[2] - b[2],
 			);
 
+		// Leave this in production for debugging
+		console.log(json);
+
 		const pages: FixturePages = [];
 
 		let pageIndex = -1;
@@ -173,9 +176,9 @@ export function Step1({
 
 		for (const item of json) {
 			const type = item[3] === 'INTER' ? 'intermediate' : 'junior';
-			const gender = item[7].toLowerCase() as Gender;
-			const sport = item[4] as string;
-			const sportDiv = (item[5] as number).toString();
+			const gender = item[7].toLowerCase().trim() as Gender;
+			const sport = item[4].trim() as string;
+			const sportDiv = (item[5] as number).toString().trim();
 			const date = dayjs(new Date(item[2])).format('YYYY-MM-DD');
 
 			if (currentPage.type !== type || currentPage.gender !== gender) {
@@ -224,12 +227,15 @@ export function Step1({
 			}
 
 			pages[pageIndex].games[sportIndex]![gameDateIndex].games.push({
-				team1: (item[8] ?? '')?.toLowerCase(),
-				team2: (item[9] ?? '')?.toLowerCase(),
-				venue: (item[10] ?? 'TBU')?.toLowerCase(),
+				team1: (item[8] ?? '')?.toLowerCase().trim(),
+				team2: (item[9] ?? '')?.toLowerCase().trim(),
+				venue: (item[10] ?? 'TBU')?.toLowerCase().trim(),
 				notes: item[11],
 			});
 		}
+
+		// Leave this in production for debugging
+		console.log(pages);
 
 		fixturePages.value = pages;
 		setDisableNext(false);

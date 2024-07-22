@@ -236,6 +236,8 @@ export function Step3({
 
 						if (teams.length > 0) setDisableNext(false);
 						else setDisableNext(true);
+
+						// Leave this in production for debugging
 						console.log(games);
 					}}
 				>
