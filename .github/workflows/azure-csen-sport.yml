@@ -21,7 +21,7 @@ jobs:
           node-version: '20.x'
           cache: 'npm'
 
-      - name: npm install, build, and test
+      - name: npm install, build, test, and prune
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
@@ -36,7 +36,7 @@ jobs:
           npm prune --omit-dev
 
       - name: Zip artifact for deployment
-        run: zip -r release.zip ./* ./.next ./.env*
+        run: zip -r release.zip ./.next ./node_modules ./public ./.env* ./next.config.js ./package.json ./package-lock.json
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4

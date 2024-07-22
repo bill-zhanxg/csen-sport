@@ -34,3 +34,8 @@ jobs:
           npm install
           npm run build --if-present
           npm run test --if-present
+
+      - name: Auto create tag
+        uses: butlerlogic/action-autotag@stable
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

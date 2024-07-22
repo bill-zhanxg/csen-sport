@@ -1,6 +1,6 @@
 'use client';
 
-import { captureMessage, captureUserFeedback } from '@sentry/nextjs';
+import { captureFeedback, captureMessage, captureUserFeedback } from '@sentry/nextjs';
 import { Session } from 'next-auth';
 import { useState } from 'react';
 import { SuccessAlert } from './Alert';
@@ -31,7 +31,9 @@ export function FeedbackDialog({ session }: { session: Session }) {
 		>
 			<div className="modal-box max-w-4xl">
 				<h3 className="font-bold text-lg">Report Bugs / Give Feedbacks</h3>
-				<p className="py-4">Found a bug or have a suggestion? Let me know!</p>
+				<p className="py-4">
+					Found a bug or have a suggestion? Let me know! (You may need to disable your adblock for this to work)
+				</p>
 				{submitted ? (
 					SuccessAlert({
 						message: 'Thank you for your feedback!',
@@ -55,15 +57,14 @@ export function FeedbackDialog({ session }: { session: Session }) {
 							className="btn btn-primary"
 							disabled={!description}
 							onClick={() => {
-								const event_id = captureMessage('User Feedback');
-
-								const userFeedback = {
-									event_id,
+								captureFeedback({
 									name: session.user.name || 'anonymous',
 									email: session.user.email || 'anonymous',
-									comments: description,
-								};
-								captureUserFeedback(userFeedback);
+									message: description,
+									source: 'feedback-dialog',
+									tags: { feedback: 'true' },
+									url: window.location.href,
+								});
 
 								setSubmitted(true);
 							}}
