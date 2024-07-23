@@ -1,8 +1,15 @@
 {
 	"name": "csen-sport",
+	"displayName": "CSEN Sport",
+	"description": "This project is a system designed to streamline the CSEN schedule management for schools involved in Christian Schools Event Network (CSEN). Its purpose is to ensure everyone involved has easy access to important match details by organising and distributing CSEN schedules to students, coaches, and staff.",
 	"version": "0.5.2-patch.2",
 	"private": false,
 	"license": "PolyForm Strict License",
+	"author": {
+		"name": "Bill Zhang",
+		"email": "contact@mail.bill-zhanxg.com",
+		"url": "https://bill-zhanxg.com"
+	},
 	"scripts": {
 		"dev": "next dev",
 		"prod": "npm run build && next start",
