@@ -1,7 +1,8 @@
 {
 	"name": "csen-sport",
 	"version": "0.5.2-patch.2",
-	"private": true,
+	"private": false,
+	"license": "PolyForm Strict License",
 	"scripts": {
 		"dev": "next dev",
 		"prod": "npm run build && next start",
