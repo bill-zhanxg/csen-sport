@@ -1,6 +1,6 @@
 'use client';
 
-import { captureFeedback, captureMessage, captureUserFeedback } from '@sentry/nextjs';
+import { captureFeedback } from '@sentry/nextjs';
 import { Session } from 'next-auth';
 import { useState } from 'react';
 import { SuccessAlert } from './Alert';
@@ -56,7 +56,8 @@ export function FeedbackDialog({ session }: { session: Session }) {
 						<button
 							className="btn btn-primary"
 							disabled={!description}
-							onClick={() => {
+							onClick={(e) => {
+								e.preventDefault();
 								captureFeedback({
 									name: session.user.name || 'anonymous',
 									email: session.user.email || 'anonymous',

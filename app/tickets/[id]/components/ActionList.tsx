@@ -16,7 +16,8 @@ export function ActionList({ ticketId, isDev }: { ticketId: string; isDev: boole
 					className={`bg-red-600 hover:bg-red-800 text-white rounded-lg px-4 py-2 text-sm w-full transition duration-200 active:bg-red-950${
 						isDev ? ' rounded-b-none' : ''
 					}`}
-					onClick={async () => {
+					onClick={async (e) => {
+						e.preventDefault();
 						router.push(`/tickets${closed ? '?status=closed' : ''}`);
 						await toggleTicketStatus(ticketId, !closed);
 					}}
@@ -28,7 +29,8 @@ export function ActionList({ ticketId, isDev }: { ticketId: string; isDev: boole
 				<li>
 					<button
 						className="bg-yellow-600 hover:bg-yellow-800 text-white rounded-lg px-4 py-2 text-sm w-full transition duration-200 active:bg-yellow-950 rounded-t-none"
-						onClick={async () => {
+						onClick={async (e) => {
+							e.preventDefault();
 							await deleteTicket(ticketId);
 							router.push(`/tickets${closed ? '?status=closed' : ''}`);
 						}}

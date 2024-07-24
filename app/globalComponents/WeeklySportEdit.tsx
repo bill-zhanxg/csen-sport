@@ -355,7 +355,8 @@ export function WeeklySportEdit({
 										<form method="dialog">
 											<button
 												className="btn btn-error"
-												onClick={() => {
+												onClick={(e) => {
+													e.preventDefault();
 													deleteGame(original.id)
 														.then(setAlert)
 														.catch(() => {
@@ -569,7 +570,8 @@ export function WeeklySportEdit({
 									<button
 										className="btn btn-square"
 										disabled={newTeam === '' || newOpponent === ''}
-										onClick={() => {
+										onClick={(e) => {
+											e.preventDefault();
 											newGame({
 												date: date.rawDate,
 												team: newTeam,

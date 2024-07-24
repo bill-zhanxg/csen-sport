@@ -18,7 +18,13 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
 						The developer have been notified and will work to resolve the issue as soon as possible.
 					</h1>
 				</div>
-				<button className="btn btn-primary w-full" onClick={() => reset()}>
+				<button
+					className="btn btn-primary w-full"
+					onClick={(e) => {
+						e.preventDefault();
+						reset();
+					}}
+				>
 					Try Again
 				</button>
 			</div>

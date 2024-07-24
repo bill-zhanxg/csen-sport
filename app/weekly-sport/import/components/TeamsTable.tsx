@@ -291,7 +291,8 @@ export function TeamsTable({
 								<button
 									className="btn btn-square"
 									disabled={newGroup === '' || newName === ''}
-									onClick={() => {
+									onClick={(e) => {
+										e.preventDefault();
 										const id = v4();
 										startTransition(() => {
 											setTeams((teams) => {
