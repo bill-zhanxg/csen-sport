@@ -152,7 +152,8 @@ export function VenueTable({ teams }: { teams: SerializedVenue[] }) {
 										<form method="dialog">
 											<button
 												className="btn btn-error"
-												onClick={() => {
+												onClick={(e) => {
+													e.preventDefault();
 													deleteVenue(original.id)
 														.then(setAlert)
 														.catch(() => {
@@ -267,7 +268,8 @@ export function VenueTable({ teams }: { teams: SerializedVenue[] }) {
 									<button
 										className="btn btn-square"
 										disabled={newName === '' || newAddress === '' || newCfNum === ''}
-										onClick={() => {
+										onClick={(e) => {
+											e.preventDefault();
 											setNewName('');
 											setNewAddress('');
 											setNewCfNum('');

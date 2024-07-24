@@ -728,7 +728,8 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 								<button
 									className="btn btn-square"
 									disabled={newGroup === '' || newTeamName === ''}
-									onClick={() => {
+									onClick={(e) => {
+										e.preventDefault();
 										setTeams((teams) => [
 											...teams,
 											{
@@ -820,7 +821,8 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 								<button
 									className="btn btn-square"
 									disabled={newVenue === '' || newAddress === ''}
-									onClick={() => {
+									onClick={(e) => {
+										e.preventDefault();
 										setVenues((venues) => [
 											...venues,
 											{
@@ -908,7 +910,9 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 										teams.filter((team) => team.group === newGameGroup).length < 1 ||
 										venues.length < 1
 									}
-									onClick={() => {
+									onClick={(e) => {
+										e;
+										e.preventDefault();
 										setGames((games) => [
 											...games,
 											...teams
@@ -950,11 +954,11 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 							className="btn btn-primary"
 							disabled={loading}
 							onClick={async (e) => {
+								e.preventDefault();
 								setLoading(true);
 								const res = await createWeeklySport(teams, venues, games, dayjs.tz.guess());
 								setAlertState(res);
 								if (res?.type === 'success') {
-									e.preventDefault();
 									router.push('/weekly-sport/timetable');
 								} else setLoading(false);
 							}}

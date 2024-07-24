@@ -147,8 +147,8 @@ export default function ImportPage({ teachers }: { teachers: { id: string; name?
 					<button
 						className="btn btn-primary w-32 !shrink"
 						onClick={(e) => {
+							e.preventDefault();
 							if (step === 4) {
-								e.preventDefault();
 								return router.push('/weekly-sport/timetable');
 							}
 							setStep((step) => {

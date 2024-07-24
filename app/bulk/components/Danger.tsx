@@ -34,7 +34,8 @@ export function Danger() {
 						<button
 							className="btn btn-error"
 							disabled={allLoading}
-							onClick={async () => {
+							onClick={async (e) => {
+								e.preventDefault();
 								setAllLoading(true);
 								const res = await resetAll();
 								setAllState(res);
@@ -69,7 +70,8 @@ export function Danger() {
 						<button
 							className="btn btn-error"
 							disabled={gameLoading}
-							onClick={async () => {
+							onClick={async (e) => {
+								e.preventDefault;
 								setGameLoading(true);
 								const res = await resetGames();
 								setGameState(res);
@@ -104,7 +106,8 @@ export function Danger() {
 						<button
 							className="btn btn-error"
 							disabled={teamLoading}
-							onClick={async () => {
+							onClick={async (e) => {
+								e.preventDefault();
 								setTeamLoading(true);
 								const res = await resetTeams();
 								setTeamState(res);
@@ -133,7 +136,8 @@ export function Danger() {
 						<button
 							className="btn btn-error"
 							disabled={venueLoading}
-							onClick={async () => {
+							onClick={async (e) => {
+								e.preventDefault();
 								setVenueLoading(true);
 								const res = await resetVenues();
 								setVenueState(res);

@@ -10,7 +10,8 @@ export function RestartGuide() {
 		<button
 			className="btn btn-primary w-full max-w-4xl"
 			disabled={loading}
-			onClick={() => {
+			onClick={(e) => {
+				e.preventDefault();
 				setLoading(true);
 				resetGuide();
 			}}

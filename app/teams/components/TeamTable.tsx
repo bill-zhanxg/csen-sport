@@ -143,7 +143,8 @@ export function TeamTable({ teams }: { teams: SerializedTeam[] }) {
 										<form method="dialog">
 											<button
 												className="btn btn-error"
-												onClick={() => {
+												onClick={(e) => {
+													e.preventDefault();
 													deleteTeam(original.id)
 														.then(setAlert)
 														.catch(() => {
@@ -254,7 +255,8 @@ export function TeamTable({ teams }: { teams: SerializedTeam[] }) {
 									<button
 										className="btn btn-square"
 										disabled={newGroup === '' || newName === ''}
-										onClick={() => {
+										onClick={(e) => {
+											e.preventDefault();
 											newTeam({ name: newName, isJunior: newGroup as 'junior' | 'intermediate' })
 												.then(setAlert)
 												.catch(() => {
