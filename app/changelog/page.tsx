@@ -15,6 +15,11 @@ export default function Changelog() {
 							games for specific team
 						</li>
 						<li>fix: add preventDefault() to all necessary (and maybe not) button clicks</li>
+						<li>chore(login): rename Microsoft Azure AD to Microsoft Entra ID</li>
+						<li>
+							fix(login): Currently fixing some problem with login system (auth.js) might expect some downtime for
+							debugging
+						</li>
 					</List>
 				</>
 			</ChangelogBox>
