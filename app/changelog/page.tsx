@@ -14,6 +14,7 @@ export default function Changelog() {
 							fix: sorting in homepage without a team is fixed to show all most recent games instead of showing all
 							games for specific team
 						</li>
+						<li>fix: add preventDefault() to all necessary (and maybe not) button clicks</li>
 					</List>
 				</>
 			</ChangelogBox>
