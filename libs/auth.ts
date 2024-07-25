@@ -14,6 +14,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
 			clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
 			tenantId: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
 			profilePhotoSize: 648,
+			allowDangerousEmailAccountLinking: true,
 		}),
 	],
 	callbacks: {
