@@ -1,6 +1,6 @@
 import { XataAdapter } from '@auth/xata-adapter';
 import NextAuth from 'next-auth';
-import AzureADProvider from 'next-auth/providers/azure-ad';
+import MicrosoftEntraID from 'next-auth/providers/microsoft-entra-id';
 import { getXataClient } from './xata';
 
 export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
@@ -9,10 +9,10 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
 		strategy: 'database',
 	},
 	providers: [
-		AzureADProvider({
-			clientId: process.env.AZURE_AD_CLIENT_ID,
-			clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
-			tenantId: process.env.AZURE_AD_TENANT_ID,
+		MicrosoftEntraID({
+			clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
+			clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+			tenantId: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
 			profilePhotoSize: 648,
 		}),
 	],

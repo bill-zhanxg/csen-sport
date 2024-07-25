@@ -14,6 +14,8 @@ export default function Changelog() {
 							fix: sorting in homepage without a team is fixed to show all most recent games instead of showing all
 							games for specific team
 						</li>
+            <li>chore(login): rename Microsoft Azure AD to Microsoft Entra ID</li>
+						<li>fix(login): Currently fixing some problem with login system (auth.js) might expect some downtime for debugging</li>
 					</List>
 				</>
 			</ChangelogBox>
