@@ -12,7 +12,7 @@ const xata = getXataClient();
 export default async function Users({ searchParams }: { searchParams: SearchParams }) {
 	const session = await auth();
 	if (!session || !isAdmin(session)) return Unauthorized();
-	const pageSize = 50;
+	const pageSize = 20;
 	const { page, search } = stringifySearchParam(searchParams);
 
 	const filter = {

@@ -7,6 +7,19 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
+			<ChangelogBox version="0.5.4" release="20/07/2024">
+				<>
+					<List>
+						<li>
+							fix: change page size for users page to reduce loading time due to large image base64 string is loaded
+						</li>
+						<li>
+							fix: a bug where I put preventDefault() on Link element and prevent anyone from navigating with the NavBar
+							is fixed
+						</li>
+					</List>
+				</>
+			</ChangelogBox>
 			<ChangelogBox version="0.5.3" release="20/07/2024">
 				<>
 					<List>

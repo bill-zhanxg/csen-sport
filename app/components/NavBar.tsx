@@ -156,7 +156,6 @@ export function NavBar({
 												<MenuItem
 													item={item}
 													onClick={(event) => {
-														event.preventDefault();
 														const details = event.currentTarget.parentElement?.parentElement
 															?.parentElement as HTMLDetailsElement;
 														details.open = false;
@@ -207,7 +206,6 @@ export function NavBar({
 	}
 
 	function handleMobileLiClick(e: MouseEvent<HTMLAnchorElement, globalThis.MouseEvent>) {
-		e.preventDefault();
 		const element = document.activeElement;
 		if (element && 'blur' in element) {
 			(element as HTMLElement).blur();
