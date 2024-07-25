@@ -28,9 +28,9 @@ export function WeeklySportView({
 	lastVisit: Date;
 	timezone: string;
 }) {
-	async function updateConfirmed(id: string, checked: boolean) {
+	async function updateConfirmed(id: any, checked: any) {
 		'use server';
-		if (!isTeacher) return false;
+		if (!isTeacher || typeof id !== 'string' || typeof checked !== 'boolean') return false;
 		return getXataClient()
 			.db.games.update(id, { confirmed: checked })
 			.then(() => true)
