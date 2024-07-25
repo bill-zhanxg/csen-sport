@@ -7,7 +7,7 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
-			<ChangelogBox version="0.5.4" release="20/07/2024">
+			<ChangelogBox version="0.5.4" release="25/07/2024">
 				<>
 					<List>
 						<li>
@@ -20,7 +20,7 @@ export default function Changelog() {
 					</List>
 				</>
 			</ChangelogBox>
-			<ChangelogBox version="0.5.3" release="20/07/2024">
+			<ChangelogBox version="0.5.3" release="25/07/2024">
 				<>
 					<List>
 						<li>
@@ -36,7 +36,7 @@ export default function Changelog() {
 					</List>
 				</>
 			</ChangelogBox>
-			<ChangelogBox version="0.5.2-patch.2" release="20/07/2024">
+			<ChangelogBox version="0.5.2-patch.2" release="22/07/2024">
 				<>
 					<List>
 						<li>chore(dependency): update all dependencies</li>
