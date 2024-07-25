@@ -3,8 +3,7 @@
 import { isAdmin } from '@/libs/checkPermission';
 import { Session } from 'next-auth';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { MouseEventHandler, useEffect, useState } from 'react';
+import { MouseEvent, MouseEventHandler, useEffect, useState } from 'react';
 import { FaBars, FaExternalLinkAlt } from 'react-icons/fa';
 import { TicketEventType } from '../tickets/types';
 
@@ -157,6 +156,7 @@ export function NavBar({
 												<MenuItem
 													item={item}
 													onClick={(event) => {
+														event.preventDefault();
 														const details = event.currentTarget.parentElement?.parentElement
 															?.parentElement as HTMLDetailsElement;
 														details.open = false;
@@ -206,7 +206,8 @@ export function NavBar({
 		);
 	}
 
-	function handleMobileLiClick() {
+	function handleMobileLiClick(e: MouseEvent<HTMLAnchorElement, globalThis.MouseEvent>) {
+		e.preventDefault();
 		const element = document.activeElement;
 		if (element && 'blur' in element) {
 			(element as HTMLElement).blur();

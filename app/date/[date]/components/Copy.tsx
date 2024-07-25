@@ -12,6 +12,7 @@ export function Copy({ games }: { games: SerializedGame[] }) {
 		group: 'junior' | 'intermediate' | undefined,
 		table = false,
 	) {
+		event.preventDefault();
 		if (table) {
 			const clipboardItem = new ClipboardItem({
 				'text/html': new Blob([renderToString(<CopyTable games={games} />)], { type: 'text/html' }),

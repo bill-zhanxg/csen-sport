@@ -324,7 +324,8 @@ export function GamesTable({
 						<div className="flex gap-2 justify-end w-full">
 							<button
 								className="btn btn-error"
-								onClick={() => {
+								onClick={(e) => {
+									e.preventDefault();
 									changes.value.push({
 										type: 'delete',
 										id: original.id,
@@ -538,7 +539,8 @@ export function GamesTable({
 								<button
 									className="btn btn-square"
 									disabled={newDate === '' || newTeam === '' || newOpponent === ''}
-									onClick={() => {
+									onClick={(e) => {
+										e.preventDefault();
 										const date = formatDate(newDate);
 										const value = {
 											// id will not be used by the server
@@ -590,7 +592,8 @@ export function GamesTable({
 					<button
 						className="btn btn-primary w-full mt-2"
 						disabled={!changed || loading}
-						onClick={async () => {
+						onClick={async (e) => {
+							e.preventDefault();
 							setLoading(true);
 							const res = await updateGamesBulk(changes.value);
 							if (res?.type === 'success') {

@@ -18,7 +18,7 @@ export function Step2({
 	pdfjs: typeof PDFJS;
 	venues: Signal<Venues>;
 }) {
-	const [weeklySportTab, setWeeklySportTab] = useState<'url' | 'upload'>('url');
+	const [weeklySportTab, setWeeklySportTab] = useState<'url' | 'upload'>('upload');
 	const [weeklySportURL, setWeeklySportURL] = useState('');
 	const [weeklySportURLDisabled, setWeeklySportURLDisabled] = useState(false);
 	const [weeklySportFileDisabled, setWeeklySportFileDisabled] = useState(false);
@@ -48,6 +48,7 @@ export function Step2({
 			});
 	}
 	function handleWeeklySportURLCheck() {
+		// TODO: Currently Disabled due to proxy not working
 		if (!weeklySportURL.trim())
 			return setAlert({
 				type: 'error',
@@ -212,8 +213,10 @@ export function Step2({
 			<div role="tablist" className="tabs tabs-lg tabs-bordered">
 				<button
 					role="tab"
-					className={`tab ${weeklySportTab === 'url' ? 'tab-active' : ''}`}
-					onClick={() => setWeeklySportTab('url')}
+					className={`tab tab-disabled ${weeklySportTab === 'url' ? 'tab-active' : ''}`}
+					onClick={() => {
+						// setWeeklySportTab('url');
+					}}
 					disabled={weeklySportFileDisabled}
 				>
 					URL

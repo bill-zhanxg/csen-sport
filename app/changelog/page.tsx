@@ -7,12 +7,61 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
-			<ChangelogBox version="0.3.4" release="28/06/2024">
+			<ChangelogBox version="0.5.3" release="20/07/2024">
 				<>
-					<Title>Bug fixes</Title>
 					<List>
-						<li>chore(login): rename Microsoft Azure AD to Microsoft Entra ID</li>
+						<li>
+							fix: sorting in homepage without a team is fixed to show all most recent games instead of showing all
+							games for specific team
+						</li>
+            <li>chore(login): rename Microsoft Azure AD to Microsoft Entra ID</li>
 						<li>fix(login): Currently fixing some problem with login system (auth.js) might expect some downtime for debugging</li>
+					</List>
+				</>
+			</ChangelogBox>
+			<ChangelogBox version="0.5.2-patch.2" release="20/07/2024">
+				<>
+					<List>
+						<li>chore(dependency): update all dependencies</li>
+						<li>fix(import): fix duplicate of teams due to ending space character</li>
+					</List>
+				</>
+			</ChangelogBox>
+			<ChangelogBox version="0.5.2" release="20/07/2024">
+				<>
+					<List>
+						<li>chore(tickets): add profile icon for developers on chat header</li>
+						<li>chore(tickets): add the ability to delete ticket for developers</li>
+					</List>
+				</>
+			</ChangelogBox>
+			<ChangelogBox version="0.5.1" release="18/07/2024">
+				<>
+					<List>
+						<li>fix: add developer has been notified text to error messages</li>
+						<li>fix: add .env file back for AUTH_URL</li>
+					</List>
+				</>
+			</ChangelogBox>
+			<ChangelogBox version="0.5.0" release="18/07/2024">
+				<>
+					<List>
+						<li>feat: ability for teacher to toggle the Confirmed column without going to edit mode</li>
+					</List>
+				</>
+			</ChangelogBox>
+			<ChangelogBox version="0.4.1" release="17/07/2024">
+				<>
+					<List>
+						<li>chore(dependency): update all dependencies</li>
+						<li>fix(spelling): Google Map -&gt; Google Maps</li>
+					</List>
+				</>
+			</ChangelogBox>
+			<ChangelogBox version="0.4.0" release="17/07/2024">
+				<>
+					<List>
+						<li>refactor(WeeklySportImport): Add support for Excel fixture import</li>
 					</List>
 				</>
 			</ChangelogBox>

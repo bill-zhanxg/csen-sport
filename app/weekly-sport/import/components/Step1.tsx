@@ -1,19 +1,15 @@
+import { dayjs } from '@/libs/dayjs';
 import { Signal } from '@preact/signals-react';
-import dayjs from 'dayjs';
-import timezone from 'dayjs/plugin/timezone';
-import utc from 'dayjs/plugin/utc';
 import Link from 'next/link';
 import { TextItem } from 'pdfjs-dist/types/src/display/api';
 import { useState } from 'react';
 import { pdfjs as PDFJS } from 'react-pdf';
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
+import { read, utils } from 'xlsx';
 
 type Type = 'junior' | 'intermediate';
 type Gender = 'boys' | 'girls';
 // This is actually the sport and division
-type Teams = {
+type Sport = {
 	name: string;
 	number: string;
 }[];
@@ -25,6 +21,7 @@ type Games = (
 						team1: string;
 						team2: string;
 						venue: string;
+						notes?: string;
 				  }
 				| {
 						text: string;
@@ -33,10 +30,10 @@ type Games = (
 	  }[]
 	| null
 )[];
-export type FIxturePages = {
+export type FixturePages = {
 	type: Type;
 	gender: Gender;
-	teams: Teams;
+	teams: Sport;
 	games: Games;
 }[];
 
@@ -51,38 +48,62 @@ export function Step1({
 	setDisableNext: (disableNext: boolean) => void;
 	setAlert: (alert: { type: 'success' | 'error'; message: string } | null) => void;
 	pdfjs: typeof PDFJS;
-	fixturePages: Signal<FIxturePages>;
+	fixturePages: Signal<FixturePages>;
 }) {
-	const [weeklySportTab, setWeeklySportTab] = useState<'url' | 'upload'>('url');
+	const [weeklySportTab, setWeeklySportTab] = useState<'url' | 'upload'>('upload');
 	const [weeklySportURL, setWeeklySportURL] = useState('');
 	const [weeklySportURLDisabled, setWeeklySportURLDisabled] = useState(false);
 	const [weeklySportFileDisabled, setWeeklySportFileDisabled] = useState(false);
 
 	async function handleWeeklySportChange(event: React.ChangeEvent<HTMLInputElement>) {
-		if (!event.target.files?.[0]) return;
+		const file = event.target.files?.[0];
+		if (!file) return;
 		setNextLoading(true);
 		setWeeklySportFileDisabled(true);
-		let input = event.target.files[0];
-		input
-			.arrayBuffer()
-			.then((buffer) => {
-				handlePdfText(buffer)
-					.catch(() => {})
-					.finally(() => {
-						setNextLoading(false);
-						setWeeklySportFileDisabled(false);
+		if (file.type === 'application/pdf') {
+			file
+				.arrayBuffer()
+				.then((buffer) => {
+					handlePdfText(buffer)
+						.catch(() => {})
+						.finally(() => {
+							setNextLoading(false);
+							setWeeklySportFileDisabled(false);
+						});
+				})
+				.catch((err) => {
+					setNextLoading(false);
+					setWeeklySportFileDisabled(false);
+					setAlert({
+						type: 'error',
+						message: `Failed to load the selected file: ${err.message}`,
 					});
-			})
-			.catch((err) => {
-				setNextLoading(false);
-				setWeeklySportFileDisabled(false);
-				setAlert({
-					type: 'error',
-					message: `Failed to load the selected file: ${err.message}`,
 				});
+		} else if (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+			file
+				.arrayBuffer()
+				.then(handleExcel)
+				.catch((err) => {
+					setAlert({
+						type: 'error',
+						message: `Failed to load the selected file: ${err.message}`,
+					});
+				})
+				.finally(() => {
+					setNextLoading(false);
+					setWeeklySportFileDisabled(false);
+				});
+		} else {
+			setNextLoading(false);
+			setWeeklySportFileDisabled(false);
+			setAlert({
+				type: 'error',
+				message: 'Invalid file type, please upload a PDF or Excel file',
 			});
+		}
 	}
 	function handleWeeklySportURLCheck() {
+		// TODO: Currently Disabled due to proxy not working
 		if (!weeklySportURL.trim())
 			return setAlert({
 				type: 'error',
@@ -98,12 +119,134 @@ export function Step1({
 			});
 	}
 
+	function handleExcel(input: ArrayBuffer) {
+		const workbook = read(input, {
+			cellDates: true,
+		});
+		const sheet = workbook.Sheets['FIXTURES'];
+		/**
+		 * Index:
+		 * 2 - Date
+		 * 3 - Age
+		 * 4 - Sport
+		 * 5 - Div
+		 * 6 - Pool (A | B)
+		 * 7 - Gender
+		 * 8 - Home Team
+		 * 9 - Away Team
+		 * 10 - Venue
+		 * 11 - Notes
+		 */
+		const json = (utils.sheet_to_json(sheet, { header: 1 }) as any[][])
+			.toSpliced(0, 3)
+			.sort(
+				(a, b) =>
+					a[3].localeCompare(b[3]) ||
+					a[7].localeCompare(b[7]) ||
+					a[4].localeCompare(b[4]) ||
+					a[5] - b[5] ||
+					a[2] - b[2],
+			);
+
+		// Leave this in production for debugging
+		console.log(json);
+
+		const pages: FixturePages = [];
+
+		let pageIndex = -1;
+		let currentPage: {
+			type: Type | undefined;
+			gender: Gender | undefined;
+		} = {
+			type: undefined,
+			gender: undefined,
+		};
+
+		let sportIndex = -1;
+		let currentSport: {
+			name: string | undefined;
+			number: string | undefined;
+		} = {
+			name: undefined,
+			number: undefined,
+		};
+
+		let gameDateIndex = -1;
+		let currentGameDate: string | undefined;
+
+		for (const item of json) {
+			const type = item[3] === 'INTER' ? 'intermediate' : 'junior';
+			const gender = item[7].toLowerCase().trim() as Gender;
+			const sport = item[4].trim() as string;
+			const sportDiv = (item[5] as number).toString().trim();
+			const date = dayjs(new Date(item[2])).format('YYYY-MM-DD');
+
+			if (currentPage.type !== type || currentPage.gender !== gender) {
+				pageIndex++;
+				pages[pageIndex] = {
+					type,
+					gender,
+					teams: [],
+					games: [],
+				};
+				currentPage = {
+					type,
+					gender,
+				};
+
+				sportIndex = -1;
+				currentSport = {
+					name: undefined,
+					number: undefined,
+				};
+			}
+
+			if (currentSport.name !== sport || currentSport.number !== sportDiv) {
+				sportIndex++;
+				pages[pageIndex].teams[sportIndex] = {
+					name: sport,
+					number: sportDiv,
+				};
+				pages[pageIndex].games[sportIndex] = [];
+				currentSport = {
+					name: sport,
+					number: sportDiv,
+				};
+
+				gameDateIndex = -1;
+				currentGameDate = undefined;
+			}
+
+			if (currentGameDate !== date) {
+				gameDateIndex++;
+				pages[pageIndex].games[sportIndex]![gameDateIndex] = {
+					date,
+					games: [],
+				};
+				currentGameDate = date;
+			}
+
+			pages[pageIndex].games[sportIndex]![gameDateIndex].games.push({
+				team1: (item[8] ?? '')?.toLowerCase().trim(),
+				team2: (item[9] ?? '')?.toLowerCase().trim(),
+				venue: (item[10] ?? 'TBU')?.toLowerCase().trim(),
+				notes: item[11],
+			});
+		}
+
+		// Leave this in production for debugging
+		console.log(pages);
+
+		fixturePages.value = pages;
+		setDisableNext(false);
+	}
+
 	function handlePdfText(input: string | ArrayBuffer) {
 		return new Promise((resolve, reject) => {
 			pdfjs
 				.getDocument(typeof input === 'string' ? `https://corsproxy.io/?${encodeURIComponent(input)}` : input)
 				.promise.then(async (pdf) => {
-					const pages: FIxturePages = [];
+					const pages: FixturePages = [];
 
 					for (let i = 1; i <= pdf.numPages; i++) {
 						await pdf
@@ -133,7 +276,7 @@ export function Step1({
 										// For step 2
 										let teamYPos = 0;
 										let currentTeamName = '';
-										let teams: Teams = [];
+										let teams: Sport = [];
 
 										// For step 3
 										let currentGameDate: string | null = null;
@@ -369,7 +512,7 @@ export function Step1({
 				to prevent any duplicate data
 			</p>
 			<p className="text-xl font-bold text-center max-w-2xl">
-				Please find the latest fixtures PDF from{' '}
+				Please find the latest fixtures PDF/Excel from{' '}
 				<Link className="link-primary link" href="https://csen.org.au/semester-sport/" target="_blank">
 					CSEN
 				</Link>{' '}
@@ -378,8 +521,10 @@ export function Step1({
 			<div role="tablist" className="tabs tabs-lg tabs-bordered">
 				<button
 					role="tab"
-					className={`tab ${weeklySportTab === 'url' ? 'tab-active' : ''}`}
-					onClick={() => setWeeklySportTab('url')}
+					className={`tab tab-disabled ${weeklySportTab === 'url' ? 'tab-active' : ''}`}
+					onClick={() => {
+						// setWeeklySportTab('url')
+					}}
 					disabled={weeklySportFileDisabled}
 				>
 					URL
@@ -398,7 +543,7 @@ export function Step1({
 					<input
 						type="text"
 						value={weeklySportURL}
-						placeholder="Input URL of the PDF here"
+						placeholder="Input URL of the PDF/Excel here"
 						className="input input-bordered w-full"
 						onChange={(event) => setWeeklySportURL(event.target.value)}
 						disabled={weeklySportURLDisabled}
@@ -411,7 +556,7 @@ export function Step1({
 				<input
 					type="file"
 					className="file-input file-input-bordered w-full max-w-xl"
-					accept=".pdf"
+					accept=".pdf,.xlsx"
 					onChange={handleWeeklySportChange}
 					disabled={weeklySportFileDisabled}
 				/>
