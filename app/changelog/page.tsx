@@ -7,6 +7,13 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
+			<ChangelogBox version="0.5.4" release="25/07/2024">
+				<>
+					<List>
+						<li>fix: upload profile avatar failed due to image side not resize properly</li>
+					</List>
+				</>
+			</ChangelogBox>
 			<ChangelogBox version="0.5.3-patch.2" release="25/07/2024">
 				<>
 					<List>
