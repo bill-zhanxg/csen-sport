@@ -11,6 +11,10 @@ export default function Changelog() {
 				<>
 					<List>
 						<li>fix: upload profile avatar failed due to image side not resize properly</li>
+						<li>
+							fix(import): issue with importing games that is same school verse each other. only the opponent team is
+							imported has been fixed. Now it import both for each team
+						</li>
 					</List>
 				</>
 			</ChangelogBox>
