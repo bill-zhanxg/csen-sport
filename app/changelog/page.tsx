@@ -10,6 +10,7 @@ export default function Changelog() {
 			<ChangelogBox version="0.5.4" release="25/07/2024">
 				<>
 					<List>
+						<li>fix: upload profile avatar failed due to image side not resize properly</li>
 						<li>
 							fix(import): issue with importing games that is same school verse each other. only the opponent team is
 							imported has been fixed. Now it import both for each team
