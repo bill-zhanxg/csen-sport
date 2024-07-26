@@ -7,6 +7,16 @@ export default function Changelog() {
 		<main className="flex flex-col gap-8 items-center w-full p-6">
 			<h1 className="font-bold text-center">Changelogs</h1>
 			<RestartGuide />
+			<ChangelogBox version="0.5.4" release="25/07/2024">
+				<>
+					<List>
+						<li>
+							fix(import): issue with importing games that is same school verse each other. only the opponent team is
+							imported has been fixed. Now it import both for each team
+						</li>
+					</List>
+				</>
+			</ChangelogBox>
 			<ChangelogBox version="0.5.3-patch.2" release="25/07/2024">
 				<>
 					<List>

@@ -128,44 +128,39 @@ export function Step3({
 								for (const game of games) {
 									for (const verses of game.games) {
 										if ('text' in verses) continue;
-										let myTeam: string | undefined;
-										let opponent: string | undefined;
-										let position: 'home' | 'away' | undefined;
+
+										const addGameRemap = (myTeam: string, opponent: string, position: 'home' | 'away') => {
+											if (!teamCodes.find((code) => code.name === myTeam && code.sport === sport)) {
+												teamCodes.push({
+													name: myTeam,
+													sport,
+												});
+											}
+
+											const opponentCode = opponent.match(/([a-z]+)/)?.[0];
+											if (opponentCode && !opponents.includes(opponentCode)) opponents.push(opponentCode);
+
+											if (!venueCodes.includes(verses.venue)) venueCodes.push(verses.venue);
+
+											gameRemap.push({
+												date: game.date,
+												team: {
+													name: myTeam,
+													sport,
+												},
+												position,
+												opponent: opponentCode || '',
+												venue: verses.venue,
+												notes: verses.notes,
+											});
+										};
+
 										if (verses.team1.includes(currentSchoolCsenCode)) {
-											myTeam = verses.team1;
-											opponent = verses.team2;
-											position = 'home';
+											addGameRemap(verses.team1, verses.team2, 'home');
 										}
 										if (verses.team2.includes(currentSchoolCsenCode)) {
-											myTeam = verses.team2;
-											opponent = verses.team1;
-											position = 'away';
+											addGameRemap(verses.team2, verses.team1, 'away');
 										}
-										if (!myTeam || !opponent || !position) continue;
-
-										if (!teamCodes.find((code) => code.name === myTeam && code.sport === sport)) {
-											teamCodes.push({
-												name: myTeam,
-												sport,
-											});
-										}
-
-										const opponentCode = opponent.match(/([a-z]+)/)?.[0];
-										if (opponentCode && !opponents.includes(opponentCode)) opponents.push(opponentCode);
-
-										if (!venueCodes.includes(verses.venue)) venueCodes.push(verses.venue);
-
-										gameRemap.push({
-											date: game.date,
-											team: {
-												name: myTeam,
-												sport,
-											},
-											position,
-											opponent,
-											venue: verses.venue,
-											notes: verses.notes,
-										});
 									}
 								}
 							}
