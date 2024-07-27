@@ -1,6 +1,5 @@
 import { PaginationMenu } from '@/app/globalComponents/PaginationMenu';
 import { Tabs } from '@/app/globalComponents/Tabs';
-import { WeeklySportEdit } from '@/app/globalComponents/WeeklySportEdit';
 import { WeeklySportView } from '@/app/globalComponents/WeeklySportView';
 import { auth } from '@/libs/auth';
 import { isTeacher } from '@/libs/checkPermission';
@@ -10,7 +9,10 @@ import { getRawTeachers, getRawTeams, getRawVenues } from '@/libs/tableData';
 import { gamesToDates, getLastVisitDate } from '@/libs/tableHelpers';
 import { SearchParams } from '@/libs/types';
 import { getXataClient } from '@/libs/xata';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
+
+const WeeklySportEdit = dynamic(() => import('@/app/globalComponents/WeeklySportEdit'), { ssr: false });
 
 const xata = getXataClient();
 
