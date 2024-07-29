@@ -1,0 +1,19 @@
+.changelog h1 {
+	@apply font-bold;
+}
+
+.changelog h2 {
+	@apply text-xl font-bold;
+}
+
+.changelog h3 {
+	@apply font-bold;
+}
+
+.changelog a {
+	@apply link link-primary;
+}
+
+.changelog ul {
+	@apply list-disc list-inside;
+}
