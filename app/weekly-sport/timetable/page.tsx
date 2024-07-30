@@ -55,20 +55,33 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 	const teachers = await getRawTeachers();
 	const venues = await getRawVenues();
 
+	function buildSearchParam(props?: { edit?: string; filter?: string; page?: string }) {
+		const { edit, filter, page } = props ?? {};
+
+		const baseUri = '/weekly-sport/timetable';
+		const searchParams = new URLSearchParams();
+
+		if (edit) searchParams.set('edit', edit);
+		if (filter) searchParams.set('filter', filter);
+		if (page) searchParams.set('page', page);
+
+		return `${baseUri}?${searchParams.toString()}`;
+	}
+
 	return (
 		<div className="flex flex-col items-center w-full sm:p-4 gap-4">
 			<h1 className="text-2xl font-bold text-center">Weekly Sport Timetable</h1>
 			<div className="flex flex-col sm:flex-row gap-4 py-2 px-1 sm:px-4 w-full sm:w-auto">
 				<Tabs>
 					<Link
-						href={`/weekly-sport/timetable?edit=${edit}`}
+						href={buildSearchParam({ edit })}
 						role="tab"
 						className={`tab ${isPast ? '' : 'tab-active text-primary'}`}
 					>
 						Upcoming Games
 					</Link>
 					<Link
-						href={`/weekly-sport/timetable?filter=past&edit=${edit}`}
+						href={buildSearchParam({ edit, filter: 'past' })}
 						role="tab"
 						className={`tab ${isPast ? 'tab-active text-primary' : ''}`}
 					>
@@ -78,14 +91,14 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 				{isTeacherBool && (
 					<Tabs>
 						<Link
-							href={`/weekly-sport/timetable?edit=false&filter=${filter}&page=${page}`}
+							href={buildSearchParam({ filter, page })}
 							role="tab"
 							className={`tab ${isEdit ? '' : 'tab-active text-primary'}`}
 						>
 							Viewing
 						</Link>
 						<Link
-							href={`/weekly-sport/timetable?edit=true&filter=${filter}&page=${page}`}
+							href={buildSearchParam({ edit: 'true', filter, page })}
 							role="tab"
 							className={`tab ${isEdit ? 'tab-active text-primary' : ''}`}
 						>
