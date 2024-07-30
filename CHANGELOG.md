@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.6](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.5...v0.5.6) (2024-07-30)
+
+
+### Bug Fixes
+
+* prevent search params for weekly sport timetable page to have undefined values ([56fab76](https://github.com/bill-zhanxg/csen-sport/commit/56fab765f752ad0fa9e667bd7367ab82bbc4abbb))
+
 ## [0.5.5](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.4...v0.5.5) (2024-07-28)
 
 
