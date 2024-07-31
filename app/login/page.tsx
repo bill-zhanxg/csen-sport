@@ -1,5 +1,6 @@
 import { auth, signIn } from '@/libs/auth';
 import { redirect } from 'next/navigation';
+import { LoginBtn } from './components/LoginBtn';
 
 type ErrorCodes =
 	| 'OAuthSignin'
@@ -27,20 +28,15 @@ export default async function Login({
 	const session = await auth();
 	if (session) return redirect(decodeURIComponent(callbackURL ?? '/'));
 
+	async function login() {
+		'use server';
+		await signIn('microsoft-entra-id');
+	}
+
 	return (
 		<div className="flex flex-col justify-center items-center gap-3 h-full">
 			<h1 className="text-4xl text-center font-bold p-5">CSEN Sport Login</h1>
-			<form
-				className="w-4/5 max-w-[20rem]"
-				action={async () => {
-					'use server';
-					await signIn('microsoft-entra-id');
-				}}
-			>
-				<button type="submit" className="btn btn-primary w-full">
-					Login with Microsoft
-				</button>
-			</form>
+			<LoginBtn login={login} />
 			{/* Error */}
 			{(searchParams.message || searchParams.error) && (
 				<div className="alert alert-error w-4/5 max-w-[20rem]">
