@@ -1,9 +1,11 @@
 'use client';
 
 import { isAdmin } from '@/libs/checkPermission';
+import { motion } from 'framer-motion';
 import { Session } from 'next-auth';
 import Link from 'next/link';
-import { MouseEvent, MouseEventHandler, useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { MouseEventHandler, useEffect, useState } from 'react';
 import { FaBars, FaExternalLinkAlt } from 'react-icons/fa';
 import { TicketEventType } from '../tickets/types';
 
@@ -79,8 +81,12 @@ export function NavBar({
 	initUnread: boolean;
 	ticketUnread: () => Promise<boolean>;
 }) {
+	const pathname = usePathname();
+
 	const [unread, setUnread] = useState(initUnread);
 	const [recheck, setRecheck] = useState(false);
+
+	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
 	useEffect(() => {
 		const eventSource = new EventSource('/tickets/ticket-stream');
@@ -114,8 +120,20 @@ export function NavBar({
 
 	return (
 		<>
-			<div className="dropdown w-full sm:w-0">
-				<label tabIndex={0} className="btn btn-ghost sm:hidden w-full">
+			<div className="dropdown w-full sm:hidden">
+				<label
+					tabIndex={0}
+					className="btn btn-ghost sm:hidden w-full"
+					onClick={() => {
+						if (mobileMenuOpen) closeMobileNavBar();
+					}}
+					onFocus={() =>
+						setTimeout(() => {
+							setMobileMenuOpen(true);
+						}, 0)
+					}
+					onBlur={() => setMobileMenuOpen(false)}
+				>
 					<FaBars />
 				</label>
 				<ul
@@ -130,14 +148,30 @@ export function NavBar({
 								<ul className="p-2">
 									{item.href.map((item) => (
 										<li key={item.id}>
-											<MenuItem mobile item={item} onClick={handleMobileLiClick} />
+											<div className="relative">
+												{pathname === item.href && (
+													<motion.div
+														layoutId="main-mobile-nav-bar"
+														className="w-full h-full absolute bg-base-200 rounded-lg"
+													/>
+												)}
+												<MenuItem mobile item={item} onClick={closeMobileNavBar} />
+											</div>
 										</li>
 									))}
 								</ul>
 							</li>
 						) : (
 							<li key={item.id}>
-								<MenuItem mobile item={item} onClick={handleMobileLiClick} />
+								<div className="relative">
+									{pathname === item.href && (
+										<motion.div
+											layoutId="main-mobile-nav-bar"
+											className="w-full h-full absolute bg-base-200 rounded-lg"
+										/>
+									)}
+									<MenuItem mobile item={item} onClick={closeMobileNavBar} />
+								</div>
 							</li>
 						),
 					)}
@@ -195,6 +229,7 @@ export function NavBar({
 				href={item.href as string}
 				onClick={onClick}
 				target={item.external ? '_blank' : '_self'}
+				className={`flex items-center gap-2${badge ? '' : ' overflow-hidden'}`}
 			>
 				<div className="indicator">
 					{badge && <span className="indicator-item badge badge-primary h-1 p-1 [--tw-translate-x:120%]"></span>}
@@ -205,7 +240,7 @@ export function NavBar({
 		);
 	}
 
-	function handleMobileLiClick(e: MouseEvent<HTMLAnchorElement, globalThis.MouseEvent>) {
+	function closeMobileNavBar() {
 		const element = document.activeElement;
 		if (element && 'blur' in element) {
 			(element as HTMLElement).blur();
