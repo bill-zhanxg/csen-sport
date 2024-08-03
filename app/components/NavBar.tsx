@@ -7,7 +7,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { MouseEventHandler, useEffect, useState } from 'react';
 import { FaBars, FaExternalLinkAlt } from 'react-icons/fa';
+import { UserAvatar } from '../globalComponents/UserAvatar';
 import { TicketEventType } from '../tickets/types';
+import { FeedbackButton } from './Feedback';
 
 type Menu = {
 	id: string;
@@ -76,10 +78,12 @@ export function NavBar({
 	session,
 	initUnread,
 	ticketUnread,
+	logout,
 }: {
 	session: Session;
 	initUnread: boolean;
 	ticketUnread: () => Promise<boolean>;
+	logout: () => Promise<void>;
 }) {
 	const pathname = usePathname();
 
@@ -87,6 +91,7 @@ export function NavBar({
 	const [recheck, setRecheck] = useState(false);
 
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+	const [accountMenuOpen, setAccountMenuOpen] = useState(false);
 
 	useEffect(() => {
 		const eventSource = new EventSource('/tickets/ticket-stream');
@@ -139,7 +144,7 @@ export function NavBar({
 					onMouseDown={() => {
 						if (mobileMenuOpen)
 							setTimeout(() => {
-								closeMobileNavBar();
+								closeDropdown();
 							}, 0);
 					}}
 					onFocus={() => setMobileMenuOpen(true)}
@@ -165,7 +170,7 @@ export function NavBar({
 													className="w-full h-full absolute bg-base-200 rounded-lg transition-none hover:bg-base-200"
 												/>
 											)}
-											<MenuItem mobile item={item} onClick={closeMobileNavBar} />
+											<MenuItem mobile item={item} onClick={closeDropdown} />
 										</li>
 									))}
 								</ul>
@@ -178,7 +183,7 @@ export function NavBar({
 										className="w-full h-full absolute bg-base-200 rounded-lg transition-none hover:bg-base-200"
 									/>
 								)}
-								<MenuItem mobile item={item} onClick={closeMobileNavBar} />
+								<MenuItem mobile item={item} onClick={closeDropdown} />
 							</li>
 						),
 					)}
@@ -227,6 +232,55 @@ export function NavBar({
 					)}
 				</ul>
 			</div>
+			<div className="navbar-end">
+				<div className="dropdown dropdown-end">
+					<div
+						className="flex items-center h-full"
+						onMouseDown={() => {
+							if (accountMenuOpen)
+								setTimeout(() => {
+									closeDropdown();
+								}, 0);
+						}}
+						onFocus={() => setAccountMenuOpen(true)}
+						onBlur={() => setAccountMenuOpen(false)}
+					>
+						<label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+							<UserAvatar user={session.user} className="rounded-full" />
+						</label>
+					</div>
+					<ul
+						id="user-menu"
+						tabIndex={0}
+						className="menu menu-md dropdown-content mt-3 z-[100] p-2 shadow-xl bg-base-100 rounded-box w-52 border border-primary"
+					>
+						<li>
+							<Link id="user-settings-btn" href="/settings" onClick={closeDropdown}>
+								User Settings
+							</Link>
+						</li>
+						<li>
+							<Link id="changelog-btn" href="/changelog" onClick={closeDropdown}>
+								Changelogs
+							</Link>
+						</li>
+						<li>
+							<FeedbackButton />
+						</li>
+						<li>
+							<form className="menu-title !p-0" action={logout}>
+								<button
+									type="submit"
+									id="logout-btn"
+									className="bg-red-600 hover:bg-red-800 text-white rounded-lg px-4 py-2 text-sm w-full transition duration-200 active:bg-red-950"
+								>
+									Logout
+								</button>
+							</form>
+						</li>
+					</ul>
+				</div>
+			</div>
 		</>
 	);
 
@@ -259,7 +313,7 @@ export function NavBar({
 		);
 	}
 
-	function closeMobileNavBar() {
+	function closeDropdown() {
 		const element = document.activeElement;
 		if (element && 'blur' in element) {
 			(element as HTMLElement).blur();
