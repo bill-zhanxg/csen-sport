@@ -112,6 +112,18 @@ export function NavBar({
 				);
 	}, [recheck, ticketUnread]);
 
+	useEffect(() => {
+		// Close desktop menu detail tags
+		window.addEventListener('click', (e) => {
+			document.querySelectorAll('.click-close').forEach((dropdown) => {
+				const target = e.target as Node;
+				if (!dropdown.contains(target)) {
+					(dropdown as HTMLDetailsElement).open = false;
+				}
+			});
+		});
+	}, []);
+
 	const menuFiltered = isAdmin(session)
 		? menu
 		: menu
@@ -148,30 +160,26 @@ export function NavBar({
 								<ul className="p-2">
 									{item.href.map((item) => (
 										<li key={item.id}>
-											<div className="relative">
-												{pathname === item.href && (
-													<motion.div
-														layoutId="main-mobile-nav-bar"
-														className="w-full h-full absolute bg-base-200 rounded-lg"
-													/>
-												)}
-												<MenuItem mobile item={item} onClick={closeMobileNavBar} />
-											</div>
+											{pathname === item.href && (
+												<motion.div
+													layoutId="main-mobile-nav-bar"
+													className="w-full h-full absolute bg-base-200 rounded-lg"
+												/>
+											)}
+											<MenuItem mobile item={item} onClick={closeMobileNavBar} />
 										</li>
 									))}
 								</ul>
 							</li>
 						) : (
 							<li key={item.id}>
-								<div className="relative">
-									{pathname === item.href && (
-										<motion.div
-											layoutId="main-mobile-nav-bar"
-											className="w-full h-full absolute bg-base-200 rounded-lg"
-										/>
-									)}
-									<MenuItem mobile item={item} onClick={closeMobileNavBar} />
-								</div>
+								{pathname === item.href && (
+									<motion.div
+										layoutId="main-mobile-nav-bar"
+										className="w-full h-full absolute bg-base-200 rounded-lg"
+									/>
+								)}
+								<MenuItem mobile item={item} onClick={closeMobileNavBar} />
 							</li>
 						),
 					)}
@@ -182,17 +190,23 @@ export function NavBar({
 					{menuFiltered.map((item) =>
 						Array.isArray(item.href) ? (
 							<li key={item.id}>
-								<details>
+								<details className="click-close">
 									<summary id={item.id}>{item.name}</summary>
 									<ul className="p-2 border border-primary">
 										{item.href.map((item) => (
 											<li className="w-36" key={item.id}>
+												{pathname === item.href && (
+													<motion.div
+														layoutId="main-desktop-nav-bar"
+														className="w-full h-full absolute left-0 bg-base-200 rounded-lg transition-none hover:bg-base-200"
+													/>
+												)}
 												<MenuItem
 													item={item}
 													onClick={(event) => {
 														const details = event.currentTarget.parentElement?.parentElement
 															?.parentElement as HTMLDetailsElement;
-														details.open = false;
+														if (details) details.open = false;
 													}}
 												/>
 											</li>
@@ -202,6 +216,12 @@ export function NavBar({
 							</li>
 						) : (
 							<li key={item.id}>
+								{pathname === item.href && (
+									<motion.div
+										layoutId="main-desktop-nav-bar"
+										className="w-full h-full absolute bg-base-300 rounded-lg transition-none hover:bg-base-300"
+									/>
+								)}
 								<MenuItem item={item} />
 							</li>
 						),
