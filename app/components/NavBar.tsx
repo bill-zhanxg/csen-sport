@@ -136,14 +136,13 @@ export function NavBar({
 				<label
 					tabIndex={0}
 					className="btn btn-ghost sm:hidden w-full"
-					onClick={() => {
-						if (mobileMenuOpen) closeMobileNavBar();
+					onMouseDown={() => {
+						if (mobileMenuOpen)
+							setTimeout(() => {
+								closeMobileNavBar();
+							}, 0);
 					}}
-					onFocus={() =>
-						setTimeout(() => {
-							setMobileMenuOpen(true);
-						}, 0)
-					}
+					onFocus={() => setMobileMenuOpen(true)}
 					onBlur={() => setMobileMenuOpen(false)}
 				>
 					<FaBars />
@@ -163,7 +162,7 @@ export function NavBar({
 											{pathname === item.href && (
 												<motion.div
 													layoutId="main-mobile-nav-bar"
-													className="w-full h-full absolute bg-base-200 rounded-lg"
+													className="w-full h-full absolute bg-base-200 rounded-lg transition-none hover:bg-base-200"
 												/>
 											)}
 											<MenuItem mobile item={item} onClick={closeMobileNavBar} />
@@ -176,7 +175,7 @@ export function NavBar({
 								{pathname === item.href && (
 									<motion.div
 										layoutId="main-mobile-nav-bar"
-										className="w-full h-full absolute bg-base-200 rounded-lg"
+										className="w-full h-full absolute bg-base-200 rounded-lg transition-none hover:bg-base-200"
 									/>
 								)}
 								<MenuItem mobile item={item} onClick={closeMobileNavBar} />
