@@ -76,14 +76,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 						</>
 					) : (
 						<>
-							<div className="navbar bg-base-200 border-b-2 border-base-300 shadow-lg shadow-base-300 h-[70px]">
-								<div className="navbar-start">
-									<Link id="home-btn" href="/" className="btn btn-ghost normal-case text-xl">
-										<FaHome />
-									</Link>
-								</div>
-								<NavBar session={session} initUnread={unread} ticketUnread={ticketUnread} logout={logout} />
-							</div>
+							<NavBar session={session} initUnread={unread} ticketUnread={ticketUnread} logout={logout} />
 							{children}
 							<FeedbackDialog session={session} />
 							<BarOfProgress />

@@ -6,7 +6,7 @@ import { Session } from 'next-auth';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { MouseEventHandler, useEffect, useState } from 'react';
-import { FaBars, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaBars, FaExternalLinkAlt, FaHome } from 'react-icons/fa';
 import { UserAvatar } from '../globalComponents/UserAvatar';
 import { TicketEventType } from '../tickets/types';
 import { FeedbackButton } from './Feedback';
@@ -136,7 +136,18 @@ export function NavBar({
 				.map((item) => (Array.isArray(item.href) ? { ...item, href: item.href.filter((item) => !item.admin) } : item));
 
 	return (
-		<>
+		<div className="navbar bg-base-200 border-b-2 border-base-300 shadow-lg shadow-base-300 h-[70px]">
+			<div className="navbar-start">
+				<Link id="home-btn" href="/" className="relative btn btn-ghost normal-case text-xl z-10">
+					{pathname === '/' && (
+						<motion.div
+							layoutId="main-desktop-nav-bar"
+							className="w-full h-full absolute left-0 bg-base-300 rounded-lg transition-none hover:bg-base-300 hidden sm:block"
+						/>
+					)}
+					<FaHome className='z-10' />
+				</Link>
+			</div>
 			<div className="dropdown w-full sm:hidden">
 				<label
 					tabIndex={0}
@@ -281,7 +292,7 @@ export function NavBar({
 					</ul>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 
 	function MenuItem({
