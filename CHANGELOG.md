@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.5.8](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.7...v0.5.8) (2024-08-04)
+
+
+### Bug Fixes
+
+* adding highlight to home button on desktop only ([deff44e](https://github.com/bill-zhanxg/csen-sport/commit/deff44e51286e41c919c3c1dade65a3d1ed4bd83))
+* auto close profile dropdown when clicked again or when clicked item ([237970f](https://github.com/bill-zhanxg/csen-sport/commit/237970f0f2fb4735e8d1d5fb9bc1b66a6dd5cb23))
+* fixed login 500 Internal Server Error by no server side rendering login component ([48af4c7](https://github.com/bill-zhanxg/csen-sport/commit/48af4c75bcbaafe2d3a440f5b5abbb8309d6424b))
+
 ## [0.5.7](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.6...v0.5.7) (2024-08-03)
 
 
