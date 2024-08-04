@@ -1,6 +1,8 @@
 import { auth, signIn } from '@/libs/auth';
+import dynamic from 'next/dynamic';
 import { redirect } from 'next/navigation';
-import { LoginBtn } from './components/LoginBtn';
+
+const LoginBtn = dynamic(() => import('./components/LoginBtn'), { ssr: false });
 
 type ErrorCodes =
 	| 'OAuthSignin'

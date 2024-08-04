@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 dotWave.register();
 
-export function LoginBtn({ login }: { login: () => Promise<void> }) {
+export default function LoginBtn({ login }: { login: () => Promise<void> }) {
 	const [loading, setLoading] = useState(false);
 
 	return (
