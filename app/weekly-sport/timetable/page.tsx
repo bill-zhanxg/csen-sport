@@ -123,6 +123,7 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 									teams={teams}
 									teachers={teachers}
 									venues={venues}
+									timezone={session?.user.timezone ?? ''}
 								/>
 							) : (
 								<WeeklySportView
