@@ -26,6 +26,7 @@ Sentry.init({
 		replayIntegration({
 			maskAllText: false,
 			maskAllInputs: false,
+			blockAllMedia: false,
 		}),
 		captureConsoleIntegration({ levels: ['error'] }),
 	],
