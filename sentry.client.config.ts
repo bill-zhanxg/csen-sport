@@ -2,7 +2,6 @@
 // The config you add here will be used whenever a users loads a page in their browser.
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
-import { captureConsoleIntegration, replayIntegration } from '@sentry/browser';
 import * as Sentry from '@sentry/nextjs';
 
 Sentry.init({
@@ -23,11 +22,25 @@ Sentry.init({
 	replaysSessionSampleRate: 0.1,
 
 	integrations: [
-		replayIntegration({
+		Sentry.replayIntegration({
 			maskAllText: false,
 			maskAllInputs: false,
 			blockAllMedia: false,
 		}),
-		captureConsoleIntegration({ levels: ['error'] }),
+		Sentry.captureConsoleIntegration({ levels: ['error'] }),
+		Sentry.thirdPartyErrorFilterIntegration({
+			filterKeys: ['A}EP@q>NJkuRGUfNzkVMGs&b^:H?Sz'],
+			behaviour: 'apply-tag-if-contains-third-party-frames',
+		}),
+
+		Sentry.extraErrorDataIntegration(),
+		Sentry.sessionTimingIntegration(),
+
+		Sentry.browserProfilingIntegration(),
+		Sentry.httpClientIntegration(),
+		Sentry.moduleMetadataIntegration(),
+		Sentry.reportingObserverIntegration(),
 	],
+
+	ignoreErrors: ['Failed to fetch', 'Load failed'],
 });

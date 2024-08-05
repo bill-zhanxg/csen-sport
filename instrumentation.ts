@@ -1,4 +1,3 @@
-import { captureConsoleIntegration } from '@sentry/browser';
 import * as Sentry from '@sentry/nextjs';
 
 export function register() {
@@ -11,6 +10,12 @@ export function register() {
 		tracesSampleRate: 0.4,
 		// Setting this option to true will print useful information to the console while you're setting up Sentry.
 		debug: false,
-		integrations: [captureConsoleIntegration({ levels: ['error'] })],
+		integrations: [
+			Sentry.captureConsoleIntegration({ levels: ['error'] }),
+			Sentry.extraErrorDataIntegration(),
+			Sentry.sessionTimingIntegration(),
+		],
+
+		ignoreErrors: ['PKCE code_verifier cookie was missing', 'at Object.use'],
 	});
 }
