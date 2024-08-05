@@ -203,7 +203,7 @@ export function VenueTable({ teams }: { teams: SerializedVenue[] }) {
 	return (
 		<>
 			<div className="p-6">
-				<div className="w-full bg-base-100 rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4">
+				<div className="w-full rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4 overflow-auto">
 					<h2 className="text-xl text-center text-primary">Modify or add venue</h2>
 					<table className="table table-pin-rows text-lg">
 						<thead>

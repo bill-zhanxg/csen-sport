@@ -43,9 +43,6 @@ export default async function Users({ searchParams }: { searchParams: SearchPara
 				size: pageSize,
 			},
 		});
-
-		console.log(Math.ceil(total / pageSize))
-
 	return (
 		<>
 			<UserTable myId={session.user.id} users={users.records.toSerializable()} />

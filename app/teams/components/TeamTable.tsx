@@ -193,7 +193,7 @@ export function TeamTable({ teams }: { teams: SerializedTeam[] }) {
 	return (
 		<>
 			<div className="p-6">
-				<div className="w-full bg-base-100 rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4">
+				<div className="w-full rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4 overflow-auto">
 					<h2 className="sticky left-0 text-xl text-center text-primary">Modify or add team</h2>
 					<table className="table table-pin-rows text-lg">
 						<thead>
