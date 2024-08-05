@@ -7,7 +7,7 @@ import { NextauthUsersRecord } from '@/libs/xata';
 import { JSONData, SelectedPick } from '@xata.io/client';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useRouter } from 'next13-progressbar';
-import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { changeRole } from '../actions';
 
@@ -34,14 +34,15 @@ export function UserTable({
 	>([]);
 
 	const searchParams = useSearchParams();
-	const searchParamsFilter = searchParams.get('search');
+	const [searchParamsFilter, setSearchParamsFilter] = useState(searchParams.get('search') ?? '');
 	const page = searchParams.get('page') ?? '1';
 
 	const createQueryPathName = useCallback(
 		(newParams: { name: string; value: string }[]) => {
 			const params = new URLSearchParams(searchParams.toString());
 			newParams.forEach((newParam) => {
-				params.set(newParam.name, newParam.value);
+				if (!newParam.value.trim()) params.delete(newParam.name);
+				else params.set(newParam.name, newParam.value);
 			});
 
 			return pathname + '?' + params.toString();
@@ -58,6 +59,16 @@ export function UserTable({
 		}
 	}, [state]);
 
+	useEffect(() => {
+		const url = createQueryPathName([
+			{
+				name: 'search',
+				value: searchParamsFilter,
+			},
+		]);
+		router.push(url);
+	}, [createQueryPathName, router, searchParamsFilter]);
+
 	if (!users) return <ErrorMessage code="501" message="There is no users in the database" />;
 
 	return (
@@ -70,16 +81,8 @@ export function UserTable({
 							<DebouncedInput
 								type="text"
 								placeholder="Search Users"
-								value={searchParamsFilter ?? ''}
-								onChange={(value) => {
-									const url = createQueryPathName([
-										{
-											name: 'search',
-											value: value,
-										},
-									]);
-									router.push(url);
-								}}
+								value={searchParamsFilter}
+								onChange={setSearchParamsFilter}
 								className="grow"
 							/>
 						</label>

@@ -14,7 +14,9 @@ export function PaginationMenu({ totalPages, ...props }: { totalPages: number })
 	const createQueryString = useCallback(
 		(name: string, value: string) => {
 			const params = new URLSearchParams(searchParams.toString());
-			params.set(name, value);
+
+			if (value === '1') params.delete(name);
+			else params.set(name, value);
 
 			return params.toString();
 		},
