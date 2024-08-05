@@ -166,7 +166,7 @@ export function NavBar({
 				<ul
 					id="mobile-menu"
 					tabIndex={0}
-					className="menu menu-md dropdown-content mt-3 z-[100] p-2 shadow bg-base-100 rounded-box border border-primary w-full"
+					className="menu menu-md dropdown-content mt-3 z-[100] p-2 shadow bg-base-100 rounded-box border border-primary w-full overflow-auto"
 				>
 					{menuFiltered.map((item) =>
 						Array.isArray(item.href) ? (
@@ -209,7 +209,7 @@ export function NavBar({
 									<summary id={item.id}>{item.name}</summary>
 									<ul className="p-2 border border-primary">
 										{item.href.map((item) => (
-											<li className="w-36" key={item.id}>
+											<li className="w-36 " key={item.id}>
 												{pathname === item.href && (
 													<motion.div
 														layoutId="main-desktop-nav-bar"
@@ -313,7 +313,7 @@ export function NavBar({
 				href={item.href as string}
 				onClick={onClick}
 				target={item.external ? '_blank' : '_self'}
-				className={`flex items-center gap-2${badge ? '' : ' overflow-hidden'}`}
+				className={`flex items-center gap-2`}
 			>
 				<div className="indicator">
 					{badge && <span className="indicator-item badge badge-primary h-1 p-1 [--tw-translate-x:120%]"></span>}
