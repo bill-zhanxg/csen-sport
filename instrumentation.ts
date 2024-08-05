@@ -13,7 +13,6 @@ export function register() {
 		integrations: [
 			Sentry.captureConsoleIntegration({ levels: ['error'] }),
 			Sentry.extraErrorDataIntegration(),
-			Sentry.sessionTimingIntegration(),
 		],
 
 		ignoreErrors: ['PKCE code_verifier cookie was missing', 'at Object.use'],
