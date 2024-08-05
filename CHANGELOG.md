@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.5.9](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.8...v0.5.9) (2024-08-05)
+
+
+### Bug Fixes
+
+* add more sentry integration and error filtering ([6bc5a2a](https://github.com/bill-zhanxg/csen-sport/commit/6bc5a2a73e222dd616d0ef30bf809b990245a783))
+* fixed team and venue table overflow ([fc5b212](https://github.com/bill-zhanxg/csen-sport/commit/fc5b212930247f19775f38d297f3434c8fecf225))
+* fixed WeeklySportEdit page's date was different (M/D/YYYY) than WeeklySportView (DD/MM/YYYY) ([164bfc5](https://github.com/bill-zhanxg/csen-sport/commit/164bfc5b09584c0ac87d6b91485cc601fb4a9086))
+* improve user search and pagination page searchParams (url query) handling ([2d87b2b](https://github.com/bill-zhanxg/csen-sport/commit/2d87b2be14f148c0c524937b2301432195ebe5e7))
+* mobile navbar overflow ([1a3a9a4](https://github.com/bill-zhanxg/csen-sport/commit/1a3a9a4cf994677e200e6b1d617190700fdc36f8))
+* ReactJoyRideAction file name ([4c87f58](https://github.com/bill-zhanxg/csen-sport/commit/4c87f58a107ea69ed6b69ef373dc2332183c24b9))
+* remove sessionTimingIntegration from the server because it was not supported ([2a97a66](https://github.com/bill-zhanxg/csen-sport/commit/2a97a6699aff109e862994e3a384aca20e8f8032))
+* sentry disable blockAllMedia ([5ecf79c](https://github.com/bill-zhanxg/csen-sport/commit/5ecf79c70bb44c12ceecc41914045dd743def73e))
+
 ## [0.5.8](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.7...v0.5.8) (2024-08-04)
 
 
