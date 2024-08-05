@@ -3,7 +3,7 @@
 import { useSignal } from '@preact/signals-react';
 import dynamic from 'next/dynamic';
 import { ReactNode } from 'react';
-import { finishGuide } from './ReacyJoyRideActions';
+import { finishGuide } from './ReactJoyRideActions';
 
 const Joyride = dynamic(() => import('react-joyride'), { ssr: false });
 
