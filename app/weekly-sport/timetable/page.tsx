@@ -29,16 +29,18 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 		date: isPast ? { $lt: getDateStart() } : { $ge: getDateStart() },
 	};
 
-	const total = (
-		await xata.db.games.summarize({
-			consistency: 'eventual',
-			filter: dbFilter,
-			summaries: {
-				total: { count: '*' },
-			},
-		})
-	).summaries[0].total;
-	const games = await xata.db.games
+	const totalPromise = async () => {
+		return (
+			await xata.db.games.summarize({
+				consistency: 'eventual',
+				filter: dbFilter,
+				summaries: {
+					total: { count: '*' },
+				},
+			})
+		).summaries[0].total;
+	};
+	const gamesPromise = xata.db.games
 		.select(['*', 'team.*', 'venue.*', 'teacher.*'])
 		.filter(dbFilter)
 		.getPaginated({
@@ -50,10 +52,19 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 			},
 		});
 
+	const teamsPromise = isTeacherBool ? getRawTeams() : [];
+	const teachersPromise = getRawTeachers();
+	const venuesPromise = getRawVenues();
+
+	const [total, games, teams, teachers, venues] = await Promise.all([
+		totalPromise(),
+		gamesPromise,
+		teamsPromise,
+		teachersPromise,
+		venuesPromise,
+	]);
+
 	const dates = gamesToDates(games, isTeacherBool);
-	const teams = isTeacherBool ? await getRawTeams() : [];
-	const teachers = await getRawTeachers();
-	const venues = await getRawVenues();
 
 	function buildSearchParam(props?: { edit?: string; filter?: string; page?: string }) {
 		const { edit, filter, page } = props ?? {};
