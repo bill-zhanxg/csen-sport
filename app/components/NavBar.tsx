@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Session } from 'next-auth';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { MouseEventHandler, useEffect, useState } from 'react';
+import { memo, MouseEventHandler, useEffect, useMemo, useState } from 'react';
 import { FaBars, FaExternalLinkAlt, FaHome } from 'react-icons/fa';
 import { UserAvatar } from '../globalComponents/UserAvatar';
 import { TicketEventType } from '../tickets/types';
@@ -74,6 +74,37 @@ const menu: Menu = [
 	},
 ];
 
+const MenuItem = memo(function MenuItem({
+	mobile = false,
+	item,
+	unread,
+	onClick,
+}: {
+	mobile?: boolean;
+	item: Menu[number];
+	unread: boolean;
+	onClick?: MouseEventHandler<HTMLAnchorElement>;
+}) {
+	const badge = item.id === 'tickets-btn' && unread;
+
+	const suffix = mobile ? '-mobile' : '';
+	return (
+		<Link
+			id={item.id + suffix}
+			href={item.href as string}
+			onClick={onClick}
+			target={item.external ? '_blank' : '_self'}
+			className={`flex items-center gap-2`}
+		>
+			<div className="indicator">
+				{badge && <span className="indicator-item badge badge-primary h-1 p-1 [--tw-translate-x:120%]"></span>}
+				{item.name}
+			</div>
+			{item.external && <FaExternalLinkAlt />}
+		</Link>
+	);
+});
+
 export function NavBar({
 	session,
 	initUnread,
@@ -119,21 +150,32 @@ export function NavBar({
 
 	useEffect(() => {
 		// Close desktop menu detail tags
-		window.addEventListener('click', (e) => {
+		function closeMenu(e: MouseEvent) {
 			document.querySelectorAll('.click-close').forEach((dropdown) => {
 				const target = e.target as Node;
 				if (!dropdown.contains(target)) {
 					(dropdown as HTMLDetailsElement).open = false;
 				}
 			});
-		});
+		}
+
+		window.addEventListener('click', closeMenu);
+		return () => {
+			window.removeEventListener('click', closeMenu);
+		};
 	}, []);
 
-	const menuFiltered = isAdmin(session)
-		? menu
-		: menu
-				.filter((item) => !item.admin)
-				.map((item) => (Array.isArray(item.href) ? { ...item, href: item.href.filter((item) => !item.admin) } : item));
+	const menuFiltered = useMemo(
+		() =>
+			isAdmin(session)
+				? menu
+				: menu
+						.filter((item) => !item.admin)
+						.map((item) =>
+							Array.isArray(item.href) ? { ...item, href: item.href.filter((item) => !item.admin) } : item,
+						),
+		[session],
+	);
 
 	return (
 		<div className="navbar bg-base-200 border-b-2 border-base-300 shadow-lg shadow-base-300 h-[70px]">
@@ -145,7 +187,7 @@ export function NavBar({
 							className="w-full h-full absolute left-0 bg-base-300 rounded-lg transition-none hover:bg-base-300 hidden sm:block"
 						/>
 					)}
-					<FaHome className='z-10' />
+					<FaHome className="z-10" />
 				</Link>
 			</div>
 			<div className="dropdown w-full sm:hidden">
@@ -153,6 +195,7 @@ export function NavBar({
 					tabIndex={0}
 					className="btn btn-ghost sm:hidden w-full"
 					onMouseDown={() => {
+						('');
 						if (mobileMenuOpen)
 							setTimeout(() => {
 								closeDropdown();
@@ -181,7 +224,7 @@ export function NavBar({
 													className="w-full h-full absolute bg-base-200 rounded-lg transition-none hover:bg-base-200"
 												/>
 											)}
-											<MenuItem mobile item={item} onClick={closeDropdown} />
+											<MenuItem mobile item={item} unread={unread} onClick={closeDropdown} />
 										</li>
 									))}
 								</ul>
@@ -194,7 +237,7 @@ export function NavBar({
 										className="w-full h-full absolute bg-base-200 rounded-lg transition-none hover:bg-base-200"
 									/>
 								)}
-								<MenuItem mobile item={item} onClick={closeDropdown} />
+								<MenuItem mobile item={item} unread={unread} onClick={closeDropdown} />
 							</li>
 						),
 					)}
@@ -218,6 +261,7 @@ export function NavBar({
 												)}
 												<MenuItem
 													item={item}
+													unread={unread}
 													onClick={(event) => {
 														const details = event.currentTarget.parentElement?.parentElement
 															?.parentElement as HTMLDetailsElement;
@@ -237,7 +281,7 @@ export function NavBar({
 										className="w-full h-full absolute bg-base-300 rounded-lg transition-none hover:bg-base-300"
 									/>
 								)}
-								<MenuItem item={item} />
+								<MenuItem item={item} unread={unread} />
 							</li>
 						),
 					)}
@@ -294,40 +338,11 @@ export function NavBar({
 			</div>
 		</div>
 	);
+}
 
-	function MenuItem({
-		mobile = false,
-		item,
-		onClick,
-	}: {
-		mobile?: boolean;
-		item: Menu[number];
-		onClick?: MouseEventHandler<HTMLAnchorElement>;
-	}) {
-		const badge = item.id === 'tickets-btn' && unread;
-
-		const suffix = mobile ? '-mobile' : '';
-		return (
-			<Link
-				id={item.id + suffix}
-				href={item.href as string}
-				onClick={onClick}
-				target={item.external ? '_blank' : '_self'}
-				className={`flex items-center gap-2`}
-			>
-				<div className="indicator">
-					{badge && <span className="indicator-item badge badge-primary h-1 p-1 [--tw-translate-x:120%]"></span>}
-					{item.name}
-				</div>
-				{item.external && <FaExternalLinkAlt />}
-			</Link>
-		);
-	}
-
-	function closeDropdown() {
-		const element = document.activeElement;
-		if (element && 'blur' in element) {
-			(element as HTMLElement).blur();
-		}
+function closeDropdown() {
+	const element = document.activeElement;
+	if (element && 'blur' in element) {
+		(element as HTMLElement).blur();
 	}
 }
