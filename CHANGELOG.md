@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.10](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.9...v0.5.10) (2024-08-06)
+
+
+### Bug Fixes
+
+* fixed needing to click navigation item twice to navigate on mobile and improved navbar performance ([0d027bb](https://github.com/bill-zhanxg/csen-sport/commit/0d027bba8d9fad1d6e16078ccd6b4d94030c8e9c))
+* improve performance for weekly sport fixture page by implementing Parallel Data Fetching ([fcd0db0](https://github.com/bill-zhanxg/csen-sport/commit/fcd0db0babbe6686e20ce02999e730c1525789bd))
+
 ## [0.5.9](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.8...v0.5.9) (2024-08-05)
 
 
