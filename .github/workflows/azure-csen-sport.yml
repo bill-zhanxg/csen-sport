@@ -26,9 +26,9 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
           XATA_API_KEY: ${{ secrets.XATA_API_KEY }}
-          AZURE_AD_CLIENT_ID: ${{ secrets.AUTH_MICROSOFT_ENTRA_ID_ID }}
-          AZURE_AD_CLIENT_SECRET: ${{ secrets.AUTH_MICROSOFT_ENTRA_ID_SECRET }}
-          AZURE_AD_TENANT_ID: ${{ secrets.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID }}
+          AUTH_MICROSOFT_ENTRA_ID_ID: ${{ secrets.AUTH_MICROSOFT_ENTRA_ID_ID }}
+          AUTH_MICROSOFT_ENTRA_ID_SECRET: ${{ secrets.AUTH_MICROSOFT_ENTRA_ID_SECRET }}
+          AUTH_MICROSOFT_ENTRA_ID_TENANT_ID: ${{ secrets.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID }}
         run: |
           npm install
           npm run build --if-present
