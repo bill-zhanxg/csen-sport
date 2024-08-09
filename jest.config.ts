@@ -5,14 +5,13 @@
 
 import type { Config } from 'jest';
 import nextJest from 'next/jest.js';
-import type { JestConfigWithTsJest } from 'ts-jest';
 
 const createJestConfig = nextJest({
 	// Provide the path to your Next.js app to load next.config.js and .env files in your test environment
 	dir: './',
 });
 
-const config: JestConfigWithTsJest = {
+const config: Config = {
 	// All imported modules in your tests should be mocked automatically
 	// automock: false,
 
@@ -54,8 +53,6 @@ const config: JestConfigWithTsJest = {
 	// Make calling deprecated APIs throw helpful error messages
 	// errorOnDeprecated: false,
 
-	extensionsToTreatAsEsm: ['.ts'],
-
 	// The default configuration for fake timers
 	// fakeTimers: {
 	//   "enableGlobally": false
@@ -96,7 +93,6 @@ const config: JestConfigWithTsJest = {
 	// A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
 	moduleNameMapper: {
 		'^@/(.*)$': '<rootDir>/$1',
-		'^(\\.{1,2}/.*)\\.js$': '$1',
 	},
 
 	// An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -109,7 +105,7 @@ const config: JestConfigWithTsJest = {
 	// notifyMode: "failure-change",
 
 	// A preset that is used as a base for Jest's configuration
-	preset: 'ts-jest/presets/default-esm',
+	preset: 'ts-jest',
 
 	// Run tests from one or more projects
 	// projects: undefined,
@@ -182,16 +178,7 @@ const config: JestConfigWithTsJest = {
 	// testRunner: "jest-circus/runner",
 
 	// A map from regular expressions to paths to transformers
-	transform: {
-		// '^.+\\.[tj]sx?$' to process ts,js,tsx,jsx with `ts-jest`
-		// '^.+\\.m?[tj]sx?$' to process ts,js,tsx,jsx,mts,mjs,mtsx,mjsx with `ts-jest`
-		'^.+\\.tsx?$': [
-			'ts-jest',
-			{
-				useESM: true,
-			},
-		],
-	},
+	// transform: undefined,
 
 	// An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
 	// transformIgnorePatterns: [
@@ -212,4 +199,4 @@ const config: JestConfigWithTsJest = {
 	// watchman: true,
 };
 
-export default createJestConfig(config as Config);
+export default createJestConfig(config);
