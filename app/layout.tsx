@@ -6,7 +6,7 @@ import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaHome } from 'react-icons/fa';
+import 'server-only';
 import BarOfProgress from './components/BarOfProgress';
 import { FeedbackDialog } from './components/Feedback';
 import { HandleUserTimezone } from './components/HandleUserTimezone';
