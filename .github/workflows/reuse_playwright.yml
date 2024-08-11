@@ -32,7 +32,7 @@ jobs:
         with:
           path: |
             /home/runner/.cache
-          key: playwright-browsers-${{ runner.os }}-${{ hashFiles('../../.cache/**/*') }}
+          key: playwright-browsers-${{ runner.os }}--${{ github.run_id }}
           restore-keys: playwright-browsers
 
       - name: Install dependencies, build and vitest
