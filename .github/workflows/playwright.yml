@@ -10,5 +10,6 @@ on:
 jobs:
   test:
     uses: bill-zhanxg/csen-sport/.github/workflows/reuse_playwright.yml@master
+    secrets: inherit
     with:
       production: false
