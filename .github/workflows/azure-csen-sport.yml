@@ -50,6 +50,7 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7AA1FD78FB99429FBB5A58F87B3CA55C }}
           package: release.zip
+          clean: true
 
   test:
     needs: deploy
