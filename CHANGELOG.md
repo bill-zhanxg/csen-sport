@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.11](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.10...v0.5.11) (2024-08-11)
+
+
+### Bug Fixes
+
+* Behind the scene work: adding testing to this project to avoid breaking website in production (this took a long time). ([023f918](https://github.com/bill-zhanxg/csen-sport/commit/023f9184f7afd834b7fa9bd314820f8ab1512013))
+* Behind the scene work: improved Github Action workflows to make continuous integration (CI) simpler and faster ([023f918](https://github.com/bill-zhanxg/csen-sport/commit/023f9184f7afd834b7fa9bd314820f8ab1512013))
+
 ## [0.5.10](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.9...v0.5.10) (2024-08-06)
 
 
