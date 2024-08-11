@@ -20,6 +20,20 @@ jobs:
           node-version: '20.x'
           cache: 'npm'
 
+      - name: Cache nextjs build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ github.workspace }}/.next
+          key: build-${{ hashFiles('**/.env','**/*.lock','**/*.[jt]s*') }}
+
+      - name: Cache playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ github.workspace }}/.cache
+          key: playwright-browsers
+
       - name: Install dependencies, build and vitest
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
