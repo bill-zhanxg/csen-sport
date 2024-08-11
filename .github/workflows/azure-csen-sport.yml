@@ -75,7 +75,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            ${{ github.workspace }}/.cache
+            /home/runner/.cache
           key: playwright-browsers
 
       - name: Install dependencies, build and vitest
