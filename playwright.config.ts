@@ -73,7 +73,7 @@ export default defineConfig({
 	webServer:
 		!process.env.BASE_URL || process.env.BASE_URL.includes('localhost')
 			? {
-					command: 'npm run start',
+					command: 'npm run start:default',
 					url: 'http://localhost:3000',
 					reuseExistingServer: !process.env.CI,
 			  }

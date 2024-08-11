@@ -15,6 +15,7 @@
 		"prod": "npm run build && next start",
 		"build": "next build",
 		"start": "node_modules/next/dist/bin/next start -p $PORT",
+		"start:default": "next start",
 		"lint": "next lint",
 		"test": "vitest",
 		"playwright": "playwright test",
