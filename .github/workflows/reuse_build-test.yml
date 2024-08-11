@@ -3,12 +3,9 @@ name: Install dependencies, build and vitest
 on:
   workflow_call:
     inputs:
-      config-path:
-        required: true
-        type: string
-    secrets:
-      token:
-        required: true
+      rm-dev:
+        required: false
+        type: boolean
 
 jobs:
   build:
@@ -27,12 +24,10 @@ jobs:
       - name: Install dependencies, build and vitest
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
-          XATA_API_KEY: ${{ secrets.XATA_API_KEY }}
-          AUTH_MICROSOFT_ENTRA_ID_ID: ${{ secrets.AUTH_MICROSOFT_ENTRA_ID_ID }}
-          AUTH_MICROSOFT_ENTRA_ID_SECRET: ${{ secrets.AUTH_MICROSOFT_ENTRA_ID_SECRET }}
-          AUTH_MICROSOFT_ENTRA_ID_TENANT_ID: ${{ secrets.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID }}
         run: |
           npm ci
           npm run build --if-present
           npm run test --if-present
+          if [ ${{ inputs.rm-dev }} == true ]; then
+            npm prune --omit-dev
+          fi
