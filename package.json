@@ -17,6 +17,7 @@
 		"start": "node_modules/next/dist/bin/next start -p $PORT",
 		"lint": "next lint",
 		"test": "vitest",
+		"playwright": "playwright test",
 		"pull": "xata pull main",
 		"pull:dev": "xata pull dev",
 		"playground": "ts-node ./.playground/games.ts"
@@ -50,6 +51,7 @@
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
+		"@playwright/test": "^1.46.0",
 		"@testing-library/jest-dom": "^6.4.8",
 		"@testing-library/react": "^16.0.0",
 		"@types/node": "^22.1.0",
@@ -62,6 +64,7 @@
 		"eslint": "^8.57.0",
 		"eslint-config-next": "^14.2.5",
 		"jsdom": "^24.1.1",
+		"playwright": "^1.46.0",
 		"postcss": "^8.4.41",
 		"tailwindcss": "^3.4.7",
 		"ts-node": "^10.9.2",
