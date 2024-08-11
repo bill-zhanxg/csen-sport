@@ -1,51 +1,17 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build, deploy then E2E test - CSEN Sport
+name: Playwright Tests Development
 
 on:
-  release:
-    types: [published]
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
   workflow_dispatch:
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Node.js version
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          cache: 'npm'
-
-      - name: Install dependencies, build and vitest
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        run: |
-          npm ci
-          npm run build --if-present
-          npm run test --if-present
-          npm prune --omit-dev
-
-      - name: Zip artifact for deployment
-        run: zip -r release.zip ./.next ./node_modules ./public ./.env* ./next.config.js ./package.json ./package-lock.json ./CHANGELOG.md
-
-      - name: 'Deploy to Azure Web App'
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: 'CCS-STUD0001'
-          slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7AA1FD78FB99429FBB5A58F87B3CA55C }}
-          package: release.zip
-
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    environment: 'Production'
+    environment: 'Development'
 
     steps:
       - uses: actions/checkout@v4
@@ -67,7 +33,7 @@ jobs:
 
       - name: Run Playwright tests
         env:
-          NODE_ENV: 'production'
+          NODE_ENV: 'development'
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           XATA_API_KEY: ${{ secrets.XATA_API_KEY }}
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
