@@ -7,22 +7,14 @@ on:
     branches: [master]
   workflow_dispatch:
 
-env:
-  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-  AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
-  XATA_API_KEY: ${{ secrets.XATA_API_KEY }}
-  AUTH_MICROSOFT_ENTRA_ID_ID: ${{ secrets.AUTH_MICROSOFT_ENTRA_ID_ID }}
-  AUTH_MICROSOFT_ENTRA_ID_SECRET: ${{ secrets.AUTH_MICROSOFT_ENTRA_ID_SECRET }}
-  AUTH_MICROSOFT_ENTRA_ID_TENANT_ID: ${{ secrets.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID }}
-
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    environment: 'Development'
 
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: '20.x'
@@ -40,8 +32,19 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Playwright tests
+        env:
+          NODE_ENV: 'development'
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          XATA_API_KEY: ${{ secrets.XATA_API_KEY }}
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          AUTH_MICROSOFT_ENTRA_ID_ID: ${{ secrets.AUTH_MICROSOFT_ENTRA_ID_ID }}
+          AUTH_MICROSOFT_ENTRA_ID_SECRET: ${{ secrets.AUTH_MICROSOFT_ENTRA_ID_SECRET }}
+          AUTH_MICROSOFT_ENTRA_ID_TENANT_ID: ${{ secrets.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID }}
         run: npm run playwright
-      - uses: actions/upload-artifact@v4
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report
