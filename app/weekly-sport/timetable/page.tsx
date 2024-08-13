@@ -3,6 +3,7 @@ import { Tabs } from '@/app/globalComponents/Tabs';
 import { WeeklySportView } from '@/app/globalComponents/WeeklySportView';
 import { auth } from '@/libs/auth';
 import { isTeacher } from '@/libs/checkPermission';
+import { dayjs } from '@/libs/dayjs';
 import { getDateStart, stringifySearchParam } from '@/libs/formatValue';
 import { serializeGames } from '@/libs/serializeData';
 import { getRawTeachers, getRawTeams, getRawVenues } from '@/libs/tableData';
@@ -81,7 +82,11 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 
 	return (
 		<div className="flex flex-col items-center w-full sm:p-4 gap-4">
-			<h1 className="text-2xl font-bold text-center">Weekly Sport Timetable</h1>
+			<h1 className="text-2xl font-bold text-center">
+				Weekly Sport Timetable <span className='text-primary'>
+				(Refreshed at {dayjs.tz(dayjs(), session?.user.timezone ?? '').format('HH:mm:ss')})
+				</span>
+			</h1>
 			<div className="flex flex-col sm:flex-row gap-4 py-2 px-1 sm:px-4 w-full sm:w-auto">
 				<Tabs>
 					<Link
