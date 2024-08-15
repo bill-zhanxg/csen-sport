@@ -1,6 +1,11 @@
 import { auth, signIn } from '@/libs/auth';
+import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import { redirect } from 'next/navigation';
+
+export const metadata: Metadata = {
+	title: 'Login',
+};
 
 const LoginBtn = dynamic(() => import('./components/LoginBtn'), { ssr: false });
 

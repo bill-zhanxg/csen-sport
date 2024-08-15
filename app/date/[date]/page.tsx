@@ -9,8 +9,13 @@ import { getRawTeachers } from '@/libs/tableData';
 import { gamesToDates, getLastVisitDate } from '@/libs/tableHelpers';
 import { SearchParams } from '@/libs/types';
 import { getXataClient } from '@/libs/xata';
+import { Metadata } from 'next';
 import Link from 'next/link';
 import { Copy } from './components/Copy';
+
+export const metadata: Metadata = {
+	title: 'Games',
+};
 
 export default async function DatePage({
 	params,

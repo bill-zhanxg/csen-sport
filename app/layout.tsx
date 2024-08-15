@@ -15,12 +15,17 @@ import { ReactJoyride } from './components/ReactJoyride';
 import { SentrySetUser } from './components/SentrySetUser';
 import './globals.css';
 
-const xata = getXataClient();
-
 export const metadata: Metadata = {
-	title: 'CSEN Sport',
-	description: 'CSEN Sport',
+	title: {
+		absolute: 'Home | CSEN Sport',
+		template: '%s | CSEN Sport',
+		default: 'CSEN Sport',
+	},
+	description:
+		'CSEN is a system designed to streamline the CSEN schedule management for schools involved in Christian Schools Event Network (CSEN). Its purpose is to ensure everyone involved has easy access to important match details by organising and distributing CSEN schedules to students, coaches, and staff.',
 };
+
+const xata = getXataClient();
 
 export default async function MainLayout({ children }: { children: React.ReactNode }) {
 	const session = await auth();

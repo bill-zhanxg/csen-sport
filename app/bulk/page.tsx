@@ -3,10 +3,15 @@ import { isAdmin } from '@/libs/checkPermission';
 import { serializeGamesWithId } from '@/libs/serializeData';
 import { getRawTeachers, getRawTeams, getRawVenues } from '@/libs/tableData';
 import { getXataClient } from '@/libs/xata';
+import { Metadata } from 'next';
 import Link from 'next/link';
 import { Unauthorized } from '../globalComponents/Unauthorized';
 import { Danger } from './components/Danger';
 import { GamesTable } from './components/GamesTable';
+
+export const metadata: Metadata = {
+	title: 'Bulk Actions',
+};
 
 const xata = getXataClient();
 

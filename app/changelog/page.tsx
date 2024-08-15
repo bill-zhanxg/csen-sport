@@ -1,11 +1,16 @@
 import SadCat from '@/app/images/sad-cat.png';
 import { promises as fs } from 'fs';
+import { Metadata } from 'next';
 import Link from 'next/link';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { RestartGuide } from './components/RestartGuide';
 
 import './changelog.css';
+
+export const metadata: Metadata = {
+	title: 'Changelog',
+};
 
 export default async function Changelog() {
 	const Changelog = await fs.readFile(process.cwd() + '/CHANGELOG.md', 'utf8');

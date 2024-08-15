@@ -4,7 +4,12 @@ import { isTeacher } from '@/libs/checkPermission';
 import { serializeGame } from '@/libs/serializeData';
 import { getRawTeachers, getRawTeams, getRawVenues } from '@/libs/tableData';
 import { getXataClient } from '@/libs/xata';
+import { Metadata } from 'next';
 import { GameForm } from './components/GameForm';
+
+export const metadata: Metadata = {
+	title: 'Game',
+};
 
 export default async function EditGame({ params }: { params: { id: string } }) {
 	const session = await auth();

@@ -2,7 +2,12 @@ import { Unauthorized } from '@/app/globalComponents/Unauthorized';
 import { auth } from '@/libs/auth';
 import { isAdmin } from '@/libs/checkPermission';
 import { getXataClient } from '@/libs/xata';
+import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
+
+export const metadata: Metadata = {
+	title: 'Import',
+};
 
 const ImportPage = dynamic(() => import('./components/ImportPage'), { ssr: false });
 

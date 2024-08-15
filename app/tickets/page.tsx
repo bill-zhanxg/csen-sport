@@ -1,5 +1,10 @@
 import Icon from '@/app/images/icon.png';
 import Image from 'next/image';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: 'Tickets',
+};
 
 export default async function Tickets() {
 	return (
@@ -8,7 +13,7 @@ export default async function Tickets() {
 				<Image src={Icon} alt="Logo" width={50} height={50} />
 				<h1 className="font-bold text-3xl">CSEN Sport Ticket System</h1>
 			</div>
-			<p className='max-w-lg'>
+			<p className="max-w-lg">
 				Create or select a ticket to get started, these requests might be for troubleshooting issues, getting help with
 				a service, or asking any questions you might have
 			</p>

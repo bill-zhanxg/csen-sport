@@ -10,8 +10,13 @@ import { getRawTeachers, getRawTeams, getRawVenues } from '@/libs/tableData';
 import { gamesToDates, getLastVisitDate } from '@/libs/tableHelpers';
 import { SearchParams } from '@/libs/types';
 import { getXataClient } from '@/libs/xata';
+import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+	title: 'Timetable',
+};
 
 const WeeklySportEdit = dynamic(() => import('@/app/globalComponents/WeeklySportEdit'), { ssr: false });
 
@@ -83,8 +88,9 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 	return (
 		<div className="flex flex-col items-center w-full sm:p-4 gap-4">
 			<h1 className="text-2xl font-bold text-center">
-				Weekly Sport Timetable <span className='text-primary'>
-				(Refreshed at {dayjs.tz(dayjs(), session?.user.timezone ?? '').format('HH:mm:ss')})
+				Weekly Sport Timetable{' '}
+				<span className="text-primary">
+					(Refreshed at {dayjs.tz(dayjs(), session?.user.timezone ?? '').format('HH:mm:ss')})
 				</span>
 			</h1>
 			<div className="flex flex-col sm:flex-row gap-4 py-2 px-1 sm:px-4 w-full sm:w-auto">

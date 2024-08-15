@@ -1,10 +1,15 @@
 import { auth } from '@/libs/auth';
 import { serializeTeams } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
+import { Metadata } from 'next';
 import { Box } from '../globalComponents/Box';
 import { Unauthorized } from '../globalComponents/Unauthorized';
 import { UserAvatar } from '../globalComponents/UserAvatar';
 import { SettingsForm } from './components/SettingsForm';
+
+export const metadata: Metadata = {
+	title: 'Settings',
+};
 
 export default async function Profile() {
 	const session = await auth();
