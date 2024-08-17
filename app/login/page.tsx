@@ -7,7 +7,10 @@ export const metadata: Metadata = {
 	title: 'Login',
 };
 
-const LoginBtn = dynamic(() => import('./components/LoginBtn'), { ssr: false });
+const LoginBtn = dynamic(() => import('./components/LoginBtn'), {
+	ssr: false,
+	loading: () => <div className="btn w-4/5 max-w-[20rem] skeleton">Loading...</div>,
+});
 
 type ErrorCodes =
 	| 'OAuthSignin'
