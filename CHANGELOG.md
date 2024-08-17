@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.5.12](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.11...v0.5.12) (2024-08-17)
+
+
+### Bug Fixes
+
+* add loading to login btn to prevent layout shift ([c9c33a5](https://github.com/bill-zhanxg/csen-sport/commit/c9c33a58a5ed09d76251b56ff22eb30829e08d9a))
+* add page title for each page ([af9d00a](https://github.com/bill-zhanxg/csen-sport/commit/af9d00a413de75429e4119194606787d63384212))
+* add refresh at time to weekly sport timetable to avoid confusion ([3971578](https://github.com/bill-zhanxg/csen-sport/commit/3971578cfbdd063458b2ceaf0f2776eb4201c559))
+
 ## [0.5.11](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.10...v0.5.11) (2024-08-11)
 
 
