@@ -1,7 +1,9 @@
 import { auth, signIn } from '@/libs/auth';
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { Pw } from './Pw';
 
 export const metadata: Metadata = {
 	title: 'Login',
@@ -44,6 +46,22 @@ export default async function Login({
 		<div className="flex flex-col justify-center items-center gap-3 h-full">
 			<h1 className="text-4xl text-center font-bold p-5">CSEN Sport Login</h1>
 			<LoginBtn login={login} />
+			<form
+				action={async () => {
+					'use server';
+					const csrfToken = cookies().get('authjs.csrf-token')?.value?.split('|').at(0);
+					console.log(csrfToken);
+					const url = await signIn('credentials', {
+						csrfToken,
+						password: 'E[QH=uz7mqDG%;9:6M"wUfXRh>Bc`A2g,Pt/8xK]@WLFkj_s*v',
+						// redirect: false,
+					});
+					console.log(url);
+					// redirect(url);
+				}}
+			>
+				<Pw />
+			</form>
 			{/* Error */}
 			{(searchParams.message || searchParams.error) && (
 				<div className="alert alert-error w-4/5 max-w-[20rem]">

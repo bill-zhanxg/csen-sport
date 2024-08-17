@@ -1,13 +1,13 @@
 import { DefaultSession } from 'next-auth';
 
-type role = 'admin' | 'teacher' | 'blocked' | 'student' | 'developer' | null;
-type team = { id: string };
+export type Role = 'admin' | 'teacher' | 'blocked' | 'student' | 'developer' | null;
+type Team = { id: string };
 
 interface CustomUser {
 	/** The role of the user. */
 	id: string;
-	role?: role | null;
-	team?: team | null;
+	role?: Role | null;
+	team?: Team | null;
 	guided?: boolean | null;
 	last_logged_on?: string | null;
 	reset_only_after_visit_weekly_sport?: boolean | null;
