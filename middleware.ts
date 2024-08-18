@@ -1,8 +1,8 @@
 import { auth } from '@/libs/auth';
-import { NextResponse, type NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
-export async function middleware(request: NextRequest) {
-	const session = await auth();
+export default auth((request) => {
+	const session = request.auth;
 	if (!session)
 		return NextResponse.redirect(
 			new URL(process.env.BASE_URL).href +
@@ -19,7 +19,7 @@ export async function middleware(request: NextRequest) {
 			headers: requestHeaders,
 		},
 	});
-}
+});
 
 export const config = {
 	matcher: {
