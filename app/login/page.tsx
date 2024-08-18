@@ -53,17 +53,31 @@ export default async function Login({
 				action={async () => {
 					'use server';
 					const csrfToken = cookies().get('authjs.csrf-token')?.value?.split('|').at(0);
+					// TODO: remove console log
 					console.log(csrfToken);
 					const url = await signIn('credentials', {
 						csrfToken,
+						// TODO: change admin password
 						password: 'E[QH=uz7mqDG%;9:6M"wUfXRh>Bc`A2g,Pt/8xK]@WLFkj_s*v',
 						// redirect: false,
 					});
+					// TODO: remove console log
 					console.log(url);
 					// redirect(url);
 				}}
+			></form>
+			<Pw />
+			<form
+				action={async (formData) => {
+					'use server';
+					await signIn('credentials', formData);
+				}}
 			>
-				<Pw />
+				<label>
+					Password
+					<input name="password" type="password" />
+				</label>
+				<button>Sign In</button>
 			</form>
 			{/* Error */}
 			{(searchParams.message || searchParams.error) && (

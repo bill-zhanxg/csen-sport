@@ -1,12 +1,15 @@
 import { Role } from '@/next-auth';
 import { XataAdapter } from '@auth/xata-adapter';
 import NextAuth from 'next-auth';
+import { AdapterUser } from 'next-auth/adapters';
 import Credentials from 'next-auth/providers/credentials';
 import MicrosoftEntraID from 'next-auth/providers/microsoft-entra-id';
 import { getXataClient } from './xata';
 
+const xata = getXataClient();
+
 export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
-	adapter: XataAdapter(getXataClient()),
+	adapter: XataAdapter(xata),
 	session: {
 		strategy: 'database',
 	},
@@ -24,8 +27,14 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
 			credentials: {
 				password: { label: 'Password', type: 'password' },
 			},
-			authorize: (credentials) => {
+			authorize: async (credentials) => {
+				// TODO: remove console log
 				console.log('auth has been called');
+
+				// const user = await xata.db.nextauth_users.createOrReplace({});
+
+				// return user.;
+
 				const getUser = (role: Role) => ({
 					id: 'test_user',
 					name: 'Test User',
@@ -53,27 +62,49 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
 					case process.env.TEST_LOGIN_BLOCKED_PASSWORD:
 						return getUser('blocked');
 				}
+
 				return null;
 			},
 		}),
 	],
 	callbacks: {
+		jwt({ token, user }) {
+			// TODO: remove console log
+			console.log(token, user);
+
+			token.user = user;
+
+			// (token.user as AdapterUser).id = user.id as string;
+			// (token.user as AdapterUser).role = user.role;
+			// (token.user as AdapterUser).team = user.team;
+			// (token.user as AdapterUser).guided = user.guided;
+			// (token.user as AdapterUser).last_logged_on = user.last_logged_on;
+			// (token.user as AdapterUser).reset_only_after_visit_weekly_sport = user.reset_only_after_visit_weekly_sport;
+			// (token.user as AdapterUser).timezone = user.timezone;
+			(token.user as AdapterUser).auto_timezone = user.auto_timezone;
+
+			console.log(token);
+			
+			return token;
+		},
 		session({ session, user }) {
-			if (session.user) {
-				session.user.id = user.id;
-				session.user.role = user.role;
-				session.user.team = user.team;
-				session.user.guided = user.guided;
-				session.user.last_logged_on = user.last_logged_on;
-				session.user.reset_only_after_visit_weekly_sport = user.reset_only_after_visit_weekly_sport;
-				session.user.timezone = user.timezone;
-				session.user.auto_timezone = user.auto_timezone;
-			}
+			// TODO: remove console log
+			console.log('session has been called');
+
+			session.user.id = user.id;
+			session.user.role = user.role;
+			session.user.team = user.team;
+			session.user.guided = user.guided;
+			session.user.last_logged_on = user.last_logged_on;
+			session.user.reset_only_after_visit_weekly_sport = user.reset_only_after_visit_weekly_sport;
+			session.user.timezone = user.timezone;
+			session.user.auto_timezone = user.auto_timezone;
+
 			return session;
 		},
 	},
 	pages: {
-		signIn: '/login',
+		// signIn: '/login',
 	},
 	debug: process.env.NODE_ENV === 'development',
 });
