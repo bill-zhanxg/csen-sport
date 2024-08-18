@@ -3,8 +3,6 @@ import { NextResponse } from 'next/server';
 
 export default auth((request) => {
 	const session = request.auth;
-	// TODO: remove console log
-	console.log(session);
 	if (!session)
 		return NextResponse.redirect(
 			new URL(process.env.BASE_URL).href +
@@ -14,7 +12,7 @@ export default auth((request) => {
 
 	// Modify the request headers with client's IP address
 	const requestHeaders = new Headers(request.headers);
-	const ip = request.ip || '';
+	const ip = request.ip || 'localhost';
 	requestHeaders.set('x-forwarded-for', ip);
 	return NextResponse.next({
 		request: {
