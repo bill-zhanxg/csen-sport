@@ -1,8 +1,8 @@
 import { auth } from '@/libs/auth';
-import { NextResponse, type NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
-export async function middleware(request: NextRequest) {
-	const session = await auth();
+export default auth((request) => {
+	const session = request.auth;
 	// TODO: remove console log
 	console.log(session);
 	if (!session)
@@ -21,7 +21,7 @@ export async function middleware(request: NextRequest) {
 			headers: requestHeaders,
 		},
 	});
-}
+});
 
 export const config = {
 	matcher: {
