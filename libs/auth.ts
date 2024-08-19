@@ -3,10 +3,8 @@ import NextAuth from 'next-auth';
 import MicrosoftEntraID from 'next-auth/providers/microsoft-entra-id';
 import { getXataClient } from './xata';
 
-const xata = getXataClient();
-
 export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
-	adapter: XataAdapter(xata),
+	adapter: XataAdapter(getXataClient()),
 	session: {
 		strategy: 'database',
 	},
