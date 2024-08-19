@@ -20,10 +20,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
 		}),
 	],
 	callbacks: {
-		session({ session, user, token }) {
-			// TODO: remove console log
-			console.log('session has been called', user, token);
-
+		session({ session, user }) {
 			if (user) {
 				session.user.id = user.id;
 				session.user.role = user.role;
