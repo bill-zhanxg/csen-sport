@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
 			session,
 		});
 
-		const res = NextResponse.redirect(new URL(process.env.BASE_URL).href + 'login');
+		const res = NextResponse.redirect(new URL(process.env.BASE_URL).href);
 		res.cookies.set('authjs.session-token', sessionToken, {
 			expires,
 		});
