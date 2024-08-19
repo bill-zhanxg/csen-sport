@@ -12,7 +12,7 @@ export default auth((request) => {
 
 	// Modify the request headers with client's IP address
 	const requestHeaders = new Headers(request.headers);
-	const ip = request.ip || '';
+	const ip = request.ip || 'localhost';
 	requestHeaders.set('x-forwarded-for', ip);
 	return NextResponse.next({
 		request: {

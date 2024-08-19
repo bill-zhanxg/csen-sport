@@ -44,7 +44,6 @@ const schema = z.object({
 export async function updateGame(prevState: FormState, formData: FormData): Promise<FormState> {
 	const session = await auth();
 	if (!session || !isTeacher(session)) return { success: false, message: 'Unauthorized' };
-	console.log(formData.get('confirmed'));
 
 	try {
 		let data = schema.parse({

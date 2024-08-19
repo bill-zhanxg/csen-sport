@@ -19,7 +19,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
 	],
 	callbacks: {
 		session({ session, user }) {
-			if (session.user) {
+			if (user) {
 				session.user.id = user.id;
 				session.user.role = user.role;
 				session.user.team = user.team;
@@ -29,6 +29,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
 				session.user.timezone = user.timezone;
 				session.user.auto_timezone = user.auto_timezone;
 			}
+
 			return session;
 		},
 	},
