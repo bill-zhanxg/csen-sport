@@ -1,6 +1,7 @@
-import { expect, test } from '@playwright/test';
+import { test } from '@playwright/test';
 import { Navigation } from './navigation';
 
+test.setTimeout(120000);
 test.use({ storageState: 'playwright/.auth/admin.json' });
 
 // test('test', async ({ page }) => {

@@ -24,6 +24,7 @@ export class Navigation {
 
 	async navigate(mobile: boolean, admin: boolean) {
 		await this._goto();
+		// TODO: for mobile also make sure clicking the menu again hides it
 		for (const menu of menus) {
 			if (menu.admin && !admin) continue;
 
@@ -31,5 +32,6 @@ export class Navigation {
 			await this.page.getByRole('link', { name: menu.name }).click();
 			await this.page.waitForURL(menu.url);
 		}
+		// TODO: test pfp clicks
 	}
 }

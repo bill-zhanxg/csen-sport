@@ -195,14 +195,11 @@ export function NavBar({
 					tabIndex={0}
 					className="btn btn-ghost sm:hidden w-full"
 					onMouseDown={() => {
-						('');
-						if (mobileMenuOpen)
-							setTimeout(() => {
-								closeDropdown();
-							}, 0);
+						if (mobileMenuOpen) setTimeout(() => closeDropdown(), 0);
 					}}
-					onFocus={() => setMobileMenuOpen(true)}
-					onBlur={() => setMobileMenuOpen(false)}
+					// We need this stupid timeout because safari is stupid
+					onFocus={() => setTimeout(() => setMobileMenuOpen(true), 0)}
+					onBlur={() => setTimeout(() => setMobileMenuOpen(false), 0)}
 				>
 					<FaBars />
 				</label>
@@ -292,13 +289,11 @@ export function NavBar({
 					<div
 						className="flex items-center h-full"
 						onMouseDown={() => {
-							if (accountMenuOpen)
-								setTimeout(() => {
-									closeDropdown();
-								}, 0);
+							if (accountMenuOpen) setTimeout(() => closeDropdown(), 0);
 						}}
-						onFocus={() => setAccountMenuOpen(true)}
-						onBlur={() => setAccountMenuOpen(false)}
+						// We need this stupid timeout because safari is stupid
+						onFocus={() => setTimeout(() => setAccountMenuOpen(true), 0)}
+						onBlur={() => setTimeout(() => setAccountMenuOpen(false), 0)}
 					>
 						<label tabIndex={0} className="btn btn-ghost btn-circle avatar">
 							<UserAvatar user={session.user} className="rounded-full" />
