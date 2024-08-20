@@ -87,7 +87,8 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 							<BarOfProgress />
 							{session.user.auto_timezone && <HandleUserTimezone />}
 							<SentrySetUser user={{ ...session.user, ip_address: ip }} />
-							{!session.user.guided && <ReactJoyride />}
+							{/* TODO: Add this back after react joyride is fixed */}
+							{/* {!session.user.guided && <ReactJoyride />} */}
 						</>
 					)
 				) : (
