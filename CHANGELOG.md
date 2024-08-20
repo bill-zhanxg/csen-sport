@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.13](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.12...v0.5.13) (2024-08-20)
+
+
+### Bug Fixes
+
+* a crucial bug preventing Safari (webkit) users from clicking the navigation menus (I found out because I implement testing, sorry for this long of a wait I know it's been a month. Also. I don't like Safari) ([1d81352](https://github.com/bill-zhanxg/csen-sport/commit/1d81352aef08f995c411c86928da8b0feea09bfa))
+* remove react joyride (blue dot for guiding) until it's fixed ([5c32377](https://github.com/bill-zhanxg/csen-sport/commit/5c3237784518b2dd17a680bb97ecb6f763366889))
+
 ## [0.5.12](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.11...v0.5.12) (2024-08-17)
 
 
