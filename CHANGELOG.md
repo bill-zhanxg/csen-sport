@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.14](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.13...v0.5.14) (2024-08-21)
+
+
+### Bug Fixes
+
+* test login route not issuing the correct cookie with prefix secure ([1eb10cb](https://github.com/bill-zhanxg/csen-sport/commit/1eb10cb49080104a1d2bb70b4eca76d655355040))
+
 ## [0.5.13](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.12...v0.5.13) (2024-08-20)
 
 
