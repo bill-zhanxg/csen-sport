@@ -1,12 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
-import 'dotenv-flow/config';
-
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// import dotenv from 'dotenv';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
+import dotenv from 'dotenv-flow';
+dotenv.config({ default_node_env: 'development' });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -32,7 +26,8 @@ export default defineConfig({
 		trace: 'on-first-retry',
 	},
 
-	timeout: 5 * 60 * 1000,
+	// 10 Minutes
+	timeout: 10 * 60 * 1000,
 
 	/* Configure projects for major browsers */
 	projects: [
@@ -40,36 +35,43 @@ export default defineConfig({
 
 		{
 			name: 'chromium',
+			dependencies: ['setup'],
 			use: { ...devices['Desktop Chrome'] },
 		},
 
 		{
 			name: 'firefox',
+			dependencies: ['setup'],
 			use: { ...devices['Desktop Firefox'] },
 		},
 
 		{
 			name: 'webkit',
+			dependencies: ['setup'],
 			use: { ...devices['Desktop Safari'] },
 		},
 
 		/* Test against mobile viewports. */
 		{
 			name: 'Mobile Chrome',
+			dependencies: ['setup'],
 			use: { ...devices['Pixel 5'] },
 		},
 		{
 			name: 'Mobile Safari',
+			dependencies: ['setup'],
 			use: { ...devices['iPhone 12'] },
 		},
 
 		/* Test against branded browsers. */
 		{
 			name: 'Microsoft Edge',
+			dependencies: ['setup'],
 			use: { ...devices['Desktop Edge'], channel: 'msedge' },
 		},
 		{
 			name: 'Google Chrome',
+			dependencies: ['setup'],
 			use: { ...devices['Desktop Chrome'], channel: 'chrome' },
 		},
 	],

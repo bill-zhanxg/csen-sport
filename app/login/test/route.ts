@@ -12,6 +12,8 @@ export async function POST(request: NextRequest) {
 	if (!ip) return rejectLogin();
 	if (blocked.includes(ip)) return rejectLogin();
 
+	const https = request.headers.get('x-forwarded-proto') === 'https';
+
 	const body = await request.json();
 	const password = body.password;
 	if (typeof password !== 'string') return rejectLogin(ip);
@@ -40,7 +42,7 @@ export async function POST(request: NextRequest) {
 		});
 
 		const res = NextResponse.redirect(new URL(process.env.BASE_URL).href);
-		res.cookies.set('authjs.session-token', sessionToken, {
+		res.cookies.set(https ? '__Secure-authjs.session-token' : 'authjs.session-token', sessionToken, {
 			expires,
 		});
 		return res;
