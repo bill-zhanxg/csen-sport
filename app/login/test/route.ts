@@ -15,7 +15,11 @@ export async function POST(request: NextRequest) {
 	const body = await request.json();
 	const password = body.password;
 	if (typeof password !== 'string') return rejectLogin(ip);
-	const https = request.headers.get('x-forwarded-proto') === 'https';
+	const https = request.headers.get('x-forwarded-proto') === 'https' || request.nextUrl.protocol === 'https:';
+
+	// TODO: remove later, testing in production
+	console.log('x-forwarded-proto', request.headers.get('x-forwarded-proto'));
+	console.log('request.nextUrl.protocol', request.nextUrl.protocol);
 
 	const login = async (role: Role) => {
 		const sessionToken = v4();
