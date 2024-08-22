@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.15](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.14...v0.5.15) (2024-08-22)
+
+
+### Bug Fixes
+
+* test: trying to fix test login route not issuing the session cookie with correct name when connection is secure (https) ([5008186](https://github.com/bill-zhanxg/csen-sport/commit/50081862dc7f12a24c7d818470c368e1da49e176))
+
 ## [0.5.14](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.13...v0.5.14) (2024-08-21)
 
 
