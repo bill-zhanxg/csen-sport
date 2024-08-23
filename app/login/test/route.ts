@@ -20,6 +20,7 @@ export async function POST(request: NextRequest) {
 	// TODO: remove later, testing in production
 	console.log('x-forwarded-proto', request.headers.get('x-forwarded-proto'));
 	console.log('request.nextUrl.protocol', request.nextUrl.protocol);
+	console.log('https', https);
 
 	const login = async (role: Role) => {
 		const sessionToken = v4();
@@ -47,6 +48,7 @@ export async function POST(request: NextRequest) {
 		const res = NextResponse.redirect(new URL(process.env.BASE_URL).href);
 		res.cookies.set(https ? '__Secure-authjs.session-token' : 'authjs.session-token', sessionToken, {
 			expires,
+			secure: https,
 		});
 		return res;
 	};
