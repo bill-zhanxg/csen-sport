@@ -17,11 +17,6 @@ export async function POST(request: NextRequest) {
 	if (typeof password !== 'string') return rejectLogin(ip);
 	const https = request.headers.get('x-forwarded-proto') === 'https' || request.nextUrl.protocol === 'https:';
 
-	// TODO: remove later, testing in production
-	console.log('x-forwarded-proto', request.headers.get('x-forwarded-proto'));
-	console.log('request.nextUrl.protocol', request.nextUrl.protocol);
-	console.log('https', https);
-
 	const login = async (role: Role) => {
 		const sessionToken = v4();
 		// Testing duration should be less than 24 hours

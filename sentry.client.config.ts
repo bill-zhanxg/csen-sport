@@ -42,5 +42,10 @@ Sentry.init({
 		Sentry.reportingObserverIntegration(),
 	],
 
-	ignoreErrors: ['Failed to fetch', 'Load failed'],
+	ignoreErrors: [
+		'network error',
+		'Failed to fetch',
+		'Load failed',
+		"Failed to construct 'URL': Invalid base URL",
+	],
 });
