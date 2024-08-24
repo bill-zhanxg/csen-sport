@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import { type Page, expect } from '@playwright/test';
 
 const menus = [
 	{ name: 'Weekly Sport', url: '/weekly-sport/timetable' },
@@ -18,18 +18,33 @@ export class Navigation {
 		await this.page.goto('/');
 	}
 
-	async _clickMobileLabel() {
-		await this.page.locator('label').first().click();
-	}
-
 	async navigate(mobile: boolean, admin: boolean) {
 		await this._goto();
-		// TODO: for mobile also make sure clicking the menu again hides it
+
+		if (mobile) {
+			await this.page.locator('label').first().click();
+			expect(this.page.locator('#mobile-menu')).toBeVisible();
+			// Check if the mobile menu closes when it is clicked again
+			await this.page.locator('label').first().click();
+			expect(this.page.locator('#mobile-menu')).not.toBeVisible();
+
+			await this.page.locator('label').first().click();
+			expect(this.page.locator('#mobile-menu')).toBeVisible();
+			// Check if the mobile menu closes when clicked outside
+			await this.page.locator('body').click();
+			expect(this.page.locator('#mobile-menu')).not.toBeVisible();
+		}
+
 		for (const menu of menus) {
 			if (menu.admin && !admin) continue;
 
-			if (mobile) await this._clickMobileLabel();
+			if (mobile) await this.page.locator('label').first().click();
+			if (menu.admin && !mobile) await this.page.locator('#admin-control-btn').click();
 			await this.page.getByRole('link', { name: menu.name }).click();
+			// Check if the mobile menu closes when a menu item is clicked
+			if (mobile) expect(this.page.locator('#mobile-menu')).not.toBeVisible();
+			if (menu.admin && !mobile)
+				expect(this.page.getByRole('group').getByText('UsersTeamsVenuesBulk')).not.toBeVisible();
 			await this.page.waitForURL(menu.url);
 		}
 		// TODO: test pfp clicks

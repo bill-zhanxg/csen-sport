@@ -32,3 +32,12 @@ test.describe('navigation mobile', () => {
 		await navigation.navigate(true, true);
 	});
 });
+
+test.describe('navigation desktop', () => {
+	test.use({ viewport: { height: 900, width: 1024 } });
+
+	test('navigation', async ({ page }) => {
+		const navigation = new Navigation(page);
+		await navigation.navigate(false, true);
+	});
+});
