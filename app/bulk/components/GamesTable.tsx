@@ -3,7 +3,6 @@ import { dayjs } from '@/libs/dayjs';
 /* eslint-disable react-hooks/rules-of-hooks */
 
 import { AlertType, ErrorAlert, SuccessAlert } from '@/app/components/Alert';
-import { PreventUnload } from '@/app/globalComponents/PreventUnload';
 import { TeachersMultiSelect } from '@/app/globalComponents/TeachersMultiSelect';
 import { formatDate, formatIsJunior, formatTime } from '@/libs/formatValue';
 import { SerializedGameWithId } from '@/libs/serializeData';
@@ -21,6 +20,7 @@ import { ChangeEvent, ChangeEventHandler, FocusEventHandler, useEffect, useMemo,
 import { FaPlus, FaRegTrashCan } from 'react-icons/fa6';
 import { v4 } from 'uuid';
 import { GameChanges, updateGamesBulk } from '../actions';
+import { useBeforeUnload } from '@/app/globalComponents/useBeforeUnload';
 
 export function GamesTable({
 	teams,
@@ -375,6 +375,8 @@ export function GamesTable({
 	const [changed, setChanged] = useState(false);
 	const [loading, setLoading] = useState(false);
 
+	useBeforeUnload(changed, 'You have unsaved changes - are you sure you wish to leave this page?');
+
 	return (
 		<>
 			<p className="text-xl font-bold mt-4 text-center">Games (Click update button after modify in bulk)</p>
@@ -608,7 +610,6 @@ export function GamesTable({
 					</button>
 				</div>
 			</div>
-			{changed && <PreventUnload />}
 		</>
 	);
 }
