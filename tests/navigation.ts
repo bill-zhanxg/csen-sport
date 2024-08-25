@@ -59,7 +59,7 @@ export class Navigation {
 			if (menu.admin && !mobile) await this.page.locator('#admin-control-btn').click();
 			// Give a little time for the menu to appear
 			await this.page.waitForTimeout(10);
-			await this.page.getByRole('link', { name: menu.name }).click();
+			await this.page.getByRole('link', { name: menu.name }).first().click();
 			// Check if the mobile menu closes when a menu item is clicked
 			if (mobile) expect(this.page.locator('#mobile-menu')).not.toBeVisible();
 			if (menu.admin && !mobile)
