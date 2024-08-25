@@ -54,6 +54,7 @@
 		"react-multi-select-component": "^4.3.4",
 		"react-pdf": "^9.1.0",
 		"react-unstyled-pagination": "^1.0.4",
+		"react-use": "^17.5.1",
 		"remark-gfm": "^4.0.0",
 		"server-only": "^0.0.1",
 		"sharp": "^0.33.4",

@@ -2,8 +2,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
 import { AlertType, ErrorAlert, SuccessAlert } from '@/app/components/Alert';
-import { PreventUnload } from '@/app/globalComponents/PreventUnload';
 import { TeachersMultiSelect } from '@/app/globalComponents/TeachersMultiSelect';
+import { useBeforeUnload } from '@/app/globalComponents/useBeforeUnload';
 import { dayjs } from '@/libs/dayjs';
 import { RawTeacher } from '@/libs/tableData';
 import {
@@ -33,6 +33,8 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 		if (changed) return;
 		setChanged(true);
 	}, [teams.length, venues.length, games.length, changed]);
+
+	useBeforeUnload(changed, 'You have unsaved changes - are you sure you wish to leave this page?');
 
 	// #region Venues
 	const teamColumns = useMemo<ColumnDef<Team>[]>(() => {
@@ -973,7 +975,6 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 					</div>
 				</div>
 			</dialog>
-			{changed && <PreventUnload />}
 		</>
 	);
 }

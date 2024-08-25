@@ -1,4 +1,4 @@
-import { PreventUnload } from '@/app/globalComponents/PreventUnload';
+import { useBeforeUnload } from '@/app/globalComponents/useBeforeUnload';
 import { Signal, useSignal } from '@preact/signals-react';
 import { RowData } from '@tanstack/react-table';
 import { Dispatch, SetStateAction, useState } from 'react';
@@ -50,6 +50,8 @@ export function Step3({
 	games: Games;
 	setGames: Dispatch<SetStateAction<Games>>;
 }) {
+	useBeforeUnload(true, 'You have unsaved changes - are you sure you wish to leave this page?');
+
 	const [currentSchoolCsenCode, setSchoolCsenCodeInput] = useState('');
 	const schoolCsenCode = useSignal<string | undefined>(undefined);
 	const filteredFixtures = useSignal<FixturePages>([]);
@@ -261,7 +263,6 @@ export function Step3({
 						Can not find any teams matching your CSEN code
 					</p>
 				))}
-			<PreventUnload />
 		</>
 	);
 }
