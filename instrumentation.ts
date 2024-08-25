@@ -10,11 +10,9 @@ export function register() {
 		tracesSampleRate: 0.4,
 		// Setting this option to true will print useful information to the console while you're setting up Sentry.
 		debug: false,
-		integrations: [
-			Sentry.captureConsoleIntegration({ levels: ['error'] }),
-			Sentry.extraErrorDataIntegration(),
-		],
+		integrations: [Sentry.captureConsoleIntegration({ levels: ['error'] }), Sentry.extraErrorDataIntegration()],
 
-		ignoreErrors: ['PKCE code_verifier cookie was missing', 'at Object.use'],
+		initialScope: { tags: { errorSource: 'server' } },
+		ignoreErrors: ['PKCE code_verifier cookie was missing', 'at Object.use', 'aborted'],
 	});
 }
