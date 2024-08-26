@@ -29,15 +29,15 @@ export class Navigation {
 		if (mobile) {
 			// Check if the mobile menu closes when it is clicked again
 			await this.page.locator('label').first().click();
-			expect(this.page.locator('#mobile-menu')).toBeVisible();
+			await expect(this.page.locator('#mobile-menu')).toBeVisible();
 			await this.page.locator('label').first().click();
-			expect(this.page.locator('#mobile-menu')).not.toBeVisible();
+			await expect(this.page.locator('#mobile-menu')).not.toBeVisible();
 
 			// Check if the mobile menu closes when clicked outside
 			await this.page.locator('label').first().click();
-			expect(this.page.locator('#mobile-menu')).toBeVisible();
+			await expect(this.page.locator('#mobile-menu')).toBeVisible();
 			await this.page.locator('body').click();
-			expect(this.page.locator('#mobile-menu')).not.toBeVisible();
+			await expect(this.page.locator('#mobile-menu')).not.toBeVisible();
 		}
 
 		// Check if the profile menu will hide on clicked again
@@ -57,13 +57,13 @@ export class Navigation {
 
 			if (mobile) await this.page.locator('label').first().click();
 			if (menu.admin && !mobile) await this.page.locator('#admin-control-btn').click();
-			// Give a little time for the menu to appear
+			// Give a little time for the page to hydrate
 			await this.page.waitForTimeout(10);
 			await this.page.getByRole('link', { name: menu.name }).first().click();
 			// Check if the mobile menu closes when a menu item is clicked
-			if (mobile) expect(this.page.locator('#mobile-menu')).not.toBeVisible();
+			if (mobile) await expect(this.page.locator('#mobile-menu')).not.toBeVisible();
 			if (menu.admin && !mobile)
-				expect(this.page.getByRole('group').getByText('UsersTeamsVenuesBulk')).not.toBeVisible();
+				await expect(this.page.getByRole('group').getByText('UsersTeamsVenuesBulk')).not.toBeVisible();
 			await this.page.waitForURL(menu.url);
 		}
 
