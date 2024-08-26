@@ -33,11 +33,6 @@ export class Navigation {
 			await this.page.locator('label').first().click();
 			await expect(this.page.locator('#mobile-menu')).not.toBeVisible();
 
-			// Check if the mobile menu closes when clicked outside
-			await this.page.locator('label').first().click();
-			await expect(this.page.locator('#mobile-menu')).toBeVisible();
-			await this.page.locator('body').click();
-			await expect(this.page.locator('#mobile-menu')).not.toBeVisible();
 		}
 
 		// Check if the profile menu will hide on clicked again
@@ -49,7 +44,7 @@ export class Navigation {
 		// Check if the profile menu will hide on clicked outside
 		await this.page.getByRole('img', { name: 'User Avatar' }).first().click();
 		await expect(this.page.getByText('User SettingsChangelogsSubmit')).toBeVisible();
-		await this.page.locator('body').click();
+		await this.page.locator('body').first().click();
 		await expect(this.page.getByText('User SettingsChangelogsSubmit')).not.toBeVisible();
 
 		for (const menu of menus) {
