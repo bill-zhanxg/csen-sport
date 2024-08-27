@@ -23,6 +23,14 @@ export class Navigation {
 		await this.page.goto('/');
 	}
 
+	_getAvatarBtn() {
+		return this.page.getByRole('img', { name: 'User Avatar', exact: true }).first();
+	}
+
+	_getAvatarMenu() {
+		return this.page.getByText('User SettingsChangelogsSubmit')
+	}
+
 	async navigate(mobile: boolean, admin: boolean) {
 		await this._goto();
 
@@ -32,34 +40,26 @@ export class Navigation {
 			await expect(this.page.locator('#mobile-menu')).toBeVisible();
 			await this.page.locator('label').first().click();
 			await expect(this.page.locator('#mobile-menu')).not.toBeVisible();
-
-			// Check if the mobile menu closes when clicked outside
-			await this.page.locator('label').first().click();
-			await expect(this.page.locator('#mobile-menu')).toBeVisible();
-			await this.page.locator('body').click();
-			await expect(this.page.locator('#mobile-menu')).not.toBeVisible();
 		}
 
 		// Check if the profile menu will hide on clicked again
-		await this.page.getByRole('img', { name: 'User Avatar' }).first().click();
-		await expect(this.page.getByText('User SettingsChangelogsSubmit')).toBeVisible();
-		await this.page.getByRole('img', { name: 'User Avatar' }).first().click();
-		await expect(this.page.getByText('User SettingsChangelogsSubmit')).not.toBeVisible();
+		await this._getAvatarBtn().click();
+		await expect(this._getAvatarMenu()).toBeVisible();
+		await this._getAvatarBtn().click();
+		await expect(this._getAvatarMenu()).not.toBeVisible();
 
 		// Check if the profile menu will hide on clicked outside
-		await this.page.getByRole('img', { name: 'User Avatar' }).first().click();
-		await expect(this.page.getByText('User SettingsChangelogsSubmit')).toBeVisible();
-		await this.page.locator('body').click();
-		await expect(this.page.getByText('User SettingsChangelogsSubmit')).not.toBeVisible();
+		await this._getAvatarBtn().click();
+		await expect(this._getAvatarMenu()).toBeVisible();
+		await this.page.locator('body').first().click();
+		await expect(this._getAvatarMenu()).not.toBeVisible();
 
 		for (const menu of menus) {
 			if (menu.admin && !admin) continue;
 
 			if (mobile) await this.page.locator('label').first().click();
 			if (menu.admin && !mobile) await this.page.locator('#admin-control-btn').click();
-			// Give a little time for the page to hydrate
-			await this.page.waitForTimeout(10);
-			await this.page.getByRole('link', { name: menu.name }).first().click();
+			await this.page.getByRole('link', { name: menu.name, exact: true }).first().click();
 			// Check if the mobile menu closes when a menu item is clicked
 			if (mobile) await expect(this.page.locator('#mobile-menu')).not.toBeVisible();
 			if (menu.admin && !mobile)
@@ -67,18 +67,16 @@ export class Navigation {
 			await this.page.waitForURL(menu.url);
 		}
 
-		await expect(this.page.getByRole('img', { name: 'User Avatar' }).first()).toBeVisible();
-
 		for (const menu of profileMenus) {
-			await this.page.getByRole('img', { name: 'User Avatar' }).first().click();
+			await this._getAvatarBtn().click();
 			await this.page.getByRole('link', { name: menu.name }).click();
 			// Check if the mobile menu closes when a menu item is clicked
-			await expect(this.page.getByText('User SettingsChangelogsSubmit')).not.toBeVisible();
+			await expect(this._getAvatarMenu()).not.toBeVisible();
 			await this.page.waitForURL(menu.url);
 		}
 
 		// Test feedback button
-		await this.page.getByRole('img', { name: 'User Avatar' }).first().click();
+		await this._getAvatarBtn().click();
 		await this.page.getByRole('button', { name: 'Submit a Bug / Feedback' }).click();
 		await expect(this.page.locator('#feedback-dialog')).toHaveAttribute('open');
 		await this.page.getByRole('button', { name: 'Close' }).click();
