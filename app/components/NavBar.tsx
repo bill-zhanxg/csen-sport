@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Session } from 'next-auth';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { memo, MouseEventHandler, useEffect, useMemo, useState } from 'react';
+import { memo, MouseEventHandler, use, useEffect, useMemo, useState } from 'react';
 import { FaBars, FaExternalLinkAlt, FaHome } from 'react-icons/fa';
 import { UserAvatar } from '../globalComponents/UserAvatar';
 import { TicketEventType } from '../tickets/types';
@@ -112,13 +112,13 @@ export function NavBar({
 	logout,
 }: {
 	session: Session;
-	initUnread: boolean;
+	initUnread: Promise<boolean>;
 	ticketUnread: () => Promise<boolean>;
 	logout: () => Promise<void>;
 }) {
 	const pathname = usePathname();
 
-	const [unread, setUnread] = useState(initUnread);
+	const [unread, setUnread] = useState(use(initUnread));
 	const [recheck, setRecheck] = useState(false);
 
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

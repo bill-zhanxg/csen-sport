@@ -63,7 +63,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 		await signOut();
 	}
 
-	const unread = await ticketUnread();
+	const unread = ticketUnread();
 
 	return (
 		<html lang="en">
