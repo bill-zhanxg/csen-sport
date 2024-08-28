@@ -26,8 +26,8 @@ export default defineConfig({
 		trace: 'retain-on-failure',
 	},
 
-	// 30 Minutes
-	timeout: 30 * 60 * 1000,
+	// 10 Minutes
+	timeout: 10 * 60 * 1000,
 	globalSetup: require.resolve('./global-setup'),
 
 	/* Configure projects for major browsers */

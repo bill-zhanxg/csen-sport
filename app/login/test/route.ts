@@ -5,6 +5,7 @@ import { v4 } from 'uuid';
 
 const xata = getXataClient();
 const blocked: string[] = [];
+let firstRequestDate: Date | null = null;
 
 export async function POST(request: NextRequest) {
 	// Manually log the user in with password (skipping auth.js)
@@ -16,6 +17,10 @@ export async function POST(request: NextRequest) {
 	const password = body.password;
 	if (typeof password !== 'string') return rejectLogin(ip);
 	const https = request.headers.get('x-forwarded-proto') === 'https' || request.nextUrl.protocol === 'https:';
+
+	// Replace the document if the first request was more than 1 hour ago
+	const replaceDocument = firstRequestDate ? new Date(Date.now() - 1000 * 60 * 60) > firstRequestDate : true;
+	if (replaceDocument) firstRequestDate = new Date();
 
 	const login = async (role: Role) => {
 		const sessionToken = v4();
@@ -29,7 +34,7 @@ export async function POST(request: NextRequest) {
 			role,
 		};
 
-		const user = await xata.db.nextauth_users.createOrReplace(userData);
+		const user = await xata.db.nextauth_users[replaceDocument ? 'createOrReplace' : 'createOrUpdate'](userData);
 		const session = await xata.db.nextauth_sessions.create({
 			sessionToken,
 			expires,
