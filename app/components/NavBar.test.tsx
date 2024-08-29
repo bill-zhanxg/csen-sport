@@ -1,7 +1,6 @@
 import { render } from '@testing-library/react';
 import { Session } from 'next-auth';
 import { NavBar } from './NavBar';
-import { mockReact } from '../vitest.mock.react';
 
 describe('NavBar', () => {
 	const session: Session = {
@@ -17,7 +16,6 @@ describe('NavBar', () => {
 	const logout = vi.fn(() => Promise.resolve());
 
 	beforeEach(() => {
-		mockReact();
 		render(<NavBar session={session} initUnread={ticketUnread()} ticketUnread={ticketUnread} logout={logout} />);
 	});
 
