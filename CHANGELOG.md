@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.5.16](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.15...v0.5.16) (2024-08-29)
+
+
+### Bug Fixes
+
+* add loading to weekly sport page for instant page navigation ([1d1303b](https://github.com/bill-zhanxg/csen-sport/commit/1d1303b4b78023feeaaf24df89525524bbf428db))
+* adding skeletons to Navbar ([5fb172e](https://github.com/bill-zhanxg/csen-sport/commit/5fb172e5c428a8fd122479fe0d804f0efa0d9ed1))
+* adding UI streaming to Navbar ([44d96d8](https://github.com/bill-zhanxg/csen-sport/commit/44d96d80b256e38c6c3bed66e06b83747c3d0627))
+* auto changing timezone doesn't require a page refresh anymore ([b8353b6](https://github.com/bill-zhanxg/csen-sport/commit/b8353b655c4714427e0f4260ea943200b8a0b4da))
+* fix home page loading skeleton shows everywhere and replaced it with a global loading box ([8d46af8](https://github.com/bill-zhanxg/csen-sport/commit/8d46af84405d56770d90bd9cf183ad23bb75f1db))
+* improve before unload fix error ([155a8c4](https://github.com/bill-zhanxg/csen-sport/commit/155a8c4de3754258fbf21b545d035f008b25f806))
+* improve prevent unload ([70e18f7](https://github.com/bill-zhanxg/csen-sport/commit/70e18f737b7e736fe839badd2874a2c901e9021e))
+* test login route will only replace test user's document if the initial request is made one hour ago ([b8353b6](https://github.com/bill-zhanxg/csen-sport/commit/b8353b655c4714427e0f4260ea943200b8a0b4da))
+* update NavBar component to use ticketUnread function instead of initUnread prop ([0c9fa76](https://github.com/bill-zhanxg/csen-sport/commit/0c9fa7695788e71a5eb52b5754623ec39e49456e))
+
 ## [0.5.15](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.14...v0.5.15) (2024-08-22)
 
 
