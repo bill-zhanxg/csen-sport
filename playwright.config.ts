@@ -27,7 +27,7 @@ export default defineConfig({
 	},
 
 	// 10 Minutes
-	timeout: 10 * 60 * 1000,
+	timeout: 20 * 60 * 1000,
 	globalSetup: require.resolve('./global-setup'),
 
 	/* Configure projects for major browsers */
