@@ -1,8 +1,8 @@
-import { expect, test } from '@playwright/test';
+import { test } from '@playwright/test';
 
 test.use({ storageState: 'playwright/.auth/admin.json' });
 
-test('Login Page', async ({ page, baseURL }) => {
+test('Login Page', async ({ page }) => {
 	await page.goto('/login');
-	expect(page.url()).toBe(baseURL + '/');
+	await page.waitForURL('/', { timeout: 30 * 1000 });
 });

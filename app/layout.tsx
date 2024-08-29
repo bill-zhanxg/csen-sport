@@ -14,6 +14,7 @@ import { FeedbackDialog } from './components/Feedback';
 import { HandleUserTimezone } from './components/HandleUserTimezone';
 import { NavBar } from './components/NavBar';
 import { SentrySetUser } from './components/SentrySetUser';
+
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -98,12 +99,12 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 												tabIndex={0}
 												className="menu menu-md dropdown-content mt-3 z-[100] p-2 shadow bg-base-100 rounded-box border border-primary w-full overflow-auto"
 											>
-												<li className="w-full h-32 skeleton"></li>
+												<li className="w-full h-32 skeleton bg-base-content rounded-md m-0"></li>
 											</ul>
 										</div>
 										<div className="navbar-center hidden sm:flex">
 											<ul className="menu menu-horizontal px-1 z-[100]">
-												<li className="w-96 h-10 skeleton"></li>
+												<li className="w-96 h-10 skeleton bg-base-content rounded-md"></li>
 											</ul>
 										</div>
 										<div className="navbar-end">
