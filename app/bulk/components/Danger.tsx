@@ -71,7 +71,7 @@ export function Danger() {
 							className="btn btn-error"
 							disabled={gameLoading}
 							onClick={async (e) => {
-								e.preventDefault;
+								e.preventDefault();
 								setGameLoading(true);
 								const res = await resetGames();
 								setGameState(res);
