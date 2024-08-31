@@ -19,13 +19,22 @@ Sentry.init({
 
 	// This sets the sample rate to be 10%. You may want this to be 100% while
 	// in development and sample at a lower rate in production
-	replaysSessionSampleRate: 0.1,
+	replaysSessionSampleRate: 0.08,
 
 	integrations: [
 		Sentry.replayIntegration({
 			maskAllText: false,
 			maskAllInputs: false,
 			blockAllMedia: false,
+
+			minReplayDuration: 10 * 1000,
+			beforeErrorSampling: (event) => {
+				// Drop replay if path is /login and no error is present
+				if (event.request?.url?.includes('/login') && !event.exception) {
+					return false;
+				}
+				return true;
+			},
 		}),
 		Sentry.captureConsoleIntegration({ levels: ['error'] }),
 		Sentry.thirdPartyErrorFilterIntegration({
@@ -43,5 +52,11 @@ Sentry.init({
 	],
 
 	initialScope: { tags: { errorSource: 'client' } },
-	ignoreErrors: ['network error', 'Failed to fetch', 'Load failed', "Failed to construct 'URL': Invalid base URL"],
+	ignoreErrors: [
+		'network error',
+		'Failed to fetch',
+		'Load failed',
+		"Failed to construct 'URL': Invalid base URL",
+		'URI malformed',
+	],
 });
