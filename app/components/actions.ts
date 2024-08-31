@@ -1,13 +1,13 @@
 'use server';
 
-import { auth } from '@/libs/auth';
+import { authC } from '@/app/cache';
 import { getXataClient } from '@/libs/xata';
 import { revalidatePath } from 'next/cache';
 
 export async function setUserTimezone(timezone: string) {
 	if (!timezone || typeof timezone !== 'string') return;
 
-	const session = await auth();
+	const session = await authC();
 	if (!session || session.user.timezone === timezone) return;
 
 	await getXataClient().db.nextauth_users.update(session.user.id, { timezone });

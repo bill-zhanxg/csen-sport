@@ -1,5 +1,5 @@
+import { authC } from '@/app/cache';
 import { Unauthorized } from '@/app/globalComponents/Unauthorized';
-import { auth } from '@/libs/auth';
 import { isAdmin } from '@/libs/checkPermission';
 import { getXataClient } from '@/libs/xata';
 import { Metadata } from 'next';
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const ImportPage = dynamic(() => import('./components/ImportPage'), { ssr: false });
 
 export default async function Import() {
-	const session = await auth();
+	const session = await authC();
 	if (!isAdmin(session)) return Unauthorized();
 
 	const teachers = await getXataClient()

@@ -1,18 +1,18 @@
 'use server';
 
-import { auth } from '@/libs/auth';
+import { authC } from '@/app/cache';
 import { isAdmin } from '@/libs/checkPermission';
+import { chunk } from '@/libs/formatValue';
 import { getXataClient } from '@/libs/xata';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { AlertType } from '../components/Alert';
 import { UpdateGameSchema } from '../globalComponents/Schemas';
-import { chunk } from '@/libs/formatValue';
 
 const xata = getXataClient();
 
 export async function resetAll(): Promise<AlertType> {
-	const session = await auth();
+	const session = await authC();
 	if (!isAdmin(session))
 		return {
 			type: 'error',
@@ -58,7 +58,7 @@ export async function resetVenues() {
 }
 
 async function resetItem(table: 'games' | 'teams' | 'venues'): Promise<AlertType> {
-	const session = await auth();
+	const session = await authC();
 	if (!isAdmin(session))
 		return {
 			type: 'error',
@@ -107,7 +107,7 @@ const GameChangesSchema = z.array(
 export type GameChanges = z.infer<typeof GameChangesSchema>;
 
 export async function updateGamesBulk(dataRaw: z.infer<typeof GameChangesSchema>): Promise<AlertType> {
-	const session = await auth();
+	const session = await authC();
 	if (!isAdmin(session))
 		return {
 			type: 'error',

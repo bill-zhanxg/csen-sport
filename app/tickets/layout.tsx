@@ -1,4 +1,4 @@
-import { auth } from '@/libs/auth';
+import { authC } from '@/app/cache';
 import { isDeveloper } from '@/libs/checkPermission';
 import { SerializedTicket, serializeTickets } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
@@ -10,7 +10,7 @@ import { ticketEmitter } from './ticket-stream/eventListener';
 const xata = getXataClient();
 
 export default async function Tickets({ children }: { children: React.ReactNode }) {
-	const session = await auth();
+	const session = await authC();
 	if (!session) return Unauthorized();
 
 	async function getPaginatedTickets(closed?: boolean, offset?: number) {
@@ -49,7 +49,7 @@ export default async function Tickets({ children }: { children: React.ReactNode 
 
 	async function createTicket(data: FormData) {
 		'use server';
-		const session = await auth();
+		const session = await authC();
 		const title = data.get('title');
 		if (!title || typeof title !== 'string' || !session) return;
 

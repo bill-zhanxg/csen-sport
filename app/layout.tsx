@@ -1,5 +1,5 @@
 import SadCat from '@/app/images/sad-cat.png';
-import { auth, signOut } from '@/libs/auth';
+import { signOut } from '@/libs/auth';
 import { isBlocked, isDeveloper } from '@/libs/checkPermission';
 import { getXataClient } from '@/libs/xata';
 import type { Metadata } from 'next';
@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 import { FaBars, FaHome } from 'react-icons/fa';
 import 'server-only';
+import { authC } from './cache';
 import BarOfProgress from './components/BarOfProgress';
 import { FeedbackDialog } from './components/Feedback';
 import { HandleUserTimezone } from './components/HandleUserTimezone';
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
 const xata = getXataClient();
 
 export default async function MainLayout({ children }: { children: React.ReactNode }) {
-	const session = await auth();
+	const session = await authC();
 	const ip = headers().get('x-forwarded-for');
 
 	async function ticketUnread() {

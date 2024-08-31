@@ -1,7 +1,8 @@
-import { auth, signIn } from '@/libs/auth';
+import { signIn } from '@/libs/auth';
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import { redirect } from 'next/navigation';
+import { authC } from '../cache';
 
 export const metadata: Metadata = {
 	title: 'Login',
@@ -35,7 +36,7 @@ export default async function Login({
 }) {
 	const callbackURL = typeof searchParams.redirect === 'string' ? searchParams.redirect : searchParams.redirect?.[0];
 
-	const session = await auth();
+	const session = await authC();
 	if (session) return redirect(decodeURIComponent(callbackURL ?? '/'));
 
 	async function login() {

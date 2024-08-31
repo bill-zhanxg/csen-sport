@@ -1,7 +1,7 @@
+import { authC } from '@/app/cache';
 import { PaginationMenu } from '@/app/globalComponents/PaginationMenu';
 import { Tabs } from '@/app/globalComponents/Tabs';
 import { WeeklySportView } from '@/app/globalComponents/WeeklySportView';
-import { auth } from '@/libs/auth';
 import { isTeacher } from '@/libs/checkPermission';
 import { dayjs } from '@/libs/dayjs';
 import { getDateStart, stringifySearchParam } from '@/libs/formatValue';
@@ -23,7 +23,7 @@ const WeeklySportEdit = dynamic(() => import('@/app/globalComponents/WeeklySport
 const xata = getXataClient();
 
 export default async function WeeklySport({ searchParams }: { searchParams: SearchParams }) {
-	const session = await auth();
+	const session = await authC();
 	const itemsPerPage = 50;
 	const { filter, page, edit } = stringifySearchParam(searchParams);
 	const isPast = filter === 'past';

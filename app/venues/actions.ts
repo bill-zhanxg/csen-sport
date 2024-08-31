@@ -1,6 +1,6 @@
 'use server';
 
-import { auth } from '@/libs/auth';
+import { authC } from '@/app/cache';
 import { isAdmin } from '@/libs/checkPermission';
 import { VenuesRecord, getXataClient } from '@/libs/xata';
 import { SelectedPick } from '@xata.io/client';
@@ -43,7 +43,7 @@ async function venueAction(
 	func: () => Promise<Readonly<SelectedPick<VenuesRecord, ['*']>> | null>,
 	action: string,
 ): Promise<AlertType> {
-	const session = await auth();
+	const session = await authC();
 	if (!isAdmin(session)) return { type: 'error', message: 'Unauthorized' };
 
 	try {

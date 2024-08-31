@@ -1,4 +1,4 @@
-import { auth } from '@/libs/auth';
+import { authC } from '@/app/cache';
 import { isDeveloper } from '@/libs/checkPermission';
 import { SerializedTicket, SerializedTicketMessage } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
 const xata = getXataClient();
 
 export async function GET(req: NextRequest) {
-	const session = await auth();
+	const session = await authC();
 	if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
 	const responseStream = new TransformStream();

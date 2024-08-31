@@ -1,10 +1,10 @@
-import { auth } from '@/libs/auth';
+import { authC } from '@/app/cache';
 import { isAdmin } from '@/libs/checkPermission';
 import { write } from 'xlsx';
 import { getTeamsWorkbook } from '../dl';
 
 export async function GET() {
-	const session = await auth();
+	const session = await authC();
 	if (!isAdmin(session)) return new Response('Unauthorized', { status: 401 });
 
 	try {

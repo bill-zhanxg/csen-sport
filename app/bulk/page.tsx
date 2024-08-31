@@ -1,4 +1,4 @@
-import { auth } from '@/libs/auth';
+import { authC } from '@/app/cache';
 import { isAdmin } from '@/libs/checkPermission';
 import { serializeGamesWithId } from '@/libs/serializeData';
 import { getRawTeachers, getRawTeams, getRawVenues } from '@/libs/tableData';
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 const xata = getXataClient();
 
 export default async function BulkAction() {
-	const session = await auth();
+	const session = await authC();
 	if (!isAdmin(session)) return Unauthorized();
 
 	const games = await xata.db.games.select(['*', 'team.id', 'venue.id', 'teacher.id']).getAll();

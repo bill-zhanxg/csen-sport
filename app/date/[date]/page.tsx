@@ -1,7 +1,7 @@
+import { authC } from '@/app/cache';
 import { ErrorMessage } from '@/app/globalComponents/ErrorMessage';
 import { Tabs } from '@/app/globalComponents/Tabs';
 import { WeeklySportView } from '@/app/globalComponents/WeeklySportView';
-import { auth } from '@/libs/auth';
 import { isTeacher } from '@/libs/checkPermission';
 import { getDateEnd, getDateStart, stringifySearchParam } from '@/libs/formatValue';
 import { serializeGames } from '@/libs/serializeData';
@@ -24,7 +24,7 @@ export default async function DatePage({
 	params: { date: string };
 	searchParams: SearchParams;
 }) {
-	const session = await auth();
+	const session = await authC();
 	const date = new Date(parseInt(params.date));
 	let view = stringifySearchParam(searchParams).view as 'junior' | 'intermediate' | undefined;
 	if (view !== 'junior' && view !== 'intermediate') view = undefined;
