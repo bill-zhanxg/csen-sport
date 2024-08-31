@@ -5,7 +5,6 @@ import { v4 } from 'uuid';
 
 const xata = getXataClient();
 const blocked: string[] = [];
-let firstRequestDate: Date | null = null;
 
 export async function POST(request: NextRequest) {
 	// Manually log the user in with password (skipping auth.js)
@@ -18,11 +17,15 @@ export async function POST(request: NextRequest) {
 	if (typeof password !== 'string') return rejectLogin(ip);
 	const https = request.headers.get('x-forwarded-proto') === 'https' || request.nextUrl.protocol === 'https:';
 
-	// Replace the document if the first request was more than 1 hour ago
-	const replaceDocument = firstRequestDate ? new Date(Date.now() - 1000 * 60 * 60) > firstRequestDate : true;
-	if (replaceDocument) firstRequestDate = new Date();
-
 	const login = async (role: Role) => {
+		// Replace the document if the first request was more than 1 hour ago
+		let replaceDocument = false;
+		const document = await xata.db.nextauth_users.read(`test_user_${role}`);
+		if (document) {
+			const firstRequestDate = document.xata.createdAt;
+			replaceDocument = new Date(Date.now() - 1000 * 60 * 60) > firstRequestDate;
+		}
+
 		const sessionToken = v4();
 		// Testing duration should be less than 24 hours
 		const expires = new Date(Date.now() + 1000 * 60 * 60 * 24);
@@ -34,7 +37,12 @@ export async function POST(request: NextRequest) {
 			role,
 		};
 
-		const user = await xata.db.nextauth_users[replaceDocument ? 'createOrReplace' : 'createOrUpdate'](userData);
+		if (replaceDocument && document) {
+			// We need to delete the document first to reset the createdAt date
+			await document.delete();
+		}
+
+		const user = await xata.db.nextauth_users.createOrUpdate(userData);
 		const session = await xata.db.nextauth_sessions.create({
 			sessionToken,
 			expires,
