@@ -1,6 +1,6 @@
 'use server';
 
-import { auth } from '@/libs/auth';
+import { authC } from '@/app/cache';
 import { isAdmin } from '@/libs/checkPermission';
 import { getXataClient } from '@/libs/xata';
 import { revalidatePath } from 'next/cache';
@@ -19,7 +19,7 @@ const schema = z
 	});
 
 export async function changeRole(prevState: ChangeRoleState, formData: FormData): Promise<ChangeRoleState> {
-	const session = await auth();
+	const session = await authC();
 	if (!isAdmin(session)) return { success: false, message: 'Unauthorized' };
 
 	const parse = schema.safeParse({

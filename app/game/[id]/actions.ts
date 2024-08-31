@@ -1,6 +1,5 @@
 'use server';
-
-import { auth } from '@/libs/auth';
+import { authC } from '@/app/cache';
 import { isTeacher } from '@/libs/checkPermission';
 import { dayjs } from '@/libs/dayjs';
 import { FormState } from '@/libs/types';
@@ -42,7 +41,7 @@ const schema = z.object({
 });
 
 export async function updateGame(prevState: FormState, formData: FormData): Promise<FormState> {
-	const session = await auth();
+	const session = await authC();
 	if (!session || !isTeacher(session)) return { success: false, message: 'Unauthorized' };
 
 	try {

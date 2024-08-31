@@ -1,5 +1,5 @@
+import { authC } from '@/app/cache';
 import { ErrorMessage } from '@/app/globalComponents/ErrorMessage';
-import { auth } from '@/libs/auth';
 import { isTeacher } from '@/libs/checkPermission';
 import { serializeGame } from '@/libs/serializeData';
 import { getRawTeachers, getRawTeams, getRawVenues } from '@/libs/tableData';
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function EditGame({ params }: { params: { id: string } }) {
-	const session = await auth();
+	const session = await authC();
 	const game = await getXataClient().db.games.read(params.id, ['*', 'team.*', 'venue.*', 'teacher.*']);
 	const isTeacherBool = isTeacher(session);
 

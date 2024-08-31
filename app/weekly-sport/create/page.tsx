@@ -1,5 +1,5 @@
+import { authC } from '@/app/cache';
 import { Unauthorized } from '@/app/globalComponents/Unauthorized';
-import { auth } from '@/libs/auth';
 import { isAdmin } from '@/libs/checkPermission';
 import { getRawTeachers } from '@/libs/tableData';
 import { Metadata } from 'next';
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Create() {
-	const session = await auth();
+	const session = await authC();
 	if (!isAdmin(session)) return Unauthorized();
 	const teachers = await getRawTeachers();
 

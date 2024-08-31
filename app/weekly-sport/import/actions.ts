@@ -1,6 +1,6 @@
 'use server';
 
-import { auth } from '@/libs/auth';
+import { authC } from '@/app/cache';
 import { isAdmin } from '@/libs/checkPermission';
 import { chunk, formatTime } from '@/libs/formatValue';
 import { getXataClient } from '@/libs/xata';
@@ -38,7 +38,7 @@ export async function importData(
 	defaultsRaw: Defaults,
 	timezoneRaw: string,
 ): Promise<ImportState> {
-	const session = await auth();
+	const session = await authC();
 	if (!isAdmin(session)) return { type: 'error', message: 'Unauthorized' };
 
 	try {

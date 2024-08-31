@@ -1,7 +1,7 @@
+import { authC } from '@/app/cache';
 import { Unauthorized } from '@/app/globalComponents/Unauthorized';
 import { UserAvatar } from '@/app/globalComponents/UserAvatar';
 import NotFound from '@/app/not-found';
-import { auth } from '@/libs/auth';
 import { isDeveloper } from '@/libs/checkPermission';
 import {
 	SerializedTicketMessage,
@@ -10,7 +10,6 @@ import {
 	serializeTicketMessages,
 } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
-import Image from 'next/image';
 import { FaRegQuestionCircle } from 'react-icons/fa';
 import { FaEllipsisVertical } from 'react-icons/fa6';
 import { ticketEmitter } from '../ticket-stream/eventListener';
@@ -23,7 +22,7 @@ export const revalidate = 0;
 const xata = getXataClient();
 
 export default async function TicketMessages({ params }: { params: { id: string } }) {
-	const session = await auth();
+	const session = await authC();
 	if (!session) return Unauthorized();
 
 	const ticket_id = params.id;

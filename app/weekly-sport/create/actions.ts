@@ -2,7 +2,7 @@
 
 import { AlertType } from '@/app/components/Alert';
 import { emptyToNull } from '@/app/globalComponents/Schemas';
-import { auth } from '@/libs/auth';
+import { authC } from '@/app/cache';
 import { chunk, formatDate, formatTime } from '@/libs/formatValue';
 import { getXataClient } from '@/libs/xata';
 import { revalidatePath } from 'next/cache';
@@ -58,7 +58,7 @@ export async function createWeeklySport(
 	gamesRaw: Game[],
 	timezone: string,
 ): Promise<AlertType> {
-	const session = await auth();
+	const session = await authC();
 	if (!session) return { type: 'error', message: 'Unauthorized' };
 
 	try {

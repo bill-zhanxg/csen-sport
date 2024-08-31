@@ -1,9 +1,8 @@
+import { authC } from '@/app/cache';
 import { Box } from '@/app/globalComponents/Box';
 import { ErrorMessage } from '@/app/globalComponents/ErrorMessage';
 import { Unauthorized } from '@/app/globalComponents/Unauthorized';
 import { UserAvatar } from '@/app/globalComponents/UserAvatar';
-import { revalidate } from '@/app/tickets/[id]/page';
-import { auth } from '@/libs/auth';
 import { isAdmin, isTeacher } from '@/libs/checkPermission';
 import { getXataClient } from '@/libs/xata';
 import { revalidatePath } from 'next/cache';
@@ -18,7 +17,7 @@ export default async function User({
 		id: string;
 	};
 }) {
-	const session = await auth();
+	const session = await authC();
 	const user = await xata.db.nextauth_users.read(params.id, ['email', 'name', 'image', 'role']);
 	if (!user) return <ErrorMessage code="404" message="The user you're looking for can not be found" />;
 	const userId = user.id;

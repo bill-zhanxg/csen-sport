@@ -1,6 +1,6 @@
 'use server';
 
-import { auth } from '@/libs/auth';
+import { authC } from '@/app/cache';
 import { isTeacher } from '@/libs/checkPermission';
 import { FormState } from '@/libs/types';
 import { getXataClient } from '@/libs/xata';
@@ -31,7 +31,7 @@ const schema = z.object({
 });
 
 export async function updateProfile(prevState: FormState, formData: FormData): Promise<FormState> {
-	const session = await auth();
+	const session = await authC();
 	if (!session) return { success: false, message: 'Unauthorized' };
 
 	const parse = schema.safeParse({

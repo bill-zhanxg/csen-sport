@@ -1,4 +1,4 @@
-import { auth } from '@/libs/auth';
+import { authC } from '@/app/cache';
 import { isAdmin } from '@/libs/checkPermission';
 import { serializeVenues } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Teams() {
-	const session = await auth();
+	const session = await authC();
 	if (!isAdmin(session)) return Unauthorized();
 
 	const venues = await getXataClient().db.venues.getAll();

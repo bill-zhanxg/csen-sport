@@ -1,6 +1,6 @@
 'use server';
 
-import { auth } from '@/libs/auth';
+import { authC } from '@/app/cache';
 import { isTeacher } from '@/libs/checkPermission';
 import { GamesRecord, getXataClient } from '@/libs/xata';
 import { SelectedPick } from '@xata.io/client';
@@ -53,7 +53,7 @@ async function gameAction(
 	action: string,
 	revalidate = false,
 ): Promise<AlertType> {
-	const session = await auth();
+	const session = await authC();
 	if (!isTeacher(session)) return { type: 'error', message: 'Unauthorized' };
 
 	try {

@@ -1,16 +1,15 @@
 'use server';
-
-import { auth } from '@/libs/auth';
 import { isDeveloper } from '@/libs/checkPermission';
 import { serializeTicket, serializeTicketMessage } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
 import { ticketEmitter } from '../ticket-stream/eventListener';
 import { ticketMessageEmitter } from './message-stream/eventListener';
+import { authC } from '@/app/cache';
 
 const xata = getXataClient();
 
 export async function toggleTicketStatus(id: string, close: boolean) {
-	const session = await auth();
+	const session = await authC();
 	if (!session || typeof id !== 'string' || typeof close !== 'boolean') return;
 	const ticket = await xata.db.tickets.update(id, { closed: close });
 	if (ticket?.createdBy?.id) {
@@ -22,7 +21,7 @@ export async function toggleTicketStatus(id: string, close: boolean) {
 }
 
 export async function markMessageAsSeen(id: string) {
-	const session = await auth();
+	const session = await authC();
 	if (!session || typeof id !== 'string') return;
 	await xata.db.ticket_messages.update(id, { seen: true });
 	const message = await xata.db.ticket_messages.read(id, ['*', 'sender.name', 'sender.email', 'sender.image']);
@@ -43,7 +42,7 @@ export async function markMessageAsSeen(id: string) {
 }
 
 export async function deleteTicket(id: string) {
-	const session = await auth();
+	const session = await authC();
 	if (!isDeveloper(session) || typeof id !== 'string') return;
 	await xata.db.tickets.delete(id);
 }

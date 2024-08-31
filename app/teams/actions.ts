@@ -1,6 +1,6 @@
 'use server';
 
-import { auth } from '@/libs/auth';
+import { authC } from '@/app/cache';
 import { isAdmin } from '@/libs/checkPermission';
 import { TeamsRecord, getXataClient } from '@/libs/xata';
 import { SelectedPick } from '@xata.io/client';
@@ -44,7 +44,7 @@ async function teamAction(
 	func: () => Promise<Readonly<SelectedPick<TeamsRecord, ['*']>> | null>,
 	action: string,
 ): Promise<AlertType> {
-	const session = await auth();
+	const session = await authC();
 	if (!isAdmin(session)) return { type: 'error', message: 'Unauthorized' };
 
 	try {

@@ -1,4 +1,4 @@
-import { auth } from '@/libs/auth';
+import { authC } from '@/app/cache';
 import { serializeTeams } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
 import { Metadata } from 'next';
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Profile() {
-	const session = await auth();
+	const session = await authC();
 	if (!session) return Unauthorized();
 
 	const teams = await getXataClient().db.teams.getAll();

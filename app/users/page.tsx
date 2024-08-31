@@ -1,4 +1,4 @@
-import { auth } from '@/libs/auth';
+import { authC } from '@/app/cache';
 import { isAdmin } from '@/libs/checkPermission';
 import { stringifySearchParam } from '@/libs/formatValue';
 import { SearchParams } from '@/libs/types';
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 const xata = getXataClient();
 
 export default async function Users({ searchParams }: { searchParams: SearchParams }) {
-	const session = await auth();
+	const session = await authC();
 	if (!session || !isAdmin(session)) return Unauthorized();
 	const pageSize = 20;
 	const { page, search } = stringifySearchParam(searchParams);

@@ -1,4 +1,4 @@
-import { auth } from '@/libs/auth';
+import { authC } from '@/app/cache';
 import { isTeacher } from '@/libs/checkPermission';
 import { getRawTeachers } from '@/libs/tableData';
 import { gamesToDates, getLastVisitDate } from '@/libs/tableHelpers';
@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { WeeklySportView } from '../globalComponents/WeeklySportView';
 
 export default async function Home() {
-	const session = await auth();
+	const session = await authC();
 	const isTeacherBool = isTeacher(session);
 	const lastVisit = getLastVisitDate(session);
 
