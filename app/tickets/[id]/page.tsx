@@ -3,6 +3,7 @@ import { Unauthorized } from '@/app/globalComponents/Unauthorized';
 import { UserAvatar } from '@/app/globalComponents/UserAvatar';
 import NotFound from '@/app/not-found';
 import { isDeveloper } from '@/libs/checkPermission';
+import { redisClient } from '@/libs/redis';
 import {
 	SerializedTicketMessage,
 	serializeTicket,
@@ -20,6 +21,7 @@ import { ticketMessageEmitter } from './message-stream/eventListener';
 export const revalidate = 0;
 
 const xata = getXataClient();
+const redisC = redisClient.duplicate();
 
 export default async function TicketMessages({ params }: { params: { id: string } }) {
 	const session = await authC();
@@ -32,6 +34,7 @@ export default async function TicketMessages({ params }: { params: { id: string 
 	const serializedTicket = {
 		id: ticket.id,
 		title: ticket.title,
+		closed: ticket.closed,
 	};
 	const ticket_creator = ticket.createdBy.id;
 	const creator = isDeveloper(session) ? await ticket.createdBy.read() : undefined;
@@ -109,6 +112,13 @@ export default async function TicketMessages({ params }: { params: { id: string 
 			sender: session.user.id,
 			message,
 		});
+		await redisC.publish(
+			'ticket-message',
+			JSON.stringify({
+				...serializeTicketMessage({ ...data, sender: session.user as any }),
+				type: 'new',
+			}),
+		);
 		ticketMessageEmitter.emit(ticket_id, {
 			...serializeTicketMessage({ ...data, sender: session.user as any }),
 			type: 'new',

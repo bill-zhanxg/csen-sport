@@ -76,7 +76,9 @@ export function TicketsList({
 						return [
 							{
 								id: data.ticket.id,
+								createdBy: data.ticket.createdBy,
 								title: data.ticket.title,
+								closed: data.ticket.closed,
 								latest_message: {
 									id: data.message.id,
 									message: data.message.message,
@@ -122,7 +124,9 @@ export function TicketsList({
 					return [
 						{
 							id: data.ticket.id,
+							createdBy: data.ticket.createdBy,
 							title: data.ticket.title,
+							closed: data.ticket.closed,
 							latest_message: null,
 						},
 						...prev,

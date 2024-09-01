@@ -1,6 +1,7 @@
 import { CustomUser } from '@/next-auth';
 import { Page, SelectedPick } from '@xata.io/client';
 import { User } from 'next-auth';
+import { z } from 'zod';
 import { RawTeam, RawVenue } from './tableData';
 import { GamesRecord, TeamsRecord, TicketMessagesRecord, TicketsRecord, VenuesRecord } from './xata';
 
@@ -167,17 +168,24 @@ export function serializeGameWithId(
 }
 
 // Tickets
-export type SerializedTicket = {
-	id: string;
-	title: string;
-	latest_message?: {
-		id: string;
-		message?: string | null;
-		seen: boolean;
-		createdAt?: Date | null;
-		senderId?: string | null;
-	} | null;
-};
+export const serializedTicketSchema = z.object({
+	id: z.string(),
+	createdBy: z.string().optional().nullable(),
+	title: z.string(),
+	closed: z.boolean(),
+	latest_message: z
+		.object({
+			id: z.string(),
+			message: z.string().optional().nullable(),
+			seen: z.boolean(),
+			createdAt: z.date().optional().nullable(),
+			senderId: z.string().optional().nullable(),
+		})
+		.optional()
+		.nullable(),
+});
+
+export type SerializedTicket = z.infer<typeof serializedTicketSchema>;
 
 export function serializeTickets(
 	tickets: Page<TicketsRecord, SelectedPick<TicketsRecord, ('*' | 'latest_message.*')[]>>,
@@ -187,12 +195,16 @@ export function serializeTickets(
 
 export function serializeTicket({
 	id,
+	createdBy,
 	title,
+	closed,
 	latest_message,
 }: SelectedPick<TicketsRecord, ('*' | 'latest_message.*')[]>): SerializedTicket {
 	return {
 		id,
+		createdBy: createdBy?.id,
 		title,
+		closed,
 		latest_message: latest_message
 			? {
 					id: latest_message.id,
@@ -205,22 +217,27 @@ export function serializeTicket({
 	};
 }
 
-export type SerializedTicketMessage = {
-	id: string;
-	ticket_id?: string | null;
-	sender?: {
-		id?: string | null;
-		name?: string | null;
-		email?: string | null;
-		image?: string | null;
-	} | null;
-	seen: boolean;
-	message?: string | null;
-	xata: {
-		createdAt: Date;
-		updatedAt: Date;
-	};
-};
+export const serializedTicketMessageSchema = z.object({
+	id: z.string(),
+	ticket_id: z.string().optional().nullable(),
+	sender: z
+		.object({
+			id: z.string().optional().nullable(),
+			name: z.string().optional().nullable(),
+			email: z.string().optional().nullable(),
+			image: z.string().optional().nullable(),
+		})
+		.optional()
+		.nullable(),
+	seen: z.boolean(),
+	message: z.string().optional().nullable(),
+	xata: z.object({
+		createdAt: z.date(),
+		updatedAt: z.date(),
+	}),
+});
+
+export type SerializedTicketMessage = z.infer<typeof serializedTicketMessageSchema>;
 
 export function serializeTicketMessages(
 	messages:

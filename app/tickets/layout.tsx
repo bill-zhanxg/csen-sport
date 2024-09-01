@@ -62,6 +62,7 @@ export default async function Tickets({ children }: { children: React.ReactNode 
 			ticket: {
 				id,
 				title,
+				closed: false,
 				creatorId: session.user.id,
 			},
 		});
