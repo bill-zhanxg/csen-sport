@@ -10,6 +10,7 @@ import { FaBars, FaExternalLinkAlt, FaHome } from 'react-icons/fa';
 import { UserAvatar } from '../globalComponents/UserAvatar';
 import { TicketEventType } from '../tickets/types';
 import { FeedbackButton } from './Feedback';
+import NProgress from 'nprogress';
 
 type Menu = {
 	id: string;
@@ -318,7 +319,14 @@ export function NavBar({
 							<FeedbackButton />
 						</li>
 						<li>
-							<form className="menu-title !p-0" action={logout}>
+							<form
+								className="menu-title !p-0"
+								action={logout}
+								onSubmit={() => {
+									// Start the progress bar
+									NProgress.start();
+								}}
+							>
 								<button
 									type="submit"
 									id="logout-btn"
