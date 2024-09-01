@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.5.18](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.17...v0.5.18) (2024-09-01)
+
+
+### Bug Fixes
+
+* (refactor): Update gamesToDates function to use user timezone for date formatting and change display date for weekly sport fixtures to date instead of using rawDate ([90c3cb7](https://github.com/bill-zhanxg/csen-sport/commit/90c3cb7bce465feffd7ef978a054bdfd3966df43))
+* Add NProgress to logout form submission ([4532689](https://github.com/bill-zhanxg/csen-sport/commit/4532689e2299ffaba886896526c7ec1401f53062))
+* improve padding for weekly sport fixture page and fix loading UI for ticket page on mobile ([e9bd4b1](https://github.com/bill-zhanxg/csen-sport/commit/e9bd4b18b3b148e11bfa807e96f034460c46ea62))
+
 ## [0.5.17](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.16...v0.5.17) (2024-08-31)
 
 
