@@ -22,11 +22,11 @@ jobs:
     steps:
       - id: setVariables
         run: |
-          echo "name=shardIndex::$shardIndex" >> $GITHUB_OUTPUT
-          echo "name=shardTotal::$shardTotal" >> $GITHUB_OUTPUT
+          echo "name=shardIndex::$shardIndexInput" >> $GITHUB_OUTPUT
+          echo "name=shardTotal::$shardTotalInput" >> $GITHUB_OUTPUT
         env:
-          shardIndex: ${{ inputs.shardIndex }}
-          shardTotal: ${{ inputs.shardTotal }}
+          shardIndexInput: ${{ inputs.shardIndex }}
+          shardTotalInput: ${{ inputs.shardTotal }}
 
   test:
     timeout-minutes: 60
@@ -37,8 +37,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shardIndex: ${{ fromJson(needs.setup.outputs.shardIndex) }}
-        shardTotal: ${{ fromJson(needs.setup.outputs.shardTotal) }}
+        shardIndex: ${{ fromJson(inputs.shardIndex) }}
+        shardTotal: ${{ fromJson(inputs.shardTotal) }}
 
     steps:
       - uses: actions/checkout@v4
