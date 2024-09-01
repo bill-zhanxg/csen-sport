@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.5.17](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.16...v0.5.17) (2024-08-31)
+
+
+### Bug Fixes
+
+* adding cache to auth function to avoid duplicate auth requests ([6e4e2d5](https://github.com/bill-zhanxg/csen-sport/commit/6e4e2d525b3b5f22f51022127e7b84e18eb85ce6))
+* Fix missing parentheses in preventDefault call ([c25fa31](https://github.com/bill-zhanxg/csen-sport/commit/c25fa31af674420122b78752991b2109563cd90e))
+* move global loading.tsx to each sub folder to prevent login route to load loading.tsx ([98fcc9d](https://github.com/bill-zhanxg/csen-sport/commit/98fcc9d92aece46fd853d3e6050c50fbbad4b2c2))
+* update loading.tsx home page to include padding on all sides for better alignment ([71d9937](https://github.com/bill-zhanxg/csen-sport/commit/71d9937c9ba33dd4ae02d26415934412fa9bec7b))
+
 ## [0.5.16](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.15...v0.5.16) (2024-08-29)
 
 
