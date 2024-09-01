@@ -58,3 +58,5 @@ jobs:
     secrets: inherit
     with:
       production: true
+      shardIndex: '[1,2]'
+      shardTotal: '[2]'
