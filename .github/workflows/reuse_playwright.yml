@@ -17,13 +17,13 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      shardIndex: ${{ steps.setVariables.outputs.matrix }}
-      shardTotal: ${{ steps.setVariables.outputs.matrix }}
+      shardIndex: ${{ steps.setVariables.outputs.shardIndex }}
+      shardTotal: ${{ steps.setVariables.outputs.shardTotal }}
     steps:
       - id: setVariables
         run: |
-          echo "::set-output name=shardIndex::$shardIndex"
-          echo "::set-output name=shardTotal::$shardTotal"
+          echo "name=shardIndex::$shardIndex" >> $GITHUB_OUTPUT
+          echo "name=shardTotal::$shardTotal" >> $GITHUB_OUTPUT
         env:
           shardIndex: ${{ inputs.shardIndex }}
           shardTotal: ${{ inputs.shardTotal }}
@@ -38,7 +38,7 @@ jobs:
       fail-fast: false
       matrix:
         shardIndex: ${{ fromJson(needs.setup.outputs.shardIndex) }}
-        shardTotal: [6]
+        shardTotal: ${{ fromJson(needs.setup.outputs.shardTotal) }}
 
     steps:
       - uses: actions/checkout@v4
