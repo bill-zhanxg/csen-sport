@@ -18,7 +18,6 @@ namespace NodeJS {
 		TEST_LOGIN_STUDENT_PASSWORD: string;
 		TEST_LOGIN_BLOCKED_PASSWORD: string;
 
-		// TODO:
 		REDIS_HOST: string;
 		REDIS_PORT: number;
 		REDIS_PASSWORD: string;

@@ -73,6 +73,9 @@ jobs:
           TEST_LOGIN_TEACHER_PASSWORD: ${{ secrets.TEST_LOGIN_TEACHER_PASSWORD }}
           TEST_LOGIN_STUDENT_PASSWORD: ${{ secrets.TEST_LOGIN_STUDENT_PASSWORD }}
           TEST_LOGIN_BLOCKED_PASSWORD: ${{ secrets.TEST_LOGIN_BLOCKED_PASSWORD }}
+          REDIS_HOST: ${{ secrets.REDIS_HOST }}
+          REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
         run: npm run playwright --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
 
       # Renaming the report files if exists to avoid conflicts (blob-report/report.zip to blob-report/report-{shardIndex}.zip)
