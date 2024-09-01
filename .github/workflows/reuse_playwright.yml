@@ -14,24 +14,9 @@ on:
         type: boolean
 
 jobs:
-  setup:
-    runs-on: ubuntu-latest
-    outputs:
-      shardIndex: ${{ steps.setVariables.outputs.shardIndex }}
-      shardTotal: ${{ steps.setVariables.outputs.shardTotal }}
-    steps:
-      - id: setVariables
-        run: |
-          echo "name=shardIndex::$shardIndexInput" >> $GITHUB_OUTPUT
-          echo "name=shardTotal::$shardTotalInput" >> $GITHUB_OUTPUT
-        env:
-          shardIndexInput: ${{ inputs.shardIndex }}
-          shardTotalInput: ${{ inputs.shardTotal }}
-
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    needs: setup
     environment: ${{ inputs.production && 'Production' || 'Development' }}
 
     strategy:
