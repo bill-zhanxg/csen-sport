@@ -2,7 +2,7 @@
 
 import { isAdmin } from '@/libs/checkPermission';
 import { motion } from 'framer-motion';
-import { Session } from 'next-auth';
+import type { Session } from 'next-auth';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { memo, MouseEventHandler, use, useEffect, useMemo, useState } from 'react';

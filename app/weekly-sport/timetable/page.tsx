@@ -86,7 +86,7 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 	}
 
 	return (
-		<div className="flex flex-col items-center w-full sm:p-4 gap-4">
+		<div className="flex flex-col items-center w-full py-6 p-1 sm:p-4 gap-4">
 			<h1 className="text-2xl font-bold text-center">
 				Weekly Sport Timetable{' '}
 				<span className="text-primary">
