@@ -1,5 +1,6 @@
 import { Page, SelectedPick } from '@xata.io/client';
 import { Session } from 'next-auth';
+import { dayjs } from './dayjs';
 import { SerializedGame } from './serializeData';
 import { GamesRecord, getXataClient } from './xata';
 
@@ -20,6 +21,7 @@ export function gamesToDates(
 		| Page<GamesRecord, SelectedPick<GamesRecord, ('*' | 'team.*' | 'teacher.*' | 'venue.*')[]>>
 		| SelectedPick<GamesRecord, ('*' | 'team.*' | 'teacher.*' | 'venue.*')[]>[],
 	isTeacher: boolean,
+	timezone: string | null | undefined,
 ): DateWithGames[] {
 	const dates: DateWithGames[] = [];
 	let datesArrayIndex = 0;
@@ -27,8 +29,7 @@ export function gamesToDates(
 	for (const game of gamesArray) {
 		const gameDate = game.date;
 		if (!gameDate) continue;
-		// TODO: use user timezone instead
-		const date = gameDate.toLocaleDateString();
+		const date = dayjs.tz(gameDate, timezone ?? '').format('DD/MM/YYYY');
 		const checkArray = () => {
 			if (!dates[datesArrayIndex]) dates[datesArrayIndex] = { date, rawDate: gameDate, games: [] };
 		};

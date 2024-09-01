@@ -412,7 +412,7 @@ export default function WeeklySportEdit({
 			<div className="w-full bg-base-100 rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4">
 				<div className="flex justify-center sticky left-0">
 					<Link href={`/date/${date.rawDate.valueOf()}`} className="text-xl text-center link link-primary">
-						Weekly Sport {dayjs.tz(date.rawDate, timezone).format('DD/MM/YYYY')}
+						Weekly Sport {date.date}
 					</Link>
 				</div>
 				<div className="overflow-x-auto">

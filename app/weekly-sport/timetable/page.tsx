@@ -70,7 +70,7 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 		venuesPromise,
 	]);
 
-	const dates = gamesToDates(games, isTeacherBool);
+	const dates = gamesToDates(games, isTeacherBool, session?.user.timezone);
 
 	function buildSearchParam(props?: { edit?: string; filter?: string; page?: string }) {
 		const { edit, filter, page } = props ?? {};

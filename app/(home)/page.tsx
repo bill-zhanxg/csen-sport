@@ -36,7 +36,7 @@ export default async function Home() {
 			pagination: { size: 30 },
 		});
 
-	const dates = gamesToDates(games, isTeacherBool);
+	const dates = gamesToDates(games, isTeacherBool, session?.user.timezone);
 	const teachers = await getRawTeachers();
 
 	return (

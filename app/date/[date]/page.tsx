@@ -41,7 +41,7 @@ export default async function DatePage({
 			consistency: 'eventual',
 		});
 
-	const dates = gamesToDates(games, false);
+	const dates = gamesToDates(games, false, session?.user.timezone);
 	const teachers = await getRawTeachers();
 
 	return (

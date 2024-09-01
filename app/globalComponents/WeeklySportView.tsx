@@ -43,7 +43,7 @@ export function WeeklySportView({
 				href={`/date/${date.rawDate.valueOf()}`}
 				className="block sticky left-0 text-xl text-center link link-primary"
 			>
-				Weekly Sport {dayjs.tz(date.rawDate, timezone).format('DD/MM/YYYY')}
+				Weekly Sport {date.date}
 				{showRelative && ` (${dayjs.tz(date.games[0]?.start ?? date.rawDate, timezone).fromNow()})`}
 			</Link>
 			<div className="w-full mt-2">
