@@ -7,6 +7,7 @@ describe('Weekly Sport View Component', () => {
 	 * @type {DateWithGames}
 	 */
 	const date = {
+		date: '29/08/2024',
 		rawDate: new Date(1724919156966),
 		games: [
 			{

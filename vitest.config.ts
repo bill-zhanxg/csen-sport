@@ -21,10 +21,10 @@ export default defineConfig({
 		environment: 'jsdom',
 		setupFiles: 'vitest.setup.ts',
 
-		browser: {
-			provider: 'playwright',
-			enabled: !process.env.CI,
-			name: 'chromium',
-		},
+		// browser: {
+		// 	provider: 'playwright',
+		// 	enabled: !process.env.CI,
+		// 	name: 'chromium',
+		// },
 	},
 });
