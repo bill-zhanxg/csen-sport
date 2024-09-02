@@ -11,6 +11,7 @@ import {
 	serializeTicketMessages,
 } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
+import Pusher from 'pusher';
 import { FaRegQuestionCircle } from 'react-icons/fa';
 import { FaEllipsisVertical } from 'react-icons/fa6';
 import { ticketEmitter } from '../ticket-stream/eventListener';
@@ -127,6 +128,18 @@ export default async function TicketMessages({ params }: { params: { id: string 
 			ticket_creator_id: ticket_creator,
 			message: serializeTicketMessage({ ...data, sender: session.user as any }),
 			ticket: serializedTicket,
+		});
+
+		const pusher = new Pusher({
+			appId: process.env.PUSHER_APP_ID,
+			key: process.env.NEXT_PUBLIC_PUSHER_KEY,
+			secret: process.env.PUSHER_SECRET,
+			cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
+			useTLS: true,
+		});
+
+		pusher.trigger('my-channel', 'my-event', {
+			message,
 		});
 
 		await xata.db.tickets.update({

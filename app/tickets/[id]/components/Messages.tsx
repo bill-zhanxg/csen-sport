@@ -4,11 +4,16 @@ import { UserAvatar } from '@/app/globalComponents/UserAvatar';
 import { dayjs } from '@/libs/dayjs';
 import { SerializedTicketMessage } from '@/libs/serializeData';
 import { User } from 'next-auth';
+import Pusher from 'pusher-js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { FaTriangleExclamation } from 'react-icons/fa6';
 import { TicketMessageEventType } from '../../types';
 import { markMessageAsSeen } from '../actions';
 import { OptimisticMessages } from './MessagesTab';
+
+var pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
+	cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
+});
 
 export function Messages({
 	user,
@@ -86,8 +91,15 @@ export function Messages({
 			}
 		};
 
+		var channel = pusher.subscribe('my-channel');
+		channel.bind('my-event', (data: any) => {
+			alert(JSON.stringify(data));
+			console.log(data);
+		});
+
 		return () => {
 			eventSource.close();
+			channel.unbind_all();
 		};
 	}, [ticketId, user]);
 

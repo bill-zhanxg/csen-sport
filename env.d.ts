@@ -21,5 +21,10 @@ namespace NodeJS {
 		REDIS_HOST: string;
 		REDIS_PORT: number;
 		REDIS_PASSWORD: string;
+
+		NEXT_PUBLIC_PUSHER_CLUSTER: string;
+		PUSHER_APP_ID: string;
+		NEXT_PUBLIC_PUSHER_KEY: string;
+		PUSHER_SECRET: string;
 	}
 }
