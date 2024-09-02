@@ -8,7 +8,6 @@ import {
 import { z } from 'zod';
 
 const publisher = redisClient.duplicate();
-const subscriber = redisClient.duplicate();
 
 const typeSchema = z.enum(['new', 'update']);
 
@@ -22,7 +21,7 @@ const ticketSchema = z.object({
 	ticket: serializedTicketSchema,
 });
 
-async function emitMessage(type: 'new' | 'update', message: SerializedTicketMessage, ticket: SerializedTicket) {
+export async function emitMessage(type: 'new' | 'update', message: SerializedTicketMessage, ticket: SerializedTicket) {
 	// Pub/Sub Format:
 	// key: `message`
 	// value: { type, message, ticket }
@@ -30,7 +29,7 @@ async function emitMessage(type: 'new' | 'update', message: SerializedTicketMess
 	await publisher.publish(`message_${process.env.NODE_ENV}`, JSON.stringify({ type, message, ticket }));
 }
 
-async function emitTicket(type: 'new' | 'update', ticket: SerializedTicket) {
+export async function emitTicket(type: 'new' | 'update', ticket: SerializedTicket) {
 	// Pub/Sub Format:
 	// key: `ticket`
 	// value: { type, ticket }
@@ -38,7 +37,9 @@ async function emitTicket(type: 'new' | 'update', ticket: SerializedTicket) {
 	await publisher.publish('ticket_${process.env.NODE_ENV}', JSON.stringify({ type, ticket }));
 }
 
-function subscribeToMessages(callback: (data: z.infer<typeof messageSchema>) => void) {
+export function subscribeToMessages(callback: (data: z.infer<typeof messageSchema>) => void) {
+	const subscriber = redisClient.duplicate();
+
 	subscriber.subscribe(`message_${process.env.NODE_ENV}`);
 	subscriber.on('message', (channel, message) => {
 		// Channel is always `message`
@@ -48,9 +49,13 @@ function subscribeToMessages(callback: (data: z.infer<typeof messageSchema>) => 
 		if (!data.success) return console.warn('Invalid message received:', message);
 		callback(data.data);
 	});
+
+	return subscriber;
 }
 
-function subscribeToTickets(callback: (data: z.infer<typeof ticketSchema>) => void) {
+export function subscribeToTickets(callback: (data: z.infer<typeof ticketSchema>) => void) {
+	const subscriber = redisClient.duplicate();
+
 	subscriber.subscribe(`ticket_${process.env.NODE_ENV}`);
 	subscriber.on('message', (channel, message) => {
 		// Channel is always `ticket`
@@ -60,4 +65,6 @@ function subscribeToTickets(callback: (data: z.infer<typeof ticketSchema>) => vo
 		if (!data.success) return console.warn('Invalid ticket received:', message);
 		callback(data.data);
 	});
+
+	return subscriber;
 }

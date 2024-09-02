@@ -1,13 +1,12 @@
 import { authC } from '@/app/cache';
 import { isDeveloper } from '@/libs/checkPermission';
-import { SerializedTicketMessage } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSSEWriter } from 'ts-sse';
+import { subscribeToMessages } from '../../helper';
 import { TicketMessageEvents } from '../../types';
-import { ticketMessageEmitter } from './eventListener';
 
-export const runtime = 'nodejs';
+export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 const xata = getXataClient();
@@ -25,18 +24,13 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 
 	const notifier = getSSEWriter(writer, encoder) as TicketMessageEvents;
 
-	const onMessage = async (
-		message: SerializedTicketMessage & {
-			type: 'new' | 'update';
-		},
-	) => {
-		if (message.type === 'new') notifier.update({ data: { type: 'new', message } });
-		else if (message.type === 'update') notifier.update({ data: { type: 'update', message } });
-	};
+	const subscriber = subscribeToMessages(({ type, message, ticket }) => {
+		if (ticket.id !== params.id) return;
+		notifier.update({ data: { type, message } });
+	});
 
-	ticketMessageEmitter.on(params.id, onMessage);
 	req.signal.onabort = () => {
-		ticketMessageEmitter.removeListener(params.id, onMessage);
+		subscriber.quit();
 		notifier.close({ data: {} });
 	};
 
