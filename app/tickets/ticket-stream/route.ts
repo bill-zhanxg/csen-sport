@@ -7,7 +7,7 @@ import { getSSEWriter } from 'ts-sse';
 import { TicketEvents } from '../types';
 import { ticketEmitter } from './eventListener';
 
-export const runtime = 'nodejs';
+export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 const xata = getXataClient();
