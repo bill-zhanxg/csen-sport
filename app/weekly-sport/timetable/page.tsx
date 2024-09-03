@@ -1,7 +1,7 @@
 import { authC } from '@/app/cache';
 import { PaginationMenu } from '@/app/globalComponents/PaginationMenu';
 import { Tabs } from '@/app/globalComponents/Tabs';
-import { WeeklySportView } from '@/app/globalComponents/WeeklySportView';
+// import { WeeklySportView } from '@/app/globalComponents/WeeklySportView';
 import { isTeacher } from '@/libs/checkPermission';
 import { dayjs } from '@/libs/dayjs';
 import { getDateStart, stringifySearchParam } from '@/libs/formatValue';
@@ -19,6 +19,7 @@ export const metadata: Metadata = {
 };
 
 const WeeklySportEdit = dynamic(() => import('@/app/globalComponents/WeeklySportEdit'), { ssr: false });
+const WeeklySportView = dynamic(() => import('@/app/globalComponents/WeeklySportView'), { ssr: false });
 
 const xata = getXataClient();
 
@@ -61,6 +62,28 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 	const teamsPromise = isTeacherBool ? getRawTeams() : [];
 	const teachersPromise = getRawTeachers();
 	const venuesPromise = getRawVenues();
+
+	async function getGames() {
+		'use server';
+		const gamesPromise = getXataClient().db.games
+		.select(['*', 'team.*', 'venue.*', 'teacher.*'])
+		.filter(dbFilter)
+		.getPaginated({
+			consistency: 'eventual',
+			sort: [{ date: isPast ? 'desc' : 'asc' }, { 'team.name': 'asc' }],
+			pagination: {
+				size: itemsPerPage,
+				offset: page ? (parseInt(page) - 1) * itemsPerPage : 0,
+			},
+		});
+		const g = await gamesPromise;
+		const dates = gamesToDates(g, isTeacherBool, session?.user.timezone);
+		const date = dates[0];
+		return {
+			...date,
+			games: serializeGames(date.games, isTeacherBool),
+		};
+	}
 
 	const [total, games, teams, teachers, venues] = await Promise.all([
 		totalPromise(),
@@ -137,11 +160,11 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 						{dates.map((date) =>
 							isTeacherBool && isEdit ? (
 								<WeeklySportEdit
+									key={date.date}
 									date={{
 										...date,
 										games: serializeGames(date.games, isTeacherBool),
 									}}
-									key={date.date}
 									teams={teams}
 									teachers={teachers}
 									venues={venues}
@@ -150,11 +173,15 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 							) : (
 								<WeeklySportView
 									key={date.date}
-									date={date}
+									date={{
+										...date,
+										games: serializeGames(date.games, isTeacherBool),
+									}}
 									teachers={teachers}
 									isTeacher={isTeacherBool}
 									lastVisit={lastVisit}
 									timezone={session?.user.timezone ?? ''}
+									getGames={getGames}
 								/>
 							),
 						)}

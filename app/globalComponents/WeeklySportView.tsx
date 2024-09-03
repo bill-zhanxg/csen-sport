@@ -1,41 +1,54 @@
+'use client';
 import { dayjs } from '@/libs/dayjs';
 import { formatIsHome, formatIsJunior } from '@/libs/formatValue';
-import { serializeGame } from '@/libs/serializeData';
 import { RawTeacher } from '@/libs/tableData';
-import { DateWithGames } from '@/libs/tableHelpers';
-import { getXataClient } from '@/libs/xata';
+import { SerializedDateWithGames } from '@/libs/tableHelpers';
 import Link from 'next/link';
 import { FaInfoCircle, FaRegEye } from 'react-icons/fa';
 import { FaCirclePlus, FaLocationDot, FaPen } from 'react-icons/fa6';
+import useSWR from 'swr';
 import { SideBySide } from './SideBySide';
 import { UserAvatar } from './UserAvatar';
-import { Checkbox } from './WeeklySportViewComponents/Checkbox';
 
-export function WeeklySportView({
-	date,
+export default function WeeklySportView({
+	date: data,
 	teachers,
 	showRelative = false,
 	isTeacher,
 	hideGroup = false,
 	lastVisit,
 	timezone,
+	getGames,
 }: {
-	date: DateWithGames;
+	date: SerializedDateWithGames;
 	teachers: RawTeacher[];
 	showRelative?: boolean;
 	isTeacher: boolean;
 	hideGroup?: boolean;
 	lastVisit: Date;
 	timezone: string;
+	getGames?: () => Promise<SerializedDateWithGames>;
 }) {
-	async function updateConfirmed(id: any, checked: any) {
-		'use server';
-		if (!isTeacher || typeof id !== 'string' || typeof checked !== 'boolean') return false;
-		return getXataClient()
-			.db.games.update(id, { confirmed: checked })
-			.then(() => true)
-			.catch(() => false);
-	}
+	const { data: date, error, isLoading } = useSWR('key', async () => {
+		if (getGames) {
+			const games = await getGames();
+			console.log(games)
+			return games;
+		}
+	}, {
+		refreshInterval: 1000,
+	});
+
+	if (!date) return <div>Loading...</div>;
+
+	// async function updateConfirmed(id: any, checked: any) {
+	// 	'use server';
+	// 	if (!isTeacher || typeof id !== 'string' || typeof checked !== 'boolean') return false;
+	// 	return getXataClient()
+	// 		.db.games.update(id, { confirmed: checked })
+	// 		.then(() => true)
+	// 		.catch(() => false);
+	// }
 
 	return (
 		<div className="w-full bg-base-200 rounded-xl border-2 border-base-200 shadow-lg shadow-base-200 p-4 overflow-auto">
@@ -157,9 +170,7 @@ export function WeeklySportView({
 								<td>{game?.out_of_class ? dayjs.tz(game?.out_of_class, timezone).format('LT') : '---'}</td>
 								<td>{game?.start ? dayjs.tz(game?.start, timezone).format('LT') : '---'}</td>
 								{isTeacher && (
-									<td>
-										<Checkbox game={serializeGame(game, isTeacher)} updateConfirmed={updateConfirmed} />
-									</td>
+									<td>{/* <Checkbox game={serializeGame(game, isTeacher)} updateConfirmed={updateConfirmed} /> */}</td>
 								)}
 								{isTeacher && <td>{game?.notes || '---'}</td>}
 								<td>
@@ -177,3 +188,6 @@ export function WeeklySportView({
 		</div>
 	);
 }
+
+export { WeeklySportView };
+

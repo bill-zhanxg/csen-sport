@@ -52,6 +52,10 @@ export type SerializedGame = {
 	start?: Date | null;
 	notes?: string | null;
 	confirmed: boolean;
+	xata: {
+		createdAt: Date;
+		updatedAt: Date;
+	};
 };
 
 export type SerializedGameWithId = {
@@ -68,6 +72,10 @@ export type SerializedGameWithId = {
 	start?: Date | null;
 	notes?: string | null;
 	confirmed: boolean;
+	xata: {
+		createdAt: Date;
+		updatedAt: Date;
+	};
 };
 
 export function serializeGames(
@@ -99,6 +107,7 @@ export function serializeGame(
 		start,
 		notes,
 		confirmed,
+		xata: { createdAt, updatedAt },
 	}: SelectedPick<GamesRecord, ('*' | 'team.*' | 'venue.*' | 'teacher.*')[]>,
 	isTeacher: boolean,
 ): SerializedGame {
@@ -128,6 +137,10 @@ export function serializeGame(
 		start,
 		notes: isTeacher ? notes : undefined,
 		confirmed: isTeacher ? confirmed : false,
+		xata: {
+			createdAt,
+			updatedAt,
+		},
 	};
 }
 
@@ -146,6 +159,7 @@ export function serializeGameWithId(
 		start,
 		notes,
 		confirmed,
+		xata: { createdAt, updatedAt },
 	}: SelectedPick<GamesRecord, ('*' | 'team.id' | 'venue.id' | 'teacher.id')[]>,
 	isTeacher: boolean,
 ) {
@@ -163,6 +177,10 @@ export function serializeGameWithId(
 		start,
 		notes: isTeacher ? notes : undefined,
 		confirmed: isTeacher ? confirmed : false,
+		xata: {
+			createdAt,
+			updatedAt,
+		},
 	};
 }
 
