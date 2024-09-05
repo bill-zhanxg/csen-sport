@@ -29,7 +29,7 @@ export default function WeeklySportView({
 	timezone: string;
 	getGames?: () => Promise<SerializedDateWithGames>;
 }) {
-	const { data: date, error, isLoading } = useSWR('key', async () => {
+	const { data: date, error, isLoading } = useSWR(getGames ? 'key' : null, async () => {
 		if (getGames) {
 			const games = await getGames();
 			console.log(games)
@@ -37,6 +37,9 @@ export default function WeeklySportView({
 		}
 	}, {
 		refreshInterval: 1000,
+		fallback: {
+			'key': data,
+		}
 	});
 
 	if (!date) return <div>Loading...</div>;

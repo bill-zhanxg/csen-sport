@@ -1,7 +1,7 @@
 import { authC } from '@/app/cache';
 import { PaginationMenu } from '@/app/globalComponents/PaginationMenu';
 import { Tabs } from '@/app/globalComponents/Tabs';
-// import { WeeklySportView } from '@/app/globalComponents/WeeklySportView';
+import WeeklySportView from '@/app/globalComponents/WeeklySportView';
 import { isTeacher } from '@/libs/checkPermission';
 import { dayjs } from '@/libs/dayjs';
 import { getDateStart, stringifySearchParam } from '@/libs/formatValue';
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 };
 
 const WeeklySportEdit = dynamic(() => import('@/app/globalComponents/WeeklySportEdit'), { ssr: false });
-const WeeklySportView = dynamic(() => import('@/app/globalComponents/WeeklySportView'), { ssr: false });
+// const WeeklySportView = dynamic(() => import('@/app/globalComponents/WeeklySportView'), { ssr: false });
 
 const xata = getXataClient();
 
@@ -65,17 +65,17 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 
 	async function getGames() {
 		'use server';
-		const gamesPromise = getXataClient().db.games
-		.select(['*', 'team.*', 'venue.*', 'teacher.*'])
-		.filter(dbFilter)
-		.getPaginated({
-			consistency: 'eventual',
-			sort: [{ date: isPast ? 'desc' : 'asc' }, { 'team.name': 'asc' }],
-			pagination: {
-				size: itemsPerPage,
-				offset: page ? (parseInt(page) - 1) * itemsPerPage : 0,
-			},
-		});
+		const gamesPromise = getXataClient()
+			.db.games.select(['*', 'team.*', 'venue.*', 'teacher.*'])
+			.filter(dbFilter)
+			.getPaginated({
+				consistency: 'eventual',
+				sort: [{ date: isPast ? 'desc' : 'asc' }, { 'team.name': 'asc' }],
+				pagination: {
+					size: itemsPerPage,
+					offset: page ? (parseInt(page) - 1) * itemsPerPage : 0,
+				},
+			});
 		const g = await gamesPromise;
 		const dates = gamesToDates(g, isTeacherBool, session?.user.timezone);
 		const date = dates[0];
@@ -172,10 +172,10 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 								/>
 							) : (
 								<WeeklySportView
-									key={date.date}
+									key={dates[0].date}
 									date={{
-										...date,
-										games: serializeGames(date.games, isTeacherBool),
+										...dates[0],
+										games: serializeGames(dates[0].games, isTeacherBool),
 									}}
 									teachers={teachers}
 									isTeacher={isTeacherBool}
