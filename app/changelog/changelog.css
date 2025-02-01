@@ -1,3 +1,5 @@
+@reference "../global.css";
+
 .changelog h1 {
 	@apply font-bold;
 }
