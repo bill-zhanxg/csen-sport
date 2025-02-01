@@ -135,15 +135,15 @@ export function Step1({
 		 * 8 - Home Team
 		 * 9 - Away Team
 		 * 10 - Venue
-		 * 11 - Notes
+		 * 12 - Notes
 		 */
 		const json = (utils.sheet_to_json(sheet, { header: 1 }) as any[][])
 			.toSpliced(0, 3)
 			.sort(
 				(a, b) =>
-					a[3].localeCompare(b[3]) ||
-					a[7].localeCompare(b[7]) ||
-					a[4].localeCompare(b[4]) ||
+					a[3]?.localeCompare(b[3]) ||
+					a[7]?.localeCompare(b[7]) ||
+					a[4]?.localeCompare(b[4]) ||
 					a[5] - b[5] ||
 					a[2] - b[2],
 			);
@@ -175,11 +175,24 @@ export function Step1({
 		let currentGameDate: string | undefined;
 
 		for (const item of json) {
-			const type = item[3] === 'INTER' ? 'intermediate' : 'junior';
-			const gender = item[7].toLowerCase().trim() as Gender;
-			const sport = item[4].trim() as string;
-			const sportDiv = (item[5] as number).toString().trim();
-			const date = dayjs(new Date(item[2])).format('YYYY-MM-DD');
+			const dateString = item[2] as string | null;
+			if (!dateString) continue;
+			const ageString = item[3] as string | null;
+			const sportString = item[4] as string | null;
+			if (!sportString) continue;
+			const sportDivString = item[5] as number | null;
+			const poolString = item[6] as string | null;
+			const genderString = item[7] as string | null;
+			const homeTeam = item[8] as string | null;
+			const awayTeam = item[9] as string | null;
+			const venue = item[10] as string | null;
+			const notes = item[12] as string | null;
+
+			const type = ageString === 'INTER' ? 'intermediate' : 'junior';
+			const gender = genderString?.toLowerCase().trim() as Gender;
+			const sport = sportString.trim() ;
+			const sportDiv = (sportDivString as number)?.toString().trim();
+			const date = dayjs(new Date(dateString)).format('YYYY-MM-DD');
 
 			if (currentPage.type !== type || currentPage.gender !== gender) {
 				pageIndex++;
@@ -227,10 +240,10 @@ export function Step1({
 			}
 
 			pages[pageIndex].games[sportIndex]![gameDateIndex].games.push({
-				team1: (item[8] ?? '')?.toLowerCase().trim(),
-				team2: (item[9] ?? '')?.toLowerCase().trim(),
-				venue: (item[10] ?? 'TBU')?.toLowerCase().trim(),
-				notes: item[11],
+				team1: (homeTeam ?? '')?.toLowerCase().trim(),
+				team2: (awayTeam ?? '')?.toLowerCase().trim(),
+				venue: (venue ?? 'TBU')?.trim(),
+				notes: notes ?? undefined,
 			});
 		}
 
