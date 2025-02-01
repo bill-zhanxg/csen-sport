@@ -346,6 +346,6 @@ export function NavBar({
 function closeDropdown() {
 	const element = document.activeElement;
 	if (element && 'blur-sm' in element) {
-		(element as HTMLElement).blur();
+		(element as unknown as HTMLElement).blur();
 	}
 }

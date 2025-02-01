@@ -12,10 +12,12 @@ export const dynamic = 'force-dynamic';
 
 const xata = getXataClient();
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+	const { id } = await params;
+
 	const session = await authC();
 	if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-	const ticket = await xata.db.tickets.read(params.id, ['createdBy.id']);
+	const ticket = await xata.db.tickets.read(id, ['createdBy.id']);
 	if (!isDeveloper(session) && ticket?.createdBy?.id !== session.user.id)
 		return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
@@ -34,9 +36,9 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 		else if (message.type === 'update') notifier.update({ data: { type: 'update', message } });
 	};
 
-	ticketMessageEmitter.on(params.id, onMessage);
+	ticketMessageEmitter.on(id, onMessage);
 	req.signal.onabort = () => {
-		ticketMessageEmitter.removeListener(params.id, onMessage);
+		ticketMessageEmitter.removeListener(id, onMessage);
 		notifier.close({ data: {} });
 	};
 
