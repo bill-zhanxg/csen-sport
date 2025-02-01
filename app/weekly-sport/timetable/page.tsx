@@ -20,20 +20,21 @@ export const metadata: Metadata = {
 
 const xata = getXataClient();
 
-export default async function WeeklySport({ searchParams }: { searchParams: SearchParams }) {
-	const session = await authC();
-	const itemsPerPage = 50;
-	const { filter, page, edit } = stringifySearchParam(searchParams);
-	const isPast = filter === 'past';
-	const isEdit = edit === 'true';
-	const isTeacherBool = isTeacher(session);
-	const lastVisit = getLastVisitDate(session, true);
+export default async function WeeklySport(props0: { searchParams: SearchParams }) {
+    const searchParams = await props0.searchParams;
+    const session = await authC();
+    const itemsPerPage = 50;
+    const { filter, page, edit } = stringifySearchParam(searchParams);
+    const isPast = filter === 'past';
+    const isEdit = edit === 'true';
+    const isTeacherBool = isTeacher(session);
+    const lastVisit = getLastVisitDate(session, true);
 
-	const dbFilter = {
+    const dbFilter = {
 		date: isPast ? { $lt: getDateStart() } : { $ge: getDateStart() },
 	};
 
-	const totalPromise = async () => {
+    const totalPromise = async () => {
 		return (
 			await xata.db.games.summarize({
 				consistency: 'eventual',
@@ -44,7 +45,7 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 			})
 		).summaries[0].total;
 	};
-	const gamesPromise = xata.db.games
+    const gamesPromise = xata.db.games
 		.select(['*', 'team.*', 'venue.*', 'teacher.*'])
 		.filter(dbFilter)
 		.getPaginated({
@@ -56,11 +57,11 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 			},
 		});
 
-	const teamsPromise = isTeacherBool ? getRawTeams() : [];
-	const teachersPromise = getRawTeachers();
-	const venuesPromise = getRawVenues();
+    const teamsPromise = isTeacherBool ? getRawTeams() : [];
+    const teachersPromise = getRawTeachers();
+    const venuesPromise = getRawVenues();
 
-	const [total, games, teams, teachers, venues] = await Promise.all([
+    const [total, games, teams, teachers, venues] = await Promise.all([
 		totalPromise(),
 		gamesPromise,
 		teamsPromise,
@@ -68,9 +69,9 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 		venuesPromise,
 	]);
 
-	const dates = gamesToDates(games, isTeacherBool, session?.user.timezone);
+    const dates = gamesToDates(games, isTeacherBool, session?.user.timezone);
 
-	function buildSearchParam(props?: { edit?: string; filter?: string; page?: string }) {
+    function buildSearchParam(props?: { edit?: string; filter?: string; page?: string }) {
 		const { edit, filter, page } = props ?? {};
 
 		const baseUri = '/weekly-sport/timetable';
@@ -83,7 +84,7 @@ export default async function WeeklySport({ searchParams }: { searchParams: Sear
 		return `${baseUri}?${searchParams.toString()}`;
 	}
 
-	return (
+    return (
 		<div className="flex flex-col items-center w-full py-6 p-1 sm:p-4 gap-4">
 			<h1 className="text-2xl font-bold text-center">
 				Weekly Sport Timetable{' '}

@@ -11,18 +11,19 @@ export const metadata: Metadata = {
 	title: 'Game',
 };
 
-export default async function EditGame({ params }: { params: { id: string } }) {
-	const session = await authC();
-	const game = await getXataClient().db.games.read(params.id, ['*', 'team.*', 'venue.*', 'teacher.*']);
-	const isTeacherBool = isTeacher(session);
+export default async function EditGame(props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
+    const session = await authC();
+    const game = await getXataClient().db.games.read(params.id, ['*', 'team.*', 'venue.*', 'teacher.*']);
+    const isTeacherBool = isTeacher(session);
 
-	const teams = isTeacherBool ? await getRawTeams() : [];
-	const venues = isTeacherBool ? await getRawVenues() : [];
-	const teachers = await getRawTeachers();
+    const teams = isTeacherBool ? await getRawTeams() : [];
+    const venues = isTeacherBool ? await getRawVenues() : [];
+    const teachers = await getRawTeachers();
 
-	if (!game) return <ErrorMessage code="404" message="Game not found" />;
+    if (!game) return <ErrorMessage code="404" message="Game not found" />;
 
-	return (
+    return (
 		<div className="flex justify-center w-full">
 			<div className="w-full max-w-[50rem] m-4 flex gap-8 flex-col">
 				<GameForm

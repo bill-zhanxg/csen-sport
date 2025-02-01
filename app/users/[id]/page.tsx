@@ -10,21 +10,22 @@ import { RoleSchema } from '../schema';
 
 const xata = getXataClient();
 
-export default async function User({
-	params,
-}: {
-	params: {
-		id: string;
-	};
-}) {
-	const session = await authC();
-	const user = await xata.db.nextauth_users.read(params.id, ['email', 'name', 'image', 'role']);
-	if (!user) return <ErrorMessage code="404" message="The user you're looking for can not be found" />;
-	const userId = user.id;
+export default async function User(
+    props: {
+        params: Promise<{
+            id: string;
+        }>;
+    }
+) {
+    const params = await props.params;
+    const session = await authC();
+    const user = await xata.db.nextauth_users.read(params.id, ['email', 'name', 'image', 'role']);
+    if (!user) return <ErrorMessage code="404" message="The user you're looking for can not be found" />;
+    const userId = user.id;
 
-	if (!isAdmin(session) && !isTeacher(user) && session?.user.id !== user.id) return Unauthorized();
+    if (!isAdmin(session) && !isTeacher(user) && session?.user.id !== user.id) return Unauthorized();
 
-	return (
+    return (
 		<div className="flex justify-center items-center h-[80vh] w-full">
 			<Box className="card card-side bg-base-100 shadow-xl w-auto p-0 sm:px-8 sm:py-2 max-w-2xl flex-col">
 				<div className="card-body">

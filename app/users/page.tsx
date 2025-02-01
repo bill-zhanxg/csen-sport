@@ -14,19 +14,20 @@ export const metadata: Metadata = {
 
 const xata = getXataClient();
 
-export default async function Users({ searchParams }: { searchParams: SearchParams }) {
-	const session = await authC();
-	if (!session || !isAdmin(session)) return Unauthorized();
-	const pageSize = 20;
-	const { page, search } = stringifySearchParam(searchParams);
+export default async function Users(props: { searchParams: SearchParams }) {
+    const searchParams = await props.searchParams;
+    const session = await authC();
+    if (!session || !isAdmin(session)) return Unauthorized();
+    const pageSize = 20;
+    const { page, search } = stringifySearchParam(searchParams);
 
-	const filter = {
+    const filter = {
 		name: {
 			$iContains: search,
 		},
 	};
 
-	const total = (
+    const total = (
 		await xata.db.nextauth_users
 			.filter(filter)
 			.summarize({
@@ -37,7 +38,7 @@ export default async function Users({ searchParams }: { searchParams: SearchPara
 			})
 			.catch(() => ({ summaries: [{ total: 0 }] }))
 	).summaries[0].total;
-	const users = await xata.db.nextauth_users
+    const users = await xata.db.nextauth_users
 		.sort('xata.createdAt', 'desc')
 		.filter(filter)
 		.select(['email', 'name', 'image', 'role'])
@@ -48,7 +49,7 @@ export default async function Users({ searchParams }: { searchParams: SearchPara
 				size: pageSize,
 			},
 		});
-	return (
+    return (
 		<>
 			<UserTable myId={session.user.id} users={users.records.toSerializable()} />
 			<div className="py-4">

@@ -17,20 +17,21 @@ export const metadata: Metadata = {
 	title: 'Games',
 };
 
-export default async function DatePage({
-	params,
-	searchParams,
-}: {
-	params: { date: string };
-	searchParams: SearchParams;
-}) {
-	const session = await authC();
-	const date = new Date(parseInt(params.date));
-	let view = stringifySearchParam(searchParams).view as 'junior' | 'intermediate' | undefined;
-	if (view !== 'junior' && view !== 'intermediate') view = undefined;
-	const lastVisit = getLastVisitDate(session);
+export default async function DatePage(
+    props: {
+        params: Promise<{ date: string }>;
+        searchParams: SearchParams;
+    }
+) {
+    const searchParams = await props.searchParams;
+    const params = await props.params;
+    const session = await authC();
+    const date = new Date(parseInt(params.date));
+    let view = stringifySearchParam(searchParams).view as 'junior' | 'intermediate' | undefined;
+    if (view !== 'junior' && view !== 'intermediate') view = undefined;
+    const lastVisit = getLastVisitDate(session);
 
-	const games = await getXataClient()
+    const games = await getXataClient()
 		.db.games.select(['*', 'team.*', 'venue.*', 'teacher.*'])
 		.sort('team.name', 'asc')
 		.filter({
@@ -41,10 +42,10 @@ export default async function DatePage({
 			consistency: 'eventual',
 		});
 
-	const dates = gamesToDates(games, false, session?.user.timezone);
-	const teachers = await getRawTeachers();
+    const dates = gamesToDates(games, false, session?.user.timezone);
+    const teachers = await getRawTeachers();
 
-	return (
+    return (
 		<div className="flex flex-col items-center w-full sm:p-4 gap-4">
 			{isTeacher(session) && (
 				<div className="p-4 w-full">

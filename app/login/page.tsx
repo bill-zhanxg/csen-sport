@@ -20,26 +20,27 @@ type ErrorCodes =
 	| 'SessionRequired'
 	| 'Default';
 
-export default async function Login({
-	searchParams,
-}: {
-	searchParams: {
-		redirect: string | string[] | undefined;
-		error: ErrorCodes | string | string[] | undefined;
-		message: string | string[] | undefined;
-	};
-}) {
-	const callbackURL = typeof searchParams.redirect === 'string' ? searchParams.redirect : searchParams.redirect?.[0];
+export default async function Login(
+    props: {
+        searchParams: Promise<{
+            redirect: string | string[] | undefined;
+            error: ErrorCodes | string | string[] | undefined;
+            message: string | string[] | undefined;
+        }>;
+    }
+) {
+    const searchParams = await props.searchParams;
+    const callbackURL = typeof searchParams.redirect === 'string' ? searchParams.redirect : searchParams.redirect?.[0];
 
-	const session = await authC();
-	if (session) return redirect(decodeURIComponent(callbackURL ?? '/'));
+    const session = await authC();
+    if (session) return redirect(decodeURIComponent(callbackURL ?? '/'));
 
-	async function login() {
+    async function login() {
 		'use server';
 		await signIn('microsoft-entra-id');
 	}
 
-	return (
+    return (
 		<div className="flex flex-col justify-center items-center gap-3 h-full">
 			<h1 className="text-4xl text-center font-bold p-5">CSEN Sport Login</h1>
 			<LoginBtn loginAction={login} />
