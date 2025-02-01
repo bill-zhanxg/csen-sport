@@ -125,10 +125,10 @@ export function ReactJoyride() {
 			steps={stepsMap.flat()}
 			styles={{
 				options: {
-					backgroundColor: 'oklch(var(--b1))',
-					textColor: 'oklch(var(--bc))',
-					primaryColor: 'oklch(var(--p))',
-					arrowColor: 'oklch(var(--b1))',
+					backgroundColor: 'var(--color-base-100)',
+					textColor: 'var(--color-base-content)',
+					primaryColor: 'var(--color-primary)',
+					arrowColor: 'var(--color-base-100)',
 				},
 			}}
 		/>

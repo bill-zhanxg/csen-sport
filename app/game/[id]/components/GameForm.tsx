@@ -164,7 +164,7 @@ export function GameForm({
 						</div>
 						{TeachersMultiSelect({
 							className: `[&>div]:[--rmsc-radius:var(--rounded-btn,0.5rem)]${
-								!isTeacherBool ? ' [&>div]:[--rmsc-bg:oklch(var(--b2))]' : ''
+								!isTeacherBool ? ' [&>div]:[--rmsc-bg:var(--color-base-200)]' : ''
 							}`,
 							teachers,
 							value: extraTeachers,

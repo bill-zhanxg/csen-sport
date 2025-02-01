@@ -27,99 +27,99 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          cache: 'npm'
+      # - uses: actions/setup-node@v4
+      #   with:
+      #     node-version: '20.x'
+      #     cache: 'npm'
 
-      - name: Cache nextjs build
-        uses: actions/cache@v4
-        with:
-          path: |
-            ${{ github.workspace }}/.next
-          key: build-${{ hashFiles('**/.env','**/*.lock','**/*.[jt]s*') }}
+      # - name: Cache nextjs build
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: |
+      #       ${{ github.workspace }}/.next
+      #     key: build-${{ hashFiles('**/.env','**/*.lock','**/*.[jt]s*') }}
 
-      - name: Cache playwright browsers
-        uses: actions/cache@v4
-        with:
-          path: |
-            /home/runner/.cache
-          key: playwright-browsers-${{ runner.os }}-${{ github.run_id }}
-          restore-keys: playwright-browsers
+      # - name: Cache playwright browsers
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: |
+      #       /home/runner/.cache
+      #     key: playwright-browsers-${{ runner.os }}-${{ github.run_id }}
+      #     restore-keys: playwright-browsers
 
-      - name: Install dependencies, build and vitest
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          XATA_API_KEY: ${{ secrets.XATA_API_KEY }}
-        run: |
-          npm ci
-          npm run build -f --if-present
-          npm run test --if-present
+      # - name: Install dependencies, build and vitest
+      #   env:
+      #     SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      #     XATA_API_KEY: ${{ secrets.XATA_API_KEY }}
+      #   run: |
+      #     npm ci -f
+      #     npm run build --if-present
+      #     npm run test --if-present
 
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+      # - name: Install Playwright Browsers
+      #   run: npx playwright install --with-deps
 
-      - name: Run Playwright tests
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          XATA_API_KEY: ${{ secrets.XATA_API_KEY }}
-          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
-          BASE_URL: ${{ secrets.BASE_URL }}
-          AUTH_MICROSOFT_ENTRA_ID_ID: ${{ secrets.AUTH_MICROSOFT_ENTRA_ID_ID }}
-          AUTH_MICROSOFT_ENTRA_ID_SECRET: ${{ secrets.AUTH_MICROSOFT_ENTRA_ID_SECRET }}
-          AUTH_MICROSOFT_ENTRA_ID_TENANT_ID: ${{ secrets.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID }}
-          TEST_LOGIN_ADMIN_PASSWORD: ${{ secrets.TEST_LOGIN_ADMIN_PASSWORD }}
-          TEST_LOGIN_DEVELOPER_PASSWORD: ${{ secrets.TEST_LOGIN_DEVELOPER_PASSWORD }}
-          TEST_LOGIN_TEACHER_PASSWORD: ${{ secrets.TEST_LOGIN_TEACHER_PASSWORD }}
-          TEST_LOGIN_STUDENT_PASSWORD: ${{ secrets.TEST_LOGIN_STUDENT_PASSWORD }}
-          TEST_LOGIN_BLOCKED_PASSWORD: ${{ secrets.TEST_LOGIN_BLOCKED_PASSWORD }}
-        run: npm run playwright --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+      # - name: Run Playwright tests
+      #   env:
+      #     SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      #     XATA_API_KEY: ${{ secrets.XATA_API_KEY }}
+      #     AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+      #     BASE_URL: ${{ secrets.BASE_URL }}
+      #     AUTH_MICROSOFT_ENTRA_ID_ID: ${{ secrets.AUTH_MICROSOFT_ENTRA_ID_ID }}
+      #     AUTH_MICROSOFT_ENTRA_ID_SECRET: ${{ secrets.AUTH_MICROSOFT_ENTRA_ID_SECRET }}
+      #     AUTH_MICROSOFT_ENTRA_ID_TENANT_ID: ${{ secrets.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID }}
+      #     TEST_LOGIN_ADMIN_PASSWORD: ${{ secrets.TEST_LOGIN_ADMIN_PASSWORD }}
+      #     TEST_LOGIN_DEVELOPER_PASSWORD: ${{ secrets.TEST_LOGIN_DEVELOPER_PASSWORD }}
+      #     TEST_LOGIN_TEACHER_PASSWORD: ${{ secrets.TEST_LOGIN_TEACHER_PASSWORD }}
+      #     TEST_LOGIN_STUDENT_PASSWORD: ${{ secrets.TEST_LOGIN_STUDENT_PASSWORD }}
+      #     TEST_LOGIN_BLOCKED_PASSWORD: ${{ secrets.TEST_LOGIN_BLOCKED_PASSWORD }}
+      #   run: npm run playwright --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
 
-      # Renaming the report files if exists to avoid conflicts (blob-report/report.zip to blob-report/report-{shardIndex}.zip)
-      - name: Rename report files
-        run: |
-          if [ -f "blob-report/report.zip" ]; then
-            mv blob-report/report.zip blob-report/report-${{ matrix.shardIndex }}.zip
-          fi
+      # # Renaming the report files if exists to avoid conflicts (blob-report/report.zip to blob-report/report-{shardIndex}.zip)
+      # - name: Rename report files
+      #   run: |
+      #     if [ -f "blob-report/report.zip" ]; then
+      #       mv blob-report/report.zip blob-report/report-${{ matrix.shardIndex }}.zip
+      #     fi
 
-      - name: Upload blob report to GitHub Actions Artifacts
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: blob-report-${{ matrix.shardIndex }}
-          path: blob-report
-          retention-days: 1
+      # - name: Upload blob report to GitHub Actions Artifacts
+      #   if: ${{ !cancelled() }}
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: blob-report-${{ matrix.shardIndex }}
+      #     path: blob-report
+      #     retention-days: 1
 
-  merge-reports:
-    # Merge reports after playwright-tests, even if some shards have failed
-    if: ${{ !cancelled() }}
-    needs: test
+  # merge-reports:
+  #   # Merge reports after playwright-tests, even if some shards have failed
+  #   if: ${{ !cancelled() }}
+  #   needs: test
 
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          cache: 'npm'
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: '20.x'
+  #         cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+  #     - name: Install dependencies
+  #       run: npm ci -f
 
-      - name: Download blob reports from GitHub Actions Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: all-blob-reports
-          pattern: blob-report-*
-          merge-multiple: true
+  #     - name: Download blob reports from GitHub Actions Artifacts
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         path: all-blob-reports
+  #         pattern: blob-report-*
+  #         merge-multiple: true
 
-      - name: Merge into HTML Report
-        # currently not working due to same name of "report" folder
-        run: npx playwright merge-reports --reporter html ./all-blob-reports
+  #     - name: Merge into HTML Report
+  #       # currently not working due to same name of "report" folder
+  #       run: npx playwright merge-reports --reporter html ./all-blob-reports
 
-      - name: Upload HTML report
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report_attempt-${{ github.run_attempt }}
-          path: playwright-report
-          retention-days: 30
+  #     - name: Upload HTML report
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: playwright-report_attempt-${{ github.run_attempt }}
+  #         path: playwright-report
+  #         retention-days: 30

@@ -22,7 +22,7 @@ export type ImportState =
 			message: string;
 	  };
 
-export default function ImportPage({ teachers }: { teachers: { id: string; name?: string | null }[] }) {
+export function ImportPage({ teachers }: { teachers: { id: string; name?: string | null }[] }) {
 	const router = useRouter();
 
 	const [step, setStep] = useState(1);
