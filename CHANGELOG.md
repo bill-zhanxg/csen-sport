@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.2](https://github.com/bill-zhanxg/csen-sport/compare/v0.6.1...v0.6.2) (2025-02-01)
+
+
+### Bug Fixes
+
+* fixed get route params not awaited ([a6463a6](https://github.com/bill-zhanxg/csen-sport/commit/a6463a63bfb35767dee6c654fc5c056919fabd46))
+* fixed type issue in navBar ([a6463a6](https://github.com/bill-zhanxg/csen-sport/commit/a6463a63bfb35767dee6c654fc5c056919fabd46))
+
 ## [0.6.1](https://github.com/bill-zhanxg/csen-sport/compare/v0.6.0...v0.6.1) (2025-02-01)
 
 
