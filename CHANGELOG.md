@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.1](https://github.com/bill-zhanxg/csen-sport/compare/v0.6.0...v0.6.1) (2025-02-01)
+
+
+### Bug Fixes
+
+* fixed changelog css build error ([2234119](https://github.com/bill-zhanxg/csen-sport/commit/2234119adb79396e653dbbaf4cf141c67b8edc26))
+* fixed changelog css build error ([4452aa4](https://github.com/bill-zhanxg/csen-sport/commit/4452aa42301f4864d10d122c47065f2a5542c284))
+
 ## [0.6.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.18...v0.6.0) (2025-02-01)
 
 
