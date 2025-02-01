@@ -70,7 +70,7 @@ export function SettingsForm({ session, teams }: { session: Session; teams: Seri
 
 					{/* Add profile upload */}
 					<div className="flex justify-center items-center basis-1/4 h-full">
-						<label className="!relative form-control mt-4">
+						<label className="relative! form-control mt-4">
 							<div className="label">
 								<span className="label-text text-md font-bold text-center">Profile picture</span>
 							</div>

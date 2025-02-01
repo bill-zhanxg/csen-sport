@@ -20,7 +20,8 @@ const nextConfig = {
 		return config;
 	},
 	experimental: {
-		instrumentationHook: true,
+		reactCompiler: true,
+		ppr: true,
 	},
 };
 

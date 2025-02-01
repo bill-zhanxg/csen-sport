@@ -171,7 +171,7 @@ export default async function Changelog() {
 				<Heading badge="New" title="Features" />
 				<List>
 					<li>feat(tickets): Add a new ticket system for user to report bugs and feedback (Minor version bump)</li>
-					<List className="!list-[circle] ml-4">
+					<List className="list-[circle]! ml-4">
 						<li>
 							feat(role): Add developer role to allow the developer to access the ticket system and view the feedbacks
 							and bugs
@@ -250,7 +250,7 @@ export default async function Changelog() {
 						and start time
 					</li>
 					<li>Finished: Resolve the lag with useTransition react hook when change values for the following:</li>
-					<List className="!list-[circle] ml-4">
+					<List className="list-[circle]! ml-4">
 						<li>User page search now use defer update</li>
 						<li>In import page, default sections values changes display are deferred</li>
 						<li>
@@ -474,7 +474,7 @@ function ChangelogBox({
 	children: React.ReactNode;
 }) {
 	return (
-		<div className="flex flex-col w-full max-w-4xl rounded-xl border-2 border-base-300 shadow-md shadow-base-300 p-6 [&_.latest-changelog]:first-of-type:inline-flex">
+		<div className="flex flex-col w-full max-w-4xl rounded-xl border-2 border-base-300 shadow-md shadow-base-300 p-6 first-of-type:[&_.latest-changelog]:inline-flex">
 			{!first && (
 				<>
 					<div className="flex flex-col sm:flex-row justify-between">

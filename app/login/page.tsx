@@ -1,17 +1,12 @@
 import { signIn } from '@/libs/auth';
 import { Metadata } from 'next';
-import dynamic from 'next/dynamic';
 import { redirect } from 'next/navigation';
 import { authC } from '../cache';
+import { LoginBtn } from './components/LoginBtn';
 
 export const metadata: Metadata = {
 	title: 'Login',
 };
-
-const LoginBtn = dynamic(() => import('./components/LoginBtn'), {
-	ssr: false,
-	loading: () => <div className="btn w-4/5 max-w-[20rem] skeleton">Loading...</div>,
-});
 
 type ErrorCodes =
 	| 'OAuthSignin'
@@ -47,7 +42,7 @@ export default async function Login({
 	return (
 		<div className="flex flex-col justify-center items-center gap-3 h-full">
 			<h1 className="text-4xl text-center font-bold p-5">CSEN Sport Login</h1>
-			<LoginBtn login={login} />
+			<LoginBtn loginAction={login} />
 			{/* Error */}
 			{(searchParams.message || searchParams.error) && (
 				<div className="alert alert-error w-4/5 max-w-[20rem]">

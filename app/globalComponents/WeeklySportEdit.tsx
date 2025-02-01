@@ -21,7 +21,7 @@ const defaultColumn: Partial<ColumnDef<SerializedGame>> = {
 	},
 };
 
-export default function WeeklySportEdit({
+export function WeeklySportEdit({
 	date,
 	teams,
 	teachers,

@@ -8,7 +8,7 @@ const blocked: string[] = [];
 
 export async function POST(request: NextRequest) {
 	// Manually log the user in with password (skipping auth.js)
-	const ip = request.ip || 'localhost';
+	const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'localhost';
 	if (!ip) return rejectLogin();
 	if (blocked.includes(ip)) return rejectLogin();
 

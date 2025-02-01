@@ -56,7 +56,7 @@ export function DefaultSection({
 									setDefaults((defaults) => ({ ...defaults, default_extra_teachers: e.target.value }));
 								});
 							}}
-							className="[&>div]:!rounded-lg"
+							className="[&>div]:rounded-lg!"
 						/>
 					</div>
 					<label className="form-control w-full">

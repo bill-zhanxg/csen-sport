@@ -93,7 +93,7 @@ export function WeeklySportView({
 														>
 															<FaLocationDot size={16} /> Open in Google Maps
 														</Link>
-														<label htmlFor={game.venue.id} className="btn w-full sm:w-auto !ml-0">
+														<label htmlFor={game.venue.id} className="btn w-full sm:w-auto ml-0!">
 															Close
 														</label>
 													</div>
@@ -143,7 +143,7 @@ export function WeeklySportView({
 															);
 														})}
 														<div className="modal-action flex-col sm:flex-row gap-2">
-															<label htmlFor={game.id + '-extra-teacher'} className="btn w-full sm:w-auto !ml-0">
+															<label htmlFor={game.id + '-extra-teacher'} className="btn w-full sm:w-auto ml-0!">
 																Close
 															</label>
 														</div>

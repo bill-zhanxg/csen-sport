@@ -35,7 +35,7 @@ jobs:
           XATA_API_KEY: ${{ secrets.XATA_API_KEY }}
         run: |
           npm ci
-          npm run build --if-present
+          npm run build -f --if-present
           npm run test --if-present
           npm prune --omit-dev
 

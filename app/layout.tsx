@@ -32,10 +32,11 @@ const xata = getXataClient();
 
 export default async function MainLayout({ children }: { children: React.ReactNode }) {
 	const session = await authC();
-	const ip = headers().get('x-forwarded-for');
+	const ip = (await headers()).get('x-forwarded-for');
 
 	async function ticketUnread() {
 		'use server';
+		const session = await authC();
 		if (!session) return false;
 		const belongsTo = (
 			await xata.db.tickets
@@ -98,13 +99,13 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 											<ul
 												id="mobile-menu"
 												tabIndex={0}
-												className="menu menu-md dropdown-content mt-3 z-[100] p-2 shadow bg-base-100 rounded-box border border-primary w-full overflow-auto"
+												className="menu menu-md dropdown-content mt-3 z-100 p-2 shadow-sm bg-base-100 rounded-box border border-primary w-full overflow-auto"
 											>
 												<li className="w-full h-32 skeleton bg-base-content rounded-md m-0"></li>
 											</ul>
 										</div>
 										<div className="navbar-center hidden sm:flex">
-											<ul className="menu menu-horizontal px-1 z-[100]">
+											<ul className="menu menu-horizontal px-1 z-100">
 												<li className="w-96 h-10 skeleton bg-base-content rounded-md"></li>
 											</ul>
 										</div>
@@ -118,7 +119,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 												<ul
 													id="user-menu"
 													tabIndex={0}
-													className="menu menu-md dropdown-content mt-3 z-[100] p-2 shadow-xl bg-base-100 rounded-box w-52 border border-primary"
+													className="menu menu-md dropdown-content mt-3 z-100 p-2 shadow-xl bg-base-100 rounded-box w-52 border border-primary"
 												>
 													<li>
 														<Link id="user-settings-btn" href="/settings">
@@ -134,7 +135,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 														<button className="skeleton">Submit a Bug / Feedback</button>
 													</li>
 													<li>
-														<form className="menu-title !p-0" action={logout}>
+														<form className="menu-title p-0!" action={logout}>
 															<button
 																type="submit"
 																id="logout-btn"

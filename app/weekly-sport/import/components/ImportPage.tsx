@@ -132,7 +132,7 @@ export default function ImportPage({ teachers }: { teachers: { id: string; name?
 
 				<div className="flex justify-between w-full max-w-xl">
 					<button
-						className="btn btn-primary w-32 !shrink"
+						className="btn btn-primary w-32 shrink!"
 						onClick={() => {
 							setStep((step) => {
 								const newStep = step - 1;
@@ -145,7 +145,7 @@ export default function ImportPage({ teachers }: { teachers: { id: string; name?
 						Previous
 					</button>
 					<button
-						className="btn btn-primary w-32 !shrink"
+						className="btn btn-primary w-32 shrink!"
 						onClick={(e) => {
 							e.preventDefault();
 							if (step === 4) {

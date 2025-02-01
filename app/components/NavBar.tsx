@@ -207,7 +207,7 @@ export function NavBar({
 				<ul
 					id="mobile-menu"
 					tabIndex={0}
-					className="menu menu-md dropdown-content mt-3 z-[100] p-2 shadow bg-base-100 rounded-box border border-primary w-full overflow-auto"
+					className="menu menu-md dropdown-content mt-3 z-100 p-2 shadow-sm bg-base-100 rounded-box border border-primary w-full overflow-auto"
 				>
 					{menuFiltered.map((item) =>
 						Array.isArray(item.href) ? (
@@ -242,7 +242,7 @@ export function NavBar({
 				</ul>
 			</div>
 			<div className="navbar-center hidden sm:flex">
-				<ul className="menu menu-horizontal px-1 z-[100]">
+				<ul className="menu menu-horizontal px-1 z-100">
 					{menuFiltered.map((item) =>
 						Array.isArray(item.href) ? (
 							<li key={item.id}>
@@ -303,7 +303,7 @@ export function NavBar({
 					<ul
 						id="user-menu"
 						tabIndex={0}
-						className="menu menu-md dropdown-content mt-3 z-[100] p-2 shadow-xl bg-base-100 rounded-box w-52 border border-primary"
+						className="menu menu-md dropdown-content mt-3 z-100 p-2 shadow-xl bg-base-100 rounded-box w-52 border border-primary"
 					>
 						<li>
 							<Link id="user-settings-btn" href="/settings" onClick={closeDropdown}>
@@ -320,7 +320,7 @@ export function NavBar({
 						</li>
 						<li>
 							<form
-								className="menu-title !p-0"
+								className="menu-title p-0!"
 								action={logout}
 								onSubmit={() => {
 									// Start the progress bar
@@ -345,7 +345,7 @@ export function NavBar({
 
 function closeDropdown() {
 	const element = document.activeElement;
-	if (element && 'blur' in element) {
+	if (element && 'blur-sm' in element) {
 		(element as HTMLElement).blur();
 	}
 }

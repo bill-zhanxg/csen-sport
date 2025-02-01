@@ -18,9 +18,9 @@ export function Checkbox({
 			type="checkbox"
 			className={`checkbox checkbox-primary ${
 				loading === 'failed'
-					? " ![background:url('/checkbox-error.svg')_no-repeat_center_/50%_oklch(var(--er))]"
+					? " [background:url('/checkbox-error.svg')_no-repeat_center/50%_oklch(var(--er))]!"
 					: loading
-					? " ![background:url('/checkbox-loading.gif')_no-repeat_center_/70%_var(--chkbg)]"
+					? " [background:url('/checkbox-loading.gif')_no-repeat_center/70%_var(--chkbg)]!"
 					: ''
 			}`}
 			checked={checked}

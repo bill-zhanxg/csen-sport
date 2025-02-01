@@ -49,7 +49,7 @@ export function GameForm({
 							disabled={!isTeacherBool}
 							defaultValue={game.date ? dayjs(game.date).format('YYYY-MM-DD') : ''}
 							name="date"
-							className="input input-bordered !text-base-content"
+							className="input input-bordered text-base-content!"
 						/>
 					</label>
 					<label className="form-control w-full">
@@ -59,7 +59,7 @@ export function GameForm({
 						<select
 							disabled={!isTeacherBool}
 							defaultValue={game.team?.id ?? ''}
-							className="select select-bordered opacity-100 !text-base-content"
+							className="select select-bordered opacity-100 text-base-content!"
 							name="team"
 						>
 							<option disabled value="">
@@ -85,7 +85,7 @@ export function GameForm({
 						<select
 							disabled={!isTeacherBool}
 							defaultValue={game.isHome === undefined || game.isHome === null ? '' : game.isHome ? 'home' : 'away'}
-							className="select select-bordered opacity-100 !text-base-content"
+							className="select select-bordered opacity-100 text-base-content!"
 							name="position"
 						>
 							<option value="">Pick one</option>
@@ -103,7 +103,7 @@ export function GameForm({
 							disabled={!isTeacherBool}
 							defaultValue={game.opponent ?? ''}
 							name="opponent"
-							className="input input-bordered !text-base-content"
+							className="input input-bordered text-base-content!"
 						/>
 					</label>
 					<label className="form-control w-full">
@@ -113,7 +113,7 @@ export function GameForm({
 						<select
 							disabled={!isTeacherBool}
 							defaultValue={game.venue?.id ?? ''}
-							className="select select-bordered opacity-100 !text-base-content"
+							className="select select-bordered opacity-100 text-base-content!"
 							name="venue"
 						>
 							<option disabled value="">
@@ -139,7 +139,7 @@ export function GameForm({
 						<select
 							disabled={!isTeacherBool}
 							defaultValue={game.teacher?.id ?? ''}
-							className="select select-bordered opacity-100 !text-base-content"
+							className="select select-bordered opacity-100 text-base-content!"
 							name="teacher"
 						>
 							<option disabled value="">
@@ -185,7 +185,7 @@ export function GameForm({
 							disabled={!isTeacherBool}
 							defaultValue={game.transportation ?? ''}
 							name="transportation"
-							className="input input-bordered !text-base-content"
+							className="input input-bordered text-base-content!"
 						/>
 					</label>
 					<label className="form-control w-full">
@@ -197,7 +197,7 @@ export function GameForm({
 							disabled={!isTeacherBool}
 							defaultValue={game.out_of_class ? dayjs(game.out_of_class).format('HH:mm') : ''}
 							name="out_of_class"
-							className="input input-bordered !text-base-content"
+							className="input input-bordered text-base-content!"
 						/>
 					</label>
 					<label className="form-control w-full">
@@ -209,7 +209,7 @@ export function GameForm({
 							disabled={!isTeacherBool}
 							defaultValue={game.start ? dayjs(game.start).format('HH:mm') : ''}
 							name="start"
-							className="input input-bordered !text-base-content"
+							className="input input-bordered text-base-content!"
 						/>
 					</label>
 					{isTeacherBool && (
@@ -223,7 +223,7 @@ export function GameForm({
 								disabled={!isTeacherBool}
 								defaultValue={game.notes ?? ''}
 								name="notes"
-								className="input input-bordered !text-base-content"
+								className="input input-bordered text-base-content!"
 							/>
 						</label>
 					)}
@@ -238,7 +238,7 @@ export function GameForm({
 								disabled={!isTeacherBool}
 								defaultChecked={game.confirmed}
 								name="confirmed"
-								className="checkbox checkbox-primary !opacity-80"
+								className="checkbox checkbox-primary opacity-80!"
 							/>
 						</label>
 					)}

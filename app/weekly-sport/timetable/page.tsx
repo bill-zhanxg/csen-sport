@@ -1,6 +1,7 @@
 import { authC } from '@/app/cache';
 import { PaginationMenu } from '@/app/globalComponents/PaginationMenu';
 import { Tabs } from '@/app/globalComponents/Tabs';
+import { WeeklySportEdit } from '@/app/globalComponents/WeeklySportEdit';
 import { WeeklySportView } from '@/app/globalComponents/WeeklySportView';
 import { isTeacher } from '@/libs/checkPermission';
 import { dayjs } from '@/libs/dayjs';
@@ -11,14 +12,11 @@ import { gamesToDates, getLastVisitDate } from '@/libs/tableHelpers';
 import { SearchParams } from '@/libs/types';
 import { getXataClient } from '@/libs/xata';
 import { Metadata } from 'next';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
 	title: 'Timetable',
 };
-
-const WeeklySportEdit = dynamic(() => import('@/app/globalComponents/WeeklySportEdit'), { ssr: false });
 
 const xata = getXataClient();
 
