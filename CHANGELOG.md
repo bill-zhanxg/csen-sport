@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.6.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.18...v0.6.0) (2025-02-01)
+
+
+### Features
+
+* enable ppr and react complier ([87339a1](https://github.com/bill-zhanxg/csen-sport/commit/87339a1b039295405d860ac4a7668fb48507b095))
+* make the UI look cleaner ([e971f95](https://github.com/bill-zhanxg/csen-sport/commit/e971f950cd4d0874e4933f759daa33bdb6a1e4c3))
+* migrate to Nextjs 15 ([4d70ef3](https://github.com/bill-zhanxg/csen-sport/commit/4d70ef3fc78bd8eed4bbca9dbca224a0d1fc2fcd))
+* migrate to Nextjs canary ([4d70ef3](https://github.com/bill-zhanxg/csen-sport/commit/4d70ef3fc78bd8eed4bbca9dbca224a0d1fc2fcd))
+* update all searchParams to awaited ([a95b5cf](https://github.com/bill-zhanxg/csen-sport/commit/a95b5cf13b6fe39395ce6e148a47995829fdae27))
+* update to daisyui v5 beta ([4d70ef3](https://github.com/bill-zhanxg/csen-sport/commit/4d70ef3fc78bd8eed4bbca9dbca224a0d1fc2fcd))
+* update to tailwindcss v4 ([4d70ef3](https://github.com/bill-zhanxg/csen-sport/commit/4d70ef3fc78bd8eed4bbca9dbca224a0d1fc2fcd))
+
+
+### Bug Fixes
+
+* fix a few errors ([87339a1](https://github.com/bill-zhanxg/csen-sport/commit/87339a1b039295405d860ac4a7668fb48507b095))
+* fix daisyui v5 beta visual changes ([e971f95](https://github.com/bill-zhanxg/csen-sport/commit/e971f950cd4d0874e4933f759daa33bdb6a1e4c3))
+* removed tailwind config file ([87339a1](https://github.com/bill-zhanxg/csen-sport/commit/87339a1b039295405d860ac4a7668fb48507b095))
+* update import code to support latest version of excel sheets ([7e2fba5](https://github.com/bill-zhanxg/csen-sport/commit/7e2fba5ec6bfb63efc99d2f499b9196195feff01))
+
 ## [0.5.18](https://github.com/bill-zhanxg/csen-sport/compare/v0.5.17...v0.5.18) (2024-09-01)
 
 
