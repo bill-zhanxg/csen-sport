@@ -96,6 +96,7 @@ const MenuItem = memo(function MenuItem({
 			onClick={onClick}
 			target={item.external ? '_blank' : '_self'}
 			className={`flex items-center gap-2`}
+			prefetch={false}
 		>
 			<div className="indicator">
 				{badge && <span className="indicator-item badge badge-primary h-1 p-1 [--tw-translate-x:120%]"></span>}
