@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.4](https://github.com/bill-zhanxg/csen-sport/compare/v0.6.3...v0.6.4) (2025-02-02)
+
+
+### Bug Fixes
+
+* disable prefetch on Navbar items to prevent navigation issues ([a42204a](https://github.com/bill-zhanxg/csen-sport/commit/a42204a8b9372f782d9e8baf382f4cca9cfb7211))
+
 ## [0.6.3](https://github.com/bill-zhanxg/csen-sport/compare/v0.6.2...v0.6.3) (2025-02-02)
 
 
