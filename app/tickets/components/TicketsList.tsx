@@ -163,11 +163,11 @@ export function TicketsList({
 	return (
 		<>
 			<div role="tablist" className="tabs tabs-boxed mb-2">
-				<Link href={`/tickets`} role="tab" className={`relative tab`}>
+				<Link href={`/tickets`} role="tab" className={`relative tab`} prefetch={false}>
 					{!closed && <motion.div layoutId="status" className="w-full h-full absolute bg-base-300 rounded-lg" />}
 					<span className="relative z-10">Opened</span>
 				</Link>
-				<Link href={`/tickets?status=closed`} role="tab" className={`relative tab`}>
+				<Link href={`/tickets?status=closed`} role="tab" className={`relative tab`} prefetch={false}>
 					{closed && <motion.div layoutId="status" className="w-full h-full absolute bg-base-300 rounded-lg" />}
 					<span className="relative z-10">Closed</span>
 				</Link>
