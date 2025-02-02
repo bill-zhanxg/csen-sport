@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.5](https://github.com/bill-zhanxg/csen-sport/compare/v0.6.4...v0.6.5) (2025-02-02)
+
+
+### Bug Fixes
+
+* HOTFIX: fixed microsoft entra id issuer issue ([f82115c](https://github.com/bill-zhanxg/csen-sport/commit/f82115c8e1067a499ecb2e9859a7a91ff9da6651))
+
 ## [0.6.4](https://github.com/bill-zhanxg/csen-sport/compare/v0.6.3...v0.6.4) (2025-02-02)
 
 
