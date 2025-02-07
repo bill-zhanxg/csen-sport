@@ -9,8 +9,8 @@ import { SerializedGame, SerializedTeam, SerializedVenue } from '@/libs/serializ
 import { RawTeacher } from '@/libs/tableData';
 import { FormState } from '@/libs/types';
 import { Session } from 'next-auth';
-import { useState } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState, useState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { FaRegCheckCircle, FaRegTimesCircle } from 'react-icons/fa';
 import { updateGame } from '../actions';
 
@@ -27,7 +27,7 @@ export function GameForm({
 	venues: SerializedVenue[];
 	teachers: RawTeacher[];
 }) {
-	const [state, formAction] = useFormState<FormState, FormData>(updateGame, null);
+	const [state, formAction] = useActionState<FormState, FormData>(updateGame, null);
 	const isTeacherBool = isTeacher(session);
 
 	const [extraTeachers, setExtraTeachers] = useState<string[]>(game.extra_teachers ?? []);

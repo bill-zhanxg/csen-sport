@@ -7,8 +7,8 @@ import { NextauthUsersRecord } from '@/libs/xata';
 import { JSONData, SelectedPick } from '@xata.io/client';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useRouter } from 'next13-progressbar';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState, useCallback, useEffect, useRef, useState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { changeRole } from '../actions';
 
 export type ChangeRoleState = null | {
@@ -26,7 +26,7 @@ export function UserTable({
 	const router = useRouter();
 	const pathname = usePathname();
 
-	const [state, formAction] = useFormState<ChangeRoleState, FormData>(changeRole, null);
+	const [state, formAction] = useActionState<ChangeRoleState, FormData>(changeRole, null);
 
 	// New
 	const [selectedUsers, setSelectedUsers] = useState<

@@ -5,8 +5,8 @@ import { dayjs } from '@/libs/dayjs';
 import { SerializedTeam } from '@/libs/serializeData';
 import { FormState } from '@/libs/types';
 import { Session } from 'next-auth';
-import { useEffect, useRef, useState } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState, useEffect, useRef, useState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { FaRegCheckCircle, FaRegTimesCircle } from 'react-icons/fa';
 import { Box } from '../../globalComponents/Box';
 import { updateProfile } from '../actions';
@@ -14,7 +14,7 @@ import { Preferences } from './Preferences';
 import { ProfilePicture } from './ProfilePicture';
 
 export function SettingsForm({ session, teams }: { session: Session; teams: SerializedTeam[] }) {
-	const [state, formAction] = useFormState<FormState, FormData>(updateProfile, null);
+	const [state, formAction] = useActionState<FormState, FormData>(updateProfile, null);
 	const [autoTimezone, setAutoTimezone] = useState(session.user.auto_timezone ?? true);
 	const [supportedTimezones, setSupportedTimezones] = useState<string[] | undefined | null>(undefined);
 
