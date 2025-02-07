@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.7.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.6.5...v0.7.0) (2025-02-07)
+
+
+### Features
+
+* add removeDupe script ([403bec7](https://github.com/bill-zhanxg/csen-sport/commit/403bec7e5e2702d4ea6f0f9479753bc7b1b1ed49))
+
+
+### Bug Fixes
+
+* replaced all useFormState with useActionState after react 19 upgrade ([f595e43](https://github.com/bill-zhanxg/csen-sport/commit/f595e43716b2019ceab2f98fba6294d69eef8696))
+
 ## [0.6.5](https://github.com/bill-zhanxg/csen-sport/compare/v0.6.4...v0.6.5) (2025-02-02)
 
 
