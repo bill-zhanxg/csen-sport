@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.1](https://github.com/bill-zhanxg/csen-sport/compare/v0.7.0...v0.7.1) (2025-04-01)
+
+
+### Bug Fixes
+
+* update dependencies and remove sessionTimingIntegration from Sentry config ([22f36cd](https://github.com/bill-zhanxg/csen-sport/commit/22f36cdb7b4f888c3952d1ad8819c6441db114c9))
+
 ## [0.7.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.6.5...v0.7.0) (2025-02-07)
 
 
