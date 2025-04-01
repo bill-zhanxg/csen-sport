@@ -43,7 +43,6 @@ Sentry.init({
 		}),
 
 		Sentry.extraErrorDataIntegration(),
-		Sentry.sessionTimingIntegration(),
 
 		Sentry.browserProfilingIntegration(),
 		Sentry.httpClientIntegration(),
