@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.2](https://github.com/bill-zhanxg/csen-sport/compare/v0.7.1...v0.7.2) (2025-05-08)
+
+
+### Bug Fixes
+
+* ensure session validation in getPaginatedMessages and return empty array if not authenticated ([d8d35b6](https://github.com/bill-zhanxg/csen-sport/commit/d8d35b61b141decefd58b1b21778c1940625d68f))
+
 ## [0.7.1](https://github.com/bill-zhanxg/csen-sport/compare/v0.7.0...v0.7.1) (2025-04-01)
 
 
