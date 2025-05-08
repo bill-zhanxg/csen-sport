@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.7.2...v0.8.0) (2025-05-08)
+
+
+### Features
+
+* renamed Sentry client configuration to nextjs instrumentation client ([6cf9a2f](https://github.com/bill-zhanxg/csen-sport/commit/6cf9a2f9fa08854c488ec0cdac6bd6d224e226aa))
+
 ## [0.7.2](https://github.com/bill-zhanxg/csen-sport/compare/v0.7.1...v0.7.2) (2025-05-08)
 
 
