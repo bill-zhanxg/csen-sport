@@ -59,3 +59,5 @@ Sentry.init({
 		'URI malformed',
 	],
 });
+
+export const onRequestError = Sentry.captureRequestError;
