@@ -22,23 +22,27 @@ export const revalidate = 0;
 const xata = getXataClient();
 
 export default async function TicketMessages(props: { params: Promise<{ id: string }> }) {
-    const params = await props.params;
-    const session = await authC();
-    if (!session) return Unauthorized();
+	const params = await props.params;
+	const session = await authC();
+	if (!session) return Unauthorized();
 
-    const ticket_id = params.id;
-    const ticket = await xata.db.tickets.read(ticket_id);
-    if (!ticket) return NotFound();
-    if (!ticket.createdBy || (!isDeveloper(session) && ticket.createdBy?.id !== session.user.id)) return Unauthorized();
-    const serializedTicket = {
+	const ticket_id = params.id;
+	const ticket = await xata.db.tickets.read(ticket_id);
+	if (!ticket) return NotFound();
+	if (!ticket.createdBy || (!isDeveloper(session) && ticket.createdBy?.id !== session.user.id)) return Unauthorized();
+	const serializedTicket = {
 		id: ticket.id,
 		title: ticket.title,
 	};
-    const ticket_creator = ticket.createdBy.id;
-    const creator = isDeveloper(session) ? await ticket.createdBy.read() : undefined;
+	const ticket_creator = ticket.createdBy.id;
+	const creator = isDeveloper(session) ? await ticket.createdBy.read() : undefined;
 
-    async function getPaginatedMessages(offset?: number) {
+	async function getPaginatedMessages(offset?: number) {
 		'use server';
+
+		const session = await authC();
+		if (!session) return [];
+
 		const messages = await xata.db.ticket_messages
 			.select(['*', 'sender.name', 'sender.email', 'sender.image'])
 			.filter({ ticket_id })
@@ -89,19 +93,19 @@ export default async function TicketMessages(props: { params: Promise<{ id: stri
 
 		return messages;
 	}
-    async function getMessages(): Promise<SerializedTicketMessage[]> {
+	async function getMessages(): Promise<SerializedTicketMessage[]> {
 		'use server';
 		const messages = await getPaginatedMessages();
 		return serializeTicketMessages(messages);
 	}
-    async function getNextPage(messageCount: number): Promise<SerializedTicketMessage[]> {
+	async function getNextPage(messageCount: number): Promise<SerializedTicketMessage[]> {
 		'use server';
 		if (typeof messageCount !== 'number') return [];
 		const messages = await getPaginatedMessages(messageCount);
 		return serializeTicketMessages(messages);
 	}
 
-    async function sendMessage(messageRaw: string) {
+	async function sendMessage(messageRaw: string) {
 		'use server';
 		const message = messageRaw.trim();
 		if (!message || !session || !ticket_id) return;
@@ -126,7 +130,7 @@ export default async function TicketMessages(props: { params: Promise<{ id: stri
 		});
 	}
 
-    return (
+	return (
 		<div id="chat" className="flex flex-col items-center w-full h-full px-8 py-2 overflow-auto relative bg-base-200">
 			<div className="flex justify-between sticky top-0 w-full bg-base-100 z-10 py-2 px-4 rounded-lg">
 				<div className="flex items-center gap-2 text-center">
