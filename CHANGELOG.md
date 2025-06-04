@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.1](https://github.com/bill-zhanxg/csen-sport/compare/v0.8.0...v0.8.1) (2025-06-04)
+
+
+### Bug Fixes
+
+* Potential fix for code scanning alert no. 3: Workflow does not contain permissions ([dbff1f1](https://github.com/bill-zhanxg/csen-sport/commit/dbff1f19928d737fc67db389cfe4488dad116bb2))
+
 ## [0.8.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.7.2...v0.8.0) (2025-05-08)
 
 
