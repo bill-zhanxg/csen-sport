@@ -25,11 +25,11 @@ const menu: Menu = [
 		name: 'Weekly Sport',
 		href: '/weekly-sport/timetable',
 	},
-	{
-		id: 'tickets-btn',
-		name: 'Tickets',
-		href: '/tickets',
-	},
+	// {
+	// 	id: 'tickets-btn',
+	// 	name: 'Tickets',
+	// 	href: '/tickets',
+	// },
 	{
 		id: 'csen-btn',
 		name: 'CSEN',
