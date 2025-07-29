@@ -500,7 +500,11 @@ function ChangelogBox({
 			</p>
 			<p>
 				Tested by <span className="font-bold">Mason S.</span>{' '}
-				<Link className="link link-primary" href={SadCat.src} target="_blank">
+				<Link
+					className="link link-primary"
+					href={SadCat.src as __next_route_internal_types__.RouteImpl<string>}
+					target="_blank"
+				>
 					Hello :)
 				</Link>
 			</p>

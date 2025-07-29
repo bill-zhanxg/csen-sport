@@ -15,7 +15,7 @@ import NProgress from 'nprogress';
 type Menu = {
 	id: string;
 	name: string;
-	href: string | { id: string; name: string; href: string; admin?: boolean }[];
+	href: __next_route_internal_types__.RouteImpl<string> | { id: string; name: string; href: __next_route_internal_types__.RouteImpl<string>; admin?: boolean }[];
 	admin?: boolean;
 	external?: boolean;
 }[];
@@ -92,7 +92,7 @@ const MenuItem = memo(function MenuItem({
 	return (
 		<Link
 			id={item.id + suffix}
-			href={item.href as string}
+			href={item.href as __next_route_internal_types__.RouteImpl<string>}
 			onClick={onClick}
 			target={item.external ? '_blank' : '_self'}
 			className={`flex items-center gap-2`}

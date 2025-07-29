@@ -71,7 +71,11 @@ export default async function WeeklySport(props0: { searchParams: SearchParams }
 
 	const dates = gamesToDates(games, isTeacherBool, session?.user.timezone);
 
-	function buildSearchParam(props?: { edit?: string; filter?: string; page?: string }) {
+	function buildSearchParam(props?: {
+		edit?: string;
+		filter?: string;
+		page?: string;
+	}): __next_route_internal_types__.RouteImpl<string> {
 		const { edit, filter, page } = props ?? {};
 
 		const baseUri = '/weekly-sport/timetable';
