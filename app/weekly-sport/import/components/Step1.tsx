@@ -123,6 +123,17 @@ export function Step1({
 		 * 10 - Venue
 		 * 12 - Notes
 		 */
+		/**
+		 * V2 New Index:
+		 * 0 - Date
+		 * 1 - Sport
+		 * 2 - Gender
+		 * 3 - Opponent
+		 * 4 - Location
+		 * 5 - Start Time
+		 * !6 - End Time
+		 * 7 - Home/Away
+		 */
 		const json = (utils.sheet_to_json(sheet, { header: 1 }) as any[][])
 			.toSpliced(0, 3)
 			.sort(
