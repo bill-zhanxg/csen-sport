@@ -40,6 +40,15 @@ export function ProfilePicture({
 				onChange={async (event) => {
 					const file = event.target.files?.[0];
 					if (!file) return;
+
+					// Check file size (30MB = 30 * 1024 * 1024 bytes)
+					const maxSize = 30 * 1024 * 1024;
+					if (file.size > maxSize) {
+						alert('File size must be less than 30MB');
+						event.target.value = ''; // Clear the input
+						return;
+					}
+
 					const base64 = (await toBase64(file)) as string;
 					setUser((user) => {
 						return {
@@ -49,7 +58,9 @@ export function ProfilePicture({
 					});
 				}}
 			/>
-			<span className="absolute bottom-0 right-0 bg-base-content/80 text-base-100 rounded-tl-full p-4 z-10"><FaPen /></span>
+			<span className="absolute bottom-0 right-0 bg-base-content/80 text-base-100 rounded-tl-full p-4 z-10">
+				<FaPen />
+			</span>
 		</label>
 	);
 }
