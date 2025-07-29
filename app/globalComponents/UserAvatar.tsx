@@ -18,7 +18,7 @@ export function UserAvatar({
 			alt="User Avatar"
 			height={500}
 			width={500}
-			className={`w-12 h-12 hover:shadow-lg shadow-cyan-500/50 ${className}`}
+			className={`w-12 h-12 hover:shadow-md ${className}`}
 			priority
 		/>
 	) : (
@@ -29,7 +29,7 @@ export function UserAvatar({
 			width={500}
 			height={500}
 			alt="User Avatar"
-			className={`w-12 h-12 hover:shadow-lg shadow-cyan-500/50 ${className}`}
+			className={`w-12 h-12 hover:shadow-md ${className}`}
 			priority
 		/>
 	);
