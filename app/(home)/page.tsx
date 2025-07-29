@@ -27,7 +27,7 @@ export default async function Home() {
 	};
 
 	const games = await getXataClient()
-		.db.games.select(['*', 'team.*', 'venue.*', 'teacher.*'])
+		.db.games.select(['*', 'team.*', 'teacher.*'])
 		.sort('date', 'asc')
 		.sort('team.name', 'asc')
 		.filter(filter)

@@ -1,7 +1,7 @@
 import { authC } from '@/app/cache';
 import { isAdmin } from '@/libs/checkPermission';
 import { serializeGamesWithId } from '@/libs/serializeData';
-import { getRawTeachers, getRawTeams, getRawVenues } from '@/libs/tableData';
+import { getRawTeachers, getRawTeams } from '@/libs/tableData';
 import { getXataClient } from '@/libs/xata';
 import { Metadata } from 'next';
 import Link from 'next/link';
@@ -19,9 +19,8 @@ export default async function BulkAction() {
 	const session = await authC();
 	if (!isAdmin(session)) return Unauthorized();
 
-	const games = await xata.db.games.select(['*', 'team.id', 'venue.id', 'teacher.id']).getAll();
+	const games = await xata.db.games.select(['*', 'team.id', 'teacher.id']).getAll();
 	const teams = await getRawTeams();
-	const venues = await getRawVenues();
 	const teachers = await getRawTeachers();
 
 	return (
@@ -47,13 +46,10 @@ export default async function BulkAction() {
 							<Link href="/download/teams" target="_blank" className="btn join-item">
 								DL All Teams
 							</Link>
-							<Link href="/download/venues" target="_blank" className="btn join-item">
-								DL All Venues
-							</Link>
 						</div>
 					</div>
 				</div>
-				<GamesTable gamesRaw={serializeGamesWithId(games, true)} teams={teams} venues={venues} teachers={teachers} />
+				<GamesTable gamesRaw={serializeGamesWithId(games, true)} teams={teams} teachers={teachers} />
 			</div>
 		</div>
 	);

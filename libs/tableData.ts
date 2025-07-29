@@ -26,11 +26,6 @@ export async function getRawTeams(): Promise<RawTeam[]> {
 	return serializeTeams(teamsRecords);
 }
 
-export async function getRawVenues(): Promise<RawVenue[]> {
-	const venuesRecords = await xata.db.venues.select(['name', 'address', 'court_field_number']).getAll();
-	return serializeVenues(venuesRecords);
-}
-
 export async function getRawTeachers(): Promise<RawTeacher[]> {
 	const teachersRecords = await xata.db.nextauth_users
 		.filter({

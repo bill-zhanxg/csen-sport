@@ -7,7 +7,7 @@ import { GamesRecord, getXataClient } from './xata';
 export type DateWithGames = {
 	date: string;
 	rawDate: Date;
-	games: SelectedPick<GamesRecord, ('*' | 'team.*' | 'venue.*' | 'teacher.*')[]>[];
+	games: SelectedPick<GamesRecord, ('*' | 'team.*' | 'teacher.*')[]>[];
 };
 
 export type SerializedDateWithGames = {
@@ -18,8 +18,8 @@ export type SerializedDateWithGames = {
 
 export function gamesToDates(
 	games:
-		| Page<GamesRecord, SelectedPick<GamesRecord, ('*' | 'team.*' | 'teacher.*' | 'venue.*')[]>>
-		| SelectedPick<GamesRecord, ('*' | 'team.*' | 'teacher.*' | 'venue.*')[]>[],
+		| Page<GamesRecord, SelectedPick<GamesRecord, ('*' | 'team.*' | 'teacher.*')[]>>
+		| SelectedPick<GamesRecord, ('*' | 'team.*' | 'teacher.*')[]>[],
 	isTeacher: boolean,
 	timezone: string | null | undefined,
 ): DateWithGames[] {

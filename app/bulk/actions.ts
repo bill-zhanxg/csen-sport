@@ -22,8 +22,7 @@ export async function resetAll(): Promise<AlertType> {
 	try {
 		const games = (await xata.db.games.select(['id']).getAll()).map((game) => ({ ...game, table: 'games' }));
 		const teams = (await xata.db.teams.select(['id']).getAll()).map((game) => ({ ...game, table: 'teams' }));
-		const venues = (await xata.db.venues.select(['id']).getAll()).map((game) => ({ ...game, table: 'venues' }));
-		const chunks = chunk([...games, ...teams, ...venues]);
+		const chunks = chunk([...games, ...teams]);
 		for (const chunk of chunks)
 			await xata.transactions.run(
 				chunk.map((item) => ({
@@ -53,11 +52,7 @@ export async function resetTeams() {
 	return resetItem('teams');
 }
 
-export async function resetVenues() {
-	return resetItem('venues');
-}
-
-async function resetItem(table: 'games' | 'teams' | 'venues'): Promise<AlertType> {
+async function resetItem(table: 'games' | 'teams'): Promise<AlertType> {
 	const session = await authC();
 	if (!isAdmin(session))
 		return {

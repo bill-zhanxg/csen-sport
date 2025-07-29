@@ -1,12 +1,13 @@
 'use client';
-import { dayjs } from '@/libs/dayjs';
 /* eslint-disable react-hooks/rules-of-hooks */
 
 import { AlertType, ErrorAlert, SuccessAlert } from '@/app/components/Alert';
 import { TeachersMultiSelect } from '@/app/globalComponents/TeachersMultiSelect';
+import { useBeforeUnload } from '@/app/globalComponents/useBeforeUnload';
+import { dayjs } from '@/libs/dayjs';
 import { formatDate, formatIsJunior, formatTime } from '@/libs/formatValue';
 import { SerializedGameWithId } from '@/libs/serializeData';
-import { RawTeacher, RawTeam, RawVenue } from '@/libs/tableData';
+import { RawTeacher, RawTeam } from '@/libs/tableData';
 import { useSignal } from '@preact/signals-react';
 import {
 	CellContext,
@@ -20,17 +21,14 @@ import { ChangeEvent, ChangeEventHandler, FocusEventHandler, useEffect, useMemo,
 import { FaPlus, FaRegTrashCan } from 'react-icons/fa6';
 import { v4 } from 'uuid';
 import { GameChanges, updateGamesBulk } from '../actions';
-import { useBeforeUnload } from '@/app/globalComponents/useBeforeUnload';
 
 export function GamesTable({
 	teams,
-	venues,
 	gamesRaw,
 	teachers,
 }: {
 	gamesRaw: SerializedGameWithId[];
 	teams: RawTeam[];
-	venues: RawVenue[];
 	teachers: RawTeacher[];
 }) {
 	const [games, setGames] = useState<SerializedGameWithId[]>(gamesRaw);
@@ -184,19 +182,13 @@ export function GamesTable({
 				cell: (prop) => {
 					const [value, onChange, onBlur] = editable<string>(prop);
 					return (
-						<select
-							className="select select-bordered rounded-none w-full"
-							value={value}
+						<input
+							className="input input-bordered rounded-none w-full"
+							placeholder="Type venue here"
+							value={value ?? ''}
 							onChange={onChange}
 							onBlur={onBlur}
-						>
-							<option disabled>Select venue</option>
-							{venues.map((venue) => (
-								<option key={venue.id} value={venue.id}>
-									{venue.name} ({venue.court_field_number})
-								</option>
-							))}
-						</select>
+						/>
 					);
 				},
 			},
@@ -341,7 +333,7 @@ export function GamesTable({
 				},
 			},
 		];
-	}, [teams, venues, teachers, changes.value]);
+	}, [teams, teachers, changes.value]);
 
 	const table = useReactTable({
 		columns,
@@ -458,18 +450,12 @@ export function GamesTable({
 								/>
 							</td>
 							<td className="p-0">
-								<select
-									className="select select-bordered rounded-none w-full"
+								<input
+									className="input input-bordered rounded-none w-full"
+									placeholder="Opponent"
 									value={newVenue}
 									onChange={(event) => setNewVenue(event.target.value)}
-								>
-									<option value="">Venue</option>
-									{venues.map((venue) => (
-										<option key={venue.id} value={venue.id}>
-											{venue.name} ({venue.court_field_number})
-										</option>
-									))}
-								</select>
+								/>
 							</td>
 							<td className="p-0">
 								<select
