@@ -1,10 +1,8 @@
 'use client';
-
 import { dayjs } from '@/libs/dayjs';
 import { useSignal } from '@preact/signals-react';
 import { useRouter } from 'next13-progressbar';
 import { useEffect, useMemo, useState } from 'react';
-import { pdfjs } from 'react-pdf';
 import { AlertType, ErrorAlertFixed, SuccessAlertFixed } from '../../../components/Alert';
 import { importData } from '../actions';
 import { Defaults, Games, Opponents, Teams, Venues } from '../types';
@@ -33,10 +31,6 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 
 	const fixturePages = useSignal<FixturePages>([]);
 	const venues = useSignal<Venues>([]);
-
-	useEffect(() => {
-		pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
-	}, []);
 
 	const [alert, setAlert] = useState<AlertType>(null);
 
@@ -96,19 +90,10 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 						setAlert={setAlert}
 						setNextLoading={setNextLoading}
 						setDisableNext={setDisableNext}
-						pdfjs={pdfjs}
 						fixturePages={fixturePages}
 					/>
 				)}
-				{step === 2 && (
-					<Step2
-						setAlert={setAlert}
-						setNextLoading={setNextLoading}
-						setDisableNext={setDisableNext}
-						pdfjs={pdfjs}
-						venues={venues}
-					/>
-				)}
+				{step === 2 && <Step2 />}
 				{step === 3 && (
 					<Step3
 						setAlert={setAlert}
