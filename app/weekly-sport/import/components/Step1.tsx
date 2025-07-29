@@ -2,9 +2,9 @@ import { dayjs } from '@/libs/dayjs';
 import { Signal } from '@preact/signals-react';
 import Link from 'next/link';
 import { TextItem } from 'pdfjs-dist/types/src/display/api';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { pdfjs as PDFJS } from 'react-pdf';
-import { read, utils } from 'xlsx';
+import { read, utils, WorkBook } from 'xlsx';
 
 type Type = 'junior' | 'intermediate';
 type Gender = 'boys' | 'girls';
@@ -51,6 +51,12 @@ export function Step1({
 	fixturePages: Signal<FixturePages>;
 }) {
 	const [weeklySportFileDisabled, setWeeklySportFileDisabled] = useState(false);
+	const [availableSheets, setAvailableSheets] = useState<string[]>([]);
+	const [selectedSheet, setSelectedSheet] = useState<string>('');
+	const [showSheetSelector, setShowSheetSelector] = useState(false);
+	const [currentWorkbook, setCurrentWorkbook] = useState<WorkBook | null>(null);
+
+	const fileSelectorRef = useRef<HTMLInputElement | null>(null);
 
 	async function handleWeeklySportChange(event: React.ChangeEvent<HTMLInputElement>) {
 		const file = event.target.files?.[0];
@@ -79,7 +85,23 @@ export function Step1({
 		} else if (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
 			file
 				.arrayBuffer()
-				.then(handleExcel)
+				.then((buffer) => {
+					const workbook = read(buffer, {
+						cellDates: true,
+					});
+					const sheetNames = Object.keys(workbook.Sheets);
+
+					if (sheetNames.length === 1) {
+						// If only one sheet, process it directly
+						handleExcel(workbook, sheetNames[0]);
+					} else {
+						// Multiple sheets, show selector
+						setCurrentWorkbook(workbook);
+						setAvailableSheets(sheetNames);
+						setSelectedSheet(sheetNames.includes('FIXTURES') ? 'FIXTURES' : sheetNames[0]);
+						setShowSheetSelector(true);
+					}
+				})
 				.catch((err) => {
 					setAlert({
 						type: 'error',
@@ -100,11 +122,17 @@ export function Step1({
 		}
 	}
 
-	function handleExcel(input: ArrayBuffer) {
-		const workbook = read(input, {
-			cellDates: true,
-		});
-		const sheet = workbook.Sheets['FIXTURES'];
+	function handleExcel(workbook: WorkBook, sheetName: string) {
+		// Script V2 - 29/07/2025
+
+		const sheet = workbook.Sheets[sheetName];
+		if (!sheet) {
+			setAlert({
+				type: 'error',
+				message: `Sheet "${sheetName}" not found in the Excel file`,
+			});
+			return;
+		}
 		/**
 		 * Index:
 		 * 2 - Date
@@ -233,6 +261,35 @@ export function Step1({
 
 		fixturePages.value = pages;
 		setDisableNext(false);
+		setShowSheetSelector(false);
+		setCurrentWorkbook(null);
+	}
+
+	function handleSheetSelection() {
+		if (!currentWorkbook || !selectedSheet) return;
+
+		setNextLoading(true);
+		setWeeklySportFileDisabled(true);
+
+		try {
+			handleExcel(currentWorkbook, selectedSheet);
+		} catch (err: any) {
+			setAlert({
+				type: 'error',
+				message: `Failed to process the selected sheet: ${err.message}`,
+			});
+		} finally {
+			setNextLoading(false);
+			setWeeklySportFileDisabled(false);
+		}
+	}
+
+	function cancelSheetSelection() {
+		setShowSheetSelector(false);
+		setCurrentWorkbook(null);
+		setAvailableSheets([]);
+		setSelectedSheet('');
+		if (fileSelectorRef.current) fileSelectorRef.current.value = '';
 	}
 
 	function handlePdfText(input: ArrayBuffer) {
@@ -513,12 +570,47 @@ export function Step1({
 				then import it here
 			</p>
 			<input
+				ref={fileSelectorRef}
 				type="file"
 				className="file-input file-input-bordered w-full max-w-xl"
 				accept=".pdf,.xlsx"
 				onChange={handleWeeklySportChange}
 				disabled={weeklySportFileDisabled}
 			/>
+
+			{showSheetSelector && (
+				<div className="mt-4 p-4 border border-gray-300 rounded-lg bg-base-100 shadow-sm max-w-xl w-full">
+					<h3 className="text-lg font-semibold mb-3">Select Sheet to Import</h3>
+					<p className="text-sm text-gray-600 mb-3">
+						Multiple sheets found in the Excel file. Please select which sheet contains the fixtures data:
+					</p>
+					<div className="form-control mb-4">
+						<select
+							className="select select-bordered w-full"
+							value={selectedSheet}
+							onChange={(e) => setSelectedSheet(e.target.value)}
+						>
+							{availableSheets.map((sheetName) => (
+								<option key={sheetName} value={sheetName}>
+									{sheetName}
+								</option>
+							))}
+						</select>
+					</div>
+					<div className="flex gap-2 justify-end">
+						<button className="btn btn-ghost" onClick={cancelSheetSelection} disabled={weeklySportFileDisabled}>
+							Cancel
+						</button>
+						<button
+							className="btn btn-primary"
+							onClick={handleSheetSelection}
+							disabled={weeklySportFileDisabled || !selectedSheet}
+						>
+							Import Selected Sheet
+						</button>
+					</div>
+				</div>
+			)}
 		</>
 	);
 }
