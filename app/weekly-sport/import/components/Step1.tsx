@@ -50,9 +50,6 @@ export function Step1({
 	pdfjs: typeof PDFJS;
 	fixturePages: Signal<FixturePages>;
 }) {
-	const [weeklySportTab, setWeeklySportTab] = useState<'url' | 'upload'>('upload');
-	const [weeklySportURL, setWeeklySportURL] = useState('');
-	const [weeklySportURLDisabled, setWeeklySportURLDisabled] = useState(false);
 	const [weeklySportFileDisabled, setWeeklySportFileDisabled] = useState(false);
 
 	async function handleWeeklySportChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -101,22 +98,6 @@ export function Step1({
 				message: 'Invalid file type, please upload a PDF or Excel file',
 			});
 		}
-	}
-	function handleWeeklySportURLCheck() {
-		// TODO: Currently Disabled due to proxy not working
-		if (!weeklySportURL.trim())
-			return setAlert({
-				type: 'error',
-				message: `URL is empty`,
-			});
-		setNextLoading(true);
-		setWeeklySportURLDisabled(true);
-		handlePdfText(weeklySportURL)
-			.catch(() => {})
-			.finally(() => {
-				setNextLoading(false);
-				setWeeklySportURLDisabled(false);
-			});
 	}
 
 	function handleExcel(input: ArrayBuffer) {
@@ -190,7 +171,7 @@ export function Step1({
 
 			const type = ageString === 'INTER' ? 'intermediate' : 'junior';
 			const gender = genderString?.toLowerCase().trim() as Gender;
-			const sport = sportString.trim() ;
+			const sport = sportString.trim();
 			const sportDiv = (sportDivString as number)?.toString().trim();
 			const date = dayjs(new Date(dateString)).format('YYYY-MM-DD');
 
@@ -254,10 +235,10 @@ export function Step1({
 		setDisableNext(false);
 	}
 
-	function handlePdfText(input: string | ArrayBuffer) {
+	function handlePdfText(input: ArrayBuffer) {
 		return new Promise((resolve, reject) => {
 			pdfjs
-				.getDocument(typeof input === 'string' ? `https://corsproxy.io/?${encodeURIComponent(input)}` : input)
+				.getDocument(input)
 				.promise.then(async (pdf) => {
 					const pages: FixturePages = [];
 
@@ -526,54 +507,18 @@ export function Step1({
 			</p>
 			<p className="text-xl font-bold text-center max-w-2xl">
 				Please find the latest fixtures PDF/Excel from{' '}
-				<Link className="link-primary link" href="https://csen.org.au/semester-sport/" target="_blank">
+				<Link className="link-primary link" href="https://csen.au/semester-sport/" target="_blank">
 					CSEN
 				</Link>{' '}
 				then import it here
 			</p>
-			<div role="tablist" className="tabs tabs-lg tabs-bordered">
-				<button
-					role="tab"
-					className={`tab tab-disabled ${weeklySportTab === 'url' ? 'tab-active' : ''}`}
-					onClick={() => {
-						// setWeeklySportTab('url')
-					}}
-					disabled={weeklySportFileDisabled}
-				>
-					URL
-				</button>
-				<button
-					role="tab"
-					className={`tab ${weeklySportTab === 'url' ? '' : 'tab-active'}`}
-					onClick={() => setWeeklySportTab('upload')}
-					disabled={weeklySportURLDisabled}
-				>
-					Upload
-				</button>
-			</div>
-			{weeklySportTab === 'url' ? (
-				<div className="flex gap-2 w-full max-w-xl">
-					<input
-						type="text"
-						value={weeklySportURL}
-						placeholder="Input URL of the PDF/Excel here"
-						className="input input-bordered w-full"
-						onChange={(event) => setWeeklySportURL(event.target.value)}
-						disabled={weeklySportURLDisabled}
-					/>
-					<button className="btn btn-accent" onClick={handleWeeklySportURLCheck} disabled={weeklySportURLDisabled}>
-						Check
-					</button>
-				</div>
-			) : (
-				<input
-					type="file"
-					className="file-input file-input-bordered w-full max-w-xl"
-					accept=".pdf,.xlsx"
-					onChange={handleWeeklySportChange}
-					disabled={weeklySportFileDisabled}
-				/>
-			)}
+			<input
+				type="file"
+				className="file-input file-input-bordered w-full max-w-xl"
+				accept=".pdf,.xlsx"
+				onChange={handleWeeklySportChange}
+				disabled={weeklySportFileDisabled}
+			/>
 		</>
 	);
 }

@@ -18,9 +18,6 @@ export function Step2({
 	pdfjs: typeof PDFJS;
 	venues: Signal<Venues>;
 }) {
-	const [weeklySportTab, setWeeklySportTab] = useState<'url' | 'upload'>('upload');
-	const [weeklySportURL, setWeeklySportURL] = useState('');
-	const [weeklySportURLDisabled, setWeeklySportURLDisabled] = useState(false);
 	const [weeklySportFileDisabled, setWeeklySportFileDisabled] = useState(false);
 
 	async function handleWeeklySportChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -45,22 +42,6 @@ export function Step2({
 					type: 'error',
 					message: `Failed to load the selected file: ${err.message}`,
 				});
-			});
-	}
-	function handleWeeklySportURLCheck() {
-		// TODO: Currently Disabled due to proxy not working
-		if (!weeklySportURL.trim())
-			return setAlert({
-				type: 'error',
-				message: `URL is empty`,
-			});
-		setNextLoading(true);
-		setWeeklySportURLDisabled(true);
-		handlePdfText(weeklySportURL)
-			.catch(() => {})
-			.finally(() => {
-				setNextLoading(false);
-				setWeeklySportURLDisabled(false);
 			});
 	}
 
@@ -210,49 +191,13 @@ export function Step2({
 				</Link>{' '}
 				then import it here
 			</p>
-			<div role="tablist" className="tabs tabs-lg tabs-bordered">
-				<button
-					role="tab"
-					className={`tab tab-disabled ${weeklySportTab === 'url' ? 'tab-active' : ''}`}
-					onClick={() => {
-						// setWeeklySportTab('url');
-					}}
-					disabled={weeklySportFileDisabled}
-				>
-					URL
-				</button>
-				<button
-					role="tab"
-					className={`tab ${weeklySportTab === 'url' ? '' : 'tab-active'}`}
-					onClick={() => setWeeklySportTab('upload')}
-					disabled={weeklySportURLDisabled}
-				>
-					Upload
-				</button>
-			</div>
-			{weeklySportTab === 'url' ? (
-				<div className="flex gap-2 w-full max-w-xl">
-					<input
-						type="text"
-						value={weeklySportURL}
-						placeholder="Input URL of the PDF here"
-						className="input input-bordered w-full"
-						onChange={(event) => setWeeklySportURL(event.target.value)}
-						disabled={weeklySportURLDisabled}
-					/>
-					<button className="btn btn-accent" onClick={handleWeeklySportURLCheck} disabled={weeklySportURLDisabled}>
-						Check
-					</button>
-				</div>
-			) : (
-				<input
-					type="file"
-					className="file-input file-input-bordered w-full max-w-xl"
-					accept=".pdf"
-					onChange={handleWeeklySportChange}
-					disabled={weeklySportFileDisabled}
-				/>
-			)}
+			<input
+				type="file"
+				className="file-input file-input-bordered w-full max-w-xl"
+				accept=".pdf"
+				onChange={handleWeeklySportChange}
+				disabled={weeklySportFileDisabled}
+			/>
 		</>
 	);
 }
