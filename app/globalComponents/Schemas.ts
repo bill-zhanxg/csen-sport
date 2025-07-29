@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export function emptyToNull<T extends z.ZodTypeAny>(zodType: T) {
 	return z.preprocess((val) => (val === '' ? null : val), zodType);
@@ -16,5 +16,5 @@ export const UpdateGameSchema = z.object({
 	out_of_class: z.date().optional(),
 	start: z.date().optional(),
 	notes: z.string().optional(),
-	confirmed: z.boolean().optional().default(false),
+	confirmed: z.boolean().optional().prefault(false),
 });

@@ -6,16 +6,16 @@ import { FormState } from '@/libs/types';
 import { getXataClient } from '@/libs/xata';
 import { revalidatePath } from 'next/cache';
 import sharp from 'sharp';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 const schema = z.object({
 	name: z.string().min(1).max(200).nullish(),
-	email: z.string().min(1).max(200).email().nullish(),
+	email: z.email().min(1).max(200).nullish(),
 	avatar: z.nullable(
 		z
 			.instanceof(File)
 			.refine((file) => file.type.startsWith('image/') || file.type === 'application/octet-stream', {
-				message: 'The thumbnail must be an image',
+				error: 'The thumbnail must be an image',
 			})
 			.transform((file) => (file.type === 'application/octet-stream' ? null : file)),
 	),
@@ -31,6 +31,7 @@ const schema = z.object({
 });
 
 export async function updateProfile(prevState: FormState, formData: FormData): Promise<FormState> {
+	// TODO: Body exceeded 1 MB limit. To configure the body size limit for Server Actions, see: https://nextjs.org/docs/app/api-reference/next-config-js/serverActions#bodysizelimit
 	const session = await authC();
 	if (!session) return { success: false, message: 'Unauthorized' };
 
@@ -40,11 +41,12 @@ export async function updateProfile(prevState: FormState, formData: FormData): P
 		avatar: formData.get('avatar'),
 		team: formData.get('team'),
 		reset_only_after_visit_weekly_sport: formData.get('reset_only_after_visit_weekly_sport'),
+		// TODO: auto timezone automatic tick after save
 		auto_timezone: formData.get('auto_timezone'),
 		timezone: formData.get('timezone'),
 	});
 
-	if (!parse.success) return { success: false, message: parse.error.errors[0].message };
+	if (!parse.success) return { success: false, message: z.prettifyError(parse.error) };
 	const { avatar, ...data } = parse.data;
 
 	if (!isTeacher(session)) {

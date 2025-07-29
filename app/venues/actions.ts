@@ -5,7 +5,7 @@ import { isAdmin } from '@/libs/checkPermission';
 import { VenuesRecord, getXataClient } from '@/libs/xata';
 import { SelectedPick } from '@xata.io/client';
 import { revalidatePath } from 'next/cache';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { AlertType } from '../components/Alert';
 
 const xata = getXataClient();

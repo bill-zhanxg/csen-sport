@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { revalidatePath } from 'next/cache';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { ImportState } from './components/ImportPage';
 import {
 	Defaults,

@@ -6,7 +6,7 @@ import { authC } from '@/app/cache';
 import { chunk, formatDate, formatTime } from '@/libs/formatValue';
 import { getXataClient } from '@/libs/xata';
 import { revalidatePath } from 'next/cache';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 const xata = getXataClient();
 

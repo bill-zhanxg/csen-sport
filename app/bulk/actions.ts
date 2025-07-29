@@ -5,7 +5,7 @@ import { isAdmin } from '@/libs/checkPermission';
 import { chunk } from '@/libs/formatValue';
 import { getXataClient } from '@/libs/xata';
 import { revalidatePath } from 'next/cache';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { AlertType } from '../components/Alert';
 import { UpdateGameSchema } from '../globalComponents/Schemas';
 

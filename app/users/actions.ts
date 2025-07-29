@@ -4,7 +4,7 @@ import { authC } from '@/app/cache';
 import { isAdmin } from '@/libs/checkPermission';
 import { getXataClient } from '@/libs/xata';
 import { revalidatePath } from 'next/cache';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { ChangeRoleState } from './components/UserTable';
 import { RoleSchema } from './schema';
 
@@ -19,6 +19,7 @@ const schema = z
 	});
 
 export async function changeRole(prevState: ChangeRoleState, formData: FormData): Promise<ChangeRoleState> {
+	// TODO: the blocked role is not highlighted when it's selected, and also add loading indicator (other files)
 	const session = await authC();
 	if (!isAdmin(session)) return { success: false, message: 'Unauthorized' };
 
@@ -27,7 +28,7 @@ export async function changeRole(prevState: ChangeRoleState, formData: FormData)
 		role: formData.get('role'),
 	});
 
-	if (!parse.success) return { success: false, message: parse.error.message };
+	if (!parse.success) return { success: false, message: z.prettifyError(parse.error) };
 
 	const { users, role } = parse.data;
 

@@ -5,7 +5,7 @@ import { isTeacher } from '@/libs/checkPermission';
 import { GamesRecord, getXataClient } from '@/libs/xata';
 import { SelectedPick } from '@xata.io/client';
 import { revalidatePath } from 'next/cache';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { AlertType } from '../components/Alert';
 import { UpdateGameSchema } from './Schemas';
 
