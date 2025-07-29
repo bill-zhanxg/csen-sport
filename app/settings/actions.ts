@@ -31,7 +31,6 @@ const schema = z.object({
 });
 
 export async function updateProfile(prevState: FormState, formData: FormData): Promise<FormState> {
-	// TODO: Body exceeded 1 MB limit. To configure the body size limit for Server Actions, see: https://nextjs.org/docs/app/api-reference/next-config-js/serverActions#bodysizelimit
 	const session = await authC();
 	if (!session) return { success: false, message: 'Unauthorized' };
 
