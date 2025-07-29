@@ -16,3 +16,5 @@ export function register() {
 		ignoreErrors: ['PKCE code_verifier cookie was missing', 'at Object.use', 'aborted'],
 	});
 }
+
+export const onRequestError = Sentry.captureRequestError;
