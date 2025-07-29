@@ -63,7 +63,7 @@
 		"ts-sse": "^0.0.6",
 		"uuid": "^11.1.0",
 		"xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
-		"zod": "^3.25.76"
+		"zod": "^4.0.11"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.54.1",
