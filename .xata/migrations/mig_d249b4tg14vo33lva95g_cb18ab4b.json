@@ -1,0 +1,12 @@
+{
+  "id": "mig_d249b4tg14vo33lva95g",
+  "parentID": "mig_d249b3lsrc3cna2qvivg",
+  "checksum": "1:cb18ab4bf2f87db0ade85d19fb368c02de1781ee436208da6cc035f5eb239fc3",
+  "operations": [
+    {
+      "removeTable": {
+        "table": "venues"
+      }
+    }
+  ]
+}

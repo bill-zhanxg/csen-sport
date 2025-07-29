@@ -1,0 +1,16 @@
+{
+  "id": "mig_d249b3lsrc3cna2qvivg",
+  "parentID": "mig_d249b1tg14vo33lva94g",
+  "checksum": "1:1b9cf2fb7446f86de1fb51b5a310bb50c67971bca7c55106511e43f9eb40c5b5",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "venue",
+          "type": "text"
+        },
+        "table": "games"
+      }
+    }
+  ]
+}
