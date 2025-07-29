@@ -61,3 +61,4 @@ Sentry.init({
 });
 
 export const onRequestError = Sentry.captureRequestError;
+export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
