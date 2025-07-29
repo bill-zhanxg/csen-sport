@@ -15,11 +15,9 @@ import {
 	DefaultsSchema,
 	Games,
 	GamesSchema,
-	Opponents,
 	OpponentsSchema,
 	Teams,
 	TeamsSchema,
-	Venues,
 	VenuesSchema,
 } from './types';
 
@@ -32,8 +30,6 @@ const TimezoneSchema = z.string();
 
 export async function importData(
 	teamRaw: Teams,
-	opponentsRaw: Opponents,
-	venuesRaw: Venues,
 	gamesRaw: Games,
 	defaultsRaw: Defaults,
 	timezoneRaw: string,
@@ -49,7 +45,7 @@ export async function importData(
 		const defaults = DefaultsSchema.parse(defaultsRaw);
 		const timezone = TimezoneSchema.parse(timezoneRaw);
 
-		const teamRecords = team.map(({ id, friendlyName, group }) => ({
+		const teamRecords = team.map(({ id, friendlyName, age: group }) => ({
 			id,
 			name: friendlyName,
 			isJunior: group === 'junior',

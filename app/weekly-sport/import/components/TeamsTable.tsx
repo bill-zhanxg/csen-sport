@@ -79,29 +79,9 @@ export function TeamsTable({
 
 		return [
 			{
-				id: 'gender',
-				accessorKey: 'gender',
-				header: 'Gender',
-			},
-			{
-				id: 'sport',
-				accessorKey: 'sport',
-				header: 'Sport',
-			},
-			{
-				id: 'division',
-				accessorKey: 'division',
-				header: 'Division',
-			},
-			{
-				id: 'team',
-				accessorKey: 'team',
-				header: 'Team',
-			},
-			{
-				id: 'friendlyName',
-				accessorKey: 'friendlyName',
-				header: 'Friendly Name',
+				id: 'name',
+				accessorKey: 'name',
+				header: 'Name',
 				cell: (prop) => {
 					const [value, disabled, onChange, onBlur] = editable<string>(prop);
 					return (
@@ -300,8 +280,8 @@ export function TeamsTable({
 													...teams,
 													{
 														id: id,
-														friendlyName: newName,
-														group: newGroup || 'junior',
+														name: newName,
+														age: newGroup || 'junior',
 													},
 												];
 											});
@@ -310,7 +290,7 @@ export function TeamsTable({
 												const allDates = games
 													.filter(({ teamId }) => {
 														const team = teams.find((team) => team.id === teamId);
-														return team?.group === newGroup;
+														return team?.age === newGroup;
 													})
 													.map((game) => game.date);
 												// Remove duplicates
@@ -322,8 +302,8 @@ export function TeamsTable({
 														date,
 														id: v4(),
 														teamId: id,
-														opponentCode: '',
-														venueCode: '',
+														opponent: '',
+														venue: '',
 													})),
 												];
 											});

@@ -1,50 +1,22 @@
 import { dayjs } from '@/libs/dayjs';
-import { Signal } from '@preact/signals-react';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
+import { v4 } from 'uuid';
 import { read, utils, WorkBook } from 'xlsx';
-
-type Type = 'junior' | 'intermediate';
-type Gender = 'boys' | 'girls';
-// This is actually the sport and division
-type Sport = {
-	name: string;
-	number: string;
-}[];
-type Games = (
-	| {
-			date: string;
-			games: (
-				| {
-						team1: string;
-						team2: string;
-						venue: string;
-						notes?: string;
-				  }
-				| {
-						text: string;
-				  }
-			)[];
-	  }[]
-	| null
-)[];
-export type FixturePages = {
-	type: Type;
-	gender: Gender;
-	teams: Sport;
-	games: Games;
-}[];
+import { Games, Teams } from '../types';
 
 export function Step1({
 	setNextLoading,
 	setDisableNext,
 	setAlert,
-	fixturePages,
+	setTeams,
+	setFixtures,
 }: {
 	setNextLoading: (nextLoading: boolean) => void;
 	setDisableNext: (disableNext: boolean) => void;
 	setAlert: (alert: { type: 'success' | 'error'; message: string } | null) => void;
-	fixturePages: Signal<FixturePages>;
+	setTeams: (teams: Teams) => void;
+	setFixtures: (fixtures: Games) => void;
 }) {
 	const [weeklySportFileDisabled, setWeeklySportFileDisabled] = useState(false);
 	const [availableSheets, setAvailableSheets] = useState<string[]>([]);
@@ -111,143 +83,74 @@ export function Step1({
 			return;
 		}
 		/**
-		 * Index:
-		 * 2 - Date
-		 * 3 - Age
-		 * 4 - Sport
-		 * 5 - Div
-		 * 6 - Pool (A | B)
-		 * 7 - Gender
-		 * 8 - Home Team
-		 * 9 - Away Team
-		 * 10 - Venue
-		 * 12 - Notes
-		 */
-		/**
 		 * V2 New Index:
-		 * 0 - Date
-		 * 1 - Sport
-		 * 2 - Gender
+		 * 0 - Date (In dd MMM YYYY format)
+		 * 1 - Sport (Activity)
+		 * 2 - Age + Gender (Team)
 		 * 3 - Opponent
 		 * 4 - Location
-		 * 5 - Start Time
+		 * 5 - Start Time (In 12-hour format, e.g., 1:00 AM)
 		 * !6 - End Time
-		 * 7 - Home/Away
+		 * 7 - Position (Home/Away)
 		 */
 		const json = (utils.sheet_to_json(sheet, { header: 1 }) as any[][])
-			.toSpliced(0, 3)
-			.sort(
-				(a, b) =>
-					a[3]?.localeCompare(b[3]) ||
-					a[7]?.localeCompare(b[7]) ||
-					a[4]?.localeCompare(b[4]) ||
-					a[5] - b[5] ||
-					a[2] - b[2],
-			);
+			// Remove header, assume sorted
+			.toSpliced(0, 1);
 
 		// Leave this in production for debugging
-		console.log(json);
+		console.log('Raw', json);
 
-		const pages: FixturePages = [];
-
-		let pageIndex = -1;
-		let currentPage: {
-			type: Type | undefined;
-			gender: Gender | undefined;
-		} = {
-			type: undefined,
-			gender: undefined,
-		};
-
-		let sportIndex = -1;
-		let currentSport: {
-			name: string | undefined;
-			number: string | undefined;
-		} = {
-			name: undefined,
-			number: undefined,
-		};
-
-		let gameDateIndex = -1;
-		let currentGameDate: string | undefined;
-
+		// #region Collapse algorithm
+		// Remap games into teams and opponents
+		const teams: (Teams[number] & { key: string })[] = [];
+		const games: Games = [];
 		for (const item of json) {
-			const dateString = item[2] as string | null;
+			const dateString = item[0] as string | null;
 			if (!dateString) continue;
-			const ageString = item[3] as string | null;
-			const sportString = item[4] as string | null;
+			const sportString = item[1] as string | null;
 			if (!sportString) continue;
-			const sportDivString = item[5] as number | null;
-			const poolString = item[6] as string | null;
-			const genderString = item[7] as string | null;
-			const homeTeam = item[8] as string | null;
-			const awayTeam = item[9] as string | null;
-			const venue = item[10] as string | null;
-			const notes = item[12] as string | null;
+			const ageGenderString = item[2] as string | null;
+			if (!ageGenderString) continue;
+			const opponent = item[3] as string | null;
+			const venue = item[4] as string | null;
+			const startTime = item[5] as string | null;
+			const position = item[7] as string | null;
 
-			const type = ageString === 'INTER' ? 'intermediate' : 'junior';
-			const gender = genderString?.toLowerCase().trim() as Gender;
-			const sport = sportString.trim();
-			const sportDiv = (sportDivString as number)?.toString().trim();
-			const date = dayjs(new Date(dateString)).format('YYYY-MM-DD');
-
-			if (currentPage.type !== type || currentPage.gender !== gender) {
-				pageIndex++;
-				pages[pageIndex] = {
-					type,
-					gender,
-					teams: [],
-					games: [],
-				};
-				currentPage = {
-					type,
-					gender,
-				};
-
-				sportIndex = -1;
-				currentSport = {
-					name: undefined,
-					number: undefined,
-				};
+			// We first extract team
+			const [age, gender, ...teamNum] = ageGenderString.split(' ');
+			const teamKey = `${ageGenderString}-${sportString}`;
+			let teamId = teams.find((team) => team.key === teamKey)?.id;
+			if (!teamId) {
+				teamId = v4();
+				teams.push({
+					id: teamId,
+					key: teamKey,
+					name: `${gender} ${sportString} ${teamNum.join(' ')}`.trim(),
+					age: age.toLowerCase() as 'junior' | 'intermediate',
+				});
 			}
 
-			if (currentSport.name !== sport || currentSport.number !== sportDiv) {
-				sportIndex++;
-				pages[pageIndex].teams[sportIndex] = {
-					name: sport,
-					number: sportDiv,
-				};
-				pages[pageIndex].games[sportIndex] = [];
-				currentSport = {
-					name: sport,
-					number: sportDiv,
-				};
-
-				gameDateIndex = -1;
-				currentGameDate = undefined;
-			}
-
-			if (currentGameDate !== date) {
-				gameDateIndex++;
-				pages[pageIndex].games[sportIndex]![gameDateIndex] = {
-					date,
-					games: [],
-				};
-				currentGameDate = date;
-			}
-
-			pages[pageIndex].games[sportIndex]![gameDateIndex].games.push({
-				team1: (homeTeam ?? '')?.toLowerCase().trim(),
-				team2: (awayTeam ?? '')?.toLowerCase().trim(),
-				venue: (venue ?? 'TBU')?.trim(),
-				notes: notes ?? undefined,
+			// Handle the fixture
+			const formattedDate = dayjs(dateString).format('YYYY-MM-DD');
+			const formattedStartTime = startTime ? dayjs(startTime, 'h:mm A').format('HH:mm') : undefined;
+			games.push({
+				id: v4(),
+				date: formattedDate,
+				teamId: teamId,
+				position: position as 'home' | 'away',
+				opponent: opponent || 'Bye',
+				venue,
+				start: formattedStartTime,
 			});
 		}
 
-		// Leave this in production for debugging
-		console.log(pages);
+		console.log('Teams:', teams);
+		console.log('Games:', games);
+		// #endregion
 
-		fixturePages.value = pages;
+		setTeams(teams);
+		setFixtures(games);
+
 		setDisableNext(false);
 		setShowSheetSelector(false);
 		setCurrentWorkbook(null);

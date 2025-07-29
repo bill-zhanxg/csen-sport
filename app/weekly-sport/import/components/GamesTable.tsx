@@ -21,20 +21,16 @@ import {
 	useTransition,
 } from 'react';
 import { FaRegTrashCan } from 'react-icons/fa6';
-import { Defaults, Games, Opponents, Teams, Venues } from '../types';
+import { Defaults, Games, Teams } from '../types';
 
 export function GamesTable({
 	teams,
-	opponents,
-	venues,
 	games,
 	setGames,
 	teachers,
 	defaults,
 }: {
 	teams: Teams;
-	opponents: Opponents;
-	venues: Venues;
 	games: Games;
 	setGames: Dispatch<SetStateAction<Games>>;
 	teachers: { id: string; name?: string | null }[];
@@ -120,7 +116,7 @@ export function GamesTable({
 							<option value="">Select a team</option>
 							{teams.map((team) => (
 								<option key={team.id} value={team.id}>
-									[{team.group}] {team.friendlyName}
+									[{team.age}] {team.name}
 								</option>
 							))}
 						</select>
@@ -148,50 +144,38 @@ export function GamesTable({
 				},
 			},
 			{
-				id: 'opponentCode',
-				accessorKey: 'opponentCode',
+				id: 'opponent',
+				accessorKey: 'opponent',
 				header: 'Opponent',
 				cell: (prop) => {
 					const [value, disabled, onChange, onBlur] = editable<string>(prop);
 					return (
-						<select
-							className="select select-bordered rounded-none w-full"
-							value={value}
+						<input
+							className="input input-bordered rounded-none w-full"
+							placeholder="Opponent"
+							value={value ?? ''}
 							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
-						>
-							<option value="">Select opponent</option>
-							{opponents.map((opponent) => (
-								<option key={opponent.csenCode} value={opponent.csenCode}>
-									{opponent.friendlyName}
-								</option>
-							))}
-						</select>
+						/>
 					);
 				},
 			},
 			{
-				id: 'venueCode',
-				accessorKey: 'venueCode',
+				id: 'venue',
+				accessorKey: 'venue',
 				header: 'Venue',
 				cell: (prop) => {
 					const [value, disabled, onChange, onBlur] = editable<string>(prop);
 					return (
-						<select
-							className="select select-bordered rounded-none w-full"
-							value={value}
+						<input
+							className="input input-bordered rounded-none w-full"
+							placeholder="Venue"
+							value={value ?? ''}
 							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
-						>
-							<option value="">Select a venue</option>
-							{venues.map((venue) => (
-								<option key={venue.csenCode} value={venue.csenCode}>
-									{venue.venue} ({venue.cfNum}) [{venue.csenCode}]
-								</option>
-							))}
-						</select>
+						/>
 					);
 				},
 			},
@@ -317,8 +301,6 @@ export function GamesTable({
 				header: () => null,
 				cell: ({ row: { original } }) => {
 					const team = teams.find((team) => team.id === original.teamId);
-					const opponent = opponents.find((opponent) => opponent.csenCode === original.opponentCode);
-					const venue = venues.find((venue) => venue.csenCode === original.venueCode);
 					const teacher = teachers.find((teacher) => teacher.id === original.teacher);
 
 					return (
@@ -337,10 +319,10 @@ export function GamesTable({
 										of the import process if accidental removal.
 									</p>
 									<SideBySide title="Date:" value={original.date} />
-									<SideBySide title="Team Group:" value={team?.group ?? '---'} />
-									<SideBySide title="Team Friendly Name:" value={team?.friendlyName ?? '---'} />
-									<SideBySide title="Opponent:" value={opponent?.friendlyName ?? '---'} />
-									<SideBySide title="Venue:" value={venue ? `${venue.venue} (${venue.cfNum})` : '---'} />
+									<SideBySide title="Team Age:" value={team?.age ?? '---'} />
+									<SideBySide title="Team Friendly Name:" value={team?.name ?? '---'} />
+									<SideBySide title="Opponent:" value={original.opponent ?? '---'} />
+									<SideBySide title="Venue:" value={original.venue ?? '---'} />
 									<SideBySide title="Teacher:" value={teacher?.name ?? '---'} />
 									<SideBySide title="Transportation:" value={original.transportation ?? '---'} />
 									<SideBySide title="Notes:" value={original.notes ?? '---'} />
@@ -368,7 +350,7 @@ export function GamesTable({
 				},
 			},
 		];
-	}, [teams, opponents, venues, teachers, defaults, setGames]);
+	}, [teams, teachers, defaults, setGames]);
 
 	const table = useReactTable({
 		columns,

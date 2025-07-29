@@ -1,12 +1,11 @@
 'use client';
 import { dayjs } from '@/libs/dayjs';
-import { useSignal } from '@preact/signals-react';
 import { useRouter } from 'next13-progressbar';
 import { useEffect, useMemo, useState } from 'react';
 import { AlertType, ErrorAlertFixed, SuccessAlertFixed } from '../../../components/Alert';
 import { importData } from '../actions';
-import { Defaults, Games, Opponents, Teams, Venues } from '../types';
-import { FixturePages, Step1 } from './Step1';
+import { Defaults, Games, Teams } from '../types';
+import { Step1 } from './Step1';
 import { Step2 } from './Step2';
 import { Step3 } from './Step3';
 
@@ -28,28 +27,25 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 	const [disableNext, setDisableNext] = useState(true);
 	const [nextLoading, setNextLoading] = useState(false);
 
-	const fixturePages = useSignal<FixturePages>([]);
-	const venues = useSignal<Venues>([]);
+	// TODO: remove signal preact completely
 
 	const [alert, setAlert] = useState<AlertType>(null);
 
-	function checkNextNeedDisable(newStep: number) {
-		if (newStep === 1 && fixturePages.value.length > 0) return false;
-		else return true;
-	}
-
 	const [defaults, setDefaults] = useState<Defaults>({});
 	const [teams, setTeams] = useState<Teams>([]);
-	const [opponents, setOpponents] = useState<Opponents>([]);
-	const [filteredVenues, setFilteredVenues] = useState<Venues>([]);
-	const [games, setGames] = useState<Games>([]);
+	const [fixtures, setFixtures] = useState<Games>([]);
+
+	function checkNextNeedDisable(newStep: number) {
+		if (newStep === 1 && fixtures.length > 0) return false;
+		else return true;
+	}
 
 	const [importState, setImportState] = useState<ImportState>({ type: 'loading' });
 
 	const startImport = useMemo(() => {
 		return () => {
 			setImportState({ type: 'loading' });
-			importData(teams, opponents, filteredVenues, games, defaults, dayjs.tz.guess())
+			importData(teams, fixtures, defaults, dayjs.tz.guess())
 				.then((res) => {
 					setImportState(res);
 					setNextLoading(false);
@@ -63,7 +59,7 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 					setNextLoading(false);
 				});
 		};
-	}, [teams, opponents, filteredVenues, games, defaults]);
+	}, [teams, fixtures, defaults]);
 
 	useEffect(() => {
 		if (importState.type === 'success') setDisableNext(false);
@@ -84,26 +80,20 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 						setAlert={setAlert}
 						setNextLoading={setNextLoading}
 						setDisableNext={setDisableNext}
-						fixturePages={fixturePages}
+						setTeams={setTeams}
+						setFixtures={setFixtures}
 					/>
 				)}
 				{step === 2 && (
 					<Step2
 						setAlert={setAlert}
-						setDisableNext={setDisableNext}
-						fixtures={fixturePages}
-						venues={venues}
 						teachers={teachers}
 						defaults={defaults}
 						setDefaults={setDefaults}
 						teams={teams}
 						setTeams={setTeams}
-						opponents={opponents}
-						setOpponents={setOpponents}
-						filteredVenues={filteredVenues}
-						setFilteredVenues={setFilteredVenues}
-						games={games}
-						setGames={setGames}
+						fixtures={fixtures}
+						setFixtures={setFixtures}
 					/>
 				)}
 				{step === 3 && <Step3 importState={importState} retry={startImport} />}
