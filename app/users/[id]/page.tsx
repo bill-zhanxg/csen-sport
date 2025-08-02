@@ -7,25 +7,36 @@ import { isAdmin, isTeacher } from '@/libs/checkPermission';
 import { getXataClient } from '@/libs/xata';
 import { revalidatePath } from 'next/cache';
 import { RoleSchema } from '../schema';
+import { RoleForm } from './components/RoleForm';
 
 const xata = getXataClient();
 
-export default async function User(
-    props: {
-        params: Promise<{
-            id: string;
-        }>;
-    }
-) {
-    const params = await props.params;
-    const session = await authC();
-    const user = await xata.db.nextauth_users.read(params.id, ['email', 'name', 'image', 'role']);
-    if (!user) return <ErrorMessage code="404" message="The user you're looking for can not be found" />;
-    const userId = user.id;
+export default async function User(props: {
+	params: Promise<{
+		id: string;
+	}>;
+}) {
+	const params = await props.params;
+	const session = await authC();
+	const user = await xata.db.nextauth_users.read(params.id, ['email', 'name', 'image', 'role']);
+	if (!user) return <ErrorMessage code="404" message="The user you're looking for can not be found" />;
+	const userId = user.id;
 
-    if (!isAdmin(session) && !isTeacher(user) && session?.user.id !== user.id) return Unauthorized();
+	if (!isAdmin(session) && !isTeacher(user) && session?.user.id !== user.id) return Unauthorized();
 
-    return (
+	const updateUserRole = async (formData: FormData) => {
+		'use server';
+		const role = RoleSchema.safeParse(formData.get('role'));
+		if (!role.success) return;
+
+		await xata.db.nextauth_users.update(userId, {
+			role: role.data,
+		});
+
+		revalidatePath(`/users/${userId}`);
+	};
+
+	return (
 		<div className="flex justify-center items-center h-[80vh] w-full">
 			<Box className="card card-side bg-base-100 shadow-xl w-auto p-0 sm:px-8 sm:py-2 max-w-2xl flex-col">
 				<div className="card-body">
@@ -52,44 +63,7 @@ export default async function User(
 						</div>
 					</div>
 				</div>
-				{isAdmin(session) && (
-					<form
-						action={async (data) => {
-							'use server';
-							const role = RoleSchema.safeParse(data.get('role'));
-							if (!role.success) return;
-
-							await xata.db.nextauth_users.update(userId, {
-								role: role.data,
-							});
-
-							revalidatePath(`/users/${userId}`);
-						}}
-						className="card-body pt-0"
-					>
-						<div className="flex flex-col sm:flex-row justify-around">
-							<label className="flex flex-row-reverse sm:flex-row label cursor-pointer gap-2">
-								<input type="radio" name="role" value="student" className="radio radio-success" required />
-								<span className="label-text">Student (Default)</span>
-							</label>
-							<label className="flex flex-row-reverse sm:flex-row label cursor-pointer gap-2">
-								<input type="radio" name="role" value="teacher" className="radio radio-warning" />
-								<span className="label-text">Teacher</span>
-							</label>
-							<label className="flex flex-row-reverse sm:flex-row label cursor-pointer gap-2">
-								<input type="radio" name="role" value="admin" className="radio radio-error" />
-								<span className="label-text">Administrator</span>
-							</label>
-							<label className="flex flex-row-reverse sm:flex-row label cursor-pointer gap-2">
-								<input type="radio" name="role" value="blocked" className="radio radio-error" />
-								<span className="label-text">Blocked</span>
-							</label>
-						</div>
-						<button className="btn btn-info" type="submit">
-							Change Role
-						</button>
-					</form>
-				)}
+				{isAdmin(session) && <RoleForm currentRole={user.role} updateUserRole={updateUserRole} />}
 			</Box>
 		</div>
 	);
