@@ -43,7 +43,7 @@ jobs:
           npm prune -f --omit-dev
 
       - name: Zip artifact for deployment
-        run: zip -r release.zip ./.next ./node_modules ./public ./.env* ./next.config.js ./package.json ./package-lock.json ./CHANGELOG.md
+        run: zip -r release.zip ./.next ./node_modules ./public ./.env* ./next.config.ts ./package.json ./package-lock.json ./CHANGELOG.md
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
