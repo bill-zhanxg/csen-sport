@@ -137,7 +137,7 @@ export function Step1({
 				id: v4(),
 				date: formattedDate,
 				teamId: teamId,
-				position: position as 'home' | 'away',
+				position: (position ?? 'home').toLocaleLowerCase() as 'home' | 'away',
 				opponent: opponent || 'Bye',
 				venue,
 				start: formattedStartTime,

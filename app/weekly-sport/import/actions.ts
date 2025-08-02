@@ -10,16 +10,7 @@ import utc from 'dayjs/plugin/utc';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod/v4';
 import { ImportState } from './components/ImportPage';
-import {
-	Defaults,
-	DefaultsSchema,
-	Games,
-	GamesSchema,
-	OpponentsSchema,
-	Teams,
-	TeamsSchema,
-	VenuesSchema,
-} from './types';
+import { Defaults, DefaultsSchema, Games, GamesSchema, Teams, TeamsSchema } from './types';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -39,22 +30,14 @@ export async function importData(
 
 	try {
 		const team = TeamsSchema.parse(teamRaw);
-		const opponents = OpponentsSchema.parse(opponentsRaw);
-		const venues = VenuesSchema.parse(venuesRaw);
 		const games = GamesSchema.parse(gamesRaw);
 		const defaults = DefaultsSchema.parse(defaultsRaw);
 		const timezone = TimezoneSchema.parse(timezoneRaw);
 
-		const teamRecords = team.map(({ id, friendlyName, age: group }) => ({
+		const teamRecords = team.map(({ id, name, age: group }) => ({
 			id,
-			name: friendlyName,
+			name,
 			isJunior: group === 'junior',
-		}));
-		const venueRecords = venues.map(({ csenCode, venue, address, cfNum }) => ({
-			id: csenCode.replaceAll(' ', '-'),
-			name: venue,
-			address,
-			court_field_number: cfNum,
 		}));
 		const findTeam = (teamId?: string | null) => team.find((team) => team.id === teamId);
 		const gameRecords = games.map((game) => {
@@ -71,8 +54,8 @@ export async function importData(
 				date,
 				team: game.teamId,
 				isHome: game.position ? game.position === 'home' : undefined,
-				opponent: opponents.find((opponent) => game.opponentCode?.includes(opponent.csenCode))?.friendlyName ?? '',
-				venue: game.venueCode?.replaceAll(' ', '-'),
+				opponent: game.opponent,
+				venue: game.venue,
 				teacher: game.teacher ?? findTeam(game.teamId)?.teacher ?? defaults.default_teacher,
 				extra_teachers: game.extra_teachers ?? findTeam(game.teamId)?.extra_teachers ?? defaults.default_extra_teachers,
 				transportation: game.transportation,
@@ -84,7 +67,6 @@ export async function importData(
 
 		const allTransactionChunks = chunk([
 			...teamRecords.map((team) => ({ insert: { table: 'teams', record: team } } as const)),
-			...venueRecords.map((venue) => ({ insert: { table: 'venues', record: venue } } as const)),
 			...gameRecords.map((games) => ({ insert: { table: 'games', record: games } } as const)),
 		]);
 
