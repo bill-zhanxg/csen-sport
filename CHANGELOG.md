@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.1](https://github.com/bill-zhanxg/csen-sport/compare/v0.9.0...v0.9.1) (2025-08-02)
+
+
+### Bug Fixes
+
+* fix lock file ([595b09e](https://github.com/bill-zhanxg/csen-sport/commit/595b09ec16707411da565c6afc0d09706aa4b714))
+
 ## [0.9.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.8.0...v0.9.0) (2025-08-02)
 
 
