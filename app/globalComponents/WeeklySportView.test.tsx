@@ -75,7 +75,7 @@ describe('Weekly Sport View Component', () => {
 		expect(screen.getByText('Team A')).toBeInTheDocument();
 		expect(screen.getByText('Home')).toBeInTheDocument();
 		expect(screen.getByText('Team B')).toBeInTheDocument();
-		expect(screen.getAllByText('Stadium')[0]).toBeInTheDocument();
+		expect(screen.getAllByText('Casey Stadium')[0]).toBeInTheDocument();
 		expect(screen.getByText('John Doe')).toBeInTheDocument();
 		expect(screen.getByText('Car')).toBeInTheDocument();
 		expect(screen.getAllByText('6:12 PM')[0]).toBeInTheDocument();
