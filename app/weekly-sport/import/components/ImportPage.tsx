@@ -36,7 +36,7 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 	const [fixtures, setFixtures] = useState<Games>([]);
 
 	function checkNextNeedDisable(newStep: number) {
-		if (newStep === 1 && fixtures.length > 0) return false;
+		if (fixtures.length > 0) return false;
 		else return true;
 	}
 
@@ -100,7 +100,7 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 
 				<div className="flex justify-between w-full max-w-xl">
 					<button
-						className="btn btn-primary w-32 shrink!"
+						className="btn btn-primary w-40 shrink!"
 						onClick={() => {
 							setStep((step) => {
 								const newStep = step - 1;
@@ -113,7 +113,7 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 						Previous
 					</button>
 					<button
-						className="btn btn-primary w-32 shrink!"
+						className="btn btn-primary w-40 shrink!"
 						onClick={(e) => {
 							e.preventDefault();
 							if (step === 2) {
