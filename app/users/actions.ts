@@ -19,7 +19,6 @@ const schema = z
 	});
 
 export async function changeRole(prevState: ChangeRoleState, formData: FormData): Promise<ChangeRoleState> {
-	// TODO: the blocked role is not highlighted when it's selected, and also add loading indicator (other files)
 	const session = await authC();
 	if (!isAdmin(session)) return { success: false, message: 'Unauthorized' };
 
