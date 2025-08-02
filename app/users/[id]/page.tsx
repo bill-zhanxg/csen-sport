@@ -1,5 +1,4 @@
 import { authC } from '@/app/cache';
-import { Box } from '@/app/globalComponents/Box';
 import { ErrorMessage } from '@/app/globalComponents/ErrorMessage';
 import { Unauthorized } from '@/app/globalComponents/Unauthorized';
 import { UserAvatar } from '@/app/globalComponents/UserAvatar';
@@ -37,34 +36,85 @@ export default async function User(props: {
 	};
 
 	return (
-		<div className="flex justify-center items-center h-[80vh] w-full">
-			<Box className="card card-side bg-base-100 shadow-xl w-auto p-0 sm:px-8 sm:py-2 max-w-2xl flex-col">
-				<div className="card-body">
-					<div className="flex flex-col sm:flex-row gap-6 items-center break-all">
-						<div className="avatar">
-							<div className="w-24 rounded-full avatar h-24 ring-3 ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden mt-2 backdrop-opacity-10 bg-white/30">
-								<UserAvatar user={user} />
+		<div className="min-h-screen bg-gradient-to-br from-base-200 via-base-100 to-base-200 p-4 sm:p-8">
+			<div className="max-w-4xl mx-auto">
+				{/* Header Section */}
+				<div className="text-center mb-8">
+					<h1 className="text-3xl font-bold text-base-content mb-2">User Profile</h1>
+					<p className="text-base-content/70">View and manage user information</p>
+				</div>
+
+				{/* Main Card */}
+				<div className="card bg-base-100 shadow-2xl border border-base-300">
+					{/* User Info Section */}
+					<div className="card-body p-8">
+						<div className="flex flex-col lg:flex-row gap-8 items-center lg:items-start">
+							{/* Avatar Section */}
+							<div className="flex-shrink-0">
+								<div className="avatar">
+									<div className="w-32 h-32 rounded-2xl ring-4 ring-primary ring-offset-4 ring-offset-base-100 overflow-hidden shadow-lg">
+										<UserAvatar user={user} />
+									</div>
+								</div>
 							</div>
-						</div>
-						<div className="flex flex-col gap-1 justify-center">
-							<h2 className="text-4xl">{user.name}</h2>
-							<h3 className="text-xl">{user.email}</h3>
-							<div
-								className={`badge gap-2 capitalize rounded-md ${
-									user.role === 'teacher'
-										? 'badge-warning'
-										: user.role === 'admin' || user.role === 'blocked'
-										? 'badge-error'
-										: 'badge-primary'
-								}`}
-							>
-								{user.role ?? 'Student'}
+
+							{/* User Details */}
+							<div className="flex-1 text-center lg:text-left space-y-4">
+								<div>
+									<h2 className="text-4xl font-bold text-base-content mb-2">{user.name}</h2>
+									<div className="flex items-center justify-center lg:justify-start gap-2 text-lg text-base-content/70">
+										<svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+											<path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+											<path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+										</svg>
+										<span>{user.email}</span>
+									</div>
+								</div>
+
+								{/* Role Badge */}
+								<div className="flex justify-center lg:justify-start">
+									<div
+										className={`badge badge-lg gap-2 px-4 py-3 text-sm font-semibold capitalize shadow-md ${
+											user.role === 'teacher'
+												? 'badge-warning text-warning-content'
+												: user.role === 'admin'
+												? 'badge-error text-error-content'
+												: user.role === 'blocked'
+												? 'badge-error text-error-content'
+												: 'badge-primary text-primary-content'
+										}`}
+									>
+										<div className="w-2 h-2 rounded-full bg-current opacity-70"></div>
+										{user.role ?? 'Student'}
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
+
+					{/* Role Management Section */}
+					{isAdmin(session) && (
+						<div className="border-t border-base-300">
+							<div className="p-6 bg-base-50">
+								<div className="mb-4">
+									<h3 className="text-xl font-semibold text-base-content flex items-center gap-2">
+										<svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+											<path
+												fillRule="evenodd"
+												d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+												clipRule="evenodd"
+											/>
+										</svg>
+										Role Management
+									</h3>
+									<p className="text-sm text-base-content/60">Update user permissions and access level</p>
+								</div>
+								<RoleForm currentRole={user.role} updateUserRole={updateUserRole} />
+							</div>
+						</div>
+					)}
 				</div>
-				{isAdmin(session) && <RoleForm currentRole={user.role} updateUserRole={updateUserRole} />}
-			</Box>
+			</div>
 		</div>
 	);
 }
