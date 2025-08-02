@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.2](https://github.com/bill-zhanxg/csen-sport/compare/v0.9.1...v0.9.2) (2025-08-02)
+
+
+### Bug Fixes
+
+* update github action npm command to install dependencies with legacy peer dependencies ([91e5f20](https://github.com/bill-zhanxg/csen-sport/commit/91e5f20681084d0c19714cff0ff057ba03baea7a))
+
 ## [0.9.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.8.0...v0.9.0) (2025-08-02)
 
 
