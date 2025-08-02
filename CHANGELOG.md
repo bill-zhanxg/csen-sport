@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.10.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.9.3...v0.10.0) (2025-08-02)
+
+
+### Features
+
+* completely removed @preact/signals-react dependency from package.json and codebase ([4e27a70](https://github.com/bill-zhanxg/csen-sport/commit/4e27a7025cf1493cea0e251a316d8ebdbb34c578))
+* enhance RoleForm and User page with improved styling and layout for better user experience ([04460ae](https://github.com/bill-zhanxg/csen-sport/commit/04460aeb15ceb8fc7e2afb77c18ecf8bf2cda038))
+* implement RoleForm component for user role management and add loading state ([7acdfba](https://github.com/bill-zhanxg/csen-sport/commit/7acdfba2cc00c628e9ddfa7577a8c38cc89418f4))
+
+
+### Bug Fixes
+
+* remove cache from auth to see if that fix the 500 ([a686c8f](https://github.com/bill-zhanxg/csen-sport/commit/a686c8fc6a6428716c7e4bc1a71367ed6974fa6c))
+
 ## [0.9.3](https://github.com/bill-zhanxg/csen-sport/compare/v0.9.2...v0.9.3) (2025-08-02)
 
 
