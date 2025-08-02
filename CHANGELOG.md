@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.10.1](https://github.com/bill-zhanxg/csen-sport/compare/v0.10.0...v0.10.1) (2025-08-02)
+
+
+### Bug Fixes
+
+* fixed an issue in user setting where the form will revert to the previous value when submitted ([c78f0f6](https://github.com/bill-zhanxg/csen-sport/commit/c78f0f64d8080fe58795c81854ec44557b49ab54))
+* turning off experimental features to see if it solves 500 ([4d87bc6](https://github.com/bill-zhanxg/csen-sport/commit/4d87bc630c1b4cb4d7c0bee7ee877fb19131adc2))
+
 ## [0.10.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.9.3...v0.10.0) (2025-08-02)
 
 
