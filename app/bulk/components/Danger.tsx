@@ -2,7 +2,7 @@
 
 import { AlertType, ErrorAlert, SuccessAlert } from '@/app/components/Alert';
 import { useState } from 'react';
-import { resetAll, resetGames, resetTeams, resetVenues } from '../actions';
+import { resetAll, resetGames, resetTeams } from '../actions';
 
 export function Danger() {
 	const [allState, setAllState] = useState<AlertType>(null);
@@ -11,8 +11,6 @@ export function Danger() {
 	const [gameLoading, setGameLoading] = useState(false);
 	const [teamState, setTeamState] = useState<AlertType>(null);
 	const [teamLoading, setTeamLoading] = useState(false);
-	const [venueState, setVenueState] = useState<AlertType>(null);
-	const [venueLoading, setVenueLoading] = useState(false);
 
 	return (
 		<div className="join join-vertical xl:join-horizontal w-full xl:w-auto [&>button]:btn-error">
@@ -88,12 +86,6 @@ export function Danger() {
 					</div>
 				</div>
 			</dialog>
-			<button
-				className="btn join-item"
-				onClick={(event) => (event.currentTarget.nextElementSibling as HTMLDialogElement).showModal()}
-			>
-				Reset All Teams
-			</button>
 			<dialog className="modal">
 				<div className="modal-box">
 					<h3 className="font-bold text-lg text-error">WARNING</h3>
@@ -124,41 +116,11 @@ export function Danger() {
 					</div>
 				</div>
 			</dialog>
-			<dialog className="modal">
-				<div className="modal-box">
-					<h3 className="font-bold text-lg text-error">WARNING</h3>
-					<p className="py-4">
-						You&apos;re about to reset (remove) all venues from the database. This action is irreversible and should not
-						be used unless necessary. Are you sure you want to continue?
-					</p>
-					{venueState && (venueState.type === 'error' ? ErrorAlert(venueState) : SuccessAlert(venueState))}
-					<div className="modal-action">
-						<button
-							className="btn btn-error"
-							disabled={venueLoading}
-							onClick={async (e) => {
-								e.preventDefault();
-								setVenueLoading(true);
-								const res = await resetVenues();
-								setVenueState(res);
-								setVenueLoading(false);
-							}}
-						>
-							Yes
-						</button>
-						<form method="dialog">
-							<button className="btn" disabled={venueLoading}>
-								No
-							</button>
-						</form>
-					</div>
-				</div>
-			</dialog>
 			<button
 				className="btn join-item"
-				onClick={(event) => (event.currentTarget.previousSibling as HTMLDialogElement).showModal()}
+				onClick={(event) => (event.currentTarget.previousElementSibling as HTMLDialogElement).showModal()}
 			>
-				Reset All Venues
+				Reset All Teams
 			</button>
 		</div>
 	);
