@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.3](https://github.com/bill-zhanxg/csen-sport/compare/v0.9.2...v0.9.3) (2025-08-02)
+
+
+### Bug Fixes
+
+* update test to correctly reference 'Casey Stadium' ([ab8e11c](https://github.com/bill-zhanxg/csen-sport/commit/ab8e11cddbd3746aed5a3606ca0ac1d86c4fba8c))
+
 ## [0.9.2](https://github.com/bill-zhanxg/csen-sport/compare/v0.9.1...v0.9.2) (2025-08-02)
 
 
