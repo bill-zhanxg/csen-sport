@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.10.2](https://github.com/bill-zhanxg/csen-sport/compare/v0.10.1...v0.10.2) (2025-08-02)
+
+
+### Bug Fixes
+
+* revert experimental change ([8d54f2d](https://github.com/bill-zhanxg/csen-sport/commit/8d54f2debf55fd44bc8de496277c80508627cdf1))
+* update Node.js version to 22.x in Azure workflow ([0a00fef](https://github.com/bill-zhanxg/csen-sport/commit/0a00fef6e5a7d5087483dc111b521027c6820b65))
+
 ## [0.10.1](https://github.com/bill-zhanxg/csen-sport/compare/v0.10.0...v0.10.1) (2025-08-02)
 
 
