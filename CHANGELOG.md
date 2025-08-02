@@ -1,5 +1,42 @@
 # Changelog
 
+## [0.9.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.8.0...v0.9.0) (2025-08-02)
+
+
+### Features
+
+* : migrate codebase to zod v4 ([ccf278a](https://github.com/bill-zhanxg/csen-sport/commit/ccf278a1b7480fde27a4de77122c51de258417bb))
+* add onRequestError handler to Sentry server instrumentation ([297c8dd](https://github.com/bill-zhanxg/csen-sport/commit/297c8dd820c59bd5311213ee7913382e4f9281cf))
+* **database:** xata make venues string instead of a table containing address and court number ([cd1c2bc](https://github.com/bill-zhanxg/csen-sport/commit/cd1c2bc19bb3becc692bc77f27b0f312fa6257f2))
+* enhance Step1 component to support multiple sheet selection from Excel files ([3b50d39](https://github.com/bill-zhanxg/csen-sport/commit/3b50d394c75e55b95bd7bbc4d8d54b70c0d64058))
+* fix some type error after removing venue table from database, need to continue ([6c58020](https://github.com/bill-zhanxg/csen-sport/commit/6c58020ee5340cb7868551616f4bd4ec7bff6790))
+* remove step 2 - import venue pdf fully ([d3d4853](https://github.com/bill-zhanxg/csen-sport/commit/d3d485389622386f6749ed061377432ab3762586))
+* removed all instance of venue table across the entire project, venue is now a string instead of an object ([2f0211f](https://github.com/bill-zhanxg/csen-sport/commit/2f0211f54e34d6498b5e4905dcb1732551d54f03))
+* removed PDF import fixture functionality ([7b0c0bd](https://github.com/bill-zhanxg/csen-sport/commit/7b0c0bd30a17f409f264f8be8ff269af65fa7dd0))
+* removed react-pdf as dependency ([7b0c0bd](https://github.com/bill-zhanxg/csen-sport/commit/7b0c0bd30a17f409f264f8be8ff269af65fa7dd0))
+* removed ticket from navbar ([3a48bf1](https://github.com/bill-zhanxg/csen-sport/commit/3a48bf163210d78798eddfa690332841f384071e))
+* removed venue upload from import page ([7b0c0bd](https://github.com/bill-zhanxg/csen-sport/commit/7b0c0bd30a17f409f264f8be8ff269af65fa7dd0))
+* rewrite next.config.ts to include updated Sentry configuration and experimental features ([80a8cb1](https://github.com/bill-zhanxg/csen-sport/commit/80a8cb1b9c4699a1af46c9052b4222db24208c3b))
+* update index documentation for Excel sheet processing in Step1 component ([751ac65](https://github.com/bill-zhanxg/csen-sport/commit/751ac65a1a67d09b9bac37bf83ce8a9eebe8c74b))
+* **V2 Excel import:** finished client side new import fixture system, new algorithm, fixed all type errors ([3869631](https://github.com/bill-zhanxg/csen-sport/commit/3869631c73d19211f2581d994c761b49707cb7f7))
+
+
+### Bug Fixes
+
+* add client side file size validation for profile picture upload ([c021a72](https://github.com/bill-zhanxg/csen-sport/commit/c021a720443b138c060d2f8836ef418f1e0b1677))
+* **compile error:** update href types to use __next_route_internal_types__.RouteImpl for better type safety ([6ca1738](https://github.com/bill-zhanxg/csen-sport/commit/6ca173859b9c87f25b29b9a71b57c2f9b0fd2fe1))
+* **Danger:** remove venue reset functionality and related state management ([edb8499](https://github.com/bill-zhanxg/csen-sport/commit/edb8499f1f070069e3428b8fc857b5e25af816b1))
+* fixed image upload size uncaught error increase size to 30mb ([80a8cb1](https://github.com/bill-zhanxg/csen-sport/commit/80a8cb1b9c4699a1af46c9052b4222db24208c3b))
+* **import:** finalised and finished V2 import, both client and server and schemas ([4d03137](https://github.com/bill-zhanxg/csen-sport/commit/4d03137a4b96c3dcf40d247d685cdc53c2850ee8))
+* **ImportPage:** simplify disable next step check and adjust button width ([ad46b5f](https://github.com/bill-zhanxg/csen-sport/commit/ad46b5fd0e22553759484afab09e58c4448fa3b6))
+* Potential fix for code scanning alert no. 3: Workflow does not contain permissions ([dbff1f1](https://github.com/bill-zhanxg/csen-sport/commit/dbff1f19928d737fc67db389cfe4488dad116bb2))
+* remove secrets read permission from Azure workflow ([08aab96](https://github.com/bill-zhanxg/csen-sport/commit/08aab96c0d1aeca85d5dfe853be64acebada7063))
+* remove unused URL handling logic from Step1 and Step2 components ([b0dbf68](https://github.com/bill-zhanxg/csen-sport/commit/b0dbf68312d0ddec8513f98b3dce8b321d46612a))
+* removed unused loading.tsx ([a10168d](https://github.com/bill-zhanxg/csen-sport/commit/a10168df926d8c35d6427951c2619e98ebdd05d3))
+* **settings:** add missing words to cSpell configuration ([ffbdf2b](https://github.com/bill-zhanxg/csen-sport/commit/ffbdf2b3f85fda896db1d4d3a8ae6e100b59fe61))
+* update UserAvatar component to use consistent shadow styling ([bed2225](https://github.com/bill-zhanxg/csen-sport/commit/bed22252d61b95ee7a6ae56f507348fa6189678e))
+* update zod to v4 ([cfc998f](https://github.com/bill-zhanxg/csen-sport/commit/cfc998ffc930080e66f8a09a20339232dfc975f1))
+
 ## [0.8.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.7.2...v0.8.0) (2025-05-08)
 
 
