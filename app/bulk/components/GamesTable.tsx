@@ -8,7 +8,6 @@ import { dayjs } from '@/libs/dayjs';
 import { formatDate, formatIsJunior, formatTime } from '@/libs/formatValue';
 import { SerializedGameWithId } from '@/libs/serializeData';
 import { RawTeacher, RawTeam } from '@/libs/tableData';
-import { useSignal } from '@preact/signals-react';
 import {
 	CellContext,
 	ColumnDef,
@@ -17,7 +16,7 @@ import {
 	getSortedRowModel,
 	useReactTable,
 } from '@tanstack/react-table';
-import { ChangeEvent, ChangeEventHandler, FocusEventHandler, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, ChangeEventHandler, FocusEventHandler, useEffect, useMemo, useRef, useState } from 'react';
 import { FaPlus, FaRegTrashCan } from 'react-icons/fa6';
 import { v4 } from 'uuid';
 import { GameChanges, updateGamesBulk } from '../actions';
@@ -32,7 +31,7 @@ export function GamesTable({
 	teachers: RawTeacher[];
 }) {
 	const [games, setGames] = useState<SerializedGameWithId[]>(gamesRaw);
-	const changes = useSignal<GameChanges[number][]>([]);
+	const changes = useRef<GameChanges[number][]>([]);
 
 	useEffect(() => {
 		setGames(gamesRaw);
@@ -69,11 +68,11 @@ export function GamesTable({
 						if (type === 'date') importValue = formatDate(importValue as string) as any;
 						if (type === 'time') importValue = formatTime(original.date, importValue as string) as any;
 						if (type === 'checkbox') importValue = (event.currentTarget as any).checked as any;
-						const index = changes.value.findIndex((change) => change.type !== 'delete' && change.id === original.id);
+						const index = changes.current.findIndex((change) => change.type !== 'delete' && change.id === original.id);
 						if (index !== -1) {
-							(changes.value[index] as any).value[id] = importValue;
+							(changes.current[index] as any).value[id] = importValue;
 						} else
-							changes.value.push({
+							changes.current.push({
 								type: 'update',
 								id: original.id,
 								value: {
@@ -318,7 +317,7 @@ export function GamesTable({
 								className="btn btn-error"
 								onClick={(e) => {
 									e.preventDefault();
-									changes.value.push({
+									changes.current.push({
 										type: 'delete',
 										id: original.id,
 									});
@@ -333,7 +332,7 @@ export function GamesTable({
 				},
 			},
 		];
-	}, [teams, teachers, changes.value]);
+	}, [teams, teachers]);
 
 	const table = useReactTable({
 		columns,
@@ -546,7 +545,7 @@ export function GamesTable({
 											out_of_class: formatTime(date, newOutOfClass),
 											start: formatTime(date, newStart),
 										};
-										changes.value.push({
+										changes.current.push({
 											type: 'create',
 											id: value.id,
 											value,
@@ -583,10 +582,10 @@ export function GamesTable({
 						onClick={async (e) => {
 							e.preventDefault();
 							setLoading(true);
-							const res = await updateGamesBulk(changes.value);
+							const res = await updateGamesBulk(changes.current);
 							if (res?.type === 'success') {
 								setChanged(false);
-								changes.value = [];
+								changes.current = [];
 							}
 							setAlert(res);
 							setLoading(false);

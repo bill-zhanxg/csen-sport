@@ -27,8 +27,6 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 	const [disableNext, setDisableNext] = useState(true);
 	const [nextLoading, setNextLoading] = useState(false);
 
-	// TODO: remove signal preact completely
-
 	const [alert, setAlert] = useState<AlertType>(null);
 
 	const [defaults, setDefaults] = useState<Defaults>({});

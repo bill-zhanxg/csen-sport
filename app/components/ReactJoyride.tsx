@@ -1,8 +1,6 @@
 'use client';
-
-import { useSignal } from '@preact/signals-react';
 import dynamic from 'next/dynamic';
-import { ReactNode } from 'react';
+import { ReactNode, useRef } from 'react';
 import { finishGuide } from './ReactJoyRideActions';
 
 const Joyride = dynamic(() => import('react-joyride'), { ssr: false });
@@ -77,7 +75,7 @@ const steps: { title?: ReactNode; target: string; content: string }[] = [
 const stepsMap = steps.map((step) => [step, { ...step, target: `${step.target}-mobile` }]);
 
 export function ReactJoyride() {
-	const foundAdminControlBtn = useSignal(true);
+	const foundAdminControlBtn = useRef(true);
 
 	function openMenu(menu: HTMLElement | null) {
 		if (menu) {
@@ -116,8 +114,8 @@ export function ReactJoyride() {
 				}
 				if (event.type === 'error:target_not_found') {
 					if (event.step.target === '#weekly-sport-btn') openMenu(document.getElementById('mobile-menu'));
-					if (event.step.target === '#admin-control-btn') foundAdminControlBtn.value = false;
-					if (event.step.target === '#admin-control-btn-mobile' && !foundAdminControlBtn.value)
+					if (event.step.target === '#admin-control-btn') foundAdminControlBtn.current = false;
+					if (event.step.target === '#admin-control-btn-mobile' && !foundAdminControlBtn.current)
 						openMenu(document.getElementById('user-menu'));
 				}
 				if (event.status === 'finished') finishGuide();
