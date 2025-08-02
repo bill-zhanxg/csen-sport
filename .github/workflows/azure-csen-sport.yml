@@ -37,7 +37,7 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           XATA_API_KEY: ${{ secrets.XATA_API_KEY }}
         run: |
-          npm ci -f
+          npm install --legacy-peer-deps
           npm run build --if-present
           npm run test --if-present
           npm prune -f --omit-dev
