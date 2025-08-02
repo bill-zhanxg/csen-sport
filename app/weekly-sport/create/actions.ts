@@ -1,8 +1,8 @@
 'use server';
 
+import { authC } from '@/app/cache';
 import { AlertType } from '@/app/components/Alert';
 import { emptyToNull } from '@/app/globalComponents/Schemas';
-import { authC } from '@/app/cache';
 import { chunk, formatDate, formatTime } from '@/libs/formatValue';
 import { getXataClient } from '@/libs/xata';
 import { revalidatePath } from 'next/cache';
@@ -19,15 +19,6 @@ const TeamsSchema = z
 		extra_teachers: emptyToNull(z.string().array().nullish()),
 		out_of_class: z.string().optional(),
 		start: z.string().optional(),
-	})
-	.array();
-
-const VenuesSchema = z
-	.object({
-		id: z.string(),
-		venue: z.string().optional(),
-		address: z.string().optional(),
-		cfNum: z.string().optional(),
 	})
 	.array();
 
@@ -49,33 +40,20 @@ const GamesSchema = z
 	.array();
 
 export type Team = z.infer<typeof TeamsSchema>[number];
-export type Venue = z.infer<typeof VenuesSchema>[number];
 export type Game = z.infer<typeof GamesSchema>[number];
 
-export async function createWeeklySport(
-	teamsRaw: Team[],
-	venuesRaw: Venue[],
-	gamesRaw: Game[],
-	timezone: string,
-): Promise<AlertType> {
+export async function createWeeklySport(teamsRaw: Team[], gamesRaw: Game[], timezone: string): Promise<AlertType> {
 	const session = await authC();
 	if (!session) return { type: 'error', message: 'Unauthorized' };
 
 	try {
 		const teams = TeamsSchema.parse(teamsRaw);
-		const venues = VenuesSchema.parse(venuesRaw);
 		const games = GamesSchema.parse(gamesRaw);
 
 		const teamRecords = teams.map(({ id, name, group }) => ({
 			id,
 			name,
 			isJunior: group === 'junior',
-		}));
-		const venueRecords = venues.map(({ id, venue, address, cfNum }) => ({
-			id,
-			name: venue,
-			address,
-			court_field_number: cfNum,
 		}));
 		const findTeam = (teamId?: string) => teams.find((team) => team.id === teamId);
 		const gameRecords = games.map((game) => {
@@ -101,7 +79,6 @@ export async function createWeeklySport(
 
 		const allTransactionChunks = chunk([
 			...teamRecords.map((team) => ({ insert: { table: 'teams', record: team } } as const)),
-			...venueRecords.map((venue) => ({ insert: { table: 'venues', record: venue } } as const)),
 			...gameRecords.map((games) => ({ insert: { table: 'games', record: games } } as const)),
 		]);
 

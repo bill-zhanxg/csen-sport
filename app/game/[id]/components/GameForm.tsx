@@ -5,7 +5,7 @@ import { TeachersMultiSelect } from '@/app/globalComponents/TeachersMultiSelect'
 import { isTeacher } from '@/libs/checkPermission';
 import { dayjs } from '@/libs/dayjs';
 import { formatIsJunior } from '@/libs/formatValue';
-import { SerializedGame, SerializedTeam, SerializedVenue } from '@/libs/serializeData';
+import { SerializedGame, SerializedTeam } from '@/libs/serializeData';
 import { RawTeacher } from '@/libs/tableData';
 import { FormState } from '@/libs/types';
 import { Session } from 'next-auth';
@@ -18,13 +18,11 @@ export function GameForm({
 	session,
 	game,
 	teams,
-	venues,
 	teachers,
 }: {
 	session: Session | null;
 	game: SerializedGame;
 	teams: SerializedTeam[];
-	venues: SerializedVenue[];
 	teachers: RawTeacher[];
 }) {
 	const [state, formAction] = useActionState<FormState, FormData>(updateGame, null);
@@ -110,27 +108,14 @@ export function GameForm({
 						<div className="label">
 							<span className="label-text text-md font-bold">Venue</span>
 						</div>
-						<select
+						<input
+							type="text"
+							placeholder="Type here"
 							disabled={!isTeacherBool}
-							defaultValue={game.venue?.id ?? ''}
-							className="select select-bordered opacity-100 text-base-content!"
+							defaultValue={game.venue ?? ''}
 							name="venue"
-						>
-							<option disabled value="">
-								Pick one
-							</option>
-							{isTeacherBool ? (
-								venues.map((venue) => (
-									<option key={venue.id} value={venue.id} className="text-base-content">
-										{venue.name} ({venue.court_field_number})
-									</option>
-								))
-							) : (
-								<option value={game.venue?.id} className="text-base-content">
-									{game.venue?.name} ({game.venue?.court_field_number})
-								</option>
-							)}
-						</select>
+							className="input input-bordered text-base-content!"
+						/>
 					</label>
 					<label className="form-control w-full">
 						<div className="label">

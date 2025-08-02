@@ -5,9 +5,8 @@ import { RawTeacher } from '@/libs/tableData';
 import { DateWithGames } from '@/libs/tableHelpers';
 import { getXataClient } from '@/libs/xata';
 import Link from 'next/link';
-import { FaInfoCircle, FaRegEye } from 'react-icons/fa';
+import { FaRegEye } from 'react-icons/fa';
 import { FaCirclePlus, FaLocationDot, FaPen } from 'react-icons/fa6';
-import { SideBySide } from './SideBySide';
 import { UserAvatar } from './UserAvatar';
 import { Checkbox } from './WeeklySportViewComponents/Checkbox';
 
@@ -16,7 +15,6 @@ export function WeeklySportView({
 	teachers,
 	showRelative = false,
 	isTeacher,
-	hideGroup = false,
 	lastVisit,
 	timezone,
 }: {
@@ -24,7 +22,6 @@ export function WeeklySportView({
 	teachers: RawTeacher[];
 	showRelative?: boolean;
 	isTeacher: boolean;
-	hideGroup?: boolean;
 	lastVisit: Date;
 	timezone: string;
 }) {
@@ -50,7 +47,7 @@ export function WeeklySportView({
 				<table className="table">
 					<thead>
 						<tr>
-							{hideGroup || <th>Group</th>}
+							<th>Group</th>
 							<th>Team</th>
 							<th>Position</th>
 							<th>Opponent</th>
@@ -66,40 +63,20 @@ export function WeeklySportView({
 					<tbody>
 						{date.games.map((game) => (
 							<tr key={game.id} className={`border-base-300${lastVisit < game.xata.updatedAt ? ' bg-info/20' : ''}`}>
-								{hideGroup || <td>{game?.team?.isJunior !== null ? formatIsJunior(game.team?.isJunior) : '---'}</td>}
+								<td>{game?.team?.isJunior !== null ? formatIsJunior(game.team?.isJunior) : '---'}</td>
 								<td>{game?.team?.name || '---'}</td>
 								<td>{game.isHome !== null ? formatIsHome(game.isHome) : '---'}</td>
 								<td>{game?.opponent || '---'}</td>
 								<td>
-									{game?.venue?.name ? (
-										<div className="flex gap-2 items-center justify-between w-full">
-											{game.venue.name}
-											<label htmlFor={game.venue.id} className="cursor-pointer">
-												<FaInfoCircle size={18} />
-											</label>
-
-											<input type="checkbox" id={game.venue.id} className="modal-toggle" />
-											<div className="modal" role="dialog">
-												<div className="flex flex-col modal-box gap-2">
-													<h3 className="font-bold text-2xl">Venue Information</h3>
-													<SideBySide title="Name:" value={game.venue.name ?? '---'} />
-													<SideBySide title="Address:" value={game.venue.address ?? '---'} />
-													<SideBySide title="Court / Field Number:" value={game.venue.court_field_number ?? '---'} />
-													<div className="modal-action flex-col sm:flex-row gap-2">
-														<Link
-															href={`https://www.google.com/maps/place/${game.venue.address?.replaceAll(' ', '+')}`}
-															target="_blank"
-															className="btn btn-primary"
-														>
-															<FaLocationDot size={16} /> Open in Google Maps
-														</Link>
-														<label htmlFor={game.venue.id} className="btn w-full sm:w-auto ml-0!">
-															Close
-														</label>
-													</div>
-												</div>
-											</div>
-										</div>
+									{game.venue ? (
+										<Link
+											href={`https://www.google.com/maps/search/${game.venue.replaceAll(' ', '+')}`}
+											target="_blank"
+											className="link link-primary"
+											rel="noopener noreferrer"
+										>
+											<FaLocationDot size={16} className="inline" /> {game.venue}
+										</Link>
 									) : (
 										'---'
 									)}

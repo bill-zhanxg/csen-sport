@@ -18,12 +18,7 @@ describe('Weekly Sport View Component', () => {
 				},
 				isHome: true,
 				opponent: 'Team B',
-				venue: {
-					id: 'venue-1',
-					name: 'Stadium',
-					address: '123 Main St',
-					court_field_number: '1',
-				},
+				venue: 'Casey Stadium',
 				teacher: {
 					id: 'teacher-1',
 					name: 'John Doe',

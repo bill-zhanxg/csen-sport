@@ -41,7 +41,7 @@ export function CopyTable({ games }: { games: SerializedGame[] }) {
 						<Td>{game.team?.isJunior !== undefined ? formatIsJunior(game.team.isJunior) : '---'}</Td>
 						<Td>{game.team?.name || '---'}</Td>
 						<Td>{game.opponent || '---'}</Td>
-						<Td>{game.venue ? `${game.venue.name} (${game.venue.court_field_number})` : '---'}</Td>
+						<Td>{game.venue || '---'}</Td>
 						<Td>{game.teacher?.name || '---'}</Td>
 						<Td>{game.transportation || '---'}</Td>
 						<Td>{game.out_of_class?.toLocaleTimeString() || '---'}</Td>

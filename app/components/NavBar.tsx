@@ -52,11 +52,6 @@ const menu: Menu = [
 				href: '/teams',
 			},
 			{
-				id: 'venues-btn',
-				name: 'Venues',
-				href: '/venues',
-			},
-			{
 				id: 'bulk-action-btn',
 				name: 'Bulk Action',
 				href: '/bulk',

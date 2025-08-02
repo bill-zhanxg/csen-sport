@@ -10,7 +10,7 @@ export function copyToText(games: SerializedGame[]): string {
 				game.team?.isJunior !== undefined ? formatIsJunior(game.team.isJunior) : '---',
 				game.team?.name ?? '---',
 				game.opponent ?? '---',
-				game.venue ? `${game.venue.name} (${game.venue.court_field_number})` : '---',
+				game.venue ?? '---',
 				game.teacher?.name ?? '---',
 				game.transportation ?? '---',
 				game.out_of_class?.toLocaleTimeString() ?? '---',

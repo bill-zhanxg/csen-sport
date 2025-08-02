@@ -18,25 +18,24 @@ import { useRouter } from 'next13-progressbar';
 import { ChangeEventHandler, FocusEventHandler, useEffect, useMemo, useState } from 'react';
 import { FaPlus, FaRegTrashCan } from 'react-icons/fa6';
 import { v4 } from 'uuid';
-import { Game, Team, Venue, createWeeklySport } from '../actions';
+import { Game, Team, createWeeklySport } from '../actions';
 
 export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 	const router = useRouter();
 
 	const [teams, setTeams] = useState<Team[]>([]);
-	const [venues, setVenues] = useState<Venue[]>([]);
 	const [games, setGames] = useState<Game[]>([]);
 
 	const [changed, setChanged] = useState(false);
 	useEffect(() => {
-		if (teams.length === 0 && venues.length === 0 && games.length === 0) return;
+		if (teams.length === 0 && games.length === 0) return;
 		if (changed) return;
 		setChanged(true);
-	}, [teams.length, venues.length, games.length, changed]);
+	}, [teams.length, games.length, changed]);
 
 	useBeforeUnload(changed, 'You have unsaved changes - are you sure you wish to leave this page?');
 
-	// #region Venues
+	// #region Teams
 	const teamColumns = useMemo<ColumnDef<Team>[]>(() => {
 		function editable<T>({
 			getValue,
@@ -209,134 +208,6 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 	const [newDefaultStart, setNewDefaultStart] = useState('');
 	// #endregion
 
-	// #region Venues
-	const venueColumns = useMemo<ColumnDef<Venue>[]>(() => {
-		function editable<T>({
-			getValue,
-			row: { index },
-			column: { id },
-			table,
-		}: CellContext<Venue, unknown>): [
-			T,
-			ChangeEventHandler<HTMLElement> | undefined,
-			FocusEventHandler<HTMLElement> | undefined,
-		] {
-			const initialValue = getValue() as T;
-			const [value, setValue] = useState(initialValue);
-			const [previousValue, setPreviousValue] = useState(value);
-			useEffect(() => {
-				setValue(initialValue);
-			}, [initialValue]);
-			return [
-				value,
-				(event) => {
-					if (!('value' in event.target)) return;
-					const newValue = event.target.value as T;
-					setValue(newValue);
-				},
-				(event) => {
-					if (!('value' in event.target)) return;
-					if (previousValue !== value) {
-						table.options.meta?.updateData(index, id, value);
-						setPreviousValue(value);
-					}
-				},
-			];
-		}
-
-		return [
-			{
-				id: 'venue',
-				accessorKey: 'venue',
-				header: 'Venue',
-				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string>(prop);
-					return (
-						<input
-							className={`input input-bordered rounded-none w-full ${
-								value === 'Not Found' ? 'bg-error text-error-content' : ''
-							}`}
-							value={value}
-							onChange={onChange}
-							onBlur={onBlur}
-						/>
-					);
-				},
-			},
-			{
-				id: 'address',
-				accessorKey: 'address',
-				header: 'Address',
-				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string>(prop);
-					return (
-						<input
-							className={`input input-bordered rounded-none w-full ${
-								value === 'Not Found' ? 'bg-error text-error-content' : ''
-							}`}
-							value={value}
-							onChange={onChange}
-							onBlur={onBlur}
-						/>
-					);
-				},
-			},
-			{
-				id: 'cfNum',
-				accessorKey: 'cfNum',
-				header: 'Court / Field Number',
-				cell: (prop) => {
-					const [value, onChange, onBlur] = editable<string>(prop);
-					return (
-						<input
-							className={`input input-bordered rounded-none w-full ${
-								value === 'Not Found' ? 'bg-error text-error-content' : ''
-							}`}
-							value={value}
-							onChange={onChange}
-							onBlur={onBlur}
-						/>
-					);
-				},
-			},
-			{
-				id: 'actions',
-				header: () => null,
-				cell: ({ row: { original } }) => {
-					return (
-						<div className="flex gap-2 justify-end w-full">
-							<button
-								className="btn btn-error"
-								onClick={() => setVenues((venues) => venues.filter((venue) => venue.id !== original.id))}
-							>
-								<FaRegTrashCan />
-							</button>
-						</div>
-					);
-				},
-			},
-		];
-	}, []);
-
-	const venuesTable = useReactTable({
-		columns: venueColumns,
-		data: venues,
-		getCoreRowModel: getCoreRowModel(),
-		meta: {
-			updateData: (rowIndex, columnId, value) => {
-				setVenues((venues) => {
-					venues[rowIndex][columnId as keyof (typeof venues)[number]] = value as string;
-					return [...venues];
-				});
-			},
-		},
-	});
-
-	const [newVenue, setNewVenue] = useState('');
-	const [newAddress, setNewAddress] = useState('');
-	const [newCfNum, setNewCfNum] = useState('');
-	// #endregion
-
 	// #region Games
 	const gameColumns = useMemo<ColumnDef<Game>[]>(() => {
 		function editable<T>({
@@ -461,19 +332,13 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 				cell: (prop) => {
 					const [value, onChange, onBlur] = editable<string>(prop);
 					return (
-						<select
-							className="select select-bordered rounded-none w-full"
+						<input
+							className="input input-bordered rounded-none w-full"
+							placeholder="Venue"
 							value={value ?? ''}
 							onChange={onChange}
 							onBlur={onBlur}
-						>
-							<option value="">Select venue</option>
-							{venues.map((venue) => (
-								<option key={venue.id} value={venue.id}>
-									{venue.venue} ({venue.cfNum})
-								</option>
-							))}
-						</select>
+						/>
 					);
 				},
 			},
@@ -596,7 +461,7 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 						<div className="flex gap-2 justify-end w-full">
 							<button
 								className="btn btn-error"
-								onClick={() => setGames((games) => games.filter((venue) => venue.id !== original.id))}
+								onClick={() => setGames((games) => games.filter((game) => game.id !== original.id))}
 							>
 								<FaRegTrashCan />
 							</button>
@@ -605,7 +470,7 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 				},
 			},
 		];
-	}, [teams, venues, teachers]);
+	}, [teams, teachers]);
 
 	const gamesTable = useReactTable({
 		columns: gameColumns,
@@ -760,94 +625,7 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 				</table>
 			</div>
 
-			<p className="text-xl font-bold mt-4">Create Venues</p>
-			<div className="overflow-x-auto w-full">
-				<table className="table text-lg">
-					<thead>
-						{venuesTable.getHeaderGroups().map((headerGroup) => (
-							<tr key={headerGroup.id}>
-								{headerGroup.headers.map((header) => {
-									return (
-										<th key={header.id} colSpan={header.colSpan}>
-											{header.isPlaceholder ? null : (
-												<div className="text-lg">{flexRender(header.column.columnDef.header, header.getContext())}</div>
-											)}
-										</th>
-									);
-								})}
-							</tr>
-						))}
-					</thead>
-					<tbody>
-						{venuesTable.getRowModel().rows.map((row) => {
-							return (
-								<tr key={row.id}>
-									{row.getVisibleCells().map((cell) => {
-										return (
-											<td className="p-0 last:w-20" key={cell.id}>
-												{flexRender(cell.column.columnDef.cell, cell.getContext())}
-											</td>
-										);
-									})}
-								</tr>
-							);
-						})}
-					</tbody>
-					<tfoot className="text-[95%]">
-						<tr>
-							<td className="p-0">
-								<input
-									className="input input-bordered rounded-none w-full"
-									placeholder="Add a Venue"
-									value={newVenue}
-									onChange={(event) => setNewVenue(event.target.value)}
-								/>
-							</td>
-							<td className="p-0">
-								<input
-									className="input input-bordered rounded-none w-full"
-									placeholder="Venue Address"
-									value={newAddress}
-									onChange={(event) => setNewAddress(event.target.value)}
-								/>
-							</td>
-							<td className="p-0">
-								<input
-									className="input input-bordered rounded-none w-full"
-									placeholder="Court / Field Number"
-									value={newCfNum}
-									onChange={(event) => setNewCfNum(event.target.value)}
-								/>
-							</td>
-							<td className="flex justify-end p-0 pt-1">
-								<button
-									className="btn btn-square"
-									disabled={newVenue === '' || newAddress === ''}
-									onClick={(e) => {
-										e.preventDefault();
-										setVenues((venues) => [
-											...venues,
-											{
-												id: v4(),
-												venue: newVenue || undefined,
-												address: newAddress || undefined,
-												cfNum: newCfNum || undefined,
-											},
-										]);
-										setNewVenue('');
-										setNewAddress('');
-										setNewCfNum('');
-									}}
-								>
-									<FaPlus />
-								</button>
-							</td>
-						</tr>
-					</tfoot>
-				</table>
-			</div>
-
-			<p className="text-xl font-bold mt-4">Create Games (After creating Teams and Venues)</p>
+			<p className="text-xl font-bold mt-4">Create Games (After creating Teams)</p>
 			<div className="overflow-x-auto w-full">
 				<table className="table text-lg">
 					<thead>
@@ -909,8 +687,7 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 									disabled={
 										newDate === '' ||
 										newGameGroup === '' ||
-										teams.filter((team) => team.group === newGameGroup).length < 1 ||
-										venues.length < 1
+										teams.filter((team) => team.group === newGameGroup).length < 1
 									}
 									onClick={(e) => {
 										e;
@@ -958,7 +735,7 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 							onClick={async (e) => {
 								e.preventDefault();
 								setLoading(true);
-								const res = await createWeeklySport(teams, venues, games, dayjs.tz.guess());
+								const res = await createWeeklySport(teams, games, dayjs.tz.guess());
 								setAlertState(res);
 								if (res?.type === 'success') {
 									router.push('/weekly-sport/timetable');

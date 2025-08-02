@@ -9,7 +9,7 @@ import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } fr
 import Link from 'next/link';
 import { ChangeEvent, ChangeEventHandler, FocusEventHandler, useEffect, useMemo, useState } from 'react';
 import { FaPlus, FaRegTrashCan } from 'react-icons/fa6';
-import { RawTeacher, RawTeam, RawVenue } from '../../libs/tableData';
+import { RawTeacher, RawTeam } from '../../libs/tableData';
 import { AlertType, ErrorAlertFixed, SuccessAlertFixed } from '../components/Alert';
 import { SideBySide } from './SideBySide';
 import { TeachersMultiSelect } from './TeachersMultiSelect';
@@ -25,14 +25,10 @@ export function WeeklySportEdit({
 	date,
 	teams,
 	teachers,
-	venues,
-	timezone,
 }: {
 	date: SerializedDateWithGames;
 	teams: RawTeam[];
 	teachers: RawTeacher[];
-	venues: RawVenue[];
-	timezone: string;
 }) {
 	const [alert, setAlert] = useState<AlertType>(null);
 
@@ -169,25 +165,18 @@ export function WeeklySportEdit({
 			},
 			{
 				id: 'venue',
-				accessorFn: (row) => row.venue?.id,
+				accessorKey: 'venue',
 				header: 'Venue',
 				cell: (prop) => {
-					const [value, disabled, onChange, onBlur] = editable<string | undefined>(prop, true);
+					const [value, disabled, onChange, onBlur] = editable<string | undefined>(prop);
 					return (
-						<select
-							className="select select-bordered rounded-none w-full"
+						<input
+							className="input input-bordered rounded-none w-full"
 							value={value ?? ''}
 							disabled={disabled}
 							onChange={onChange}
 							onBlur={onBlur}
-						>
-							<option value="">---</option>
-							{venues.map((venue) => (
-								<option key={venue.id} value={venue.id}>
-									{venue.name} ({venue.court_field_number})
-								</option>
-							))}
-						</select>
+						/>
 					);
 				},
 			},
@@ -346,7 +335,7 @@ export function WeeklySportEdit({
 									/>
 									<SideBySide title="Team Name:" value={original.team?.name ?? '---'} />
 									<SideBySide title="Opponent:" value={original.opponent ?? '---'} />
-									<SideBySide title="Venue:" value={original.venue?.name ?? '---'} />
+									<SideBySide title="Venue:" value={original.venue ?? '---'} />
 									<SideBySide title="Teacher:" value={original.teacher?.name ?? '---'} />
 									<SideBySide title="Transportation:" value={original.transportation ?? '---'} />
 									<SideBySide title="Out of Class:" value={original.out_of_class?.toLocaleTimeString() ?? '---'} />
@@ -383,7 +372,7 @@ export function WeeklySportEdit({
 				},
 			},
 		];
-	}, [teams, venues, teachers]);
+	}, [teams, teachers]);
 
 	const table = useReactTable({
 		columns,
@@ -489,18 +478,12 @@ export function WeeklySportEdit({
 									/>
 								</td>
 								<td className="p-0">
-									<select
-										className="select select-bordered rounded-none w-full"
+									<input
+										className="input input-bordered rounded-none w-full"
+										placeholder="Venue"
 										value={newVenue}
 										onChange={(event) => setNewVenue(event.target.value)}
-									>
-										<option value="">Venue</option>
-										{venues.map((venue) => (
-											<option key={venue.id} value={venue.id}>
-												{venue.name} ({venue.court_field_number})
-											</option>
-										))}
-									</select>
+									/>
 								</td>
 								<td className="p-0">
 									<select

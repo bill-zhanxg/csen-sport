@@ -1,17 +1,10 @@
-import { serializeTeams, serializeVenues } from './serializeData';
+import { serializeTeams } from './serializeData';
 import { getXataClient } from './xata';
 
 export type RawTeam = {
 	id: string;
 	name?: string | null;
 	isJunior?: boolean | null;
-};
-
-export type RawVenue = {
-	id: string;
-	name?: string | null;
-	address?: string | null;
-	court_field_number?: string | null;
 };
 
 export type RawTeacher = {

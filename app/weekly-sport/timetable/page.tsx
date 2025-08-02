@@ -7,7 +7,7 @@ import { isTeacher } from '@/libs/checkPermission';
 import { dayjs } from '@/libs/dayjs';
 import { getDateStart, stringifySearchParam } from '@/libs/formatValue';
 import { serializeGames } from '@/libs/serializeData';
-import { getRawTeachers, getRawTeams, getRawVenues } from '@/libs/tableData';
+import { getRawTeachers, getRawTeams } from '@/libs/tableData';
 import { gamesToDates, getLastVisitDate } from '@/libs/tableHelpers';
 import { SearchParams } from '@/libs/types';
 import { getXataClient } from '@/libs/xata';
@@ -46,7 +46,7 @@ export default async function WeeklySport(props0: { searchParams: SearchParams }
 		).summaries[0].total;
 	};
 	const gamesPromise = xata.db.games
-		.select(['*', 'team.*', 'venue.*', 'teacher.*'])
+		.select(['*', 'team.*', 'teacher.*'])
 		.filter(dbFilter)
 		.getPaginated({
 			consistency: 'eventual',
@@ -59,14 +59,12 @@ export default async function WeeklySport(props0: { searchParams: SearchParams }
 
 	const teamsPromise = isTeacherBool ? getRawTeams() : [];
 	const teachersPromise = getRawTeachers();
-	const venuesPromise = getRawVenues();
 
-	const [total, games, teams, teachers, venues] = await Promise.all([
+	const [total, games, teams, teachers] = await Promise.all([
 		totalPromise(),
 		gamesPromise,
 		teamsPromise,
 		teachersPromise,
-		venuesPromise,
 	]);
 
 	const dates = gamesToDates(games, isTeacherBool, session?.user.timezone);
@@ -151,8 +149,6 @@ export default async function WeeklySport(props0: { searchParams: SearchParams }
 									key={date.date}
 									teams={teams}
 									teachers={teachers}
-									venues={venues}
-									timezone={session?.user.timezone ?? ''}
 								/>
 							) : (
 								<WeeklySportView

@@ -1,8 +1,8 @@
 import { CustomUser } from '@/next-auth';
 import { Page, SelectedPick } from '@xata.io/client';
 import { User } from 'next-auth';
-import { RawTeam, RawVenue } from './tableData';
-import { GamesRecord, TeamsRecord, TicketMessagesRecord, TicketsRecord, VenuesRecord } from './xata';
+import { RawTeam } from './tableData';
+import { GamesRecord, TeamsRecord, TicketMessagesRecord, TicketsRecord } from './xata';
 
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
@@ -20,28 +20,13 @@ export function serializeTeam({ id, name, isJunior }: TeamRecord): SerializedTea
 	};
 }
 
-export type SerializedVenue = RawVenue;
-type VenueRecord = SelectedPick<VenuesRecord, ['name', 'address', 'court_field_number']>;
-
-export function serializeVenues(venues: VenueRecord[]): SerializedVenue[] {
-	return venues.map((venue) => serializeVenue(venue));
-}
-export function serializeVenue({ id, name, address, court_field_number }: VenueRecord): SerializedVenue {
-	return {
-		id,
-		name,
-		address,
-		court_field_number,
-	};
-}
-
 export type SerializedGame = {
 	id: string;
 	date?: Date | null;
 	team: PartialBy<SerializedTeam, 'id'> | null;
 	isHome?: boolean | null;
 	opponent?: string | null;
-	venue: PartialBy<SerializedVenue, 'id'> | null;
+	venue?: string | null;
 	teacher: {
 		id?: string;
 		name?: string | null;
@@ -60,7 +45,7 @@ export type SerializedGameWithId = {
 	team?: string;
 	isHome?: boolean | null;
 	opponent?: string | null;
-	venue?: string;
+	venue?: string | null;
 	teacher?: string;
 	extra_teachers?: string[] | null;
 	transportation?: string | null;
@@ -71,14 +56,14 @@ export type SerializedGameWithId = {
 };
 
 export function serializeGames(
-	games: SelectedPick<GamesRecord, ('*' | 'team.*' | 'venue.*' | 'teacher.*')[]>[],
+	games: SelectedPick<GamesRecord, ('*' | 'team.*' | 'teacher.*')[]>[],
 	isTeacher: boolean,
 ): SerializedGame[] {
 	return games.map((game) => serializeGame(game, isTeacher));
 }
 
 export function serializeGamesWithId(
-	games: SelectedPick<GamesRecord, ('*' | 'team.id' | 'venue.id' | 'teacher.id')[]>[],
+	games: SelectedPick<GamesRecord, ('*' | 'team.id' | 'teacher.id')[]>[],
 	isTeacher: boolean,
 ): SerializedGameWithId[] {
 	return games.map((game) => serializeGameWithId(game, isTeacher));
@@ -99,7 +84,7 @@ export function serializeGame(
 		start,
 		notes,
 		confirmed,
-	}: SelectedPick<GamesRecord, ('*' | 'team.*' | 'venue.*' | 'teacher.*')[]>,
+	}: SelectedPick<GamesRecord, ('*' | 'team.*' | 'teacher.*')[]>,
 	isTeacher: boolean,
 ): SerializedGame {
 	return {
@@ -112,12 +97,7 @@ export function serializeGame(
 		},
 		isHome: isHome,
 		opponent,
-		venue: {
-			id: venue?.id,
-			name: venue?.name,
-			address: venue?.address,
-			court_field_number: venue?.court_field_number,
-		},
+		venue,
 		teacher: {
 			id: teacher?.id,
 			name: teacher?.name,
@@ -146,7 +126,7 @@ export function serializeGameWithId(
 		start,
 		notes,
 		confirmed,
-	}: SelectedPick<GamesRecord, ('*' | 'team.id' | 'venue.id' | 'teacher.id')[]>,
+	}: SelectedPick<GamesRecord, ('*' | 'team.id' | 'teacher.id')[]>,
 	isTeacher: boolean,
 ) {
 	return {
@@ -155,7 +135,7 @@ export function serializeGameWithId(
 		team: team?.id,
 		isHome,
 		opponent,
-		venue: venue?.id,
+		venue,
 		teacher: teacher?.id,
 		extra_teachers,
 		transportation,
