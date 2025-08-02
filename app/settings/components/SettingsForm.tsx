@@ -5,7 +5,7 @@ import { dayjs } from '@/libs/dayjs';
 import { SerializedTeam } from '@/libs/serializeData';
 import { FormState } from '@/libs/types';
 import { Session } from 'next-auth';
-import { useActionState, useEffect, useRef, useState } from 'react';
+import { startTransition, useActionState, useEffect, useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { FaRegCheckCircle, FaRegTimesCircle } from 'react-icons/fa';
 import { Box } from '../../globalComponents/Box';
@@ -33,7 +33,14 @@ export function SettingsForm({ session, teams }: { session: Session; teams: Seri
 	}, [state]);
 
 	return (
-		<form className="flex flex-col gap-4 w-full" action={formAction}>
+		<form
+			className="flex flex-col gap-4 w-full"
+			// We use onSubmit instead of action to prevent resetting the form state and mismatching the react states
+			onSubmit={(e) => {
+				e.preventDefault();
+				startTransition(() => formAction(new FormData(e.currentTarget)));
+			}}
+		>
 			<Box>
 				<h1 className="font-bold px-4">Profile Settings</h1>
 				<div className="divider m-0"></div>

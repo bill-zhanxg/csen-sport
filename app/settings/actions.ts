@@ -40,7 +40,6 @@ export async function updateProfile(prevState: FormState, formData: FormData): P
 		avatar: formData.get('avatar'),
 		team: formData.get('team'),
 		reset_only_after_visit_weekly_sport: formData.get('reset_only_after_visit_weekly_sport'),
-		// TODO: auto timezone automatic tick after save
 		auto_timezone: formData.get('auto_timezone'),
 		timezone: formData.get('timezone'),
 	});
