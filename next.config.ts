@@ -27,8 +27,8 @@ const nextConfig: NextConfig = {
 		reactCompiler: true,
 		typedRoutes: true,
 		typedEnv: true,
-		// useCache: true,
-		// clientSegmentCache: true,
+		useCache: true,
+		clientSegmentCache: true,
 		// Waiting for Sentry to support dynamicIO: https://github.com/getsentry/sentry-javascript/issues/14118
 		// dynamicIO: true,
 

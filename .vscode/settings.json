@@ -2,6 +2,7 @@
     "cSpell.words": [
         "appwrite",
         "authjs",
+        "AZUREAPPSERVICE",
         "behaviour",
         "billzhanxg",
         "Brodie",
@@ -23,9 +24,11 @@
         "personalised",
         "PKCE",
         "progressbar",
+        "PUBLISHPROFILE",
         "rmsc",
         "tailwindcss",
         "tanstack",
+        "webapps",
         "Xmark"
     ],
     "files.exclude": {
