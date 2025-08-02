@@ -5,7 +5,6 @@ name: Build, deploy then E2E test - CSEN Sport
 
 permissions:
   contents: write
-  secrets: read
 
 on:
   release:
