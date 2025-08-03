@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.14.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.13.0...v0.14.0) (2025-08-03)
+
+
+### Features
+
+* add loading components for login, weekly sport creation, and import fixtures ([27fbe39](https://github.com/bill-zhanxg/csen-sport/commit/27fbe39fa9aba9d3df46008b50d6f748779b9f41))
+
+
+### Bug Fixes
+
+* correct time format parsing for start time in fixture import ([1a7c39e](https://github.com/bill-zhanxg/csen-sport/commit/1a7c39e2bcbb94394bf317289761a30db57868ae))
+
 ## [0.13.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.12.0...v0.13.0) (2025-08-03)
 
 
