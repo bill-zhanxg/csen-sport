@@ -12,6 +12,7 @@ import NProgress from 'nprogress';
 import { useEffect, useRef, useState } from 'react';
 import { CiBasketball, CiImport } from 'react-icons/ci';
 import { FaBars, FaXmark } from 'react-icons/fa6';
+import { FiExternalLink } from 'react-icons/fi';
 import { HiOutlineClipboardDocumentList, HiOutlineCog, HiOutlineHome } from 'react-icons/hi2';
 import { IoCreateOutline, IoSettingsOutline } from 'react-icons/io5';
 import { LuUsersRound } from 'react-icons/lu';
@@ -19,7 +20,6 @@ import { MdOutlineShield } from 'react-icons/md';
 import { useClickAway } from 'react-use';
 import { UserAvatar } from '../globalComponents/UserAvatar';
 import { FeedbackButton } from './Feedback';
-import { FiExternalLink } from 'react-icons/fi';
 
 const MENU_ITEMS: Array<{
 	href: __next_route_internal_types__.RouteImpl<string>;
@@ -131,7 +131,7 @@ export function NavBar({ children, session }: { children: React.ReactNode; sessi
 								</div>
 							)}
 						</div>
-						<ul className="menu sticky bottom-0 w-full border-t-2 border-base-300 bg-base-100">
+						<ul className="menu sticky bottom-0 w-full border-t-2 border-base-300 bg-base-100 z-10">
 							<MenuItem href="/settings" name="User Settings" icon={IoSettingsOutline} />
 							<MenuItem href="/changelog" name="Changelog" icon={HiOutlineClipboardDocumentList} />
 							<li>
