@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.11.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.10.2...v0.11.0) (2025-08-03)
+
+
+### Features
+
+* enhance NavBar by adding a dock to mobile navigation. ([b219ff6](https://github.com/bill-zhanxg/csen-sport/commit/b219ff60dc517b9bae3d9671f1976c79ea1d497c))
+* fully revamped and redesigned the navigation system for both desktop and mobile ([90ddd1c](https://github.com/bill-zhanxg/csen-sport/commit/90ddd1c1d29cd8af69fee0336b20f430e338462e))
+
+
+### Bug Fixes
+
+* comment out unused RestartGuide import in Changelog component ([dea4dae](https://github.com/bill-zhanxg/csen-sport/commit/dea4daefc60425e0c3216ca65a998163cc163e8c))
+* fixed transparent menu items on mobile overladed ([c052568](https://github.com/bill-zhanxg/csen-sport/commit/c0525687696bdad41b191bdd9a8bb6cc241e95b0))
+* simplify NavBar props by removing unused ticketUnread functionality ([81d3bce](https://github.com/bill-zhanxg/csen-sport/commit/81d3bceb25b5024f1bf67c345cf53a3cdb4c901f))
+* update deployment artifact to use next.config.ts (this was the issue all along) ([d6f5396](https://github.com/bill-zhanxg/csen-sport/commit/d6f5396eeac22369d1c532733dae67ffe32bb8cc))
+
 ## [0.10.2](https://github.com/bill-zhanxg/csen-sport/compare/v0.10.1...v0.10.2) (2025-08-02)
 
 
