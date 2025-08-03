@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.13.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.12.0...v0.13.0) (2025-08-03)
+
+
+### Features
+
+* completely redesign and update the home page to use card style instead of tables. Including loading skeletons. ([828603d](https://github.com/bill-zhanxg/csen-sport/commit/828603df2b885d72f14c95db07d957ece43e9e27))
+
+
+### Bug Fixes
+
+* changed folder structure of home path ([3434449](https://github.com/bill-zhanxg/csen-sport/commit/343444967a95e9f6ef37d6a4f9b9cd45a9b0e336))
+* fixed all lint warnings ([758bdd0](https://github.com/bill-zhanxg/csen-sport/commit/758bdd0bc16ffb8f13ed446e332afd26088a337f))
+
 ## [0.12.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.11.1...v0.12.0) (2025-08-03)
 
 
