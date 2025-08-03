@@ -132,7 +132,7 @@ export function Step1({
 
 			// Handle the fixture
 			const formattedDate = dayjs(dateString).format('YYYY-MM-DD');
-			const formattedStartTime = startTime ? dayjs(startTime, 'h:mm A').format('HH:mm') : undefined;
+			const formattedStartTime = startTime ? dayjs(startTime, 'h:mma').format('HH:mm') : undefined;
 			games.push({
 				id: v4(),
 				date: formattedDate,
