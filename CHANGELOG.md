@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.1](https://github.com/bill-zhanxg/csen-sport/compare/v0.11.0...v0.11.1) (2025-08-03)
+
+
+### Bug Fixes
+
+* fixed navbar scrolls with content by adding removed overflow auto ([fd3fbb7](https://github.com/bill-zhanxg/csen-sport/commit/fd3fbb7433f494b80099a1503fb05159467e23c5))
+
 ## [0.11.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.10.2...v0.11.0) (2025-08-03)
 
 
