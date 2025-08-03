@@ -7,31 +7,37 @@ import { MessageInput } from './MessageInput';
 import { Messages } from './Messages';
 
 export type OptimisticMessages = {
-    id: string;
+	id: string;
 	message: string;
 }[];
 
 export function MessageTab({
 	user,
 	ticketId,
-	getMessages,
-	getNextPage,
-	sendMessage,
+	getMessagesAction: getMessages,
+	getNextPageAction: getNextPage,
+	sendMessageAction: sendMessage,
 }: {
 	user: User;
 	ticketId: string;
-	getMessages: () => Promise<SerializedTicketMessage[]>;
-	getNextPage: (messageCount: number) => Promise<SerializedTicketMessage[]>;
-	sendMessage: (message: string) => Promise<void>;
+	getMessagesAction: () => Promise<SerializedTicketMessage[]>;
+	getNextPageAction: (messageCount: number) => Promise<SerializedTicketMessage[]>;
+	sendMessageAction: (message: string) => Promise<void>;
 }) {
 	const [optimisticMessages, setOptimisticMessages] = useState<OptimisticMessages>([]);
 
 	return (
 		<>
 			<div className="grow max-w-[100rem] w-full">
-				<Messages user={user} ticketId={ticketId} getMessages={getMessages} getNextPage={getNextPage} optimisticMessages={optimisticMessages} />
+				<Messages
+					user={user}
+					ticketId={ticketId}
+					getMessagesAction={getMessages}
+					getNextPageAction={getNextPage}
+					optimisticMessages={optimisticMessages}
+				/>
 			</div>
-			<MessageInput sendMessage={sendMessage} setOptimisticMessages={setOptimisticMessages} />
+			<MessageInput sendMessageAction={sendMessage} setOptimisticMessagesAction={setOptimisticMessages} />
 		</>
 	);
 }

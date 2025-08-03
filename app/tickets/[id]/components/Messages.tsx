@@ -13,14 +13,14 @@ import { OptimisticMessages } from './MessagesTab';
 export function Messages({
 	user,
 	ticketId,
-	getMessages,
-	getNextPage,
+	getMessagesAction: getMessages,
+	getNextPageAction: getNextPage,
 	optimisticMessages,
 }: {
 	user: User;
 	ticketId: string;
-	getMessages: () => Promise<SerializedTicketMessage[]>;
-	getNextPage: (messageCount: number) => Promise<SerializedTicketMessage[]>;
+	getMessagesAction: () => Promise<SerializedTicketMessage[]>;
+	getNextPageAction: (messageCount: number) => Promise<SerializedTicketMessage[]>;
 	optimisticMessages: OptimisticMessages;
 }) {
 	const [messages, setMessages] = useState<SerializedTicketMessage[] | null | 'error'>(null);

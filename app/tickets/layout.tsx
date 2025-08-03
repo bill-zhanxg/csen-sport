@@ -72,9 +72,9 @@ export default async function Tickets({ children }: { children: React.ReactNode 
 	return (
 		<div className="flex w-full h-full-nav overflow-auto">
 			<LeftBar
-				createTicket={createTicket}
-				getTickets={getTickets}
-				getNextPage={getNextPage}
+				createTicketAction={createTicket}
+				getTicketsAction={getTickets}
+				getNextPageAction={getNextPage}
 				timezone={session.user.timezone ?? ''}
 				session={session}
 			/>

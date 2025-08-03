@@ -8,15 +8,15 @@ import { TicketsList } from './TicketsList';
 import { Session } from 'next-auth';
 
 export function LeftBar({
-	createTicket,
-	getTickets,
-	getNextPage,
+	createTicketAction: createTicket,
+	getTicketsAction: getTickets,
+	getNextPageAction: getNextPage,
 	timezone,
-	session
+	session,
 }: {
-	createTicket: (data: FormData) => void;
-	getTickets: (closed: boolean) => Promise<SerializedTicket[]>;
-	getNextPage: (closed: boolean, messageCount: number) => Promise<SerializedTicket[]>;
+	createTicketAction: (data: FormData) => void;
+	getTicketsAction: (closed: boolean) => Promise<SerializedTicket[]>;
+	getNextPageAction: (closed: boolean, messageCount: number) => Promise<SerializedTicket[]>;
 	timezone: string;
 	session: Session;
 }) {
@@ -35,8 +35,13 @@ export function LeftBar({
 				selected === 'tickets' ? 'flex' : 'hidden sm:flex'
 			}`}
 		>
-			<CreateTicketButton createTicket={createTicket} />
-			<TicketsList getTickets={getTickets} getNextPage={getNextPage} timezone={timezone} session={session} />
+			<CreateTicketButton createTicketAction={createTicket} />
+			<TicketsList
+				getTicketsAction={getTickets}
+				getNextPageAction={getNextPage}
+				timezone={timezone}
+				session={session}
+			/>
 		</div>
 	);
 }

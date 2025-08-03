@@ -6,11 +6,11 @@ import { v4 } from 'uuid';
 import { OptimisticMessages } from './MessagesTab';
 
 export function MessageInput({
-	sendMessage,
-	setOptimisticMessages,
+	sendMessageAction: sendMessage,
+	setOptimisticMessagesAction: setOptimisticMessages,
 }: {
-	sendMessage: (message: string) => Promise<void>;
-	setOptimisticMessages: Dispatch<SetStateAction<OptimisticMessages>>;
+	sendMessageAction: (message: string) => Promise<void>;
+	setOptimisticMessagesAction: Dispatch<SetStateAction<OptimisticMessages>>;
 }) {
 	const [message, setMessage] = useState('');
 	const textarea = useRef<HTMLTextAreaElement>(null);

@@ -5,10 +5,10 @@ import { useState } from 'react';
 
 export function Checkbox({
 	game,
-	updateConfirmed,
+	updateConfirmedAction: updateConfirmed,
 }: {
 	game: SerializedGame;
-	updateConfirmed: (id: string, checked: boolean) => Promise<boolean>;
+	updateConfirmedAction: (id: string, checked: boolean) => Promise<boolean>;
 }) {
 	const [checked, setChecked] = useState(game.confirmed);
 	const [loading, setLoading] = useState<boolean | 'failed'>(false);

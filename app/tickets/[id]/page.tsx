@@ -153,9 +153,9 @@ export default async function TicketMessages(props: { params: Promise<{ id: stri
 			<MessageTab
 				user={session.user}
 				ticketId={ticket_id}
-				getMessages={getMessages}
-				getNextPage={getNextPage}
-				sendMessage={sendMessage}
+				getMessagesAction={getMessages}
+				getNextPageAction={getNextPage}
+				sendMessageAction={sendMessage}
 			/>
 		</div>
 	);

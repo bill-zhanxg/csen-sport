@@ -3,7 +3,11 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 
-export function CreateTicketButton({ createTicket }: { createTicket: (data: FormData) => void }) {
+export function CreateTicketButton({
+	createTicketAction: createTicket,
+}: {
+	createTicketAction: (data: FormData) => void;
+}) {
 	const [isOpen, setIsOpen] = useState(false);
 
 	return (

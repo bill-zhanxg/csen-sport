@@ -11,13 +11,13 @@ import { FaTriangleExclamation } from 'react-icons/fa6';
 import { TicketEventType } from '../types';
 
 export function TicketsList({
-	getTickets,
-	getNextPage,
+	getTicketsAction: getTickets,
+	getNextPageAction: getNextPage,
 	timezone,
 	session,
 }: {
-	getTickets: (closed: boolean) => Promise<SerializedTicket[]>;
-	getNextPage: (closed: boolean, messageCount: number) => Promise<SerializedTicket[]>;
+	getTicketsAction: (closed: boolean) => Promise<SerializedTicket[]>;
+	getNextPageAction: (closed: boolean, messageCount: number) => Promise<SerializedTicket[]>;
 	timezone: string;
 	session: Session;
 }) {

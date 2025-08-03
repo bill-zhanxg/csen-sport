@@ -135,7 +135,7 @@ export function WeeklySportView({
 								<td>{game?.start ? dayjs.tz(game?.start, timezone).format('LT') : '---'}</td>
 								{isTeacher && (
 									<td>
-										<Checkbox game={serializeGame(game, isTeacher)} updateConfirmed={updateConfirmed} />
+										<Checkbox game={serializeGame(game, isTeacher)} updateConfirmedAction={updateConfirmed} />
 									</td>
 								)}
 								{isTeacher && <td>{game?.notes || '---'}</td>}
