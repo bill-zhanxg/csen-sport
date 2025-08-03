@@ -1,21 +1,21 @@
 'use client';
-
 import { isAdmin } from '@/libs/checkPermission';
 import { motion } from 'framer-motion';
 import type { Session } from 'next-auth';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { memo, MouseEventHandler, use, useEffect, useMemo, useState } from 'react';
+import NProgress from 'nprogress';
+import { memo, MouseEventHandler, useEffect, useMemo, useState } from 'react';
 import { FaBars, FaExternalLinkAlt, FaHome } from 'react-icons/fa';
 import { UserAvatar } from '../globalComponents/UserAvatar';
-import { TicketEventType } from '../tickets/types';
 import { FeedbackButton } from './Feedback';
-import NProgress from 'nprogress';
 
 type Menu = {
 	id: string;
 	name: string;
-	href: __next_route_internal_types__.RouteImpl<string> | { id: string; name: string; href: __next_route_internal_types__.RouteImpl<string>; admin?: boolean }[];
+	href:
+		| __next_route_internal_types__.RouteImpl<string>
+		| { id: string; name: string; href: __next_route_internal_types__.RouteImpl<string>; admin?: boolean }[];
 	admin?: boolean;
 	external?: boolean;
 }[];
@@ -25,11 +25,6 @@ const menu: Menu = [
 		name: 'Weekly Sport',
 		href: '/weekly-sport/timetable',
 	},
-	// {
-	// 	id: 'tickets-btn',
-	// 	name: 'Tickets',
-	// 	href: '/tickets',
-	// },
 	{
 		id: 'csen-btn',
 		name: 'CSEN',
@@ -73,16 +68,12 @@ const menu: Menu = [
 const MenuItem = memo(function MenuItem({
 	mobile = false,
 	item,
-	unread,
 	onClick,
 }: {
 	mobile?: boolean;
 	item: Menu[number];
-	unread: boolean;
 	onClick?: MouseEventHandler<HTMLAnchorElement>;
 }) {
-	const badge = item.id === 'tickets-btn' && unread;
-
 	const suffix = mobile ? '-mobile' : '';
 	return (
 		<Link
@@ -93,57 +84,17 @@ const MenuItem = memo(function MenuItem({
 			className={`flex items-center gap-2`}
 			prefetch={false}
 		>
-			<div className="indicator">
-				{badge && <span className="indicator-item badge badge-primary h-1 p-1 [--tw-translate-x:120%]"></span>}
-				{item.name}
-			</div>
+			<div className="indicator">{item.name}</div>
 			{item.external && <FaExternalLinkAlt />}
 		</Link>
 	);
 });
 
-export function NavBar({
-	session,
-	initUnread,
-	ticketUnread,
-	logout,
-}: {
-	session: Session;
-	initUnread: Promise<boolean>;
-	ticketUnread: () => Promise<boolean>;
-	logout: () => Promise<void>;
-}) {
+export function NavBar({ session, logoutAction: logout }: { session: Session; logoutAction: () => Promise<void> }) {
 	const pathname = usePathname();
-
-	const [unread, setUnread] = useState(use(initUnread));
-	const [recheck, setRecheck] = useState(false);
 
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const [accountMenuOpen, setAccountMenuOpen] = useState(false);
-
-	useEffect(() => {
-		const eventSource = new EventSource('/tickets/ticket-stream');
-		eventSource.onmessage = async (event) => {
-			const data = JSON.parse(event.data) as TicketEventType;
-			if (data.type === 'new-message' && data.message.sender?.id !== session.user.id) setUnread(true);
-			else if (data.type === 'update-message' || data.type === 'toggle-status') setRecheck(true);
-		};
-
-		return () => {
-			eventSource.close();
-		};
-	}, [session]);
-
-	useEffect(() => {
-		if (recheck)
-			ticketUnread()
-				.then(setUnread)
-				.finally(() =>
-					setTimeout(() => {
-						setRecheck(false);
-					}, 3000),
-				);
-	}, [recheck, ticketUnread]);
 
 	useEffect(() => {
 		// Close desktop menu detail tags
@@ -218,7 +169,7 @@ export function NavBar({
 													className="w-full h-full absolute bg-base-200 rounded-lg transition-none hover:bg-base-200"
 												/>
 											)}
-											<MenuItem mobile item={item} unread={unread} onClick={closeDropdown} />
+											<MenuItem mobile item={item} onClick={closeDropdown} />
 										</li>
 									))}
 								</ul>
@@ -231,7 +182,7 @@ export function NavBar({
 										className="w-full h-full absolute bg-base-200 rounded-lg transition-none hover:bg-base-200"
 									/>
 								)}
-								<MenuItem mobile item={item} unread={unread} onClick={closeDropdown} />
+								<MenuItem mobile item={item} onClick={closeDropdown} />
 							</li>
 						),
 					)}
@@ -255,7 +206,6 @@ export function NavBar({
 												)}
 												<MenuItem
 													item={item}
-													unread={unread}
 													onClick={(event) => {
 														const details = event.currentTarget.parentElement?.parentElement
 															?.parentElement as HTMLDetailsElement;
@@ -275,7 +225,7 @@ export function NavBar({
 										className="w-full h-full absolute bg-base-300 rounded-lg transition-none hover:bg-base-300"
 									/>
 								)}
-								<MenuItem item={item} unread={unread} />
+								<MenuItem item={item} />
 							</li>
 						),
 					)}

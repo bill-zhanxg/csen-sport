@@ -16,7 +16,7 @@ describe('NavBar', () => {
 	const logout = vi.fn(() => Promise.resolve());
 
 	beforeEach(() => {
-		render(<NavBar session={session} initUnread={ticketUnread()} ticketUnread={ticketUnread} logout={logout} />);
+		render(<NavBar session={session} logoutAction={logout} />);
 	});
 
 	test('renders home button', () => {

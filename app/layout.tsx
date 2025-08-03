@@ -151,7 +151,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 									</div>
 								}
 							>
-								<NavBar session={session} initUnread={ticketUnread()} ticketUnread={ticketUnread} logout={logout} />
+								<NavBar session={session} logoutAction={logout} />
 							</Suspense>
 							{children}
 							<FeedbackDialog session={session} />
