@@ -1,4 +1,4 @@
-import SadCat from '@/app/images/sad-cat.png';
+import SadCat from '@/images/sad-cat.png';
 import { promises as fs } from 'fs';
 import { Metadata } from 'next';
 import Link from 'next/link';

@@ -12,15 +12,16 @@ describe('NavBar', () => {
 		expires: '',
 	};
 
-	const ticketUnread = vi.fn(() => Promise.resolve(false));
-	const logout = vi.fn(() => Promise.resolve());
-
 	beforeEach(() => {
-		render(<NavBar session={session} logoutAction={logout} />);
+		render(
+			<NavBar session={session}>
+				<div>Test Children</div>
+			</NavBar>,
+		);
 	});
 
 	test('renders home button', () => {
-		const homeButton = document.querySelector('#home-btn');
+		const homeButton = document.querySelector('a[href="/"]');
 		expect(homeButton).toBeInTheDocument();
 	});
 });

@@ -3,6 +3,7 @@
 import { captureFeedback } from '@sentry/nextjs';
 import { Session } from 'next-auth';
 import { useState } from 'react';
+import { HiOutlineChatBubbleBottomCenterText } from 'react-icons/hi2';
 import { SuccessAlert } from './Alert';
 
 export function FeedbackButton() {
@@ -11,7 +12,8 @@ export function FeedbackButton() {
 			id="feedback-btn"
 			onClick={() => (document.getElementById('feedback-dialog') as HTMLDialogElement).showModal()}
 		>
-			Submit a Bug / Feedback
+			<HiOutlineChatBubbleBottomCenterText className="h-5 w-5" />
+			Submit Feedback
 		</button>
 	);
 }
