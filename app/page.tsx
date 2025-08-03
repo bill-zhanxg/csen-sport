@@ -4,7 +4,7 @@ import { getRawTeachers } from '@/libs/tableData';
 import { gamesToDates, getLastVisitDate } from '@/libs/tableHelpers';
 import { getXataClient } from '@/libs/xata';
 import Link from 'next/link';
-import { WeeklySportView } from './globalComponents/WeeklySportView';
+import { WeeklySportCardView } from './globalComponents/WeeklySportCardView';
 
 export default async function Home() {
 	const session = await authC();
@@ -40,38 +40,50 @@ export default async function Home() {
 	const teachers = await getRawTeachers();
 
 	return (
-		<div className="flex flex-col items-center w-full py-6 p-1 sm:p-6 gap-4">
-			<h1 className="text-2xl font-bold text-center">
-				Hello <span className="text-primary">{session?.user.name}</span>
-			</h1>
-			<h2 className="text-xl text-center max-w-3xl">
-				{!isTeacherBool && !session?.user.team ? (
-					<>
-						<span className="text-error">You are currently not in a team, showing all upcoming weekly sport games</span>
-						<br />
-						<Link className="link link-secondary" href="/settings#team-preferences">
-							Click here to select your team
-						</Link>
-					</>
-				) : (
-					'Here is your upcoming weekly sport schedule'
-				)}
-			</h2>
-			<main className="flex flex-col items-center gap-4 pt-0 p-1 sm:p-4 w-full">
+		<div className="flex flex-col items-center w-full py-6 px-4 sm:px-6 gap-6">
+			<div className="text-center max-w-4xl">
+				<h1 className="text-3xl sm:text-4xl font-bold mb-4">
+					Hello <span className="text-primary">{session?.user.name}</span>
+				</h1>
+				<h2 className="text-lg sm:text-xl text-base-content/80">
+					{!isTeacherBool && !session?.user.team ? (
+						<>
+							<span className="text-error font-medium">
+								You are currently not in a team, showing all upcoming weekly sport games
+							</span>
+							<br />
+							<Link className="link link-secondary" href="/settings#team-preferences">
+								Click here to select your team
+							</Link>
+						</>
+					) : (
+						'Here is your upcoming weekly sport schedule'
+					)}
+				</h2>
+			</div>
+			<main className="flex flex-col items-center w-full max-w-7xl">
 				{dates.length < 1 ? (
-					<div>Nothing Here</div>
+					<div className="flex flex-col items-center gap-6 py-16 text-center">
+						<div className="text-8xl opacity-80">🏀</div>
+						<div>
+							<h3 className="text-2xl font-bold text-base-content/80 mb-2">No upcoming games</h3>
+							<p className="text-base-content/60">Check back later for your weekly sport schedule</p>
+						</div>
+					</div>
 				) : (
 					<>
-						{dates.map((date) => (
-							<WeeklySportView
-								key={date.date}
-								date={date}
-								teachers={teachers}
-								isTeacher={isTeacherBool}
-								lastVisit={lastVisit}
-								showRelative
-								timezone={session?.user.timezone ?? ''}
-							/>
+						{dates.map((date, index) => (
+							<div key={date.date} className="w-full">
+								<WeeklySportCardView
+									date={date}
+									teachers={teachers}
+									isTeacher={isTeacherBool}
+									lastVisit={lastVisit}
+									showRelative
+									timezone={session?.user.timezone ?? ''}
+								/>
+								{index < dates.length - 1 && <div className="divider my-8"></div>}
+							</div>
 						))}
 					</>
 				)}
