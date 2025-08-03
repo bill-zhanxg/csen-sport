@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { RestartGuide } from './components/RestartGuide';
+// import { RestartGuide } from './components/RestartGuide';
 
 import './changelog.css';
 
@@ -18,7 +18,7 @@ export default async function Changelog() {
 	return (
 		<main className="flex flex-col gap-8 items-center w-full p-6 changelog">
 			<h1 className="font-bold text-center">Changelogs</h1>
-			<RestartGuide />
+			{/* <RestartGuide /> */}
 			<ChangelogBox first>
 				<Markdown remarkPlugins={[remarkGfm]}>{Changelog}</Markdown>
 			</ChangelogBox>
