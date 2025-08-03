@@ -66,7 +66,7 @@ export function NavBar({ children, session }: { children: React.ReactNode; sessi
 				onChange={(e) => setDrawerOpen(e.target.checked)}
 			/>
 
-			<div className="drawer-content flex h-full w-full flex-col overflow-auto md:flex-row">
+			<div className="drawer-content flex h-full w-full flex-col md:flex-row">
 				<div className="navbar z-40 h-16 overflow-x-auto overflow-y-hidden border-b-2 bg-base-100 md:hidden">
 					<div className="navbar-start">
 						<label
@@ -87,7 +87,16 @@ export function NavBar({ children, session }: { children: React.ReactNode; sessi
 					</div>
 					<div className="navbar-end"></div>
 				</div>
-				<div className="h-full w-full">{children}</div>
+
+				<div className="flex flex-col h-full w-full min-h-0">
+					<div className="flex-1 overflow-auto">{children}</div>
+
+					<div className="dock sticky md:hidden border-t-2 border-base-300">
+						<DockMenuItem href="/" name="Home" icon={HiOutlineHome} />
+						<DockMenuItem href="/weekly-sport/timetable" name="Fixtures" icon={CiBasketball} />
+						<DockMenuItem href="/settings" name="Settings" icon={IoSettingsOutline} />
+					</div>
+				</div>
 			</div>
 
 			<div className="drawer-side z-30">
@@ -202,6 +211,25 @@ function MenuItem({
 				</Link>
 			)}
 		</li>
+	);
+}
+
+function DockMenuItem({
+	href,
+	name,
+	icon: Icon,
+}: {
+	href: __next_route_internal_types__.RouteImpl<string>;
+	name: string;
+	icon: React.ElementType;
+}) {
+	const pathname = usePathname();
+
+	return (
+		<Link href={href} className={pathname === href ? 'dock-active' : undefined}>
+			<Icon className="h-5 w-5" />
+			<span className="dock-label">{name}</span>
+		</Link>
 	);
 }
 
