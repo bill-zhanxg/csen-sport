@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.11.1...v0.12.0) (2025-08-03)
+
+
+### Features
+
+* enhance login page with animated particle background and improved button UI ([cfb62e5](https://github.com/bill-zhanxg/csen-sport/commit/cfb62e541cd57648df5e50d8b743f91550043856))
+
 ## [0.11.1](https://github.com/bill-zhanxg/csen-sport/compare/v0.11.0...v0.11.1) (2025-08-03)
 
 
