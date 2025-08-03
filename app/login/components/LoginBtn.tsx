@@ -27,25 +27,37 @@ export function LoginBtn({ loginAction }: { loginAction: () => Promise<void> }) 
 	}, []);
 
 	return hasMounted ? (
-		<form className="w-4/5 max-w-[15rem]" action={loginAction} onSubmit={() => setLoading(true)}>
-			<button type="submit" className="btn btn-primary w-full" disabled={loading}>
+		<form className="w-full" action={loginAction} onSubmit={() => setLoading(true)}>
+			<button
+				type="submit"
+				className="btn btn-primary w-full h-12 text-base font-medium shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+				disabled={loading}
+			>
 				{loading ? (
 					hasMounted ? (
-						<l-dot-wave size="30" speed="1" color="black"></l-dot-wave>
+						<l-dot-wave size="30" speed="1" color="white"></l-dot-wave>
 					) : (
-						<span className="flex w-full items-center justify-between gap-4">Loading...</span>
+						<span className="flex w-full items-center justify-center gap-3">
+							<div className="loading loading-spinner loading-sm"></div>
+							Signing in...
+						</span>
 					)
 				) : (
-					<span className="flex w-full items-center justify-between gap-4">
-						<FaMicrosoft className="text-xl" />
-						<p>Login with Microsoft</p>
+					<span className="flex w-full items-center justify-center gap-3">
+						<FaMicrosoft className="text-lg" />
+						<span>Continue with Microsoft</span>
 					</span>
 				)}
 			</button>
 		</form>
 	) : (
-		<button type="submit" className="btn btn-primary w-4/5 max-w-[15rem]" disabled={true}>
-			<span className="flex w-full items-center justify-between gap-4">Loading...</span>
-		</button>
+		<div className="w-full">
+			<button type="submit" className="btn btn-primary w-full h-12 text-base font-medium" disabled={true}>
+				<span className="flex w-full items-center justify-center gap-3">
+					<div className="loading loading-spinner loading-sm"></div>
+					Loading...
+				</span>
+			</button>
+		</div>
 	);
 }

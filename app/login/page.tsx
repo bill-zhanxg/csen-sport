@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { authC } from '../cache';
 import { LoginBtn } from './components/LoginBtn';
+import { ParticleBackground } from './components/ParticleBackground';
 
 export const metadata: Metadata = {
 	title: 'Login',
@@ -20,49 +21,74 @@ type ErrorCodes =
 	| 'SessionRequired'
 	| 'Default';
 
-export default async function Login(
-    props: {
-        searchParams: Promise<{
-            redirect: string | string[] | undefined;
-            error: ErrorCodes | string | string[] | undefined;
-            message: string | string[] | undefined;
-        }>;
-    }
-) {
-    const searchParams = await props.searchParams;
-    const callbackURL = typeof searchParams.redirect === 'string' ? searchParams.redirect : searchParams.redirect?.[0];
+export default async function Login(props: {
+	searchParams: Promise<{
+		redirect: string | string[] | undefined;
+		error: ErrorCodes | string | string[] | undefined;
+		message: string | string[] | undefined;
+	}>;
+}) {
+	const searchParams = await props.searchParams;
+	const callbackURL = typeof searchParams.redirect === 'string' ? searchParams.redirect : searchParams.redirect?.[0];
 
-    const session = await authC();
-    if (session) return redirect(decodeURIComponent(callbackURL ?? '/'));
+	const session = await authC();
+	if (session) return redirect(decodeURIComponent(callbackURL ?? '/'));
 
-    async function login() {
+	async function login() {
 		'use server';
 		await signIn('microsoft-entra-id');
 	}
 
-    return (
-		<div className="flex flex-col justify-center items-center gap-3 h-full">
-			<h1 className="text-4xl text-center font-bold p-5">CSEN Sport Login</h1>
-			<LoginBtn loginAction={login} />
-			{/* Error */}
-			{(searchParams.message || searchParams.error) && (
-				<div className="alert alert-error w-4/5 max-w-[20rem]">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						className="stroke-current shrink-0 h-6 w-6"
-						fill="none"
-						viewBox="0 0 24 24"
-					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth="2"
-							d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-						/>
-					</svg>
-					<span>Error: {searchParams.message || getMessages(searchParams.error)}</span>
+	return (
+		<div className="min-h-screen bg-gradient-to-br from-primary/10 via-base-100 to-secondary/10 flex items-center justify-center p-4 relative overflow-hidden">
+			{/* Animated particle background */}
+			<ParticleBackground />
+
+			<div className="w-full max-w-md relative z-10">
+				{/* Main Card */}
+				<div className="card bg-base-100 shadow-2xl border border-base-300">
+					<div className="card-body p-8">
+						{/* Header Section */}
+						<div className="text-center mb-8">
+							<h1 className="text-3xl font-bold text-base-content mb-2">Welcome Back</h1>
+							<p className="text-base-content/70 text-sm">Sign in to access CSEN Sport</p>
+						</div>
+
+						{/* Login Button */}
+						<div className="mb-6">
+							<LoginBtn loginAction={login} />
+						</div>
+
+						{/* Error Message */}
+						{(searchParams.message || searchParams.error) && (
+							<div className="alert alert-error shadow-lg">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									className="stroke-current shrink-0 h-6 w-6"
+									fill="none"
+									viewBox="0 0 24 24"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth="2"
+										d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+									/>
+								</svg>
+								<div>
+									<h3 className="font-semibold">Authentication Error</h3>
+									<div className="text-xs opacity-80">{searchParams.message || getMessages(searchParams.error)}</div>
+								</div>
+							</div>
+						)}
+					</div>
 				</div>
-			)}
+
+				{/* Footer */}
+				<div className="text-center mt-6">
+					<p className="text-sm text-base-content/60">Made with ❤️ by Bill Zhang</p>
+				</div>
+			</div>
 		</div>
 	);
 }
