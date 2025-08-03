@@ -66,7 +66,7 @@ export function NavBar({ children, session }: { children: React.ReactNode; sessi
 				onChange={(e) => setDrawerOpen(e.target.checked)}
 			/>
 
-			<div className="drawer-content flex h-full w-full flex-col md:flex-row">
+			<div className="drawer-content flex h-full w-full flex-col overflow-auto md:flex-row">
 				<div className="navbar z-40 h-16 overflow-x-auto overflow-y-hidden border-b-2 bg-base-100 md:hidden">
 					<div className="navbar-start">
 						<label
