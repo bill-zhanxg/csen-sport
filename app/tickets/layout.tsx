@@ -70,7 +70,7 @@ export default async function Tickets({ children }: { children: React.ReactNode 
 	}
 
 	return (
-		<div className="flex w-full h-full-nav overflow-auto">
+		<div className="flex w-full h-full overflow-auto">
 			<LeftBar
 				createTicketAction={createTicket}
 				getTicketsAction={getTickets}
