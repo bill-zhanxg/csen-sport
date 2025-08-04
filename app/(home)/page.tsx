@@ -4,7 +4,7 @@ import { getRawTeachers } from '@/libs/tableData';
 import { gamesToDates, getLastVisitDate } from '@/libs/tableHelpers';
 import { getXataClient } from '@/libs/xata';
 import Link from 'next/link';
-import { WeeklySportCardView } from './globalComponents/WeeklySportCardView';
+import { WeeklySportCardView } from '../globalComponents/WeeklySportCardView';
 
 export default async function Home() {
 	const session = await authC();
