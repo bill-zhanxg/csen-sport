@@ -2,6 +2,7 @@
 
 import { SerializedGame } from '@/libs/serializeData';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 export function Checkbox({
 	game,
@@ -11,27 +12,38 @@ export function Checkbox({
 	updateConfirmedAction: (id: string, checked: boolean) => Promise<boolean>;
 }) {
 	const [checked, setChecked] = useState(game.confirmed);
-	const [loading, setLoading] = useState<boolean | 'failed'>(false);
+	const [loading, setLoading] = useState(false);
 
 	return (
 		<input
 			type="checkbox"
-			className={`checkbox checkbox-primary ${
-				loading === 'failed'
-					? " [background:url('/checkbox-error.svg')_no-repeat_center/50%_oklch(var(--er))]!"
-					: loading
-					? " [background:url('/checkbox-loading.gif')_no-repeat_center/70%_var(--chkbg)]!"
-					: ''
-			}`}
-			checked={checked}
+			className={`checkbox checkbox-primary ${loading ? 'loading' : ''}`}
+			checked={loading ? true : checked} // Show as checked during loading to display spinner
+			disabled={loading}
 			onChange={async () => {
-				if (loading === true) return;
+				if (loading) return;
 				setLoading(true);
-				const res = await updateConfirmed(game.id, !checked);
-				if (res) {
-					setChecked(!checked);
-					setLoading(false);
-				} else setLoading('failed');
+
+				const promise = updateConfirmed(game.id, !checked);
+
+				toast.promise(promise, {
+					loading: `${!checked ? 'Confirming' : 'Unconfirming'} game...`,
+					success: (res) => {
+						if (res) {
+							setChecked(!checked);
+							setLoading(false);
+							return `Game ${!checked ? 'confirmed' : 'unconfirmed'} successfully`;
+						} else {
+							setLoading(false);
+							throw new Error('Failed to update confirmation');
+						}
+					},
+					error: (err) => {
+						setLoading(false);
+						console.error('Checkbox update error:', err);
+						return `Failed to update game confirmation: ${err.message || 'Unknown error'}. Please try again.`;
+					},
+				});
 			}}
 		/>
 	);
