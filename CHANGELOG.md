@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.15.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.14.0...v0.15.0) (2025-08-04)
+
+
+### Features
+
+* add custom Sonner toast styling and integrate Toaster component in layout ([5e6810c](https://github.com/bill-zhanxg/csen-sport/commit/5e6810cc7bf77397d80bf9084cf1b6463d489310))
+
+
+### Bug Fixes
+
+* add a global generic loading page before other loading pages loads and move home page back to it's orginal folder structure ([c4ff4ce](https://github.com/bill-zhanxg/csen-sport/commit/c4ff4ce99d81fe368d43e72c6f7bdf16cc8fb86d))
+* adjust minimum width of game cards in WeeklySportCardView ([9c810e6](https://github.com/bill-zhanxg/csen-sport/commit/9c810e6e0a919fd99261b0206670f86acf4d62d5))
+* handle potential port value for IP address in MainLayout ([53be547](https://github.com/bill-zhanxg/csen-sport/commit/53be54782fddd6589ac0aa22d5a98c03a02d73b5))
+* improve login redirection logic in middleware to fix different hook number on render issue ([87decda](https://github.com/bill-zhanxg/csen-sport/commit/87decda2478d5a280601de330fe9cead62e7198a))
+* move BarOfProgress component to render consistently in MainLayout ([800d73e](https://github.com/bill-zhanxg/csen-sport/commit/800d73eb8372d6b66976deee3db217c2b4a13b4e))
+* refactor Checkbox component to use Sonner toast for loading state feedback ([dd19dcd](https://github.com/bill-zhanxg/csen-sport/commit/dd19dcdfd3dcca0492a57c0f3e0e921b93495c9a))
+* removed 'h-full-nav' class as the navigation is fully refreshed on the left ([a268691](https://github.com/bill-zhanxg/csen-sport/commit/a268691ed0e81428a4ce4d5873bb9e7aa4680a47))
+* replace alert state management with Sonner toast notifications for better user feedback ([6d59337](https://github.com/bill-zhanxg/csen-sport/commit/6d593373eb15a91aadf9d4f3a393dc69473fbc58))
+
 ## [0.14.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.13.0...v0.14.0) (2025-08-03)
 
 
