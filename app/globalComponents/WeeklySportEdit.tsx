@@ -9,8 +9,8 @@ import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } fr
 import Link from 'next/link';
 import { ChangeEvent, ChangeEventHandler, FocusEventHandler, useEffect, useMemo, useState } from 'react';
 import { FaPlus, FaRegTrashCan } from 'react-icons/fa6';
+import { toast } from 'sonner';
 import { RawTeacher, RawTeam } from '../../libs/tableData';
-import { AlertType, ErrorAlertFixed, SuccessAlertFixed } from '../components/Alert';
 import { SideBySide } from './SideBySide';
 import { TeachersMultiSelect } from './TeachersMultiSelect';
 import { deleteGame, newGame, updateGame } from './WeeklySportEditActions';
@@ -30,8 +30,6 @@ export function WeeklySportEdit({
 	teams: RawTeam[];
 	teachers: RawTeacher[];
 }) {
-	const [alert, setAlert] = useState<AlertType>(null);
-
 	const columns = useMemo<ColumnDef<SerializedGame>[]>(() => {
 		function editable<T>(
 			{ getValue, row: { original }, column: { id } }: CellContext<SerializedGame, unknown>,
@@ -78,14 +76,16 @@ export function WeeklySportEdit({
 
 				updateGame(original.id, { [id]: importValue } as any)
 					.then((res) => {
-						setAlert(res);
+						if (res?.type === 'success') {
+							toast.success(res.message);
+						} else if (res?.type === 'error') {
+							toast.error(res.message);
+						}
 						setDisabled(false);
 					})
 					.catch(() => {
-						setAlert({
-							type: 'error',
-							message: 'A network error occurred. Please try again later.',
-						});
+						toast.error('A network error occurred. Please try again later.');
+						setDisabled(false);
 					});
 			}
 		}
@@ -349,12 +349,15 @@ export function WeeklySportEdit({
 												onClick={(e) => {
 													e.preventDefault();
 													deleteGame(original.id)
-														.then(setAlert)
+														.then((res) => {
+															if (res?.type === 'success') {
+																toast.success(res.message);
+															} else if (res?.type === 'error') {
+																toast.error(res.message);
+															}
+														})
 														.catch(() => {
-															setAlert({
-																type: 'error',
-																message: 'A network error occurred. Please try again later.',
-															});
+															toast.error('A network error occurred. Please try again later.');
 														});
 												}}
 											>
@@ -571,12 +574,15 @@ export function WeeklySportEdit({
 												out_of_class: formatTime(date.rawDate, newOutOfClass),
 												start: formatTime(date.rawDate, newStart),
 											})
-												.then(setAlert)
+												.then((res) => {
+													if (res?.type === 'success') {
+														toast.success(res.message);
+													} else if (res?.type === 'error') {
+														toast.error(res.message);
+													}
+												})
 												.catch(() => {
-													setAlert({
-														type: 'error',
-														message: 'A network error occurred. Please try again later.',
-													});
+													toast.error('A network error occurred. Please try again later.');
 												});
 											setNewTeam('');
 											setNewOpponent('');
@@ -598,12 +604,6 @@ export function WeeklySportEdit({
 					</table>
 				</div>
 			</div>
-			{alert &&
-				(alert.type === 'success' ? (
-					<SuccessAlertFixed message={alert.message} setAlert={setAlert} />
-				) : (
-					<ErrorAlertFixed message={alert.message} setAlert={setAlert} />
-				))}
 		</>
 	);
 }
