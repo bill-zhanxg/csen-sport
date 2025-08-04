@@ -6,6 +6,7 @@ import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import 'server-only';
+import { Toaster } from 'sonner';
 import { authC } from './cache';
 import BarOfProgress from './components/BarOfProgress';
 import { FeedbackDialog } from './components/Feedback';
@@ -58,7 +59,9 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 				) : (
 					children
 				)}
+
 				<BarOfProgress />
+				<Toaster richColors closeButton />
 			</body>
 		</html>
 	);

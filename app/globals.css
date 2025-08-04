@@ -136,4 +136,56 @@
 	input::-webkit-calendar-picker-indicator {
 		filter: invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%);
 	}
+
+	/* Custom Sonner toast styling to match DaisyUI */
+	[data-sonner-toaster] {
+		--normal-bg: var(--color-base-100) !important;
+		--normal-border: var(--color-primary) !important;
+		--normal-text: var(--color-base-content) !important;
+		--success-bg: color-mix(in oklch, var(--color-base-100) 90%, var(--color-success) 10%) !important;
+		--success-border: var(--color-success) !important;
+		--success-text: var(--color-success) !important;
+		--info-bg: color-mix(in oklch, var(--color-base-100) 90%, var(--color-info) 10%) !important;
+		--info-border: var(--color-info) !important;
+		--info-text: var(--color-info) !important;
+		--warning-bg: color-mix(in oklch, var(--color-base-100) 90%, var(--color-warning) 10%) !important;
+		--warning-border: var(--color-warning) !important;
+		--warning-text: var(--color-warning) !important;
+		--error-bg: color-mix(in oklch, var(--color-base-100) 90%, var(--color-error) 10%) !important;
+		--error-border: var(--color-error) !important;
+		--error-text: var(--color-error) !important;
+	}
+
+	/* Style the close button for default toasts only (no data-type) */
+	[data-sonner-toast]:not([data-type])[data-styled='true'] [data-close-button] {
+		background-color: var(--color-base-100) !important;
+		border-color: var(--color-primary) !important;
+		color: var(--color-base-content) !important;
+	}
+
+	[data-sonner-toast]:not([data-type])[data-styled='true'] [data-close-button]:hover {
+		background-color: var(--color-base-200) !important;
+		border-color: color-mix(in oklch, var(--color-base-100) 20%, var(--color-primary) 80%) !important;
+	}
+
+	/* Hover style the close button for other toasts */
+	[data-sonner-toast][data-type='success'][data-styled='true'] [data-close-button]:hover {
+		background-color: var(--color-base-200) !important;
+		border-color: color-mix(in oklch, var(--color-base-100) 20%, var(--color-success) 80%) !important;
+	}
+
+	[data-sonner-toast][data-type='error'][data-styled='true'] [data-close-button]:hover {
+		background-color: var(--color-base-200) !important;
+		border-color: color-mix(in oklch, var(--color-base-100) 20%, var(--color-error) 80%) !important;
+	}
+
+	[data-sonner-toast][data-type='warning'][data-styled='true'] [data-close-button]:hover {
+		background-color: var(--color-base-200) !important;
+		border-color: color-mix(in oklch, var(--color-base-100) 20%, var(--color-warning) 80%) !important;
+	}
+
+	[data-sonner-toast][data-type='info'][data-styled='true'] [data-close-button]:hover {
+		background-color: var(--color-base-200) !important;
+		border-color: color-mix(in oklch, var(--color-base-100) 20%, var(--color-info) 80%) !important;
+	}
 }
