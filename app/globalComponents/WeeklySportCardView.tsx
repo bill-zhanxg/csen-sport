@@ -43,7 +43,7 @@ export function WeeklySportCardView({
 			</div>
 
 			{/* Games Grid */}
-			<div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-4">
+			<div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(420px,1fr))] gap-4">
 				{date.games.map((game) => (
 					<GameCard
 						key={game.id}
