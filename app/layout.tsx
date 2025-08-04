@@ -49,7 +49,6 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 						<>
 							<NavBar session={session}>{children}</NavBar>
 							<FeedbackDialog session={session} />
-							<BarOfProgress />
 							{session.user.auto_timezone && <HandleUserTimezone />}
 							<SentrySetUser user={{ ...session.user, ip_address: ip }} />
 							{/* TODO: Add this back after react joyride is fixed */}
@@ -59,6 +58,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 				) : (
 					children
 				)}
+				<BarOfProgress />
 			</body>
 		</html>
 	);
