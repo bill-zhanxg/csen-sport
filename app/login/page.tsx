@@ -1,7 +1,5 @@
 import { signIn } from '@/libs/auth';
 import { Metadata } from 'next';
-import { redirect } from 'next/navigation';
-import { authC } from '../cache';
 import { LoginBtn } from './components/LoginBtn';
 import { ParticleBackground } from './components/ParticleBackground';
 
@@ -23,16 +21,11 @@ type ErrorCodes =
 
 export default async function Login(props: {
 	searchParams: Promise<{
-		redirect: string | string[] | undefined;
 		error: ErrorCodes | string | string[] | undefined;
 		message: string | string[] | undefined;
 	}>;
 }) {
 	const searchParams = await props.searchParams;
-	const callbackURL = typeof searchParams.redirect === 'string' ? searchParams.redirect : searchParams.redirect?.[0];
-
-	const session = await authC();
-	if (session) return redirect(decodeURIComponent(callbackURL ?? '/'));
 
 	async function login() {
 		'use server';
