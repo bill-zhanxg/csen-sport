@@ -29,7 +29,7 @@ const xata = getXataClient();
 
 export default async function MainLayout({ children }: { children: React.ReactNode }) {
 	const session = await authC();
-	const ip = (await headers()).get('x-forwarded-for');
+	const ip = (await headers()).get('x-forwarded-for')?.split(':')[0];
 
 	return (
 		<html lang="en">
