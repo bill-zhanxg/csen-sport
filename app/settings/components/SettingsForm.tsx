@@ -1,5 +1,4 @@
 'use client';
-
 import { isTeacher } from '@/libs/checkPermission';
 import { dayjs } from '@/libs/dayjs';
 import { SerializedTeam } from '@/libs/serializeData';
@@ -7,8 +6,8 @@ import { FormState } from '@/libs/types';
 import { Session } from 'next-auth';
 import { startTransition, useActionState, useEffect, useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { FaRegCheckCircle, FaRegTimesCircle } from 'react-icons/fa';
-import { Box } from '../../globalComponents/Box';
+import { FaRegCheckCircle, FaUsers, FaBell, FaClock } from 'react-icons/fa';
+import { toast } from 'sonner';
 import { updateProfile } from '../actions';
 import { Preferences } from './Preferences';
 import { ProfilePicture } from './ProfilePicture';
@@ -16,6 +15,7 @@ import { ProfilePicture } from './ProfilePicture';
 export function SettingsForm({ session, teams }: { session: Session; teams: SerializedTeam[] }) {
 	const [state, formAction] = useActionState<FormState, FormData>(updateProfile, null);
 	const [autoTimezone, setAutoTimezone] = useState(session.user.auto_timezone ?? true);
+	const [selectedTimezone, setSelectedTimezone] = useState(session.user.timezone ?? dayjs.tz.guess());
 	const [supportedTimezones, setSupportedTimezones] = useState<string[] | undefined | null>(undefined);
 
 	useEffect(() => {
@@ -24,173 +24,196 @@ export function SettingsForm({ session, teams }: { session: Session; teams: Seri
 
 	const prevState = useRef(state);
 	useEffect(() => {
-		if (prevState.current !== state) {
-			window.scrollTo({
-				top: document.body.scrollHeight,
-			});
+		if (prevState.current !== state && state) {
+			if (state.success) {
+				toast.success(state.message);
+			} else {
+				toast.error(state.message);
+			}
 			prevState.current = state;
 		}
 	}, [state]);
 
 	return (
 		<form
-			className="flex flex-col gap-4 w-full"
+			className="flex flex-col w-full"
 			// We use onSubmit instead of action to prevent resetting the form state and mismatching the react states
 			onSubmit={(e) => {
 				e.preventDefault();
 				startTransition(() => formAction(new FormData(e.currentTarget)));
 			}}
 		>
-			<Box>
-				<h1 className="font-bold px-4">Profile Settings</h1>
-				<div className="divider m-0"></div>
-				<div className="flex flex-col sm:flex-row justify-center w-full gap-4 items-center pt-0 p-4">
-					{/* Input Name */}
-					<div className="flex justify-center flex-col basis-3/4 w-full">
-						<label className="form-control w-full">
-							<div className="label">
-								<span className="label-text text-md font-bold">Name</span>
-							</div>
+			<div id="profile-settings" className="p-6 border-b border-base-300">
+				<h2 className="text-xl font-bold mb-6 flex items-center gap-3">
+					<div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+						<FaRegCheckCircle className="w-4 h-4 text-primary" />
+					</div>
+					Profile Settings
+				</h2>
+				<div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+					{/* Input Fields */}
+					<div className="lg:col-span-3">
+						<fieldset className="fieldset">
+							<legend className="fieldset-legend">Full Name</legend>
 							<input
 								type="text"
-								placeholder="Type here"
+								placeholder="Enter your full name"
 								disabled={!isTeacher(session)}
 								defaultValue={session.user.name ?? ''}
 								name="name"
-								className="input input-bordered w-full"
+								className="input focus:input-primary transition-colors w-full"
 							/>
-						</label>
-						<label className="form-control w-full">
-							<div className="label">
-								<span className="label-text text-md font-bold">Email</span>
-							</div>
+							{!isTeacher(session) && <p className="label text-warning">Only teachers can edit profile information</p>}
+						</fieldset>
+
+						<fieldset className="fieldset">
+							<legend className="fieldset-legend">Email Address</legend>
 							<input
 								type="email"
-								placeholder="Type here"
+								placeholder="Enter your email address"
 								disabled={!isTeacher(session)}
 								defaultValue={session.user.email ?? ''}
 								name="email"
-								className="input input-bordered w-full"
+								className="input focus:input-primary transition-colors w-full"
 							/>
-						</label>
+							{!isTeacher(session) && <p className="label text-warning">Only teachers can edit profile information</p>}
+						</fieldset>
 					</div>
 
-					{/* Add profile upload */}
-					<div className="flex justify-center items-center basis-1/4 h-full">
-						<label className="relative! form-control mt-4">
+					{/* Profile Picture */}
+					<div className="lg:col-span-1 flex flex-col items-center">
+						<label className="form-control">
 							<div className="label">
-								<span className="label-text text-md font-bold text-center">Profile picture</span>
+								<span className="label-text font-semibold text-center w-full">Profile Picture</span>
 							</div>
-							<ProfilePicture user={session.user} />
+							<div className="flex justify-center">
+								<ProfilePicture user={session.user} />
+							</div>
 						</label>
 					</div>
 				</div>
-			</Box>
+			</div>
 
-			<Box id="team-preferences">
-				<h1 className="font-bold px-4 pt-4">Team Preferences</h1>
-				<div className="divider m-0"></div>
-				<div className="flex flex-col sm:flex-row justify-center w-full gap-4 items-center pt-0 p-4">
+			<div id="team-preferences" className="p-6 border-b border-base-300">
+				<h2 className="text-xl font-bold mb-6 flex items-center gap-3">
+					<div className="w-8 h-8 bg-secondary/10 rounded-lg flex items-center justify-center">
+						<FaUsers className="w-4 h-4 text-secondary" />
+					</div>
+					Team Preferences
+				</h2>
+				<div className="w-full">
 					<Preferences teams={teams} session={session} />
 				</div>
-			</Box>
+			</div>
 
-			<Box>
-				<h1 className="font-bold px-4 pt-4">Others</h1>
-				<div className="divider m-0"></div>
-				<div className="flex flex-col sm:flex-row justify-center w-full gap-4 items-center pt-0 p-4">
-					<label className="form-control w-full">
-						<div className="label">
-							<span className="label-text text-md font-bold">
-								Choose when changed game since last time visit (highlighted as blue) will be marked as read
-							</span>
-						</div>
-						<div>
-							{/* file deepcode ignore ReactControlledUncontrolledFormElement: Intended */}
-							<div className="form-control">
-								<label className="label cursor-pointer">
-									<span className="label-text">
-										When visited Home, Weekly Sport page, or any weekly sport schedule page (default)
-									</span>
-									<input
-										type="radio"
-										name="reset_only_after_visit_weekly_sport"
-										value="false"
-										className="radio"
-										defaultChecked={!session.user.reset_only_after_visit_weekly_sport}
-									/>
-								</label>
+			<div id="notifications" className="p-6 border-b border-base-300">
+				<h2 className="text-xl font-bold mb-6 flex items-center gap-3">
+					<div className="w-8 h-8 bg-accent/10 rounded-lg flex items-center justify-center">
+						<FaBell className="w-4 h-4 text-accent" />
+					</div>
+					Notification Preferences
+				</h2>
+				<div className="space-y-4">
+					<div className="form-control">
+						<label className="label cursor-pointer justify-start gap-3">
+							<input
+								type="radio"
+								name="reset_only_after_visit_weekly_sport"
+								value="false"
+								className="radio radio-primary"
+								defaultChecked={!session.user.reset_only_after_visit_weekly_sport}
+							/>
+							<div>
+								<span className="label-text font-medium">Mark changes as read automatically</span>
+								<div className="text-sm text-base-content/70 mt-1">
+									When visiting Home, Weekly Sport page, or any schedule page (default)
+								</div>
 							</div>
-							<div className="form-control">
-								<label className="label cursor-pointer">
-									<span className="label-text">
-										Only when navigated to Weekly Sport page (to prevent unseen data from being marked as read)
-									</span>
-									<input
-										type="radio"
-										name="reset_only_after_visit_weekly_sport"
-										value="true"
-										className="radio"
-										defaultChecked={!!session.user.reset_only_after_visit_weekly_sport}
-									/>
-								</label>
+						</label>
+					</div>
+					<div className="form-control">
+						<label className="label cursor-pointer justify-start gap-3">
+							<input
+								type="radio"
+								name="reset_only_after_visit_weekly_sport"
+								value="true"
+								className="radio radio-primary"
+								defaultChecked={!!session.user.reset_only_after_visit_weekly_sport}
+							/>
+							<div>
+								<span className="label-text font-medium">Mark changes as read manually</span>
+								<div className="text-sm text-base-content/70 mt-1">
+									Only when navigating to Weekly Sport page (prevents unseen data from being marked as read)
+								</div>
 							</div>
-						</div>
-					</label>
+						</label>
+					</div>
 				</div>
-			</Box>
+			</div>
 
-			<Box>
-				<h1 className="font-bold px-4 pt-4">Timezone</h1>
-				<div className="divider m-0"></div>
-				<div className="flex flex-col sm:flex-row justify-center w-full gap-4 items-center pt-0 p-4">
-					<label className="form-control w-full">
-						<div className="form-control max-w-72">
-							<label className="label cursor-pointer gap-2">
-								<input
-									type="checkbox"
-									name="auto_timezone"
-									checked={autoTimezone}
-									className="checkbox"
-									onChange={(e) => setAutoTimezone(e.target.checked)}
-								/>
-								<span className="label-text">Automatically detect timezone (default)</span>
-							</label>
-						</div>
-						<div className="label">
-							<span className="label-text">Pick Your Timezone</span>
-						</div>
-						<select
-							name="timezone"
-							className="select select-bordered"
-							defaultValue={session.user.timezone ?? dayjs.tz.guess()}
-							disabled={autoTimezone || supportedTimezones === undefined}
-						>
-							{supportedTimezones === undefined ? (
-								<option key="loading">Loading...</option>
-							) : supportedTimezones === null ? (
-								<option key="unsupported">
-									Your browser does not support timezone detection, please update your browser
-								</option>
-							) : (
-								supportedTimezones.map((tz) => (
-									<option key={tz} value={tz}>
-										{tz}
+			<div id="timezone" className="p-6">
+				<h2 className="text-xl font-bold mb-6 flex items-center gap-3">
+					<div className="w-8 h-8 bg-info/10 rounded-lg flex items-center justify-center">
+						<FaClock className="w-4 h-4 text-info" />
+					</div>
+					Timezone Settings
+				</h2>
+				<div className="space-y-6">
+					<fieldset className="border border-base-300 rounded-lg p-4">
+						<legend className="text-sm font-medium px-2">Auto Detection</legend>
+						<label className="label cursor-pointer justify-start gap-3">
+							<input
+								type="checkbox"
+								name="auto_timezone"
+								checked={autoTimezone}
+								className="checkbox checkbox-primary"
+								onChange={(e) => setAutoTimezone(e.target.checked)}
+							/>
+							<div className="flex flex-col">
+								<span className="label-text font-medium">Automatically detect timezone</span>
+								<div className="text-sm text-base-content/70">Use your device's timezone setting (recommended)</div>
+							</div>
+						</label>
+					</fieldset>
+
+					<fieldset className="border border-base-300 rounded-lg p-4">
+						<legend className="text-sm font-medium px-2">Manual Selection</legend>
+						<div className="space-y-3">
+							<select
+								name="timezone"
+								className="select select-bordered focus:select-primary transition-colors w-full"
+								value={selectedTimezone}
+								onChange={(e) => setSelectedTimezone(e.target.value)}
+								disabled={autoTimezone || supportedTimezones === undefined}
+							>
+								{supportedTimezones === undefined ? (
+									<option key="loading">Loading timezones...</option>
+								) : supportedTimezones === null ? (
+									<option key="unsupported">
+										Browser doesn't support timezone detection - please update your browser
 									</option>
-								))
+								) : (
+									supportedTimezones.map((tz) => (
+										<option key={tz} value={tz}>
+											{tz.replace(/_/g, ' ')}
+										</option>
+									))
+								)}
+							</select>
+							{!autoTimezone && (
+								<div className="text-sm text-info font-medium">
+									Current time: {dayjs().tz(selectedTimezone).format('YYYY-MM-DD HH:mm:ss')}
+								</div>
 							)}
-						</select>
-					</label>
+						</div>
+					</fieldset>
 				</div>
-			</Box>
+			</div>
 
-			{state && (
-				<div role="alert" className={`alert ${state.success ? 'alert-success' : 'alert-error'} mt-2`}>
-					{state.success ? <FaRegCheckCircle size={20} /> : <FaRegTimesCircle size={20} />}
-					<span>{state?.message}</span>
-				</div>
-			)}
-			<Submit />
+			{/* Submit Button - Sticky */}
+			<div className="sticky bottom-0 z-10 p-6 bg-base-200/50 backdrop-blur-sm border-t border-base-300 shadow-lg rounded-b-2xl">
+				<Submit />
+			</div>
 		</form>
 	);
 }
@@ -199,8 +222,20 @@ function Submit() {
 	const { pending } = useFormStatus();
 
 	return (
-		<button type="submit" disabled={pending} className="sticky bottom-2 btn btn-primary">
-			Update Profile
-		</button>
+		<div className="flex justify-end">
+			<button type="submit" disabled={pending} className="btn btn-primary btn-lg min-w-40 shadow-lg">
+				{pending ? (
+					<>
+						<span className="loading loading-spinner loading-sm"></span>
+						Updating...
+					</>
+				) : (
+					<>
+						<FaRegCheckCircle className="w-4 h-4" />
+						Update Profile
+					</>
+				)}
+			</button>
+		</div>
 	);
 }

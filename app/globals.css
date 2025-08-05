@@ -116,6 +116,10 @@
 		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 	}
 
+	* {
+		@apply scroll-smooth;
+	}
+
 	h1 {
 		@apply text-2xl;
 	}
@@ -129,6 +133,10 @@
 		--rmsc-bg: var(--color-base-100);
 		--rmsc-radius: 0;
 		--rmsc-h: 2.85rem;
+	}
+
+	.label {
+		@apply whitespace-normal!;
 	}
 }
 

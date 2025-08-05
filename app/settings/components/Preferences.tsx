@@ -24,35 +24,39 @@ export function Preferences({ teams, session }: { teams: SerializedTeam[]; sessi
 	}, [group, teams]);
 
 	return (
-		<div className="flex justify-center flex-col w-full">
-			<label className="form-control w-full">
-				{isTeacher(session) && (
-					<p className="text-xl font-bold text-primary">
-						You are a teacher, games shown in home page will be already filtered to the games you are in charge of
+		<div className="space-y-2 w-full">
+			{isTeacher(session) && (
+				<div className="bg-primary/10 border border-primary/20 rounded-lg p-4">
+					<p className="text-primary font-medium">
+						<span className="font-bold">Teacher Account:</span> Games shown on the home page will be automatically
+						filtered to show only the games you are in charge of.
 					</p>
-				)}
-				<div className="label">
-					<span className="label-text">Pick Your Group</span>
 				</div>
+			)}
+
+			<fieldset className="fieldset">
+				<legend className="fieldset-legend">Group Preference</legend>
 				<select
-					className="select select-bordered"
+					className="select focus:select-primary transition-colors w-full"
 					value={group}
 					disabled={isTeacher(session)}
 					onChange={(e) => {
 						setGroup(e.target.value as 'default' | 'junior' | 'intermediate');
 					}}
 				>
-					<option value="default">Default (Both)</option>
+					<option value="default">Default (Both Groups)</option>
 					<option value="junior">Junior (Year 7 - 8)</option>
 					<option value="intermediate">Intermediate (Year 9 - 10)</option>
 				</select>
-				<div className="label">
-					<span className="label-text">Pick Your Team</span>
-				</div>
+				<span className="label text-base-content/70">Choose which age group games you want to see by default</span>
+			</fieldset>
+
+			<fieldset className="fieldset">
+				<legend className="fieldset-legend">Team Preference</legend>
 				<select
 					disabled={group === 'default' || isTeacher(session)}
-					defaultValue={currentTeam?.id}
-					className="select select-bordered"
+					defaultValue={currentTeam?.id || 'Pick one'}
+					className="select focus:select-primary transition-colors w-full"
 					name="team"
 				>
 					<option disabled>Pick one</option>
@@ -62,7 +66,14 @@ export function Preferences({ teams, session }: { teams: SerializedTeam[]; sessi
 						</option>
 					))}
 				</select>
-			</label>
+				<span className="label text-base-content/70">
+					{group === 'default'
+						? 'Select a group first to choose a specific team'
+						: isTeacher(session)
+						? 'Team selection is managed automatically for teachers'
+						: 'Choose your preferred team to highlight their games'}
+				</span>
+			</fieldset>
 		</div>
 	);
 }
