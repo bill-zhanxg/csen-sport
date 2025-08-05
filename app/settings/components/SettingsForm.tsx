@@ -172,7 +172,9 @@ export function SettingsForm({ session, teams }: { session: Session; teams: Seri
 							/>
 							<div className="flex flex-col">
 								<span className="label-text font-medium">Automatically detect timezone</span>
-								<div className="text-sm text-base-content/70">Use your device's timezone setting (recommended)</div>
+								<div className="text-sm text-base-content/70">
+									Use your device&apos;s timezone setting (recommended)
+								</div>
 							</div>
 						</label>
 					</fieldset>
@@ -194,7 +196,7 @@ export function SettingsForm({ session, teams }: { session: Session; teams: Seri
 									<option key="loading">Loading timezones...</option>
 								) : supportedTimezones === null ? (
 									<option key="unsupported">
-										Browser doesn't support timezone detection - please update your browser
+										Browser doesn&apos;t support timezone detection - please update your browser
 									</option>
 								) : (
 									supportedTimezones.map((tz) => (
