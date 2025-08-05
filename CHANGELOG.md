@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.16.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.15.0...v0.16.0) (2025-08-05)
+
+
+### Features
+
+* completely redesigned the UI, UX and loading for the individual game information for both teacher and students ([35b086c](https://github.com/bill-zhanxg/csen-sport/commit/35b086c37a7d963417cde6cfb395ecd9db10f510))
+* fully redesigned and refreshed user setting page with better UI, UX and loading ([b293ddd](https://github.com/bill-zhanxg/csen-sport/commit/b293ddd13fda355ae1e9b31373b3f69e0e61a12c))
+
+
+### Bug Fixes
+
+* disable timezone selection when supported timezones are unavailable to prevent hydration and parsing error ([0110c16](https://github.com/bill-zhanxg/csen-sport/commit/0110c16ac81eabcc282c6749b18afe5611c0628e))
+* escape apostrophes in timezone settings text for better rendering ([b3fee5b](https://github.com/bill-zhanxg/csen-sport/commit/b3fee5b9dfe130fb17140eb7a866e3c43084437d))
+* **global.css:** make global scrolling smooth and label now will wrap instead of nowrap ([b293ddd](https://github.com/bill-zhanxg/csen-sport/commit/b293ddd13fda355ae1e9b31373b3f69e0e61a12c))
+* update extra_teachers transformation to handle empty input correctly ([e8f3ca9](https://github.com/bill-zhanxg/csen-sport/commit/e8f3ca916b52930eaba3a5b52e6b8fb9aba152bc))
+* update Sonner toast styles to use color-mix for better blending with DaisyUI theme ([568cc9e](https://github.com/bill-zhanxg/csen-sport/commit/568cc9e2b57893d7139791213e4b298327da85f5))
+
 ## [0.15.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.14.0...v0.15.0) (2025-08-04)
 
 
