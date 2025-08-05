@@ -147,19 +147,19 @@
 
 	/* Custom Sonner toast styling to match DaisyUI */
 	[data-sonner-toaster] {
-		--normal-bg: var(--color-base-100) !important;
+		--normal-bg: color-mix(in oklch, var(--color-base-100) 95%, transparent 5%) !important;
 		--normal-border: var(--color-primary) !important;
 		--normal-text: var(--color-base-content) !important;
-		--success-bg: color-mix(in oklch, var(--color-base-100) 90%, var(--color-success) 10%) !important;
+		--success-bg: color-mix(in oklch, color-mix(in oklch, var(--color-base-100) 95%, var(--color-success) 5%) 95%, transparent 5%) !important;
 		--success-border: var(--color-success) !important;
 		--success-text: var(--color-success) !important;
-		--info-bg: color-mix(in oklch, var(--color-base-100) 90%, var(--color-info) 10%) !important;
+		--info-bg: color-mix(in oklch, color-mix(in oklch, var(--color-base-100) 95%, var(--color-info) 5%) 95%, transparent 5%) !important;
 		--info-border: var(--color-info) !important;
 		--info-text: var(--color-info) !important;
-		--warning-bg: color-mix(in oklch, var(--color-base-100) 90%, var(--color-warning) 10%) !important;
+		--warning-bg: color-mix(in oklch, color-mix(in oklch, var(--color-base-100) 95%, var(--color-warning) 5%) 95%, transparent 5%) !important;
 		--warning-border: var(--color-warning) !important;
 		--warning-text: var(--color-warning) !important;
-		--error-bg: color-mix(in oklch, var(--color-base-100) 90%, var(--color-error) 10%) !important;
+		--error-bg: color-mix(in oklch, color-mix(in oklch, var(--color-base-100) 95%, var(--color-error) 5%) 95%, transparent 5%) !important;
 		--error-border: var(--color-error) !important;
 		--error-text: var(--color-error) !important;
 	}
