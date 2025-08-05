@@ -29,7 +29,7 @@ const schema = z.object({
 	extra_teachers: z
 		.string()
 		.optional()
-		.transform((val) => (val ? val.split(',') : undefined)),
+		.transform((val) => (val && val.trim() ? val.split(',') : [])),
 	transportation: z.string().optional(),
 	out_of_class: z.string().or(z.date()).optional(),
 	start: z.string().or(z.date()).optional(),
@@ -43,7 +43,6 @@ const schema = z.object({
 export async function updateGame(prevState: FormState, formData: FormData): Promise<FormState> {
 	const session = await authC();
 	if (!session || !isTeacher(session)) return { success: false, message: 'Unauthorized' };
-	// TODO: unselecting all extra teachers doesn't work
 
 	try {
 		let data = schema.parse({
