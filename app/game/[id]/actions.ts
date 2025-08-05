@@ -43,6 +43,7 @@ const schema = z.object({
 export async function updateGame(prevState: FormState, formData: FormData): Promise<FormState> {
 	const session = await authC();
 	if (!session || !isTeacher(session)) return { success: false, message: 'Unauthorized' };
+	// TODO: unselecting all extra teachers doesn't work
 
 	try {
 		let data = schema.parse({
