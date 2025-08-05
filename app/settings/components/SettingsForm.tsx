@@ -6,7 +6,7 @@ import { FormState } from '@/libs/types';
 import { Session } from 'next-auth';
 import { startTransition, useActionState, useEffect, useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { FaRegCheckCircle, FaUsers, FaBell, FaClock } from 'react-icons/fa';
+import { FaBell, FaClock, FaRegCheckCircle, FaUsers } from 'react-icons/fa';
 import { toast } from 'sonner';
 import { updateProfile } from '../actions';
 import { Preferences } from './Preferences';
@@ -166,6 +166,7 @@ export function SettingsForm({ session, teams }: { session: Session; teams: Seri
 								type="checkbox"
 								name="auto_timezone"
 								checked={autoTimezone}
+								disabled={supportedTimezones === undefined}
 								className="checkbox checkbox-primary"
 								onChange={(e) => setAutoTimezone(e.target.checked)}
 							/>
@@ -183,7 +184,10 @@ export function SettingsForm({ session, teams }: { session: Session; teams: Seri
 								name="timezone"
 								className="select select-bordered focus:select-primary transition-colors w-full"
 								value={selectedTimezone}
-								onChange={(e) => setSelectedTimezone(e.target.value)}
+								onChange={(e) => {
+									// Only set the timezone if supported and not loading
+									if (!!supportedTimezones) setSelectedTimezone(e.target.value);
+								}}
 								disabled={autoTimezone || supportedTimezones === undefined}
 							>
 								{supportedTimezones === undefined ? (
@@ -200,7 +204,7 @@ export function SettingsForm({ session, teams }: { session: Session; teams: Seri
 									))
 								)}
 							</select>
-							{!autoTimezone && (
+							{!autoTimezone && supportedTimezones && (
 								<div className="text-sm text-info font-medium">
 									Current time: {dayjs().tz(selectedTimezone).format('YYYY-MM-DD HH:mm:ss')}
 								</div>
