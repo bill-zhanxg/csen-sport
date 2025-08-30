@@ -46,7 +46,7 @@
 		"dayjs": "^1.11.13",
 		"framer-motion": "^12.23.12",
 		"ldrs": "^1.1.7",
-		"next": "15.4.2-canary.30",
+		"next": "15.5.2",
 		"next-auth": "^5.0.0-beta.29",
 		"next13-progressbar": "^1.2.2",
 		"react": "19.1.1",
