@@ -36,7 +36,7 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 	const [teams, setTeams] = useState<Teams>([]);
 	const [fixtures, setFixtures] = useState<Games>([]);
 
-	function checkNextNeedDisable(newStep: number) {
+	function checkNextNeedDisable() {
 		if (fixtures.length > 0) return false;
 		else return true;
 	}
@@ -63,6 +63,7 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 	}, [teams, fixtures, defaults]);
 
 	useEffect(() => {
+		// eslint-disable-next-line react-hooks/set-state-in-effect
 		if (importState.type === 'success') setDisableNext(false);
 	}, [importState]);
 
@@ -105,7 +106,7 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 						onClick={() => {
 							setStep((step) => {
 								const newStep = step - 1;
-								if (!checkNextNeedDisable(newStep)) setDisableNext(false);
+								if (!checkNextNeedDisable()) setDisableNext(false);
 								return newStep;
 							});
 						}}
@@ -126,7 +127,7 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 							}
 							setStep((step) => {
 								const newStep = step + 1;
-								setDisableNext(checkNextNeedDisable(newStep));
+								setDisableNext(checkNextNeedDisable());
 								if (newStep === 3) {
 									setDisablePrevious(true);
 									setNextLoading(true);

@@ -3,17 +3,14 @@ import { getSSEWriter } from 'ts-sse';
 
 import { authC } from '@/app/cache';
 import { isDeveloper } from '@/libs/checkPermission';
-import { getXataClient } from '@/libs/xata';
 
 import { ticketEmitter } from './eventListener';
 
 import type { SerializedTicket, SerializedTicketMessage } from '@/libs/serializeData';
-import type { NextRequest} from 'next/server';
+import type { NextRequest } from 'next/server';
 import type { TicketEvents } from '../types';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
-
-const xata = getXataClient();
 
 export async function GET(req: NextRequest) {
 	const session = await authC();

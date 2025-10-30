@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import type { SerializedTicketMessage } from '@/libs/serializeData';
 import '../actions';
 

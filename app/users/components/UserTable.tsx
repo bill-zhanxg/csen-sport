@@ -56,6 +56,7 @@ export function UserTable({
 
 	useEffect(() => {
 		if (state?.success) {
+			// eslint-disable-next-line react-hooks/set-state-in-effect
 			setSelectedUsers([]);
 			blockUserDialogRef.current?.close();
 		}

@@ -105,6 +105,7 @@ export function Messages({
 		if (isTop) {
 			const c = chat.current;
 			if (loadingMessages !== false || !messages) return;
+			// eslint-disable-next-line react-hooks/set-state-in-effect
 			setIsTop(false);
 			setLoadingMessages(true);
 			getNextPage(messages.length)
@@ -171,7 +172,7 @@ export function Messages({
 									<time className="text-xs opacity-50 ml-2">{datetime.format('LT')}</time>
 								</div>
 							</div>
-							<div className="chat-bubble break-words">{message.message}</div>
+							<div className="chat-bubble wrap-break-word">{message.message}</div>
 							<div className="chat-footer opacity-50">{message.seen ? 'Seen' : 'Delivered'}</div>
 						</div>
 					</div>
@@ -193,7 +194,7 @@ export function Messages({
 								</time>
 							</div>
 						</div>
-						<div className="chat-bubble break-words">{message.message}</div>
+						<div className="chat-bubble wrap-break-word">{message.message}</div>
 						<div className="chat-footer opacity-50">Sending</div>
 					</div>
 				</div>

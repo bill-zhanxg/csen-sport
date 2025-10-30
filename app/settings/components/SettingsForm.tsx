@@ -21,6 +21,7 @@ export function SettingsForm({ session, teams }: { session: Session; teams: Seri
 	const [supportedTimezones, setSupportedTimezones] = useState<string[] | undefined | null>(undefined);
 
 	useEffect(() => {
+		// eslint-disable-next-line react-hooks/set-state-in-effect
 		setSupportedTimezones(typeof Intl.supportedValuesOf === 'undefined' ? null : Intl.supportedValuesOf('timeZone'));
 	}, []);
 

@@ -15,6 +15,7 @@ export function Preferences({ teams, session }: { teams: SerializedTeam[]; sessi
 	const [filteredTeams, setFilteredTeams] = useState<SerializedTeam[]>(teams);
 
 	useEffect(() => {
+		// eslint-disable-next-line react-hooks/set-state-in-effect
 		setFilteredTeams(
 			teams.filter((team) => {
 				if (group === 'junior') return team.isJunior;

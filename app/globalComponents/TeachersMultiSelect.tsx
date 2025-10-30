@@ -32,7 +32,7 @@ export function TeachersMultiSelect({
 				if (onChange) onChange({ target: { value: value.map((teacher) => teacher.value) } });
 			}}
 			isLoading={disabled}
-			valueRenderer={(selected, _options) => {
+			valueRenderer={(selected) => {
 				return selected.length ? (
 					<div className="flex items-center gap-2">
 						<FaUsers />

@@ -83,6 +83,7 @@ export function ParticleBackground() {
 			});
 		}
 
+		// eslint-disable-next-line react-hooks/set-state-in-effect
 		setParticles(initialParticles);
 	}, [dimensions]);
 

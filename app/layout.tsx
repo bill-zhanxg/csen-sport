@@ -9,7 +9,6 @@ import { Toaster } from 'sonner';
 
 import SadCat from '@/images/sad-cat.png';
 import { isBlocked } from '@/libs/checkPermission';
-import { getXataClient } from '@/libs/xata';
 
 import { authC } from './cache';
 import BarOfProgress from './components/BarOfProgress';
@@ -29,8 +28,6 @@ export const metadata: Metadata = {
 	description:
 		'CSEN is a system designed to streamline the CSEN schedule management for schools involved in Christian Schools Event Network (CSEN). Its purpose is to ensure everyone involved has easy access to important match details by organising and distributing CSEN schedules to students, coaches, and staff.',
 };
-
-const xata = getXataClient();
 
 export default async function MainLayout({ children }: { children: React.ReactNode }) {
 	return (

@@ -51,6 +51,7 @@ export function NavBar({ children, session }: { children: React.ReactNode; sessi
 
 	useEffect(() => {
 		if (drawer.current) drawer.current.checked = false;
+		// eslint-disable-next-line react-hooks/set-state-in-effect
 		setDrawerOpen(false);
 	}, [pathname]);
 
@@ -244,7 +245,7 @@ function ProfileMenu({
 }) {
 	return (
 		<div tabIndex={0} role="button" className="flex items-center gap-2" onClick={() => setShowAccountMenu(true)}>
-			<UserAvatar user={session.user} className="!h-10 !w-10 !rounded-full" />
+			<UserAvatar user={session.user} className="h-10! w-10! rounded-full!" />
 			<div className="overflow-hidden">
 				<p className="truncate font-bold">{session.user.name}</p>
 				<p className="truncate opacity-60">{session.user.email}</p>

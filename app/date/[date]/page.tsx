@@ -10,14 +10,12 @@ import { getXataClient } from '@/libs/xata';
 
 import { Copy } from './components/Copy';
 
-import type { SearchParams } from '@/libs/types';
 import type { Metadata } from 'next';
 export const metadata: Metadata = {
 	title: 'Games',
 };
 
-export default async function DatePage(props: { params: Promise<{ date: string }>; searchParams: SearchParams }) {
-	const searchParams = await props.searchParams;
+export default async function DatePage(props: { params: Promise<{ date: string }> }) {
 	const params = await props.params;
 	const session = await authC();
 	const date = new Date(parseInt(params.date));

@@ -27,6 +27,7 @@ export function LeftBar({
 	const [selected, setSelected] = useState(lastPath);
 
 	useEffect(() => {
+		// eslint-disable-next-line react-hooks/set-state-in-effect
 		if (lastPath) setSelected(lastPath);
 	}, [lastPath]);
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 import type { SerializedTicket, SerializedTicketMessage } from '@/libs/serializeData';
 import type { EventNotifier } from 'ts-sse';
 

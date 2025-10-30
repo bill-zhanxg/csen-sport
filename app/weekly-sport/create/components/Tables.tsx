@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable react-compiler/react-compiler */
 /* eslint-disable react-hooks/rules-of-hooks */
 
 import type { AlertType} from '@/app/components/Alert';
@@ -691,7 +692,6 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 										teams.filter((team) => team.group === newGameGroup).length < 1
 									}
 									onClick={(e) => {
-										e;
 										e.preventDefault();
 										setGames((games) => [
 											...games,

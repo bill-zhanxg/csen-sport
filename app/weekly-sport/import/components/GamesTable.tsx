@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler */
 /* eslint-disable react-hooks/rules-of-hooks */
 
 import { useEffect, useMemo, useState, useTransition } from 'react';

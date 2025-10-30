@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable react-compiler/react-compiler */
 /* eslint-disable react-hooks/rules-of-hooks */
 
 import type { AlertType} from '@/app/components/Alert';
