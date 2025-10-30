@@ -1,5 +1,5 @@
 import type { DateWithGames } from '@/libs/tableHelpers';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import { WeeklySportView } from './WeeklySportView';
 
@@ -45,8 +45,10 @@ describe('Weekly Sport View Component', () => {
 	const lastVisit = new Date();
 	const timezone = 'Australia/Sydney';
 
+	let rendered: ReturnType<typeof render>;
+
 	beforeEach(() => {
-		render(
+		rendered = render(
 			<WeeklySportView
 				date={date as DateWithGames}
 				teachers={teachers}
@@ -58,29 +60,31 @@ describe('Weekly Sport View Component', () => {
 	});
 
 	test('renders Weekly Sport View component', () => {
-		expect(screen.getByText('Weekly Sport 29/08/2024')).toBeInTheDocument();
+		const { getByText, getAllByText } = rendered;
 
-		expect(screen.getByText('Group')).toBeInTheDocument();
-		expect(screen.getByText('Team')).toBeInTheDocument();
-		expect(screen.getByText('Position')).toBeInTheDocument();
-		expect(screen.getByText('Opponent')).toBeInTheDocument();
-		expect(screen.getByText('Venue')).toBeInTheDocument();
-		expect(screen.getByText('Teacher')).toBeInTheDocument();
-		expect(screen.getByText('Transportation')).toBeInTheDocument();
-		expect(screen.getByText('Out of Class')).toBeInTheDocument();
-		expect(screen.getByText('Start time')).toBeInTheDocument();
-		expect(screen.getByText('Confirmed')).toBeInTheDocument();
-		expect(screen.getByText('Notes')).toBeInTheDocument();
+		expect(getByText('Weekly Sport 29/08/2024')).toBeInTheDocument();
 
-		expect(screen.getByText('Junior (Y7-8)')).toBeInTheDocument();
-		expect(screen.getByText('Team A')).toBeInTheDocument();
-		expect(screen.getByText('Home')).toBeInTheDocument();
-		expect(screen.getByText('Team B')).toBeInTheDocument();
-		expect(screen.getAllByText('Casey Stadium')[0]).toBeInTheDocument();
-		expect(screen.getByText('John Doe')).toBeInTheDocument();
-		expect(screen.getByText('Car')).toBeInTheDocument();
-		expect(screen.getAllByText('6:12 PM')[0]).toBeInTheDocument();
-		expect(screen.getAllByText('6:12 PM')[1]).toBeInTheDocument();
-		expect(screen.getByText('Some notes')).toBeInTheDocument();
+		expect(getByText('Group')).toBeInTheDocument();
+		expect(getByText('Team')).toBeInTheDocument();
+		expect(getByText('Position')).toBeInTheDocument();
+		expect(getByText('Opponent')).toBeInTheDocument();
+		expect(getByText('Venue')).toBeInTheDocument();
+		expect(getByText('Teacher')).toBeInTheDocument();
+		expect(getByText('Transportation')).toBeInTheDocument();
+		expect(getByText('Out of Class')).toBeInTheDocument();
+		expect(getByText('Start time')).toBeInTheDocument();
+		expect(getByText('Confirmed')).toBeInTheDocument();
+		expect(getByText('Notes')).toBeInTheDocument();
+
+		expect(getByText('Junior (Y7-8)')).toBeInTheDocument();
+		expect(getByText('Team A')).toBeInTheDocument();
+		expect(getByText('Home')).toBeInTheDocument();
+		expect(getByText('Team B')).toBeInTheDocument();
+		expect(getAllByText('Casey Stadium')[0]).toBeInTheDocument();
+		expect(getByText('John Doe')).toBeInTheDocument();
+		expect(getByText('Car')).toBeInTheDocument();
+		expect(getAllByText('6:12 PM')[0]).toBeInTheDocument();
+		expect(getAllByText('6:12 PM')[1]).toBeInTheDocument();
+		expect(getByText('Some notes')).toBeInTheDocument();
 	});
 });
