@@ -1,22 +1,22 @@
 'use client';
 /* eslint-disable react-hooks/rules-of-hooks */
 
-import { AlertType, ErrorAlertFixed, SuccessAlertFixed } from '@/app/components/Alert';
-import { SideBySide } from '@/app/globalComponents/SideBySide';
-import { SerializedTeam } from '@/libs/serializeData';
-import {
-	CellContext,
-	ColumnDef,
-	flexRender,
-	getCoreRowModel,
-	getSortedRowModel,
-	useReactTable,
-} from '@tanstack/react-table';
-import { ChangeEventHandler, FocusEventHandler, useEffect, useMemo, useState } from 'react';
+import type { AlertType} from '@/app/components/Alert';
+import { useEffect, useMemo, useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import { FaRegTrashCan } from 'react-icons/fa6';
+
+import { ErrorAlertFixed, SuccessAlertFixed } from '@/app/components/Alert';
+import { SideBySide } from '@/app/globalComponents/SideBySide';
+import { flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
+
 import { deleteTeam, newTeam, updateTeam } from '../actions';
 
+import type { SerializedTeam } from '@/libs/serializeData';
+import type {
+	CellContext,
+	ColumnDef} from '@tanstack/react-table';
+import type { ChangeEventHandler, FocusEventHandler} from 'react';
 const defaultColumn: Partial<ColumnDef<SerializedTeam>> = {
 	cell: ({ getValue }) => {
 		return <input className="input input-bordered rounded-none w-full" value={getValue() as string} disabled />;

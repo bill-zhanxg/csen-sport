@@ -1,13 +1,14 @@
 import { authC } from '@/app/cache';
 import { isAdmin } from '@/libs/checkPermission';
 import { stringifySearchParam } from '@/libs/formatValue';
-import { SearchParams } from '@/libs/types';
 import { getXataClient } from '@/libs/xata';
-import { Metadata } from 'next';
+
 import { PaginationMenu } from '../globalComponents/PaginationMenu';
 import { Unauthorized } from '../globalComponents/Unauthorized';
 import { UserTable } from './components/UserTable';
 
+import type { SearchParams } from '@/libs/types';
+import type { Metadata } from 'next';
 export const metadata: Metadata = {
 	title: 'Users',
 };

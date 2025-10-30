@@ -1,8 +1,9 @@
 'use client';
 
-import { SerializedGame } from '@/libs/serializeData';
-import { MouseEvent } from 'react';
+import type { SerializedGame } from '@/libs/serializeData';
+import type { MouseEvent } from 'react';
 import { renderToString } from 'react-dom/server';
+
 import { CopyTable } from './CopyTable';
 import { copyToText } from './copyTo';
 

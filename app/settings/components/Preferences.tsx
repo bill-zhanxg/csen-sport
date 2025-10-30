@@ -1,10 +1,11 @@
 'use client';
 
-import { isTeacher } from '@/libs/checkPermission';
-import { SerializedTeam } from '@/libs/serializeData';
-import { Session } from 'next-auth';
 import { useEffect, useState } from 'react';
 
+import { isTeacher } from '@/libs/checkPermission';
+
+import type { SerializedTeam } from '@/libs/serializeData';
+import type { Session } from 'next-auth';
 export function Preferences({ teams, session }: { teams: SerializedTeam[]; session: Session }) {
 	const currentTeam = teams.find((team) => team.id === session.user.team?.id);
 

@@ -1,11 +1,13 @@
 'use client';
 
-import { captureFeedback } from '@sentry/nextjs';
-import { Session } from 'next-auth';
 import { useState } from 'react';
 import { HiOutlineChatBubbleBottomCenterText } from 'react-icons/hi2';
+
+import { captureFeedback } from '@sentry/nextjs';
+
 import { SuccessAlert } from './Alert';
 
+import type { Session } from 'next-auth';
 export function FeedbackButton() {
 	return (
 		<button

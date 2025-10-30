@@ -1,7 +1,9 @@
 'use client';
 
-import { dayjs } from '@/libs/dayjs';
 import { useEffect } from 'react';
+
+import { dayjs } from '@/libs/dayjs';
+
 import { setUserTimezone } from './actions';
 
 export function HandleUserTimezone() {

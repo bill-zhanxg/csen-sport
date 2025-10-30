@@ -1,9 +1,5 @@
 'use client';
-import Icon from '@/images/csen-temp.png';
-import { cn } from '@/lib/utils';
-import { isAdmin } from '@/libs/checkPermission';
 import { motion } from 'framer-motion';
-import type { Session } from 'next-auth';
 import { signOut } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -18,9 +14,15 @@ import { IoCreateOutline, IoSettingsOutline } from 'react-icons/io5';
 import { LuUsersRound } from 'react-icons/lu';
 import { MdOutlineShield } from 'react-icons/md';
 import { useClickAway } from 'react-use';
+
+import Icon from '@/images/csen-temp.png';
+import { cn } from '@/lib/utils';
+import { isAdmin } from '@/libs/checkPermission';
+
 import { UserAvatar } from '../globalComponents/UserAvatar';
 import { FeedbackButton } from './Feedback';
 
+import type { Session } from 'next-auth';
 const MENU_ITEMS: Array<{
 	href: __next_route_internal_types__.RouteImpl<string>;
 	name: string;

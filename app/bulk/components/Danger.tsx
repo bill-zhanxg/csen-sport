@@ -1,7 +1,10 @@
 'use client';
 
-import { AlertType, ErrorAlert, SuccessAlert } from '@/app/components/Alert';
+import type { AlertType} from '@/app/components/Alert';
 import { useState } from 'react';
+
+import { ErrorAlert, SuccessAlert } from '@/app/components/Alert';
+
 import { resetAll, resetGames, resetTeams } from '../actions';
 
 export function Danger() {

@@ -1,7 +1,8 @@
-import Icon from '@/images/icon.png';
-import { Metadata } from 'next';
 import Image from 'next/image';
 
+import Icon from '@/images/icon.png';
+
+import type { Metadata } from 'next';
 export const metadata: Metadata = {
 	title: 'Tickets',
 };

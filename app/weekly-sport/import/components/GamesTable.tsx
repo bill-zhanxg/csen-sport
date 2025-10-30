@@ -1,27 +1,21 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
+import { useEffect, useMemo, useState, useTransition } from 'react';
+import { FaRegTrashCan } from 'react-icons/fa6';
+
 import { SideBySide } from '@/app/globalComponents/SideBySide';
 import { TeachersMultiSelect } from '@/app/globalComponents/TeachersMultiSelect';
-import {
+import { flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
+
+import type {
 	CellContext,
-	ColumnDef,
-	flexRender,
-	getCoreRowModel,
-	getSortedRowModel,
-	useReactTable,
-} from '@tanstack/react-table';
-import {
+	ColumnDef} from '@tanstack/react-table';
+import type {
 	ChangeEventHandler,
 	Dispatch,
 	FocusEventHandler,
-	SetStateAction,
-	useEffect,
-	useMemo,
-	useState,
-	useTransition,
-} from 'react';
-import { FaRegTrashCan } from 'react-icons/fa6';
-import { Defaults, Games, Teams } from '../types';
+	SetStateAction} from 'react';
+import type { Defaults, Games, Teams } from '../types';
 
 export function GamesTable({
 	teams,

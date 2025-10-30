@@ -2,9 +2,10 @@ import { authC } from '@/app/cache';
 import { Unauthorized } from '@/app/globalComponents/Unauthorized';
 import { isAdmin } from '@/libs/checkPermission';
 import { getRawTeachers } from '@/libs/tableData';
-import { Metadata } from 'next';
+
 import { Tables } from './components/Tables';
 
+import type { Metadata } from 'next';
 export const metadata: Metadata = {
 	title: 'Create Timetable',
 };

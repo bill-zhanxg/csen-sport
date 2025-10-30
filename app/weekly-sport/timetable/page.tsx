@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { authC } from '@/app/cache';
 import { PaginationMenu } from '@/app/globalComponents/PaginationMenu';
 import { Tabs } from '@/app/globalComponents/Tabs';
@@ -9,11 +11,10 @@ import { getDateStart, stringifySearchParam } from '@/libs/formatValue';
 import { serializeGames } from '@/libs/serializeData';
 import { getRawTeachers, getRawTeams } from '@/libs/tableData';
 import { gamesToDates, getLastVisitDate } from '@/libs/tableHelpers';
-import { SearchParams } from '@/libs/types';
 import { getXataClient } from '@/libs/xata';
-import { Metadata } from 'next';
-import Link from 'next/link';
 
+import type { SearchParams } from '@/libs/types';
+import type { Metadata } from 'next';
 export const metadata: Metadata = {
 	title: 'Timetable',
 };

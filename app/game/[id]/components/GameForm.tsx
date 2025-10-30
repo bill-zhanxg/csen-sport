@@ -1,20 +1,22 @@
 'use client';
 
+import { startTransition, useActionState, useEffect, useRef, useState } from 'react';
+import { useFormStatus } from 'react-dom';
+import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaRegCheckCircle, FaStickyNote } from 'react-icons/fa';
+import { toast } from 'sonner';
+
 import { TeachersMultiSelect } from '@/app/globalComponents/TeachersMultiSelect';
 import { UserAvatar } from '@/app/globalComponents/UserAvatar';
 import { isTeacher } from '@/libs/checkPermission';
 import { dayjs } from '@/libs/dayjs';
 import { formatIsJunior } from '@/libs/formatValue';
-import { SerializedGame, SerializedTeam } from '@/libs/serializeData';
-import { RawTeacher } from '@/libs/tableData';
-import { FormState } from '@/libs/types';
-import { Session } from 'next-auth';
-import { startTransition, useActionState, useEffect, useRef, useState } from 'react';
-import { useFormStatus } from 'react-dom';
-import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaRegCheckCircle, FaStickyNote } from 'react-icons/fa';
-import { toast } from 'sonner';
+
 import { updateGame } from '../actions';
 
+import type { SerializedGame, SerializedTeam } from '@/libs/serializeData';
+import type { RawTeacher } from '@/libs/tableData';
+import type { FormState } from '@/libs/types';
+import type { Session } from 'next-auth';
 export function GameForm({
 	session,
 	game,

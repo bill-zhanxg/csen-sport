@@ -1,17 +1,19 @@
 'use client';
-import { isTeacher } from '@/libs/checkPermission';
-import { dayjs } from '@/libs/dayjs';
-import { SerializedTeam } from '@/libs/serializeData';
-import { FormState } from '@/libs/types';
-import { Session } from 'next-auth';
 import { startTransition, useActionState, useEffect, useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { FaBell, FaClock, FaRegCheckCircle, FaUsers } from 'react-icons/fa';
 import { toast } from 'sonner';
+
+import { isTeacher } from '@/libs/checkPermission';
+import { dayjs } from '@/libs/dayjs';
+
 import { updateProfile } from '../actions';
 import { Preferences } from './Preferences';
 import { ProfilePicture } from './ProfilePicture';
 
+import type { SerializedTeam } from '@/libs/serializeData';
+import type { FormState } from '@/libs/types';
+import type { Session } from 'next-auth';
 export function SettingsForm({ session, teams }: { session: Session; teams: SerializedTeam[] }) {
 	const [state, formAction] = useActionState<FormState, FormData>(updateProfile, null);
 	const [autoTimezone, setAutoTimezone] = useState(session.user.auto_timezone ?? true);

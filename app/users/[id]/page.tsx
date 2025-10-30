@@ -1,10 +1,12 @@
+import { revalidatePath } from 'next/cache';
+
 import { authC } from '@/app/cache';
 import { ErrorMessage } from '@/app/globalComponents/ErrorMessage';
 import { Unauthorized } from '@/app/globalComponents/Unauthorized';
 import { UserAvatar } from '@/app/globalComponents/UserAvatar';
 import { isAdmin, isTeacher } from '@/libs/checkPermission';
 import { getXataClient } from '@/libs/xata';
-import { revalidatePath } from 'next/cache';
+
 import { RoleSchema } from '../schema';
 import { RoleForm } from './components/RoleForm';
 

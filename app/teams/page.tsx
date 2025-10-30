@@ -2,10 +2,11 @@ import { authC } from '@/app/cache';
 import { isAdmin } from '@/libs/checkPermission';
 import { serializeTeams } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
-import { Metadata } from 'next';
+
 import { Unauthorized } from '../globalComponents/Unauthorized';
 import { TeamTable } from './components/TeamTable';
 
+import type { Metadata } from 'next';
 export const metadata: Metadata = {
 	title: 'Teams',
 };

@@ -1,9 +1,12 @@
-import { dayjs } from '@/libs/dayjs';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { v4 } from 'uuid';
-import { read, utils, WorkBook } from 'xlsx';
-import { Games, Teams } from '../types';
+import { read, utils } from 'xlsx';
+
+import { dayjs } from '@/libs/dayjs';
+
+import type { WorkBook } from 'xlsx';
+import type { Games, Teams } from '../types';
 
 export function Step1({
 	setNextLoading,

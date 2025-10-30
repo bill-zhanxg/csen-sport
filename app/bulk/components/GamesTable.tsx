@@ -1,26 +1,27 @@
 'use client';
 /* eslint-disable react-hooks/rules-of-hooks */
 
-import { AlertType, ErrorAlert, SuccessAlert } from '@/app/components/Alert';
+import type { AlertType} from '@/app/components/Alert';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { FaPlus, FaRegTrashCan } from 'react-icons/fa6';
+import { v4 } from 'uuid';
+
+import { ErrorAlert, SuccessAlert } from '@/app/components/Alert';
 import { TeachersMultiSelect } from '@/app/globalComponents/TeachersMultiSelect';
 import { useBeforeUnload } from '@/app/globalComponents/useBeforeUnload';
 import { dayjs } from '@/libs/dayjs';
 import { formatDate, formatIsJunior, formatTime } from '@/libs/formatValue';
-import { SerializedGameWithId } from '@/libs/serializeData';
-import { RawTeacher, RawTeam } from '@/libs/tableData';
-import {
-	CellContext,
-	ColumnDef,
-	flexRender,
-	getCoreRowModel,
-	getSortedRowModel,
-	useReactTable,
-} from '@tanstack/react-table';
-import { ChangeEvent, ChangeEventHandler, FocusEventHandler, useEffect, useMemo, useRef, useState } from 'react';
-import { FaPlus, FaRegTrashCan } from 'react-icons/fa6';
-import { v4 } from 'uuid';
-import { GameChanges, updateGamesBulk } from '../actions';
+import { flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
 
+import { updateGamesBulk } from '../actions';
+
+import type { SerializedGameWithId } from '@/libs/serializeData';
+import type { RawTeacher, RawTeam } from '@/libs/tableData';
+import type {
+	CellContext,
+	ColumnDef} from '@tanstack/react-table';
+import type { ChangeEvent, ChangeEventHandler, FocusEventHandler} from 'react';
+import type { GameChanges} from '../actions';
 export function GamesTable({
 	teams,
 	gamesRaw,

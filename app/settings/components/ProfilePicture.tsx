@@ -1,8 +1,9 @@
 'use client';
 
-import { UserAvatar } from '@/app/globalComponents/UserAvatar';
 import { useState } from 'react';
 import { FaPen } from 'react-icons/fa6';
+
+import { UserAvatar } from '@/app/globalComponents/UserAvatar';
 
 export function ProfilePicture({
 	user,

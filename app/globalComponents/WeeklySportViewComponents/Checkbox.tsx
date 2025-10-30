@@ -1,6 +1,6 @@
 'use client';
 
-import { SerializedGame } from '@/libs/serializeData';
+import type { SerializedGame } from '@/libs/serializeData';
 import { useState } from 'react';
 import { toast } from 'sonner';
 

@@ -1,7 +1,8 @@
 'use client';
 
-import { setUser } from '@sentry/nextjs';
 import { useEffect } from 'react';
+
+import { setUser } from '@sentry/nextjs';
 
 export function SentrySetUser({
 	user,

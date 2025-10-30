@@ -1,20 +1,24 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 'use client';
 
-import { dayjs } from '@/libs/dayjs';
-import { formatIsJunior, formatTime } from '@/libs/formatValue';
-import { SerializedGame } from '@/libs/serializeData';
-import { SerializedDateWithGames } from '@/libs/tableHelpers';
-import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import Link from 'next/link';
-import { ChangeEvent, ChangeEventHandler, FocusEventHandler, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FaPlus, FaRegTrashCan } from 'react-icons/fa6';
 import { toast } from 'sonner';
-import { RawTeacher, RawTeam } from '../../libs/tableData';
+
+import { dayjs } from '@/libs/dayjs';
+import { formatIsJunior, formatTime } from '@/libs/formatValue';
+import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+
 import { SideBySide } from './SideBySide';
 import { TeachersMultiSelect } from './TeachersMultiSelect';
 import { deleteGame, newGame, updateGame } from './WeeklySportEditActions';
 
+import type { SerializedGame } from '@/libs/serializeData';
+import type { SerializedDateWithGames } from '@/libs/tableHelpers';
+import type { CellContext, ColumnDef} from '@tanstack/react-table';
+import type { ChangeEvent, ChangeEventHandler, FocusEventHandler} from 'react';
+import type { RawTeacher, RawTeam } from '../../libs/tableData';
 const defaultColumn: Partial<ColumnDef<SerializedGame>> = {
 	cell: ({ getValue }) => {
 		return <input className="input input-bordered rounded-none w-full" value={getValue() as string} disabled />;

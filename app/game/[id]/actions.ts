@@ -1,12 +1,13 @@
 'use server';
-import { authC } from '@/app/cache';
-import { isTeacher } from '@/libs/checkPermission';
-import { dayjs } from '@/libs/dayjs';
-import { FormState } from '@/libs/types';
-import { getXataClient } from '@/libs/xata';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
+import { authC } from '@/app/cache';
+import { isTeacher } from '@/libs/checkPermission';
+import { dayjs } from '@/libs/dayjs';
+import { getXataClient } from '@/libs/xata';
+
+import type { FormState } from '@/libs/types';
 const schema = z.object({
 	id: z.string(),
 	timezone: z.string().optional(),

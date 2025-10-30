@@ -2,9 +2,10 @@ import { authC } from '@/app/cache';
 import { Unauthorized } from '@/app/globalComponents/Unauthorized';
 import { isAdmin } from '@/libs/checkPermission';
 import { getXataClient } from '@/libs/xata';
-import { Metadata } from 'next';
+
 import { ImportPage } from './components/ImportPage';
 
+import type { Metadata } from 'next';
 export const metadata: Metadata = {
 	title: 'Import',
 };

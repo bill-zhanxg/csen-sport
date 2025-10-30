@@ -1,13 +1,16 @@
-import SadCat from '@/images/sad-cat.png';
-import { isBlocked } from '@/libs/checkPermission';
-import { getXataClient } from '@/libs/xata';
-import type { Metadata } from 'next';
+import 'server-only';
+import './globals.css';
+
 import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import 'server-only';
 import { Toaster } from 'sonner';
+
+import SadCat from '@/images/sad-cat.png';
+import { isBlocked } from '@/libs/checkPermission';
+import { getXataClient } from '@/libs/xata';
+
 import { authC } from './cache';
 import BarOfProgress from './components/BarOfProgress';
 import { FeedbackDialog } from './components/Feedback';
@@ -16,8 +19,7 @@ import { NavBar } from './components/NavBar';
 import { SentrySetUser } from './components/SentrySetUser';
 import { GenericLoading } from './globalComponents/GenericLoading';
 
-import './globals.css';
-
+import type { Metadata } from 'next';
 export const metadata: Metadata = {
 	title: {
 		absolute: 'Home | CSEN Sport',

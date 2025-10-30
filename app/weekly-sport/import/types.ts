@@ -1,5 +1,6 @@
-import { emptyToNull } from '@/app/globalComponents/Schemas';
 import { z } from 'zod/v4';
+
+import { emptyToNull } from '@/app/globalComponents/Schemas';
 
 export const GamesSchema = z.array(
 	z.object({

@@ -1,14 +1,16 @@
 'use client';
 
-import { dayjs } from '@/libs/dayjs';
-import { SerializedTicket } from '@/libs/serializeData';
 import { motion } from 'framer-motion';
-import { Session } from 'next-auth';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { FaTriangleExclamation } from 'react-icons/fa6';
-import { TicketEventType } from '../types';
+
+import { dayjs } from '@/libs/dayjs';
+
+import type { SerializedTicket } from '@/libs/serializeData';
+import type { Session } from 'next-auth';
+import type { TicketEventType } from '../types';
 
 export function TicketsList({
 	getTicketsAction: getTickets,

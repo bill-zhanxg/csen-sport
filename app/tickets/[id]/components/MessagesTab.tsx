@@ -1,8 +1,9 @@
 'use client';
 
-import { SerializedTicketMessage } from '@/libs/serializeData';
-import { User } from 'next-auth';
+import type { SerializedTicketMessage } from '@/libs/serializeData';
+import type { User } from 'next-auth';
 import { useState } from 'react';
+
 import { MessageInput } from './MessageInput';
 import { Messages } from './Messages';
 

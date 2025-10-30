@@ -1,12 +1,15 @@
+import { NextResponse } from 'next/server';
+import { getSSEWriter } from 'ts-sse';
+
 import { authC } from '@/app/cache';
 import { isDeveloper } from '@/libs/checkPermission';
-import { SerializedTicket, SerializedTicketMessage } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
-import { NextRequest, NextResponse } from 'next/server';
-import { getSSEWriter } from 'ts-sse';
-import { TicketEvents } from '../types';
+
 import { ticketEmitter } from './eventListener';
 
+import type { SerializedTicket, SerializedTicketMessage } from '@/libs/serializeData';
+import type { NextRequest} from 'next/server';
+import type { TicketEvents } from '../types';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 

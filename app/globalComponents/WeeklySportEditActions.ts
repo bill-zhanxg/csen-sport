@@ -1,14 +1,17 @@
 'use server';
 
-import { authC } from '@/app/cache';
-import { isTeacher } from '@/libs/checkPermission';
-import { GamesRecord, getXataClient } from '@/libs/xata';
-import { SelectedPick } from '@xata.io/client';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod/v4';
-import { AlertType } from '../components/Alert';
+
+import { authC } from '@/app/cache';
+import { isTeacher } from '@/libs/checkPermission';
+import { getXataClient } from '@/libs/xata';
+
 import { UpdateGameSchema } from './Schemas';
 
+import type { GamesRecord} from '@/libs/xata';
+import type { SelectedPick } from '@xata.io/client';
+import type { AlertType } from '../components/Alert';
 const xata = getXataClient();
 const stringSchema = z.string();
 

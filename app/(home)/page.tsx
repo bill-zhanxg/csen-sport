@@ -1,9 +1,11 @@
+import Link from 'next/link';
+
 import { authC } from '@/app/cache';
 import { isTeacher } from '@/libs/checkPermission';
 import { getRawTeachers } from '@/libs/tableData';
 import { gamesToDates, getLastVisitDate } from '@/libs/tableHelpers';
 import { getXataClient } from '@/libs/xata';
-import Link from 'next/link';
+
 import { WeeklySportCardView } from '../globalComponents/WeeklySportCardView';
 
 export default async function Home() {

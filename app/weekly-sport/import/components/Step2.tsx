@@ -1,11 +1,12 @@
 import { useBeforeUnload } from '@/app/globalComponents/useBeforeUnload';
-import { RowData } from '@tanstack/react-table';
-import { Dispatch, SetStateAction } from 'react';
-import { Defaults, Games, Teams } from '../types';
+
 import { DefaultSection } from './DefaultSection';
 import { GamesTable } from './GamesTable';
 import { TeamsTable } from './TeamsTable';
 
+import type { RowData } from '@tanstack/react-table';
+import type { Dispatch, SetStateAction } from 'react';
+import type { Defaults, Games, Teams } from '../types';
 declare module '@tanstack/react-table' {
 	interface TableMeta<TData extends RowData> {
 		updateData: (rowIndex: number, columnId: string, value: unknown) => void;

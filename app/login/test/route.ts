@@ -1,8 +1,10 @@
-import { getXataClient } from '@/libs/xata';
-import { Role } from '@/next-auth';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { v4 } from 'uuid';
 
+import { getXataClient } from '@/libs/xata';
+
+import type { Role } from '@/next-auth';
+import type { NextRequest} from 'next/server';
 const xata = getXataClient();
 const blocked: string[] = [];
 

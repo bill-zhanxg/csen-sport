@@ -1,5 +1,6 @@
 import { TbReload } from 'react-icons/tb';
-import { ImportState } from './ImportPage';
+
+import type { ImportState } from './ImportPage';
 
 export function Step3({ importState, retry }: { importState: ImportState; retry: () => void }) {
 	return (

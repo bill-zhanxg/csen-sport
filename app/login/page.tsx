@@ -1,8 +1,9 @@
 import { signIn } from '@/libs/auth';
-import { Metadata } from 'next';
+
 import { LoginBtn } from './components/LoginBtn';
 import { ParticleBackground } from './components/ParticleBackground';
 
+import type { Metadata } from 'next';
 export const metadata: Metadata = {
 	title: 'Login',
 };

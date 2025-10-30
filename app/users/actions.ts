@@ -1,13 +1,15 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
+import { z } from 'zod/v4';
+
 import { authC } from '@/app/cache';
 import { isAdmin } from '@/libs/checkPermission';
 import { getXataClient } from '@/libs/xata';
-import { revalidatePath } from 'next/cache';
-import { z } from 'zod/v4';
-import { ChangeRoleState } from './components/UserTable';
+
 import { RoleSchema } from './schema';
 
+import type { ChangeRoleState } from './components/UserTable';
 const schema = z
 	.object({
 		users: z.string(),

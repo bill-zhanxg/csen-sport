@@ -1,9 +1,10 @@
 'use server';
 
-import { authC } from '@/app/cache';
-import { getXataClient } from '@/libs/xata';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+
+import { authC } from '@/app/cache';
+import { getXataClient } from '@/libs/xata';
 
 export async function resetGuide() {
 	const session = await authC();

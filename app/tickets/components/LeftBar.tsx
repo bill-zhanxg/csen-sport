@@ -1,11 +1,13 @@
 'use client';
 
-import { SerializedTicket } from '@/libs/serializeData';
+import type { SerializedTicket } from '@/libs/serializeData';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+
 import { CreateTicketButton } from './CreateTicketButton';
 import { TicketsList } from './TicketsList';
-import { Session } from 'next-auth';
+
+import type { Session } from 'next-auth';
 
 export function LeftBar({
 	createTicketAction: createTicket,

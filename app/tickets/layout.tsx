@@ -1,12 +1,15 @@
+import { redirect } from 'next/navigation';
+
 import { authC } from '@/app/cache';
 import { isDeveloper } from '@/libs/checkPermission';
-import { SerializedTicket, serializeTickets } from '@/libs/serializeData';
+import { serializeTickets } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
-import { redirect } from 'next/navigation';
+
 import { Unauthorized } from '../globalComponents/Unauthorized';
 import { LeftBar } from './components/LeftBar';
 import { ticketEmitter } from './ticket-stream/eventListener';
 
+import type { SerializedTicket} from '@/libs/serializeData';
 const xata = getXataClient();
 
 export default async function Tickets({ children }: { children: React.ReactNode }) {

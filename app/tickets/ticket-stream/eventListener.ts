@@ -1,6 +1,7 @@
-import { SerializedTicket, SerializedTicketMessage } from '@/libs/serializeData';
-import { EventEmitter } from 'events';
+import type { SerializedTicket, SerializedTicketMessage } from '@/libs/serializeData';
 import '../[id]/actions';
+
+import { EventEmitter } from 'events';
 
 interface TicketEventType {
 	'new-message': (data: {

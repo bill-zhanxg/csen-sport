@@ -4,9 +4,10 @@ import { isTeacher } from '@/libs/checkPermission';
 import { serializeGame } from '@/libs/serializeData';
 import { getRawTeachers, getRawTeams } from '@/libs/tableData';
 import { getXataClient } from '@/libs/xata';
-import { Metadata } from 'next';
+
 import { GameForm } from './components/GameForm';
 
+import type { Metadata } from 'next';
 export const metadata: Metadata = {
 	title: 'Game',
 };

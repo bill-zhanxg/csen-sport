@@ -1,5 +1,6 @@
-import { DateWithGames } from '@/libs/tableHelpers';
+import type { DateWithGames } from '@/libs/tableHelpers';
 import { render, screen } from '@testing-library/react';
+
 import { WeeklySportView } from './WeeklySportView';
 
 describe('Weekly Sport View Component', () => {

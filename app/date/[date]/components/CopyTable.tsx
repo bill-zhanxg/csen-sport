@@ -1,8 +1,9 @@
 // This file is used only to generate string for copy and should not be imported
 
 import { formatIsJunior } from '@/libs/formatValue';
-import { SerializedGame } from '@/libs/serializeData';
-import { CSSProperties, ReactNode } from 'react';
+
+import type { SerializedGame } from '@/libs/serializeData';
+import type { CSSProperties, ReactNode } from 'react';
 
 const trStyles: CSSProperties = {
 	height: '15pt',

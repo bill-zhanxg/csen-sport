@@ -1,10 +1,12 @@
-import { dayjs } from '@/libs/dayjs';
-import { RawTeacher } from '@/libs/tableData';
-import { DateWithGames } from '@/libs/tableHelpers';
 import Link from 'next/link';
 import { FaCalendarAlt } from 'react-icons/fa';
+
+import { dayjs } from '@/libs/dayjs';
+
 import { GameCard } from './GameCard';
 
+import type { RawTeacher } from '@/libs/tableData';
+import type { DateWithGames } from '@/libs/tableHelpers';
 export function WeeklySportCardView({
 	date,
 	teachers,

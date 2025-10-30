@@ -1,15 +1,18 @@
-import { dayjs } from '@/libs/dayjs';
-import { formatIsHome, formatIsJunior } from '@/libs/formatValue';
-import { serializeGame } from '@/libs/serializeData';
-import { RawTeacher } from '@/libs/tableData';
-import { GamesRecord, getXataClient } from '@/libs/xata';
-import { SelectedPick } from '@xata.io/client';
 import Link from 'next/link';
 import { FaBus, FaChalkboardTeacher, FaClock, FaRegEye, FaUsers } from 'react-icons/fa';
 import { FaCirclePlus, FaLocationDot, FaPen } from 'react-icons/fa6';
+
+import { dayjs } from '@/libs/dayjs';
+import { formatIsHome, formatIsJunior } from '@/libs/formatValue';
+import { serializeGame } from '@/libs/serializeData';
+import { getXataClient } from '@/libs/xata';
+
 import { UserAvatar } from './UserAvatar';
 import { Checkbox } from './WeeklySportViewComponents/Checkbox';
 
+import type { RawTeacher } from '@/libs/tableData';
+import type { GamesRecord} from '@/libs/xata';
+import type { SelectedPick } from '@xata.io/client';
 type GameCardProps = {
 	game: SelectedPick<GamesRecord, ('*' | 'team.*' | 'teacher.*')[]>;
 	teachers: RawTeacher[];

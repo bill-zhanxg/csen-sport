@@ -1,5 +1,6 @@
 import { formatIsJunior } from '@/libs/formatValue';
-import { SerializedGame } from '@/libs/serializeData';
+
+import type { SerializedGame } from '@/libs/serializeData';
 
 export function copyToText(games: SerializedGame[]): string {
 	return [

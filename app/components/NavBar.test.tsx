@@ -1,7 +1,8 @@
 import { render } from '@testing-library/react';
-import { Session } from 'next-auth';
+
 import { NavBar } from './NavBar';
 
+import type { Session } from 'next-auth';
 describe('NavBar', () => {
 	const session: Session = {
 		user: {

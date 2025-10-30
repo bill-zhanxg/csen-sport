@@ -1,13 +1,14 @@
-import SadCat from '@/images/sad-cat.png';
+// import { RestartGuide } from './components/RestartGuide';
+import './changelog.css';
+
 import { promises as fs } from 'fs';
-import { Metadata } from 'next';
 import Link from 'next/link';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-// import { RestartGuide } from './components/RestartGuide';
 
-import './changelog.css';
+import SadCat from '@/images/sad-cat.png';
 
+import type { Metadata } from 'next';
 export const metadata: Metadata = {
 	title: 'Changelog',
 };

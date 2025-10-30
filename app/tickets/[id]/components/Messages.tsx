@@ -1,14 +1,17 @@
 'use client';
 
-import { UserAvatar } from '@/app/globalComponents/UserAvatar';
-import { dayjs } from '@/libs/dayjs';
-import { SerializedTicketMessage } from '@/libs/serializeData';
-import { User } from 'next-auth';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { FaTriangleExclamation } from 'react-icons/fa6';
-import { TicketMessageEventType } from '../../types';
+
+import { UserAvatar } from '@/app/globalComponents/UserAvatar';
+import { dayjs } from '@/libs/dayjs';
+
 import { markMessageAsSeen } from '../actions';
-import { OptimisticMessages } from './MessagesTab';
+
+import type { SerializedTicketMessage } from '@/libs/serializeData';
+import type { User } from 'next-auth';
+import type { TicketMessageEventType } from '../../types';
+import type { OptimisticMessages } from './MessagesTab';
 
 export function Messages({
 	user,

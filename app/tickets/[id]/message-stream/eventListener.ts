@@ -1,6 +1,7 @@
-import { SerializedTicketMessage } from '@/libs/serializeData';
-import { EventEmitter } from 'events';
+import type { SerializedTicketMessage } from '@/libs/serializeData';
 import '../actions';
+
+import { EventEmitter } from 'events';
 
 type Listener = (
 	data: SerializedTicketMessage & {

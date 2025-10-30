@@ -1,20 +1,19 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
+import { useEffect, useMemo, useState, useTransition } from 'react';
+import { FaPlus } from 'react-icons/fa';
+import { v4 } from 'uuid';
+
 import { TeachersMultiSelect } from '@/app/globalComponents/TeachersMultiSelect';
-import { CellContext, ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import {
+import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+
+import type { CellContext, ColumnDef} from '@tanstack/react-table';
+import type {
 	ChangeEventHandler,
 	Dispatch,
 	FocusEventHandler,
-	SetStateAction,
-	useEffect,
-	useMemo,
-	useState,
-	useTransition,
-} from 'react';
-import { FaPlus } from 'react-icons/fa';
-import { v4 } from 'uuid';
-import { Defaults, Games, Teams } from '../types';
+	SetStateAction} from 'react';
+import type { Defaults, Games, Teams } from '../types';
 
 const defaultColumn: Partial<ColumnDef<Teams[number]>> = {
 	cell: ({ getValue }) => {

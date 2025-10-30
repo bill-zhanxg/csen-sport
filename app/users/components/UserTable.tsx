@@ -1,16 +1,18 @@
 'use client';
 
-import { DebouncedInput } from '@/app/globalComponents/DebouncedInput';
-import { ErrorMessage } from '@/app/globalComponents/ErrorMessage';
-import { UserAvatar } from '@/app/globalComponents/UserAvatar';
-import { NextauthUsersRecord } from '@/libs/xata';
-import { JSONData, SelectedPick } from '@xata.io/client';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useRouter } from 'next13-progressbar';
 import { useActionState, useCallback, useEffect, useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
+
+import { DebouncedInput } from '@/app/globalComponents/DebouncedInput';
+import { ErrorMessage } from '@/app/globalComponents/ErrorMessage';
+import { UserAvatar } from '@/app/globalComponents/UserAvatar';
+
 import { changeRole } from '../actions';
 
+import type { NextauthUsersRecord } from '@/libs/xata';
+import type { JSONData, SelectedPick } from '@xata.io/client';
 export type ChangeRoleState = null | {
 	success: boolean;
 	message: string;

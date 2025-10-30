@@ -1,22 +1,21 @@
+import { FaRegQuestionCircle } from 'react-icons/fa';
+import { FaEllipsisVertical } from 'react-icons/fa6';
+
 import { authC } from '@/app/cache';
 import { Unauthorized } from '@/app/globalComponents/Unauthorized';
 import { UserAvatar } from '@/app/globalComponents/UserAvatar';
 import NotFound from '@/app/not-found';
 import { isDeveloper } from '@/libs/checkPermission';
-import {
-	SerializedTicketMessage,
-	serializeTicket,
-	serializeTicketMessage,
-	serializeTicketMessages,
-} from '@/libs/serializeData';
+import { serializeTicket, serializeTicketMessage, serializeTicketMessages } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
-import { FaRegQuestionCircle } from 'react-icons/fa';
-import { FaEllipsisVertical } from 'react-icons/fa6';
+
 import { ticketEmitter } from '../ticket-stream/eventListener';
 import { ActionList } from './components/ActionList';
 import { MessageTab } from './components/MessagesTab';
 import { ticketMessageEmitter } from './message-stream/eventListener';
 
+import type {
+	SerializedTicketMessage} from '@/libs/serializeData';
 export const revalidate = 0;
 
 const xata = getXataClient();

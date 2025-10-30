@@ -1,5 +1,5 @@
-import { SerializedTicket, SerializedTicketMessage } from '@/libs/serializeData';
-import { EventNotifier } from 'ts-sse';
+import type { SerializedTicket, SerializedTicketMessage } from '@/libs/serializeData';
+import type { EventNotifier } from 'ts-sse';
 
 export type TicketMessageEventType =
 	| { type: 'new'; message: SerializedTicketMessage }

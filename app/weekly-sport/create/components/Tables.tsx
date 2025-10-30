@@ -1,25 +1,26 @@
 'use client';
 /* eslint-disable react-hooks/rules-of-hooks */
 
-import { AlertType, ErrorAlert, SuccessAlert } from '@/app/components/Alert';
+import type { AlertType} from '@/app/components/Alert';
+import { useRouter } from 'next13-progressbar';
+import { useEffect, useMemo, useState } from 'react';
+import { FaPlus, FaRegTrashCan } from 'react-icons/fa6';
+import { v4 } from 'uuid';
+
+import { ErrorAlert, SuccessAlert } from '@/app/components/Alert';
 import { TeachersMultiSelect } from '@/app/globalComponents/TeachersMultiSelect';
 import { useBeforeUnload } from '@/app/globalComponents/useBeforeUnload';
 import { dayjs } from '@/libs/dayjs';
-import { RawTeacher } from '@/libs/tableData';
-import {
-	CellContext,
-	ColumnDef,
-	flexRender,
-	getCoreRowModel,
-	getSortedRowModel,
-	useReactTable,
-} from '@tanstack/react-table';
-import { useRouter } from 'next13-progressbar';
-import { ChangeEventHandler, FocusEventHandler, useEffect, useMemo, useState } from 'react';
-import { FaPlus, FaRegTrashCan } from 'react-icons/fa6';
-import { v4 } from 'uuid';
-import { Game, Team, createWeeklySport } from '../actions';
+import { flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
 
+import { createWeeklySport } from '../actions';
+
+import type { RawTeacher } from '@/libs/tableData';
+import type {
+	CellContext,
+	ColumnDef} from '@tanstack/react-table';
+import type { ChangeEventHandler, FocusEventHandler} from 'react';
+import type { Game, Team} from '../actions';
 export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 	const router = useRouter();
 

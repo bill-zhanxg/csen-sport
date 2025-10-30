@@ -1,12 +1,15 @@
 'use server';
 
-import { authC } from '@/app/cache';
-import { isAdmin } from '@/libs/checkPermission';
-import { TeamsRecord, getXataClient } from '@/libs/xata';
-import { SelectedPick } from '@xata.io/client';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod/v4';
-import { AlertType } from '../components/Alert';
+
+import { authC } from '@/app/cache';
+import { isAdmin } from '@/libs/checkPermission';
+import { getXataClient } from '@/libs/xata';
+
+import type { TeamsRecord} from '@/libs/xata';
+import type { SelectedPick } from '@xata.io/client';
+import type { AlertType } from '../components/Alert';
 
 const xata = getXataClient();
 const stringSchema = z.string();

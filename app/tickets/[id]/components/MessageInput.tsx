@@ -1,9 +1,11 @@
 'use client';
 
-import { Dispatch, SetStateAction, useCallback, useRef, useState } from 'react';
-import { FaPaperPlane, FaPaperclip } from 'react-icons/fa6';
+import type { Dispatch, SetStateAction} from 'react';
+import { useCallback, useRef, useState } from 'react';
+import { FaPaperclip, FaPaperPlane } from 'react-icons/fa6';
 import { v4 } from 'uuid';
-import { OptimisticMessages } from './MessagesTab';
+
+import type { OptimisticMessages } from './MessagesTab';
 
 export function MessageInput({
 	sendMessageAction: sendMessage,

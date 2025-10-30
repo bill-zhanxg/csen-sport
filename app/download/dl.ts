@@ -1,7 +1,8 @@
+import { utils } from 'xlsx';
+
 import { formatIsJunior } from '@/libs/formatValue';
 import { getRawTeachers } from '@/libs/tableData';
 import { getXataClient } from '@/libs/xata';
-import { utils } from 'xlsx';
 
 const xata = getXataClient();
 

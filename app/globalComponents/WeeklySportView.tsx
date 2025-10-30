@@ -1,15 +1,17 @@
-import { dayjs } from '@/libs/dayjs';
-import { formatIsHome, formatIsJunior } from '@/libs/formatValue';
-import { serializeGame } from '@/libs/serializeData';
-import { RawTeacher } from '@/libs/tableData';
-import { DateWithGames } from '@/libs/tableHelpers';
-import { getXataClient } from '@/libs/xata';
 import Link from 'next/link';
 import { FaRegEye } from 'react-icons/fa';
 import { FaCirclePlus, FaLocationDot, FaPen } from 'react-icons/fa6';
+
+import { dayjs } from '@/libs/dayjs';
+import { formatIsHome, formatIsJunior } from '@/libs/formatValue';
+import { serializeGame } from '@/libs/serializeData';
+import { getXataClient } from '@/libs/xata';
+
 import { UserAvatar } from './UserAvatar';
 import { Checkbox } from './WeeklySportViewComponents/Checkbox';
 
+import type { RawTeacher } from '@/libs/tableData';
+import type { DateWithGames } from '@/libs/tableHelpers';
 export function WeeklySportView({
 	date,
 	teachers,

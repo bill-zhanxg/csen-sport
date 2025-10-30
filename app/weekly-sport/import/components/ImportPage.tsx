@@ -1,14 +1,17 @@
 'use client';
-import { dayjs } from '@/libs/dayjs';
 import { useRouter } from 'next13-progressbar';
 import { useEffect, useMemo, useState } from 'react';
-import { AlertType, ErrorAlertFixed, SuccessAlertFixed } from '../../../components/Alert';
+
+import { dayjs } from '@/libs/dayjs';
+
+import { ErrorAlertFixed, SuccessAlertFixed } from '../../../components/Alert';
 import { importData } from '../actions';
-import { Defaults, Games, Teams } from '../types';
 import { Step1 } from './Step1';
 import { Step2 } from './Step2';
 import { Step3 } from './Step3';
 
+import type { AlertType} from '../../../components/Alert';
+import type { Defaults, Games, Teams } from '../types';
 export type ImportState =
 	| {
 			type: 'success' | 'loading';

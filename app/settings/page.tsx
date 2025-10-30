@@ -1,12 +1,14 @@
+import { FaCog, FaUser } from 'react-icons/fa';
+
 import { authC } from '@/app/cache';
 import { serializeTeams } from '@/libs/serializeData';
 import { getXataClient } from '@/libs/xata';
-import { Metadata } from 'next';
-import { FaCog, FaUser } from 'react-icons/fa';
+
 import { Unauthorized } from '../globalComponents/Unauthorized';
 import { UserAvatar } from '../globalComponents/UserAvatar';
 import { SettingsForm } from './components/SettingsForm';
 
+import type { Metadata } from 'next';
 export const metadata: Metadata = {
 	title: 'Settings',
 };

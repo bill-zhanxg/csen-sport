@@ -1,4 +1,4 @@
-import { RawTeacher } from '@/libs/tableData';
+import type { RawTeacher } from '@/libs/tableData';
 import { FaUsers } from 'react-icons/fa6';
 import { MultiSelect } from 'react-multi-select-component';
 

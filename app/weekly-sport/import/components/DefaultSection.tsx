@@ -1,6 +1,9 @@
+import { useTransition } from 'react';
+
 import { TeachersMultiSelect } from '@/app/globalComponents/TeachersMultiSelect';
-import { Dispatch, SetStateAction, useTransition } from 'react';
-import { Defaults } from '../types';
+
+import type { Dispatch, SetStateAction} from 'react';
+import type { Defaults } from '../types';
 
 export function DefaultSection({
 	defaults,

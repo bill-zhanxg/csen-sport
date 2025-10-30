@@ -1,8 +1,10 @@
 'use client';
 import dynamic from 'next/dynamic';
-import { ReactNode, useRef } from 'react';
+import { useRef } from 'react';
+
 import { finishGuide } from './ReactJoyRideActions';
 
+import type { ReactNode} from 'react';
 const Joyride = dynamic(() => import('react-joyride'), { ssr: false });
 
 const steps: { title?: ReactNode; target: string; content: string }[] = [
