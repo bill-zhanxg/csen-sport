@@ -1,11 +1,35 @@
-import { defineConfig } from "eslint/config";
-import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+import typescriptEslint from '@typescript-eslint/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
+import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
+import reactCompiler from 'eslint-plugin-react-compiler';
+import { defineConfig } from 'eslint/config';
+import tseslint from 'typescript-eslint';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+export default defineConfig(
+	tseslint.configs.recommended,
+	{
+		extends: [...nextCoreWebVitals],
+	},
+	{
+		languageOptions: {
+			parser: tsParser,
+			parserOptions: {
+				project: './tsconfig.json',
+			},
+		},
+		plugins: {
+			'react-compiler': reactCompiler,
+			'@typescript-eslint': typescriptEslint,
+		},
+		rules: {
+			'react-compiler/react-compiler': 'error',
+			'@typescript-eslint/consistent-type-imports': 'warn',
 
-export default defineConfig([{
-    extends: [...nextCoreWebVitals],
-}]);
+			'prefer-const': 'off',
+			'@typescript-eslint/no-explicit-any': 'off',
+			'@typescript-eslint/no-namespace': 'off',
+			'@typescript-eslint/ban-ts-comment': 'off',
+			'@typescript-eslint/no-unused-vars': 'warn',
+		},
+	},
+);
