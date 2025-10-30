@@ -16,7 +16,8 @@
 		"build": "next build",
 		"start": "node_modules/next/dist/bin/next start -p $PORT",
 		"start:default": "next start",
-		"lint": "next lint",
+		"lint": "eslint app",
+		"lint:fix": "eslint app --fix",
 		"test": "vitest",
 		"coverage": "vitest run --coverage",
 		"playwright": "playwright test",
@@ -46,11 +47,11 @@
 		"dayjs": "^1.11.13",
 		"framer-motion": "^12.23.12",
 		"ldrs": "^1.1.7",
-		"next": "15.4.2-canary.30",
+		"next": "16.0.1",
 		"next-auth": "^5.0.0-beta.29",
 		"next13-progressbar": "^1.2.2",
-		"react": "19.1.1",
-		"react-dom": "19.1.1",
+		"react": "19.2.0",
+		"react-dom": "19.2.0",
 		"react-icons": "^5.5.0",
 		"react-joyride": "^2.9.3",
 		"react-markdown": "^10.1.0",
@@ -73,8 +74,8 @@
 		"@testing-library/jest-dom": "^6.6.4",
 		"@testing-library/react": "^16.3.0",
 		"@types/node": "^24.2.0",
-		"@types/react": "19.1.9",
-		"@types/react-dom": "19.1.7",
+		"@types/react": "19.2.2",
+		"@types/react-dom": "19.2.2",
 		"@types/uuid": "^10.0.0",
 		"@vitejs/plugin-react": "^4.7.0",
 		"@vitest/browser": "^3.2.4",
@@ -83,7 +84,7 @@
 		"daisyui": "^5.0.50",
 		"dotenv-flow": "^4.1.0",
 		"eslint": "^9.32.0",
-		"eslint-config-next": "15.4.5",
+		"eslint-config-next": "16.0.1",
 		"jsdom": "^26.1.0",
 		"playwright": "^1.54.2",
 		"postcss": "^8.5.6",
@@ -94,5 +95,9 @@
 	},
 	"engines": {
 		"node": ">=20.x.x"
+	},
+	"overrides": {
+		"@types/react": "19.2.2",
+		"@types/react-dom": "19.2.2"
 	}
 }
