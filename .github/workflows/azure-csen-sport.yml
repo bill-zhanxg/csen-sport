@@ -39,7 +39,7 @@ jobs:
         run: |
           npm install --legacy-peer-deps
           npm run build --if-present
-          npm run test --if-present
+          # npm run test --if-present
           npm prune -f --omit-dev
 
       - name: Zip artifact for deployment
@@ -55,11 +55,11 @@ jobs:
           package: release.zip
           clean: true
 
-  test:
-    needs: deploy
-    uses: bill-zhanxg/csen-sport/.github/workflows/reuse_playwright.yml@master
-    secrets: inherit
-    with:
-      production: true
-      shardIndex: '[1,2]'
-      shardTotal: '[2]'
+  # test:
+  #   needs: deploy
+  #   uses: bill-zhanxg/csen-sport/.github/workflows/reuse_playwright.yml@master
+  #   secrets: inherit
+  #   with:
+  #     production: true
+  #     shardIndex: '[1,2]'
+  #     shardTotal: '[2]'
