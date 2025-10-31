@@ -245,7 +245,7 @@ function ProfileMenu({
 }) {
 	return (
 		<div tabIndex={0} role="button" className="flex items-center gap-2" onClick={() => setShowAccountMenu(true)}>
-			<UserAvatar user={session.user} className="h-10! w-10! rounded-full!" />
+			<UserAvatar user={session.user} className="h-10 w-10 rounded-full" />
 			<div className="overflow-hidden">
 				<p className="truncate font-bold">{session.user.name}</p>
 				<p className="truncate opacity-60">{session.user.email}</p>

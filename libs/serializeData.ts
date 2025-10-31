@@ -28,6 +28,7 @@ export type SerializedGame = {
 	teacher: {
 		id?: string;
 		name?: string | null;
+		image?: string | null;
 	};
 	extra_teachers?: string[] | null;
 	transportation?: string | null;
@@ -99,6 +100,7 @@ export function serializeGame(
 		teacher: {
 			id: teacher?.id,
 			name: teacher?.name,
+			image: teacher?.image,
 		},
 		extra_teachers: extra_teachers,
 		transportation,

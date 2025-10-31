@@ -20,9 +20,9 @@ export default async function Profile() {
 	const teams = await getXataClient().db.teams.getAll();
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-base-100 to-base-200">
+		<div className="min-h-screen bg-linear-to-br from-base-100 to-base-200">
 			{/* Header Section */}
-			<div className="bg-gradient-to-r from-primary to-secondary/50 text-primary-content py-8 px-4 sm:py-12">
+			<div className="bg-linear-to-r from-primary to-secondary/50 text-primary-content py-8 px-4 sm:py-12">
 				<div className="container mx-auto max-w-6xl">
 					<div className="flex flex-col sm:flex-row items-center gap-6">
 						{/* Profile Avatar */}

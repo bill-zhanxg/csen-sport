@@ -24,7 +24,7 @@ export async function getRawTeachers(): Promise<RawTeacher[]> {
 		.filter({
 			role: { $any: ['teacher', 'admin'] },
 		})
-		.select(['name'])
+		.select(['name', 'image'])
 		.getAll();
-	return teachersRecords.map(({ id, name }) => ({ id, name }));
+	return teachersRecords.map(({ id, name, image }) => ({ id, name, image }));
 }

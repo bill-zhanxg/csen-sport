@@ -17,6 +17,7 @@ import type { SerializedGame, SerializedTeam } from '@/libs/serializeData';
 import type { RawTeacher } from '@/libs/tableData';
 import type { FormState } from '@/libs/types';
 import type { Session } from 'next-auth';
+
 export function GameForm({
 	session,
 	game,
@@ -47,7 +48,7 @@ export function GameForm({
 	return (
 		<div>
 			{/* Header */}
-			<div className="bg-gradient-to-r from-primary/90 to-primary/80 text-primary-content p-6 rounded-t-2xl">
+			<div className="bg-linear-to-r from-primary/90 to-primary/80 text-primary-content p-6 rounded-t-2xl">
 				<h1 className="text-2xl font-bold flex items-center gap-3">
 					<div className="w-8 h-8 bg-primary-content/20 rounded-lg flex items-center justify-center">
 						<FaCalendarAlt className="w-4 h-4" />
@@ -441,7 +442,11 @@ function Submit({ isTeacher }: { isTeacher: boolean }) {
 	const { pending } = useFormStatus();
 
 	return (
-		<button type="submit" disabled={pending || !isTeacher} className="btn btn-primary btn-sm sm:btn-lg gap-2 min-h-10 sm:min-h-12 text-sm sm:text-base">
+		<button
+			type="submit"
+			disabled={pending || !isTeacher}
+			className="btn btn-primary btn-sm sm:btn-lg gap-2 min-h-10 sm:min-h-12 text-sm sm:text-base"
+		>
 			{pending ? (
 				<>
 					<span className="loading loading-spinner loading-sm"></span>
