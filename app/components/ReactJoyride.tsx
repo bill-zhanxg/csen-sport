@@ -43,7 +43,7 @@ const steps: { title?: ReactNode; target: string; content: string }[] = [
 	},
 	{
 		target: '#import-timetables-btn',
-		content: 'Click here to import a weekly sport schedule using the CSEN venue and fixture PDFs',
+		content: 'Click here to import a weekly sport schedule using the CSEN venue and fixture Sheets',
 	},
 	{
 		target: '#create-timetables-btn',

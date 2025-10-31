@@ -14,13 +14,6 @@ const nextConfig: NextConfig = {
 			},
 		],
 	},
-	webpack: (config, { isServer }) => {
-		config.resolve.alias.canvas = false;
-		if (isServer) {
-			config.ignoreWarnings = [{ module: /opentelemetry/ }];
-		}
-		return config;
-	},
 	experimental: {
 		// authInterrupts: true,
 		typedEnv: true,

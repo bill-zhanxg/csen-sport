@@ -69,7 +69,7 @@ export function Step1({
 			setWeeklySportFileDisabled(false);
 			setAlert({
 				type: 'error',
-				message: 'Invalid file type, please upload a PDF or Excel file',
+				message: 'Invalid file type, please upload an Excel file',
 			});
 		}
 	}
