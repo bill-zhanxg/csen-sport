@@ -2,7 +2,7 @@
 	"name": "csen-sport",
 	"displayName": "CSEN Sport",
 	"description": "This project is a system designed to streamline the CSEN schedule management for schools involved in Christian Schools Event Network (CSEN). Its purpose is to ensure everyone involved has easy access to important match details by organising and distributing CSEN schedules to students, coaches, and staff.",
-	"version": "0.17.0",
+	"version": "0.17.1",
 	"private": false,
 	"license": "PolyForm Strict License",
 	"author": {
