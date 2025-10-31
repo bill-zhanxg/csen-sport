@@ -1,6 +1,6 @@
-import { SelectedPick } from '@xata.io/client';
-import { RawTeam } from './tableData';
-import { GamesRecord, TeamsRecord } from './xata';
+import type { SelectedPick } from '@xata.io/client';
+import type { RawTeam } from './tableData';
+import type { GamesRecord, TeamsRecord } from './xata';
 
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
