@@ -2,7 +2,6 @@ import { type Page, expect } from '@playwright/test';
 
 const menus = [
 	{ name: 'Weekly Sport', url: '/weekly-sport/timetable' },
-	{ name: 'Tickets', url: '/tickets' },
 	{ name: 'Users', url: '/users', admin: true },
 	{ name: 'Teams', url: '/teams', admin: true },
 	{ name: 'Venues', url: '/venues', admin: true },

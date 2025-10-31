@@ -1,0 +1,12 @@
+{
+  "id": "mig_d426cdsp4msil7aqaopg",
+  "parentID": "mig_d426cb3p99jflgc6jvhg",
+  "checksum": "1:70caff99c5cc3e82e43edeae15d567709a357591150781056fc40569a92f65c7",
+  "operations": [
+    {
+      "removeTable": {
+        "table": "ticket_messages"
+      }
+    }
+  ]
+}

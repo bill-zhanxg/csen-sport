@@ -26,10 +26,6 @@ This project is a system designed to streamline the CSEN schedule management for
   ![Edit timetable](.img/edit_timetable.jpeg)
   ![Create timetable](.img/create_timetable.jpeg)
 
-- **Ticket system**: Ability for users to create tickets for help
-
-  ![Ticket](.img/ticket.jpeg)
-
 - **Personalised Schedule**: Create a student profile to select your team and receive a personalised CSEN timetable.
 
   ![User setting](.img/user_setting.jpeg)

@@ -32,8 +32,6 @@ const tables = [
       { column: "user", table: "nextauth_users_sessions" },
       { column: "user", table: "nextauth_sessions" },
       { column: "teacher", table: "games" },
-      { column: "createdBy", table: "tickets" },
-      { column: "sender", table: "ticket_messages" },
     ],
   },
   {
@@ -112,35 +110,6 @@ const tables = [
       { column: "team", table: "nextauth_users" },
     ],
   },
-  {
-    name: "tickets",
-    columns: [
-      { name: "createdBy", type: "link", link: { table: "nextauth_users" } },
-      {
-        name: "title",
-        type: "string",
-        notNull: true,
-        defaultValue: "Untitled",
-      },
-      { name: "closed", type: "bool", notNull: true, defaultValue: "false" },
-      {
-        name: "latest_message",
-        type: "link",
-        link: { table: "ticket_messages" },
-      },
-    ],
-  },
-  {
-    name: "ticket_messages",
-    columns: [
-      { name: "ticket_id", type: "string" },
-      { name: "sender", type: "link", link: { table: "nextauth_users" } },
-      { name: "seen", type: "bool", notNull: true, defaultValue: "false" },
-      { name: "message", type: "text" },
-      { name: "attachments", type: "file[]" },
-    ],
-    revLinks: [{ column: "latest_message", table: "tickets" }],
-  },
 ] as const;
 
 export type SchemaTables = typeof tables;
@@ -172,12 +141,6 @@ export type GamesRecord = Games & XataRecord;
 export type Teams = InferredTypes["teams"];
 export type TeamsRecord = Teams & XataRecord;
 
-export type Tickets = InferredTypes["tickets"];
-export type TicketsRecord = Tickets & XataRecord;
-
-export type TicketMessages = InferredTypes["ticket_messages"];
-export type TicketMessagesRecord = TicketMessages & XataRecord;
-
 export type DatabaseSchema = {
   nextauth_users: NextauthUsersRecord;
   nextauth_accounts: NextauthAccountsRecord;
@@ -187,8 +150,6 @@ export type DatabaseSchema = {
   nextauth_sessions: NextauthSessionsRecord;
   games: GamesRecord;
   teams: TeamsRecord;
-  tickets: TicketsRecord;
-  ticket_messages: TicketMessagesRecord;
 };
 
 const DatabaseClient = buildClient();
