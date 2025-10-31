@@ -11,7 +11,7 @@ import { UserAvatar } from './UserAvatar';
 import { Checkbox } from './WeeklySportViewComponents/Checkbox';
 
 import type { RawTeacher } from '@/libs/tableData';
-import type { GamesRecord} from '@/libs/xata';
+import type { GamesRecord } from '@/libs/xata';
 import type { SelectedPick } from '@xata.io/client';
 type GameCardProps = {
 	game: SelectedPick<GamesRecord, ('*' | 'team.*' | 'teacher.*')[]>;
@@ -44,16 +44,14 @@ export function GameCard({ game, teachers, isTeacher, lastVisit, timezone }: Gam
 				<div className="flex flex-col gap-2 mb-3">
 					<div className="flex items-center gap-3">
 						<div className="min-w-0 flex-1">
-							<h3 className="text-xl font-bold break-words">{game?.team?.name || 'Unknown Team'}</h3>
+							<h3 className="text-xl font-bold wrap-break-word">{game?.team?.name || 'Unknown Team'}</h3>
 							<div className="flex items-center gap-2 text-sm opacity-70 flex-wrap">
 								{game?.team?.isJunior !== null && (
-									<span className="badge badge-outline badge-sm flex-shrink-0">
-										{formatIsJunior(game.team?.isJunior)}
-									</span>
+									<span className="badge badge-outline badge-sm shrink-0">{formatIsJunior(game.team?.isJunior)}</span>
 								)}
 								{game.isHome !== null && (
 									<span
-										className={`badge badge-sm flex-shrink-0 ${
+										className={`badge badge-sm shrink-0 ${
 											game.isHome ? 'badge-success text-success-content' : 'badge-info text-info-content'
 										}`}
 									>
@@ -82,23 +80,23 @@ export function GameCard({ game, teachers, isTeacher, lastVisit, timezone }: Gam
 				<div className="grid grid-cols-1 min-[400px]:grid-cols-2 gap-2 sm:gap-3 min-w-0">
 					{/* Opponent */}
 					<div className="flex items-center gap-2 p-2 bg-base-200 rounded-lg hover:bg-base-300 transition-colors min-w-0">
-						<FaUsers className="text-primary w-4 h-4 flex-shrink-0" />
+						<FaUsers className="text-primary w-4 h-4 shrink-0" />
 						<div className="min-w-0 flex-1">
 							<div className="text-xs opacity-70">Opponent</div>
-							<div className="font-medium text-sm break-words">{game?.opponent || '---'}</div>
+							<div className="font-medium text-sm wrap-break-word">{game?.opponent || '---'}</div>
 						</div>
 					</div>
 
 					{/* Venue */}
 					<div className="flex items-center gap-2 p-2 bg-base-200 rounded-lg hover:bg-base-300 transition-colors min-w-0">
-						<FaLocationDot className="text-primary w-4 h-4 flex-shrink-0" />
+						<FaLocationDot className="text-primary w-4 h-4 shrink-0" />
 						<div className="flex-1 min-w-0">
 							<div className="text-xs opacity-70">Venue</div>
 							{game.venue ? (
 								<Link
 									href={`https://www.google.com/maps/search/${game.venue.replaceAll(' ', '+')}`}
 									target="_blank"
-									className="link link-primary font-medium break-words block text-sm"
+									className="link link-primary font-medium wrap-break-word block text-sm"
 									rel="noopener noreferrer"
 								>
 									{game.venue}
@@ -111,10 +109,10 @@ export function GameCard({ game, teachers, isTeacher, lastVisit, timezone }: Gam
 
 					{/* Start Time */}
 					<div className="flex items-center gap-2 p-2 bg-base-200 rounded-lg hover:bg-base-300 transition-colors min-w-0">
-						<FaClock className="text-primary w-4 h-4 flex-shrink-0" />
+						<FaClock className="text-primary w-4 h-4 shrink-0" />
 						<div className="min-w-0 flex-1">
 							<div className="text-xs opacity-70">Start Time</div>
-							<div className="font-medium text-sm break-words">
+							<div className="font-medium text-sm wrap-break-word">
 								{game?.start ? dayjs.tz(game?.start, timezone).format('LT') : '---'}
 							</div>
 						</div>
@@ -122,10 +120,10 @@ export function GameCard({ game, teachers, isTeacher, lastVisit, timezone }: Gam
 
 					{/* Out of Class */}
 					<div className="flex items-center gap-2 p-2 bg-base-200 rounded-lg hover:bg-base-300 transition-colors min-w-0">
-						<FaClock className="text-warning w-4 h-4 flex-shrink-0" />
+						<FaClock className="text-warning w-4 h-4 shrink-0" />
 						<div className="min-w-0 flex-1">
 							<div className="text-xs opacity-70">Out of Class</div>
-							<div className="font-medium text-sm break-words">
+							<div className="font-medium text-sm wrap-break-word">
 								{game?.out_of_class ? dayjs.tz(game?.out_of_class, timezone).format('LT') : '---'}
 							</div>
 						</div>
@@ -133,23 +131,23 @@ export function GameCard({ game, teachers, isTeacher, lastVisit, timezone }: Gam
 
 					{/* Transportation */}
 					<div className="flex items-center gap-2 p-2 bg-base-200 rounded-lg hover:bg-base-300 transition-colors min-w-0">
-						<FaBus className="text-primary w-4 h-4 flex-shrink-0" />
+						<FaBus className="text-primary w-4 h-4 shrink-0" />
 						<div className="min-w-0 flex-1">
 							<div className="text-xs opacity-70">Transportation</div>
-							<div className="font-medium text-sm break-words">{game?.transportation || '---'}</div>
+							<div className="font-medium text-sm wrap-break-word">{game?.transportation || '---'}</div>
 						</div>
 					</div>
 
 					{/* Teacher */}
 					<div className="flex items-center gap-2 p-2 bg-base-200 rounded-lg hover:bg-base-300 transition-colors min-w-0">
-						<FaChalkboardTeacher className="text-primary w-4 h-4 flex-shrink-0" />
+						<FaChalkboardTeacher className="text-primary w-4 h-4 shrink-0" />
 						<div className="flex-1 min-w-0">
 							<div className="text-xs opacity-70">Teacher</div>
 							<div className="flex items-center gap-2 min-w-0">
 								{game?.teacher?.name ? (
 									<Link
 										href={`/users/${game.teacher.id}`}
-										className="link link-primary font-medium text-sm break-words"
+										className="link link-primary font-medium text-sm wrap-break-word"
 									>
 										{game.teacher.name}
 									</Link>
