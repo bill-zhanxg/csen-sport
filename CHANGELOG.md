@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.17.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.16.0...v0.17.0) (2025-10-31)
+
+
+### Features
+
+* implement loading state with GenericLoading component and refactor MainLayout ([ad67847](https://github.com/bill-zhanxg/csen-sport/commit/ad678475f1000da2e9c5f2ed5e9fe2f0d9bafdee))
+* refactor vitest configuration to use dynamic import for React plugin ([c29ea07](https://github.com/bill-zhanxg/csen-sport/commit/c29ea0709e20f8d90b20ffa25041c7095c516141))
+* rename middleware to proxy as nextjs v16 breaking change ([0e97dad](https://github.com/bill-zhanxg/csen-sport/commit/0e97dad18826e966ea14e7940e469c9fe8a25729))
+* update Nextjs to v16 and add eslint config ([00912b4](https://github.com/bill-zhanxg/csen-sport/commit/00912b41a4bb7a23a4ee2a88662154a0f3c2a701))
+
+
+### Bug Fixes
+
+* fixed all eslint errors ([4051a91](https://github.com/bill-zhanxg/csen-sport/commit/4051a9197f6e29f4ea806a308461a760bcbfb895))
+* fixed all user avatar related problems ([5ab8037](https://github.com/bill-zhanxg/csen-sport/commit/5ab8037b006382abcfcf8fd9bf73e54a17982b18))
+* remove all pdf import text; remove unused webpack config ([b226ab7](https://github.com/bill-zhanxg/csen-sport/commit/b226ab7527f86dbeb6d74cf2ab0a53c24867ae52))
+
 ## [0.16.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.15.0...v0.16.0) (2025-08-05)
 
 
