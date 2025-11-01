@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.17.1](https://github.com/bill-zhanxg/csen-sport/compare/v0.17.0...v0.17.1) (2025-10-31)
+
+
+### Bug Fixes
+
+* disabled vitest and playwright testing from project ([d595043](https://github.com/bill-zhanxg/csen-sport/commit/d5950435efdc1c81c6491f5cda33717e62240d5f))
+
 ## [0.17.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.16.0...v0.17.0) (2025-10-31)
 
 
