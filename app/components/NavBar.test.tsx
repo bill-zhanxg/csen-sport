@@ -15,7 +15,7 @@ describe('NavBar', () => {
 
 	beforeEach(() => {
 		render(
-			<NavBar session={session}>
+			<NavBar session={session} tawkHash="test-hash">
 				<div>Test Children</div>
 			</NavBar>,
 		);

@@ -1,4 +1,7 @@
 'use client';
+import Icon from '@/images/csen-temp.png';
+import { cn } from '@/lib/utils';
+import { isAdmin } from '@/libs/checkPermission';
 import { motion } from 'framer-motion';
 import { signOut } from 'next-auth/react';
 import Image from 'next/image';
@@ -12,13 +15,9 @@ import { FiExternalLink } from 'react-icons/fi';
 import { HiOutlineClipboardDocumentList, HiOutlineCog, HiOutlineHome } from 'react-icons/hi2';
 import { IoCreateOutline, IoSettingsOutline } from 'react-icons/io5';
 import { LuUsersRound } from 'react-icons/lu';
-import { MdOutlineShield } from 'react-icons/md';
+import { MdOutlineShield, MdOutlineSupportAgent } from 'react-icons/md';
 import { useClickAway } from 'react-use';
-
-import Icon from '@/images/csen-temp.png';
-import { cn } from '@/lib/utils';
-import { isAdmin } from '@/libs/checkPermission';
-
+import { TawkEvent, useTawkAction, useTawkEvent } from 'tawk-react';
 import { UserAvatar } from '../globalComponents/UserAvatar';
 import { FeedbackButton } from './Feedback';
 
@@ -38,7 +37,32 @@ const MENU_ITEMS: Array<{
 	{ href: '/weekly-sport/create', name: 'Create Timetable', authorize: isAdmin, icon: IoCreateOutline },
 ];
 
-export function NavBar({ children, session }: { children: React.ReactNode; session: Session }) {
+export function NavBar({
+	children,
+	session,
+	tawkHash,
+}: {
+	children: React.ReactNode;
+	session: Session;
+	tawkHash: string;
+}) {
+	const { start, toggle, login } = useTawkAction();
+
+	// Tawk login
+	useTawkEvent(TawkEvent.onBeforeLoad, () => {
+		login(
+			{
+				userId: session.user.id,
+				name: session.user.name || 'Unknown Registered User',
+				email: session.user.email || 'unknown@example.com',
+				hash: tawkHash,
+			},
+			(err) => {
+				if (err) console.error('Tawk login error:', err);
+			},
+		);
+	});
+
 	const pathname = usePathname();
 
 	const drawer = useRef<HTMLInputElement>(null);
@@ -148,6 +172,20 @@ export function NavBar({ children, session }: { children: React.ReactNode; sessi
 							<MenuItem href="/changelog" name="Changelog" icon={HiOutlineClipboardDocumentList} />
 							<li>
 								<FeedbackButton />
+							</li>
+							<li>
+								<button
+									className="flex items-center gap-3"
+									onClick={() => {
+										try {
+											start({ showWidget: false });
+											toggle();
+										} catch {}
+									}}
+								>
+									<MdOutlineSupportAgent className="h-5 w-5" />
+									Support
+								</button>
 							</li>
 							<li>
 								<ProfileMenu session={session} setShowAccountMenu={(value: boolean) => setShowAccountMenu(value)} />

@@ -1,15 +1,16 @@
 import 'server-only';
 import './globals.css';
 
+import SadCat from '@/images/sad-cat.png';
+import { isBlocked } from '@/libs/checkPermission';
+import { createHmac } from 'crypto';
+import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { Toaster } from 'sonner';
-
-import SadCat from '@/images/sad-cat.png';
-import { isBlocked } from '@/libs/checkPermission';
-
+import { TawkLiveChat } from 'tawk-react';
 import { authC } from './cache';
 import BarOfProgress from './components/BarOfProgress';
 import { FeedbackDialog } from './components/Feedback';
@@ -18,7 +19,6 @@ import { NavBar } from './components/NavBar';
 import { SentrySetUser } from './components/SentrySetUser';
 import { GenericLoading } from './globalComponents/GenericLoading';
 
-import type { Metadata } from 'next';
 export const metadata: Metadata = {
 	title: {
 		absolute: 'Home | CSEN Sport',
@@ -61,12 +61,23 @@ async function Content({ children }: { children: React.ReactNode }) {
 			</>
 		) : (
 			<>
-				<NavBar session={session}>{children}</NavBar>
+				<NavBar
+					session={session}
+					tawkHash={createHmac('sha256', process.env.TAWK_API_KEY).update(session.user.id).digest('hex')}
+				>
+					{children}
+				</NavBar>
 				<FeedbackDialog session={session} />
 				{session.user.auto_timezone && <HandleUserTimezone />}
 				<SentrySetUser user={{ ...session.user, ip_address: ip }} />
 				{/* TODO: Add this back after react joyride is fixed */}
 				{/* {!session.user.guided && <ReactJoyride />} */}
+
+				<TawkLiveChat
+					propertyId={process.env.NEXT_PUBLIC_TAWK_PROPERTY_ID}
+					widgetId={process.env.NEXT_PUBLIC_TAWK_WIDGET_ID}
+					autoStart={false}
+				/>
 			</>
 		)
 	) : (
