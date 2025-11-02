@@ -92,9 +92,9 @@ export function Step1({
 		 * 2 - Age + Gender (Team)
 		 * 3 - Opponent
 		 * 4 - Location
-		 * 5 - Start Time (In 12-hour format, e.g., 1:00 AM)
-		 * !6 - End Time
-		 * 7 - Position (Home/Away)
+		 * 7 - Start Time (In 12-hour format, e.g., 1:00 AM)
+		 * !8 - End Time
+		 * 19 - Position (Home/Away)
 		 */
 		const json = (utils.sheet_to_json(sheet, { header: 1 }) as any[][])
 			// Remove header, assume sorted
@@ -116,8 +116,8 @@ export function Step1({
 			if (!ageGenderString) continue;
 			const opponent = item[3] as string | null;
 			const venue = item[4] as string | null;
-			const startTime = item[5] as string | null;
-			const position = item[7] as string | null;
+			const startTime = item[7] as string | null;
+			const position = item[19] as string | null;
 
 			// We first extract team
 			const [age, gender, ...teamNum] = ageGenderString.split(' ');
