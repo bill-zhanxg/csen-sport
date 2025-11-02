@@ -11,11 +11,11 @@ import { UpdateGameSchema } from './Schemas';
 
 import type { GamesRecord} from '@/libs/xata';
 import type { SelectedPick } from '@xata.io/client';
-import type { AlertType } from '../components/Alert';
+import type { ToastMessage } from '../components/Alert';
 const xata = getXataClient();
 const stringSchema = z.string();
 
-export async function updateGame(idRaw: string, dataRaw: z.infer<typeof UpdateGameSchema>): Promise<AlertType> {
+export async function updateGame(idRaw: string, dataRaw: z.infer<typeof UpdateGameSchema>): Promise<ToastMessage> {
 	return gameAction(() => {
 		const id = stringSchema.parse(idRaw);
 		const data = UpdateGameSchema.parse(dataRaw);
@@ -23,7 +23,7 @@ export async function updateGame(idRaw: string, dataRaw: z.infer<typeof UpdateGa
 	}, 'updated');
 }
 
-export async function newGame(dataRaw: z.infer<typeof UpdateGameSchema>): Promise<AlertType> {
+export async function newGame(dataRaw: z.infer<typeof UpdateGameSchema>): Promise<ToastMessage> {
 	return gameAction(
 		() => {
 			const data = UpdateGameSchema.parse(dataRaw);
@@ -40,7 +40,7 @@ export async function newGame(dataRaw: z.infer<typeof UpdateGameSchema>): Promis
 	);
 }
 
-export async function deleteGame(idRaw: string): Promise<AlertType> {
+export async function deleteGame(idRaw: string): Promise<ToastMessage> {
 	return gameAction(
 		() => {
 			const id = stringSchema.parse(idRaw);
@@ -55,7 +55,7 @@ async function gameAction(
 	func: () => Promise<Readonly<SelectedPick<GamesRecord, ['*']>> | null>,
 	action: string,
 	revalidate = false,
-): Promise<AlertType> {
+): Promise<ToastMessage> {
 	const session = await authC();
 	if (!isTeacher(session)) return { type: 'error', message: 'Unauthorized' };
 

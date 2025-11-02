@@ -2,12 +2,11 @@
 /* eslint-disable react-compiler/react-compiler */
 /* eslint-disable react-hooks/rules-of-hooks */
 
-import type { AlertType} from '@/app/components/Alert';
 import { useEffect, useMemo, useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import { FaRegTrashCan } from 'react-icons/fa6';
 
-import { ErrorAlertFixed, SuccessAlertFixed } from '@/app/components/Alert';
+import { showToast } from '@/app/components/Alert';
 import { SideBySide } from '@/app/globalComponents/SideBySide';
 import { flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
 
@@ -25,8 +24,6 @@ const defaultColumn: Partial<ColumnDef<SerializedTeam>> = {
 };
 
 export function TeamTable({ teams }: { teams: SerializedTeam[] }) {
-	const [alert, setAlert] = useState<AlertType>(null);
-
 	const columns = useMemo<ColumnDef<SerializedTeam>[]>(() => {
 		function editable<T>(
 			{ getValue, row: { original }, column: { id } }: CellContext<SerializedTeam, unknown>,
@@ -63,14 +60,11 @@ export function TeamTable({ teams }: { teams: SerializedTeam[] }) {
 
 				updateTeam(original.id, { [id]: importValue })
 					.then((res) => {
-						setAlert(res);
+						showToast(res);
 						setDisabled(false);
 					})
 					.catch(() => {
-						setAlert({
-							type: 'error',
-							message: 'A network error occurred. Please try again later.',
-						});
+						showToast({ type: 'error', message: 'A network error occurred. Please try again later.' });
 					});
 			}
 		}
@@ -147,12 +141,9 @@ export function TeamTable({ teams }: { teams: SerializedTeam[] }) {
 												onClick={(e) => {
 													e.preventDefault();
 													deleteTeam(original.id)
-														.then(setAlert)
+														.then(showToast)
 														.catch(() => {
-															setAlert({
-																type: 'error',
-																message: 'A network error occurred. Please try again later.',
-															});
+															showToast({ type: 'error', message: 'A network error occurred. Please try again later.' });
 														});
 												}}
 											>
@@ -259,12 +250,9 @@ export function TeamTable({ teams }: { teams: SerializedTeam[] }) {
 										onClick={(e) => {
 											e.preventDefault();
 											newTeam({ name: newName, isJunior: newGroup as 'junior' | 'intermediate' })
-												.then(setAlert)
+												.then(showToast)
 												.catch(() => {
-													setAlert({
-														type: 'error',
-														message: 'A network error occurred. Please try again later.',
-													});
+													showToast({ type: 'error', message: 'A network error occurred. Please try again later.' });
 												});
 											setNewGroup('');
 											setNewName('');
@@ -278,12 +266,6 @@ export function TeamTable({ teams }: { teams: SerializedTeam[] }) {
 					</table>
 				</div>
 			</div>
-			{alert &&
-				(alert.type === 'success' ? (
-					<SuccessAlertFixed message={alert.message} setAlert={setAlert} />
-				) : (
-					<ErrorAlertFixed message={alert.message} setAlert={setAlert} />
-				))}
 		</>
 	);
 }

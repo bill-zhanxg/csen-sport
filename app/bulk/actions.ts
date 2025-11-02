@@ -10,10 +10,10 @@ import { getXataClient } from '@/libs/xata';
 
 import { UpdateGameSchema } from '../globalComponents/Schemas';
 
-import type { AlertType } from '../components/Alert';
+import type { ToastMessage } from '../components/Alert';
 const xata = getXataClient();
 
-export async function resetAll(): Promise<AlertType> {
+export async function resetAll(): Promise<ToastMessage> {
 	const session = await authC();
 	if (!isAdmin(session))
 		return {
@@ -54,7 +54,7 @@ export async function resetTeams() {
 	return resetItem('teams');
 }
 
-async function resetItem(table: 'games' | 'teams'): Promise<AlertType> {
+async function resetItem(table: 'games' | 'teams'): Promise<ToastMessage> {
 	const session = await authC();
 	if (!isAdmin(session))
 		return {
@@ -103,7 +103,7 @@ const GameChangesSchema = z.array(
 
 export type GameChanges = z.infer<typeof GameChangesSchema>;
 
-export async function updateGamesBulk(dataRaw: z.infer<typeof GameChangesSchema>): Promise<AlertType> {
+export async function updateGamesBulk(dataRaw: z.infer<typeof GameChangesSchema>): Promise<ToastMessage> {
 	const session = await authC();
 	if (!isAdmin(session))
 		return {

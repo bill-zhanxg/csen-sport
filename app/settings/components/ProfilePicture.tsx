@@ -1,9 +1,9 @@
 'use client';
 
+import { UserAvatar } from '@/app/globalComponents/UserAvatar';
 import { useState } from 'react';
 import { FaPen } from 'react-icons/fa6';
-
-import { UserAvatar } from '@/app/globalComponents/UserAvatar';
+import { toast } from 'sonner';
 
 export function ProfilePicture({
 	user,
@@ -45,7 +45,7 @@ export function ProfilePicture({
 					// Check file size (30MB = 30 * 1024 * 1024 bytes)
 					const maxSize = 30 * 1024 * 1024;
 					if (file.size > maxSize) {
-						alert('File size must be less than 30MB');
+						toast.error('File size must be less than 30MB');
 						event.target.value = ''; // Clear the input
 						return;
 					}

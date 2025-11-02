@@ -2,13 +2,12 @@
 /* eslint-disable react-compiler/react-compiler */
 /* eslint-disable react-hooks/rules-of-hooks */
 
-import type { AlertType} from '@/app/components/Alert';
 import { useRouter } from 'next13-progressbar';
 import { useEffect, useMemo, useState } from 'react';
 import { FaPlus, FaRegTrashCan } from 'react-icons/fa6';
 import { v4 } from 'uuid';
 
-import { ErrorAlert, SuccessAlert } from '@/app/components/Alert';
+import { showToast } from '@/app/components/Alert';
 import { TeachersMultiSelect } from '@/app/globalComponents/TeachersMultiSelect';
 import { useBeforeUnload } from '@/app/globalComponents/useBeforeUnload';
 import { dayjs } from '@/libs/dayjs';
@@ -22,6 +21,7 @@ import type {
 	ColumnDef} from '@tanstack/react-table';
 import type { ChangeEventHandler, FocusEventHandler} from 'react';
 import type { Game, Team} from '../actions';
+
 export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 	const router = useRouter();
 
@@ -493,7 +493,6 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 	const [newGameGroup, setNewGameGroup] = useState<'' | 'junior' | 'intermediate'>('');
 	// #endregion
 
-	const [alertState, setAlertState] = useState<AlertType>(null);
 	const [loading, setLoading] = useState(false);
 
 	return (
@@ -725,10 +724,9 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 				<div className="modal-box">
 					<h3 className="font-bold text-lg">Confirmation</h3>
 					<p className="py-4">
-						You will not be able to modify the data after you import the fixture to the database. Are you sure you want
+						You will not be able to modify some data after you import the fixture to the database. Are you sure you want
 						to continue? Have you double checked?
 					</p>
-					{alertState && (alertState.type === 'success' ? SuccessAlert(alertState) : ErrorAlert(alertState))}
 					<div className="modal-action">
 						<button
 							className="btn btn-primary"
@@ -737,10 +735,12 @@ export function Tables({ teachers }: { teachers: RawTeacher[] }) {
 								e.preventDefault();
 								setLoading(true);
 								const res = await createWeeklySport(teams, games, dayjs.tz.guess());
-								setAlertState(res);
 								if (res?.type === 'success') {
 									router.push('/weekly-sport/timetable');
-								} else setLoading(false);
+								} else {
+									setLoading(false);
+								}
+								showToast(res);
 							}}
 						>
 							Import to Database

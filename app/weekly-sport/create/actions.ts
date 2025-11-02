@@ -8,7 +8,7 @@ import { emptyToNull } from '@/app/globalComponents/Schemas';
 import { chunk, formatDate, formatTime } from '@/libs/formatValue';
 import { getXataClient } from '@/libs/xata';
 
-import type { AlertType } from '@/app/components/Alert';
+import type { ToastMessage } from '@/app/components/Alert';
 const xata = getXataClient();
 
 const TeamsSchema = z
@@ -43,7 +43,7 @@ const GamesSchema = z
 export type Team = z.infer<typeof TeamsSchema>[number];
 export type Game = z.infer<typeof GamesSchema>[number];
 
-export async function createWeeklySport(teamsRaw: Team[], gamesRaw: Game[], timezone: string): Promise<AlertType> {
+export async function createWeeklySport(teamsRaw: Team[], gamesRaw: Game[], timezone: string): Promise<ToastMessage> {
 	const session = await authC();
 	if (!session) return { type: 'error', message: 'Unauthorized' };
 

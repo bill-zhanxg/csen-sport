@@ -9,7 +9,7 @@ import { getXataClient } from '@/libs/xata';
 
 import type { TeamsRecord} from '@/libs/xata';
 import type { SelectedPick } from '@xata.io/client';
-import type { AlertType } from '../components/Alert';
+import type { ToastMessage } from '../components/Alert';
 
 const xata = getXataClient();
 const stringSchema = z.string();
@@ -19,7 +19,7 @@ const UpdateTeamSchema = z.object({
 	isJunior: z.optional(z.boolean().or(z.literal('junior').or(z.literal('intermediate')))),
 });
 
-export async function updateTeam(idRaw: string, dataRaw: z.infer<typeof UpdateTeamSchema>): Promise<AlertType> {
+export async function updateTeam(idRaw: string, dataRaw: z.infer<typeof UpdateTeamSchema>): Promise<ToastMessage> {
 	return teamAction(() => {
 		const id = stringSchema.parse(idRaw);
 		const data = UpdateTeamSchema.parse(dataRaw);
@@ -28,7 +28,7 @@ export async function updateTeam(idRaw: string, dataRaw: z.infer<typeof UpdateTe
 	}, 'updated');
 }
 
-export async function newTeam(dataRaw: z.infer<typeof UpdateTeamSchema>): Promise<AlertType> {
+export async function newTeam(dataRaw: z.infer<typeof UpdateTeamSchema>): Promise<ToastMessage> {
 	return teamAction(() => {
 		const data = UpdateTeamSchema.parse(dataRaw);
 		if (data.isJunior && typeof data.isJunior !== 'boolean') data.isJunior = data.isJunior === 'junior';
@@ -36,7 +36,7 @@ export async function newTeam(dataRaw: z.infer<typeof UpdateTeamSchema>): Promis
 	}, 'created');
 }
 
-export async function deleteTeam(idRaw: string): Promise<AlertType> {
+export async function deleteTeam(idRaw: string): Promise<ToastMessage> {
 	return teamAction(() => {
 		const id = stringSchema.parse(idRaw);
 		return xata.db.teams.delete(id);
@@ -46,7 +46,7 @@ export async function deleteTeam(idRaw: string): Promise<AlertType> {
 async function teamAction(
 	func: () => Promise<Readonly<SelectedPick<TeamsRecord, ['*']>> | null>,
 	action: string,
-): Promise<AlertType> {
+): Promise<ToastMessage> {
 	const session = await authC();
 	if (!isAdmin(session)) return { type: 'error', message: 'Unauthorized' };
 

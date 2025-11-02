@@ -2,12 +2,11 @@
 /* eslint-disable react-compiler/react-compiler */
 /* eslint-disable react-hooks/rules-of-hooks */
 
-import type { AlertType} from '@/app/components/Alert';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { FaPlus, FaRegTrashCan } from 'react-icons/fa6';
 import { v4 } from 'uuid';
 
-import { ErrorAlert, SuccessAlert } from '@/app/components/Alert';
+import { showToast } from '@/app/components/Alert';
 import { TeachersMultiSelect } from '@/app/globalComponents/TeachersMultiSelect';
 import { useBeforeUnload } from '@/app/globalComponents/useBeforeUnload';
 import { dayjs } from '@/libs/dayjs';
@@ -364,7 +363,6 @@ export function GamesTable({
 	const [newOutOfClass, setNewOutOfClass] = useState('');
 	const [newStart, setNewStart] = useState('');
 
-	const [alert, setAlert] = useState<AlertType>(null);
 	const [changed, setChanged] = useState(false);
 	const [loading, setLoading] = useState(false);
 
@@ -577,7 +575,6 @@ export function GamesTable({
 				</table>
 				<div className="mt-2"></div>
 				<div className="sticky left-0">
-					{alert && (alert.type === 'error' ? ErrorAlert(alert) : SuccessAlert(alert))}
 					<button
 						className="btn btn-primary w-full mt-2"
 						disabled={!changed || loading}
@@ -589,7 +586,7 @@ export function GamesTable({
 								setChanged(false);
 								changes.current = [];
 							}
-							setAlert(res);
+							showToast(res);
 							setLoading(false);
 						}}
 					>

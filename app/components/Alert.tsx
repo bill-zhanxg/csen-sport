@@ -1,60 +1,17 @@
-import { FaXmark } from 'react-icons/fa6';
+import { toast, type ExternalToast } from 'sonner';
 
-export type AlertType = {
-	type: 'success' | 'error';
+// Toast-friendly type that can be spread directly into toast functions
+export type ToastMessage = {
 	message: string;
+	type: 'success' | 'error';
+	options?: ExternalToast;
 } | null;
 
-export function ErrorAlertFixed({ message, setAlert }: { message: string; setAlert: (message: null) => void }) {
-	return (
-		<div className="fixed bottom-3 px-3 w-full z-50">
-			<div className="alert alert-error">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					className="stroke-current shrink-0 h-8 w-8"
-					fill="none"
-					viewBox="0 0 24 24"
-				>
-					<path
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						strokeWidth="2"
-						d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-					/>
-				</svg>
-				<span className="text-xl text-ellipsis overflow-x-hidden">{message}</span>
-				<button className="btn btn-error btn-circle" onClick={() => setAlert(null)}>
-					<FaXmark className="text-xl" />
-				</button>
-			</div>
-		</div>
-	);
-}
-
-export function SuccessAlertFixed({ message, setAlert }: { message: string; setAlert: (message: null) => void }) {
-	return (
-		<div className="fixed bottom-3 px-3 w-full z-50">
-			<div className="alert alert-success">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					className="stroke-current shrink-0 h-6 w-6"
-					fill="none"
-					viewBox="0 0 24 24"
-				>
-					<path
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						strokeWidth="2"
-						d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-					/>
-				</svg>
-				<span className="text-xl text-ellipsis overflow-x-hidden">{message}</span>
-				<button className="btn btn-success btn-circle" onClick={() => setAlert(null)}>
-					<FaXmark className="text-xl" />
-				</button>
-			</div>
-		</div>
-	);
+// Helper function to show toast from ToastMessage
+export function showToast(toastMessage: ToastMessage) {
+	if (!toastMessage) return;
+	const { type, message, options } = toastMessage;
+	toast[type](message, options);
 }
 
 export function ErrorAlert({ message }: { message: string }) {
