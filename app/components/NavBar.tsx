@@ -116,7 +116,9 @@ export function NavBar({
 				</div>
 
 				<div className="flex flex-col h-full w-full min-h-0">
-					<div className="flex-1 overflow-auto">{children}</div>
+					<div className="flex-1 overflow-auto" data-app-scroll-container>
+						{children}
+					</div>
 
 					<div className="dock sticky md:hidden border-t-2 border-base-300">
 						<DockMenuItem href="/" name="Home" icon={HiOutlineHome} />

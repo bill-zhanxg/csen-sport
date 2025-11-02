@@ -23,7 +23,6 @@ export function Step2({
 	fixtures,
 	setFixtures,
 }: {
-	setAlert: (alert: { type: 'success' | 'error'; message: string } | null) => void;
 	teachers: { id: string; name?: string | null }[];
 	defaults: Defaults;
 	setDefaults: Dispatch<SetStateAction<Defaults>>;

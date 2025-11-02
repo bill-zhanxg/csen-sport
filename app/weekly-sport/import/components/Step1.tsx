@@ -1,31 +1,51 @@
-import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { v4 } from 'uuid';
 import { read, utils } from 'xlsx';
+import { toast } from 'sonner';
 
 import { dayjs } from '@/libs/dayjs';
 
 import type { WorkBook } from 'xlsx';
 import type { Games, Teams } from '../types';
+import { Instructions } from './step1/Instructions';
+import { FileUploader } from './step1/FileUploader';
+import { SheetSelector } from './step1/SheetSelector';
+import { ColumnMapper } from './step1/ColumnMapper';
 
 export function Step1({
 	setNextLoading,
 	setDisableNext,
-	setAlert,
 	setTeams,
 	setFixtures,
+	onImportSuccess,
 }: {
 	setNextLoading: (nextLoading: boolean) => void;
 	setDisableNext: (disableNext: boolean) => void;
-	setAlert: (alert: { type: 'success' | 'error'; message: string } | null) => void;
 	setTeams: (teams: Teams) => void;
 	setFixtures: (fixtures: Games) => void;
+	onImportSuccess?: () => void;
 }) {
 	const [weeklySportFileDisabled, setWeeklySportFileDisabled] = useState(false);
 	const [availableSheets, setAvailableSheets] = useState<string[]>([]);
 	const [selectedSheet, setSelectedSheet] = useState<string>('');
 	const [showSheetSelector, setShowSheetSelector] = useState(false);
 	const [currentWorkbook, setCurrentWorkbook] = useState<WorkBook | null>(null);
+
+	// Column mapping UI state
+	const [showColumnMapper, setShowColumnMapper] = useState(false);
+	const [headerRow, setHeaderRow] = useState<string[] | null>(null);
+	const [sampleRows, setSampleRows] = useState<any[][]>([]);
+	const [columnsCount, setColumnsCount] = useState(0);
+	const [mapping, setMapping] = useState<Record<string, number | null>>({
+		date: 0,
+		sport: 1,
+		ageGender: 2,
+		opponent: 3,
+		location: 4,
+		startTime: 7,
+		endTime: 8,
+		position: 19,
+	});
 
 	const fileSelectorRef = useRef<HTMLInputElement | null>(null);
 
@@ -44,8 +64,10 @@ export function Step1({
 					const sheetNames = Object.keys(workbook.Sheets);
 
 					if (sheetNames.length === 1) {
-						// If only one sheet, process it directly
-						handleExcel(workbook, sheetNames[0]);
+						// If only one sheet, prepare mapping UI for that sheet
+						setCurrentWorkbook(workbook);
+						setSelectedSheet(sheetNames[0]);
+						prepareMapping(workbook, sheetNames[0]);
 					} else {
 						// Multiple sheets, show selector
 						setCurrentWorkbook(workbook);
@@ -55,10 +77,7 @@ export function Step1({
 					}
 				})
 				.catch((err) => {
-					setAlert({
-						type: 'error',
-						message: `Failed to load the selected file: ${err.message}`,
-					});
+					toast.error(`Failed to load the selected file: ${err.message}`);
 				})
 				.finally(() => {
 					setNextLoading(false);
@@ -67,60 +86,96 @@ export function Step1({
 		} else {
 			setNextLoading(false);
 			setWeeklySportFileDisabled(false);
-			setAlert({
-				type: 'error',
-				message: 'Invalid file type, please upload an Excel file',
-			});
+			toast.error('Invalid file type, please upload an Excel file');
 		}
 	}
 
-	function handleExcel(workbook: WorkBook, sheetName: string) {
-		// Script V2 - 29/07/2025
+	function prepareMapping(workbook: WorkBook, sheetName: string) {
+		const sheet = workbook.Sheets[sheetName];
+		if (!sheet) {
+			toast.error(`Sheet "${sheetName}" not found in the Excel file`);
+			return;
+		}
+
+		const data = utils.sheet_to_json(sheet, { header: 1 }) as any[][];
+		if (!data || data.length === 0) {
+			toast.error('Selected sheet appears to be empty');
+			return;
+		}
+
+		const hdr = (data[0] || []).map((h) => (h === null || h === undefined ? '' : String(h)));
+		const samples = data.slice(1, 20);
+		const cols = Math.max(...data.map((r) => (r ? r.length : 0)));
+
+		setHeaderRow(hdr.length ? hdr : null);
+		setSampleRows(samples);
+		setColumnsCount(cols);
+
+		// Ensure mapping defaults fit within available columns
+		setMapping((prev) => {
+			const newMap: Record<string, number | null> = { ...prev };
+			Object.keys(newMap).forEach((k) => {
+				const val = newMap[k];
+				if (typeof val === 'number' && val >= cols) newMap[k] = null;
+			});
+			return newMap;
+		});
+
+		setShowSheetSelector(false);
+		setShowColumnMapper(true);
+		setCurrentWorkbook(workbook);
+	}
+
+	function updateMapping(key: string, value: number | null) {
+		setMapping((m) => ({ ...m, [key]: value }));
+	}
+
+	function cancelMapping() {
+		setShowColumnMapper(false);
+		setCurrentWorkbook(null);
+		setHeaderRow(null);
+		setSampleRows([]);
+		setColumnsCount(0);
+		if (fileSelectorRef.current) fileSelectorRef.current.value = '';
+	}
+
+	function importUsingMapping(workbook: WorkBook, sheetName: string, providedMapping?: Record<string, number | null>) {
+		const map = providedMapping ?? mapping;
 
 		const sheet = workbook.Sheets[sheetName];
 		if (!sheet) {
-			setAlert({
-				type: 'error',
-				message: `Sheet "${sheetName}" not found in the Excel file`,
-			});
+			toast.error(`Sheet "${sheetName}" not found in the Excel file`);
 			return;
 		}
-		/**
-		 * V2 New Index:
-		 * 0 - Date (In dd MMM YYYY format)
-		 * 1 - Sport (Activity)
-		 * 2 - Age + Gender (Team)
-		 * 3 - Opponent
-		 * 4 - Location
-		 * 7 - Start Time (In 12-hour format, e.g., 1:00 AM)
-		 * !8 - End Time
-		 * 19 - Position (Home/Away)
-		 */
-		const json = (utils.sheet_to_json(sheet, { header: 1 }) as any[][])
-			// Remove header, assume sorted
-			.toSpliced(0, 1);
 
-		// Leave this in production for debugging
-		console.log('Raw', json);
+		const data = utils.sheet_to_json(sheet, { header: 1 }) as any[][];
+		const rows = data.slice(1); // remove header
 
-		// #region Collapse algorithm
+		// Validate required mappings
+		if (map.date === null || map.sport === null || map.ageGender === null) {
+			toast.error('Please map Date, Sport and Age+Gender columns before importing.');
+			return;
+		}
+
+		console.log('Raw', rows);
+
 		// Remap games into teams and opponents
 		const teams: (Teams[number] & { key: string })[] = [];
 		const games: Games = [];
-		for (const item of json) {
-			const dateString = item[0] as string | null;
+		for (const item of rows) {
+			const dateString = item[map.date as number] as string | null;
 			if (!dateString) continue;
-			const sportString = item[1] as string | null;
+			const sportString = (map.sport !== null ? item[map.sport] : null) as string | null;
 			if (!sportString) continue;
-			const ageGenderString = item[2] as string | null;
+			const ageGenderString = (map.ageGender !== null ? item[map.ageGender] : null) as string | null;
 			if (!ageGenderString) continue;
-			const opponent = item[3] as string | null;
-			const venue = item[4] as string | null;
-			const startTime = item[7] as string | null;
-			const position = item[19] as string | null;
+			const opponent = (map.opponent !== null ? item[map.opponent] : null) as string | null;
+			const venue = (map.location !== null ? item[map.location] : null) as string | null;
+			const startTime = (map.startTime !== null ? item[map.startTime] : null) as string | null;
+			const position = (map.position !== null ? item[map.position] : null) as string | null;
 
 			// We first extract team
-			const [age, gender, ...teamNum] = ageGenderString.split(' ');
+			const [age, gender, ...teamNum] = String(ageGenderString).split(' ');
 			const teamKey = `${ageGenderString}-${sportString}`;
 			let teamId = teams.find((team) => team.key === teamKey)?.id;
 			if (!teamId) {
@@ -129,7 +184,7 @@ export function Step1({
 					id: teamId,
 					key: teamKey,
 					name: `${gender} ${sportString} ${teamNum.join(' ')}`.trim(),
-					age: age.toLowerCase() as 'junior' | 'intermediate',
+					age: age ? (age.toLowerCase() as 'junior' | 'intermediate') : 'junior',
 				});
 			}
 
@@ -149,14 +204,21 @@ export function Step1({
 
 		console.log('Teams:', teams);
 		console.log('Games:', games);
-		// #endregion
 
 		setTeams(teams);
 		setFixtures(games);
 
+		toast.success(`Successfully loaded ${games.length} fixtures for ${teams.length} teams`);
+
 		setDisableNext(false);
-		setShowSheetSelector(false);
+		setShowColumnMapper(false);
 		setCurrentWorkbook(null);
+		if (fileSelectorRef.current) fileSelectorRef.current.value = '';
+		
+		// Automatically proceed to next step
+		if (onImportSuccess) {
+			onImportSuccess();
+		}
 	}
 
 	function handleSheetSelection() {
@@ -166,12 +228,10 @@ export function Step1({
 		setWeeklySportFileDisabled(true);
 
 		try {
-			handleExcel(currentWorkbook, selectedSheet);
+			// Instead of processing immediately, show mapping UI so user can map columns
+			prepareMapping(currentWorkbook, selectedSheet);
 		} catch (err: any) {
-			setAlert({
-				type: 'error',
-				message: `Failed to process the selected sheet: ${err.message}`,
-			});
+			toast.error(`Failed to process the selected sheet: ${err.message}`);
 		} finally {
 			setNextLoading(false);
 			setWeeklySportFileDisabled(false);
@@ -188,69 +248,32 @@ export function Step1({
 
 	return (
 		<>
-			<p className="text-xl font-bold text-error text-center max-w-2xl">
-				Before you begin, make sure all teachers are registered and being given the{' '}
-				<span className="text-info">teacher</span> role for linking with each game in{' '}
-				<Link href="/users" className="link link-primary">
-					the User page
-				</Link>
-			</p>
-			<p className="text-xl font-bold text-error text-center max-w-2xl">
-				Also make sure you have reset everything in{' '}
-				<Link href="/bulk" className="link link-primary">
-					the Bulk Action page
-				</Link>{' '}
-				to prevent any duplicate data
-			</p>
-			<p className="text-xl font-bold text-center max-w-2xl">
-				Please find the latest fixtures Excel from{' '}
-				<Link className="link-primary link" href="https://csen.au/semester-sport/" target="_blank">
-					CSEN
-				</Link>{' '}
-				then import it here
-			</p>
-			<input
-				ref={fileSelectorRef}
-				type="file"
-				className="file-input file-input-bordered w-full max-w-xl"
-				accept=".xlsx"
-				onChange={handleWeeklySportChange}
-				disabled={weeklySportFileDisabled}
-			/>
+			<Instructions />
+			<FileUploader inputRef={fileSelectorRef} disabled={weeklySportFileDisabled} onChange={handleWeeklySportChange} />
 
 			{showSheetSelector && (
-				<div className="mt-4 p-4 border border-gray-300 rounded-lg bg-base-100 shadow-sm max-w-xl w-full">
-					<h3 className="text-lg font-semibold mb-3">Select Sheet to Import</h3>
-					<p className="text-sm text-gray-600 mb-3">
-						Multiple sheets found in the Excel file. Please select which sheet contains the fixtures data:
-					</p>
-					<div className="form-control mb-4">
-						<select
-							className="select select-bordered w-full"
-							value={selectedSheet}
-							onChange={(e) => setSelectedSheet(e.target.value)}
-						>
-							{availableSheets.map((sheetName) => (
-								<option key={sheetName} value={sheetName}>
-									{sheetName}
-								</option>
-							))}
-						</select>
-					</div>
-					<div className="flex gap-2 justify-end">
-						<button className="btn btn-ghost" onClick={cancelSheetSelection} disabled={weeklySportFileDisabled}>
-							Cancel
-						</button>
-						<button
-							className="btn btn-primary"
-							onClick={handleSheetSelection}
-							disabled={weeklySportFileDisabled || !selectedSheet}
-						>
-							Import Selected Sheet
-						</button>
-					</div>
-				</div>
+				<SheetSelector
+					availableSheets={availableSheets}
+					selectedSheet={selectedSheet}
+					onChange={setSelectedSheet}
+					onCancel={cancelSheetSelection}
+					onConfirm={handleSheetSelection}
+					disabled={weeklySportFileDisabled}
+				/>
 			)}
+
+				{showColumnMapper && (
+					<ColumnMapper
+						headerRow={headerRow}
+						sampleRows={sampleRows}
+						columnsCount={columnsCount}
+						mapping={mapping}
+						onUpdateMapping={updateMapping}
+						onBack={cancelMapping}
+						onImport={() => currentWorkbook && selectedSheet && importUsingMapping(currentWorkbook, selectedSheet)}
+						disabled={weeklySportFileDisabled}
+					/>
+				)}
 		</>
 	);
 }

@@ -4,13 +4,11 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { dayjs } from '@/libs/dayjs';
 
-import { ErrorAlertFixed, SuccessAlertFixed } from '../../../components/Alert';
 import { importData } from '../actions';
 import { Step1 } from './Step1';
 import { Step2 } from './Step2';
 import { Step3 } from './Step3';
 
-import type { AlertType} from '../../../components/Alert';
 import type { Defaults, Games, Teams } from '../types';
 export type ImportState =
 	| {
@@ -26,11 +24,18 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 
 	const [step, setStep] = useState(1);
 
+	const scrollToTop = () => {
+		// Prefer the global layout scroll container inside NavBar
+		const layoutEl = document.querySelector('[data-app-scroll-container]') as HTMLElement | null;
+		if (layoutEl) {
+			layoutEl.scrollTo({ top: 0, behavior: 'instant' });
+			return;
+		}
+	};
+
 	const [disablePrevious, setDisablePrevious] = useState(false);
 	const [disableNext, setDisableNext] = useState(true);
 	const [nextLoading, setNextLoading] = useState(false);
-
-	const [alert, setAlert] = useState<AlertType>(null);
 
 	const [defaults, setDefaults] = useState<Defaults>({});
 	const [teams, setTeams] = useState<Teams>([]);
@@ -79,16 +84,18 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 
 				{step === 1 && (
 					<Step1
-						setAlert={setAlert}
 						setNextLoading={setNextLoading}
 						setDisableNext={setDisableNext}
 						setTeams={setTeams}
 						setFixtures={setFixtures}
+						onImportSuccess={() => {
+							scrollToTop();
+							setStep(2);
+						}}
 					/>
 				)}
 				{step === 2 && (
 					<Step2
-						setAlert={setAlert}
 						teachers={teachers}
 						defaults={defaults}
 						setDefaults={setDefaults}
@@ -104,6 +111,7 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 					<button
 						className="btn btn-primary w-40 shrink!"
 						onClick={() => {
+							scrollToTop();
 							setStep((step) => {
 								const newStep = step - 1;
 								if (!checkNextNeedDisable()) setDisableNext(false);
@@ -125,6 +133,7 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 							if (step === 3) {
 								return router.push('/weekly-sport/timetable');
 							}
+							scrollToTop();
 							setStep((step) => {
 								const newStep = step + 1;
 								setDisableNext(checkNextNeedDisable());
@@ -149,12 +158,6 @@ export function ImportPage({ teachers }: { teachers: { id: string; name?: string
 					</button>
 				</div>
 			</main>
-			{alert &&
-				(alert.type === 'success' ? (
-					<SuccessAlertFixed message={alert.message} setAlert={setAlert} />
-				) : (
-					<ErrorAlertFixed message={alert.message} setAlert={setAlert} />
-				))}
 		</>
 	);
 }
