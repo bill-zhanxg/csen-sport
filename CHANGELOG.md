@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.18.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.17.1...v0.18.0) (2025-11-02)
+
+
+### Features
+
+* add Tawk API keys to environment types and update dependencies ([8a95719](https://github.com/bill-zhanxg/csen-sport/commit/8a9571916296f832ef7814a2b41559d00f808335))
+* enhance error handling UI with improved messaging and reload options ([3433064](https://github.com/bill-zhanxg/csen-sport/commit/3433064f347c6446b71f570458ed03e9a4958be3))
+* implement column mapping UI for Excel import process and enhance import timetable experience ([85f867a](https://github.com/bill-zhanxg/csen-sport/commit/85f867a470fbdcd67ef5075bfc346779fe753cf4))
+* improves bulk action performance and UI ([59fdb47](https://github.com/bill-zhanxg/csen-sport/commit/59fdb4705e524bf6b3c29f337e3dc3da65b98545))
+* integrate Tawk chat support in NavBar and layout components ([3814713](https://github.com/bill-zhanxg/csen-sport/commit/3814713c1c3e56f989be448d978c1ec9b50100a2))
+
+
+### Bug Fixes
+
+* correct index mapping for start time and position in Step1 component ([4720186](https://github.com/bill-zhanxg/csen-sport/commit/47201862a7cfcd734e94a98fd04362d6c8435f9d))
+* replace all alerts fixed with toast for better user feedback ([15c7cc1](https://github.com/bill-zhanxg/csen-sport/commit/15c7cc1fa7e93beb63e7b3da3045afa425eacff4))
+
 ## [0.17.1](https://github.com/bill-zhanxg/csen-sport/compare/v0.17.0...v0.17.1) (2025-10-31)
 
 
