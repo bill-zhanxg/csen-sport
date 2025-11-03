@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.1](https://github.com/bill-zhanxg/csen-sport/compare/v0.18.0...v0.18.1) (2025-11-03)
+
+
+### Bug Fixes
+
+* add '$_Tawk.i18next' to ignored errors in Sentry configuration ([89e73d1](https://github.com/bill-zhanxg/csen-sport/commit/89e73d149e9f204ac93e660e5dd9cdba566ae8ad))
+
 ## [0.18.0](https://github.com/bill-zhanxg/csen-sport/compare/v0.17.1...v0.18.0) (2025-11-02)
 
 
