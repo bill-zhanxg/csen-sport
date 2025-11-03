@@ -57,6 +57,7 @@ Sentry.init({
 		'Load failed',
 		"Failed to construct 'URL': Invalid base URL",
 		'URI malformed',
+		'$_Tawk.i18next',
 	],
 });
 
