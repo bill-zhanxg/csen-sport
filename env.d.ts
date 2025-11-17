@@ -23,3 +23,9 @@ namespace NodeJS {
 		TAWK_API_KEY: string;
 	}
 }
+
+// Tawk.io global type declaration
+interface Window {
+	Tawk_API?: any;
+	Tawk_LoadStart?: Date;
+}

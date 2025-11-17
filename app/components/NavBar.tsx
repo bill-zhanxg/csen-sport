@@ -17,9 +17,11 @@ import { IoCreateOutline, IoSettingsOutline } from 'react-icons/io5';
 import { LuUsersRound } from 'react-icons/lu';
 import { MdOutlineShield, MdOutlineSupportAgent } from 'react-icons/md';
 import { useClickAway } from 'react-use';
+import { toast } from 'sonner';
 import { TawkEvent, useTawkAction, useTawkEvent } from 'tawk-react';
 import { UserAvatar } from '../globalComponents/UserAvatar';
 import { FeedbackButton } from './Feedback';
+import { useTawkStatus } from './useTawkStatus';
 
 import type { Session } from 'next-auth';
 const MENU_ITEMS: Array<{
@@ -47,6 +49,7 @@ export function NavBar({
 	tawkHash: string;
 }) {
 	const { start, toggle, login } = useTawkAction();
+	const { isFailed } = useTawkStatus();
 
 	// Tawk login
 	useTawkEvent(TawkEvent.onBeforeLoad, () => {
@@ -179,6 +182,13 @@ export function NavBar({
 								<button
 									className="flex items-center gap-3"
 									onClick={() => {
+										if (isFailed) {
+											toast.error(
+												'Support widget failed to load. This is most likely due to your organization\'s network filtering system blocking the support platform (tawk.io).',
+												{ duration: 5000 }
+											);
+											return;
+										}
 										try {
 											start({ showWidget: false });
 											toggle();
