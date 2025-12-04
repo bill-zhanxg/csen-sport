@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.2](https://github.com/bill-zhanxg/csen-sport/compare/v0.18.1...v0.18.2) (2025-12-04)
+
+
+### Bug Fixes
+
+* update package to fix Next.js CVE 10.0 vulnerability and other security vulnerabilities ([c44ffb1](https://github.com/bill-zhanxg/csen-sport/commit/c44ffb13b86178c916f651d52268b98e7820171a))
+
 ## [0.18.1](https://github.com/bill-zhanxg/csen-sport/compare/v0.18.0...v0.18.1) (2025-11-03)
 
 
