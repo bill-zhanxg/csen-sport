@@ -17,7 +17,6 @@ const nextConfig: NextConfig = {
 	experimental: {
 		// authInterrupts: true,
 		typedEnv: true,
-		clientSegmentCache: true,
 		turbopackFileSystemCacheForDev: true,
 
 		serverActions: {
