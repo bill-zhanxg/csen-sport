@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.3](https://github.com/bill-zhanxg/csen-sport/compare/v0.18.2...v0.18.3) (2025-12-06)
+
+
+### Bug Fixes
+
+* fixed react2shell vulnerability  ([9e51910](https://github.com/bill-zhanxg/csen-sport/commit/9e519103930beadfb76a2de53b473a7c72666966))
+
 ## [0.18.2](https://github.com/bill-zhanxg/csen-sport/compare/v0.18.1...v0.18.2) (2025-12-04)
 
 
